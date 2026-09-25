@@ -1,5 +1,9 @@
 # Start here
 
+## Windows setup first
+
+Read [WINDOWS_SETUP.md](../WINDOWS_SETUP.md) for required versus optional installs and exact launch/build commands. All four Codex prompts start with that setup information.
+
 ## What this package contains
 
 This is the working game source, not only a design plan.
@@ -24,11 +28,11 @@ Do not rebuild from scratch merely because a new Codex session starts.
 First, verify live graphics and sound on the target computer. The previous browser environment had no working WebGL context.
 Do not label that limitation as proof that the game graphics are broken.
 The automated physics and DOM checks passed for the last focused update.
-The new package verification is recorded separately in `OFFLINE_VALIDATION.json` and `EXPORT_VALIDATION.json`.
+Read `WINDOWS_PACKAGE_VALIDATION.json` for this Windows update. `EXPORT_VALIDATION.json` records the earlier combined export. The README screenshots are UI previews with the unavailable 3D renderer omitted.
 
 ## Offline meaning
 
-The game and included build tools run locally without internet on the included x64 targets.
+The Windows release includes a Windows x64 runtime and all installed build dependencies. Its game and build tools run locally without internet. The earlier combined release also included Linux x64.
 External source links need internet when opened. They are optional references, not runtime dependencies.
 This ZIP does not include the Codex application or an AI model.
 A hosted Codex model can still need internet. A fully disconnected AI setup needs a separately configured local model and client.

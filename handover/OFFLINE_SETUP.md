@@ -1,5 +1,7 @@
 # Offline setup and troubleshooting
 
+Start with [WINDOWS_SETUP.md](../WINDOWS_SETUP.md). The current release ZIP targets Windows x64. Its prerequisites appear at the beginning of all four Codex prompts.
+
 ## Windows x64
 
 The full ZIP includes Node.js v24.21.0, npm, locked build dependencies and Windows native build modules.
@@ -10,9 +12,9 @@ Use `TEST-WINDOWS.cmd` for package checks. Add `--physics` for the selected phys
 No system-wide installation or administrator account is required by these launchers.
 This package contains x64 binaries. It does not contain native Windows ARM64 or 32-bit runtimes.
 
-## Linux x64
+## Linux x64 — optional combined package only
 
-Use `sh start.sh`. The launcher restores the Node executable flag if the ZIP tool removed it.
+The Windows ZIP does not include the Linux Node runtime. Use the earlier combined release or prepare a Linux runtime while online. With the combined package, use `sh start.sh`. The launcher restores the Node executable flag if the ZIP tool removed it.
 For development:
 
 ```sh
@@ -48,9 +50,9 @@ It checks Node SHA-256 sums and npm lockfile integrity before unpacking.
 
 ## Repackage after development
 
-Build and verify the app first. With Python 3 installed, run `python3 scripts/package-offline.py`.
-On Windows, use `py scripts/package-offline.py` if that is the installed Python launcher.
-The script creates a full ZIP in the parent folder, checks its CRCs, and writes a separate SHA-256 file.
+Build and verify the app first. With Python 3 installed, run `python3 scripts/package-offline.py --target windows`.
+On Windows, use `py -3 scripts/package-offline.py --target windows` if that is the installed Python launcher.
+The script creates the full Windows ZIP in the parent folder, checks its CRCs, and writes a separate SHA-256 file. Use `--target all` only when both Windows and Linux runtimes are prepared.
 It refreshes the included file manifest. Do not replace source Git commits with repeated binary ZIP commits.
 For a clean extraction, run `node scripts/verify-manifest.mjs` before editing or rebuilding.
 That checks the original packaged files, including local dependencies and runtimes.

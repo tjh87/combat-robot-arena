@@ -1,7 +1,7 @@
 # GitHub publication
 
-The intended repository name is `combat-robot-arena` under the user's GitHub account.
-Use a private repository unless the user explicitly requests public visibility.
+The existing repository is `tjh87/combat-robot-arena`: https://github.com/tjh87/combat-robot-arena
+The user explicitly requires this repository to stay private.
 Do not place this game in an unrelated repository, such as another project's repository.
 
 ## Source and release layout
@@ -18,13 +18,19 @@ Sign in with GitHub CLI through its normal secure flow. Do not paste a token int
 Then run PowerShell from this folder:
 
 ```powershell
-.\PUBLISH-GITHUB.ps1 -ZipPath "C:\path\Combat_Robot_Arena_Offline_Codex.zip"
+.\PUBLISH-GITHUB.ps1 -ZipPath "C:\path\Combat_Robot_Arena_Windows_Offline_Codex.zip"
 ```
 
 The helper creates a private repository, commits source and attaches the ZIP to a new dated release.
 It stops when a repository name exists without a matching local remote. It never force-pushes.
 Review the exact repository name and current diff before running it.
-Use `-Public` only after an explicit decision to expose the project and included assets.
+The helper creates only private repositories and refuses to publish to an existing public repository.
+
+## Continue from the extracted ZIP with the existing private repository
+
+The ZIP omits Git metadata. Prefer cloning the private repository, then copying `runtime/`, `node_modules/` and `dist/` from the full ZIP into that clone. Its existing `origin` and commit history remain intact. Review and transfer any edits made in the extracted folder before discarding it. Do not run the new-repository helper in a Git-less extracted folder when the repository already exists.
+
+Commit source and documentation, push normally, then create a new private release and attach the refreshed Windows ZIP plus its SHA-256 file. Do not commit runtime folders or ZIP binaries into source history.
 
 ## Manual equivalent
 

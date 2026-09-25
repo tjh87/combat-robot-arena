@@ -40,12 +40,12 @@ Use the same local-to-world conversion for target damage, hints, visible battery
 
 The app uses 11 local robot PNG files and 12 local MP3 files.
 Rapier compat embeds physics WASM into the JavaScript build.
-The full ZIP includes installed dependencies and Windows/Linux x64 native esbuild/Rollup packages.
+The full Windows ZIP includes installed dependencies, Windows x64 Node and Windows native esbuild/Rollup packages. Linux native build modules are retained for cross-platform checks, but the Linux Node runtime is only in the optional combined ZIP.
 The runtime manifest records official download URLs and checked hashes.
 The source repository keeps `package-lock.json`. Generated dependencies and runtimes belong in the release ZIP.
 
 ## Historical evidence
 
 Keep `docs/` reports for debugging. Some reports contain failures from earlier iterations.
-Use `handover/EXPORT_VALIDATION.json` for this export and `docs/hydra-battery-research-results.json` for the latest focused game update.
+Use `handover/WINDOWS_PACKAGE_VALIDATION.json` for the Windows package and `handover/EXPORT_VALIDATION.json` for the earlier combined export and `docs/hydra-battery-research-results.json` for the latest focused game update.
 Do not treat `docs/RELEASE.json` as the current standalone release; it records an older Sites publication.

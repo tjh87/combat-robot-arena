@@ -1,0 +1,59 @@
+{
+  "date": "2026-09-25",
+  "releaseTarget": "Windows x64",
+  "sourceBaseline": "d3e2ebdb3de97d2373897bbb3b0bb620d3838e0b",
+  "changedGameplaySourceFiles": 0,
+  "preservedGameplaySourceFiles": 39,
+  "checks": {
+    "productionBuild": "passed; unchanged app JS/CSS hashes",
+    "typescript": "passed",
+    "localAssetsAndEmbeddedWasm": "passed",
+    "localhostServerRoutesAndBoundaries": "passed",
+    "devServerExplicitHostAndPort": "passed in supervised preview; localhost remains default",
+    "windowsPEBinaries": "Node, esbuild and Rollup AMD64 headers passed; execution untested",
+    "windowsLaunchers": "CRLF and failure-exit propagation reviewed; native execution untested",
+    "promptPrerequisites": "4 of 4 begin with Windows installation and build/run steps",
+    "screenshots": "3 current UI captures with renderer omitted; labeled accordingly"
+  },
+  "archive": {
+    "runtimeTargets": [
+      "windows-x64"
+    ],
+    "includes": [
+      "source",
+      "dist",
+      "installed dependencies",
+      "Windows native build tools",
+      "4 development prompts",
+      "Windows setup",
+      "3 UI screenshots",
+      "8 reference images"
+    ],
+    "integrity": "Per-file SHA-256 manifest; packaging performs ZIP CRC check; final download SHA-256 supplied beside ZIP",
+    "freshExtraction": {
+      "status": "passed",
+      "checkedFiles": 6165,
+      "pathWithSpaces": true,
+      "manifest": "passed before build",
+      "productionBuild": "passed using external Linux Node against extracted dependencies",
+      "localVerification": "passed",
+      "npmInstallRequired": false,
+      "windowsExecution": "not tested"
+    }
+  },
+  "notRerun": [
+    "Physics suites: no gameplay source or numerical setting changes",
+    "Historical UI and research reports retained as historical evidence"
+  ],
+  "manualChecksRequired": [
+    "Native Windows play/build/test launchers",
+    "WebGL rendering on a graphics-capable PC",
+    "Audible playback and levels",
+    "Disconnected target-PC smoke test"
+  ],
+  "limitations": [
+    "Codex and AI model not bundled",
+    "Fitted battery coordinates remain estimates",
+    "Capture browser lacked WebGL"
+  ]
+}
