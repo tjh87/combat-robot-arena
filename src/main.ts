@@ -1,3 +1,4 @@
+import {inject} from '@vercel/analytics';
 import {WEAPON_GAUGE_MARKUP,HYDRA_GAUGE_MARKUP,updateWeaponGauge} from './weapon-gauge';
 import {batteryReferenceHTML} from './battery-layout';
 import {fitTraction} from './model';
@@ -17,6 +18,8 @@ import {GameAudio,readyImpactSounds,impactSurface} from './audio';
 import {saveBuild,loadBuild,clearSavedBuild} from './build-storage';
 import {scorecard,podium} from './result-view';
 import {START_DURATION,startSignal,startMarkup} from './start-sequence';
+
+inject();
 
 type State='menu'|'builder'|'practice'|'introduction'|'countdown'|'fighting'|'finishing'|'paused'|'replay'|'result'|'repair'|'bracket'|'settings';
 const app=document.querySelector<HTMLDivElement>('#app')!;
