@@ -1,0 +1,44 @@
+Steel impact recordings
+
+Source: Foley_Impact_Metal_Long_Mono.wav by Nox_Sound
+https://freesound.org/people/Nox_Sound/sounds/569555/
+License: Creative Commons Zero (CC0 1.0)
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Eight excerpts from the publicly served high-quality MP3 preview. Original recording: AKG C411 contact microphone, metal impacts, 48 kHz/24-bit mono.
+
+Edits: isolated hits, trimmed tails, low-frequency emphasis, peak limiting, short fade-out, 44.1 kHz mono MP3 conversion. Runtime varies level and playback rate with impact strength.
+
+steel_tap_01: 0.00-0.95 s
+steel_tap_02: 6.08-7.13 s
+steel_strike_01: 30.68-32.13 s
+steel_strike_02: 33.71-35.16 s
+steel_strike_03: 35.89-37.34 s
+steel_crash_01: 20.60-23.25 s
+steel_crash_02: 23.49-26.34 s
+steel_crash_03: 26.71-29.66 s
+
+The impact and landing sets contain no BattleBots broadcast audio.
+
+Landing recordings (revised 2026-09-20)
+
+landing_light_01, landing_heavy_01 and landing_heavy_02:
+Scrap metal dropping / crashing, SamsterBirdies, CC0.
+https://freesound.org/people/SamsterBirdies/sounds/587443/
+Sources: the previously credited excerpts at 10.80–12.65 s and 15.22–17.62 s.
+Edits: isolate the impact transient, suppress narrow resonances, mix a slowed
+and filtered recorded body transient, and apply a short damped tail.
+New durations: 0.30 s, 0.52 s and 0.64 s. The thin-sheet clip is no longer used.
+No synthesized bell or tonal ringing layer is present in these assets.
+See docs/landing-audio-assets.json and scripts/rebuild-landings.py.
+
+MATCH START AND ICEWAVE REFERENCES
+match-start.mp3: Audio only, extracted from the user's supplied BattleBots start excerpt. Original video is not included or played.
+2026-09-20 impact revision: the eight steel hits now preserve the first transient,
+suppress persistent narrow resonances, and mix short, band-limited body transients
+from SamsterBirdies' CC0 scrap recording. Durations are 0.26–0.79 seconds.
+See docs/steel-audio-assets.json for each clip. Landing clips have the separate revision described above.
+
+ICEwave uses original procedural combustion audio. The user-provided engine
+recordings informed firing rates and throttle timing only. No ICEwave recording
+or excerpt is included, fetched, or played by the game.
