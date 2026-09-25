@@ -1,0 +1,113 @@
+[
+  {
+    "name": "Hydra stays upright on central and off-centre loaded flips while launching above 1.2 metres",
+    "status": "passed",
+    "detail": [
+      {
+        "offsetM": 0,
+        "opponentPeakM": 3.8595621585845947,
+        "hydraPeakM": 0.10758626461029053,
+        "maxTiltDegrees": 2.236762297255122,
+        "workJ": 1427.1002201874987
+      },
+      {
+        "offsetM": 0.15,
+        "opponentPeakM": 3.2077386379241943,
+        "hydraPeakM": 0.110704705119133,
+        "maxTiltDegrees": 5.040000306953379,
+        "workJ": 1344.921902316219
+      },
+      {
+        "offsetM": -0.15,
+        "opponentPeakM": 1.2514859437942505,
+        "hydraPeakM": 0.1293068528175354,
+        "maxTiltDegrees": 7.9239662487992994,
+        "workJ": 1076.0683458189087
+      }
+    ]
+  },
+  {
+    "name": "Every template can be manually recovered upright without repairs, lost time or displaced opponents",
+    "status": "passed",
+    "detail": [
+      {
+        "name": "Tombstone",
+        "hasSelfRight": false,
+        "travelAfterM": 3.406458458328039
+      },
+      {
+        "name": "Minotaur",
+        "hasSelfRight": true,
+        "travelAfterM": 4.120666984939759
+      },
+      {
+        "name": "Hydra",
+        "hasSelfRight": true,
+        "travelAfterM": 3.2374400457116885
+      },
+      {
+        "name": "ICEwave",
+        "hasSelfRight": false,
+        "travelAfterM": 2.7894659829497854
+      },
+      {
+        "name": "HyperShock",
+        "hasSelfRight": true,
+        "travelAfterM": 3.423266738661304
+      },
+      {
+        "name": "Gigabyte",
+        "hasSelfRight": true,
+        "travelAfterM": 1.951948239039522
+      },
+      {
+        "name": "Son of Whyachi",
+        "hasSelfRight": false,
+        "travelAfterM": 2.6034037225091793
+      },
+      {
+        "name": "HUGE",
+        "hasSelfRight": false,
+        "travelAfterM": 1.9731326910955143
+      },
+      {
+        "name": "SawBlaze",
+        "hasSelfRight": true,
+        "travelAfterM": 2.555860908989656
+      },
+      {
+        "name": "Deep Six",
+        "hasSelfRight": false,
+        "travelAfterM": 1.7280977091802974
+      },
+      {
+        "name": "Quantum",
+        "hasSelfRight": true,
+        "travelAfterM": 3.795824538379375
+      }
+    ]
+  },
+  {
+    "name": "A naturally settled inverted robot without self-righting becomes recoverable",
+    "status": "passed",
+    "detail": {
+      "readyAfterSeconds": 2
+    }
+  },
+  {
+    "name": "Both stuck robots recover to separate clear positions and recovery cannot be spammed or used after a result",
+    "status": "passed",
+    "detail": {
+      "robotsRecovered": 2,
+      "cooldownSeconds": 5,
+      "flightDistanceUnchanged": true
+    }
+  },
+  {
+    "name": "Healthy idle, moving, unpowered and fully disabled robots cannot use manual recovery",
+    "status": "passed",
+    "detail": {
+      "blockedStates": 4
+    }
+  }
+]

@@ -1,0 +1,57 @@
+[
+  {
+    "names": [
+      "Tombstone",
+      "Son of Whyachi"
+    ],
+    "winner": 1,
+    "reason": "Judges’ decision",
+    "seconds": 180,
+    "hits": 17,
+    "status": "passed"
+  },
+  {
+    "names": [
+      "Minotaur",
+      "HyperShock"
+    ],
+    "winner": 1,
+    "reason": "Count-out",
+    "seconds": 28.8,
+    "hits": 4,
+    "status": "passed"
+  },
+  {
+    "names": [
+      "Hydra",
+      "Gigabyte"
+    ],
+    "winner": 0,
+    "reason": "Structural KO",
+    "seconds": 46.458333333333336,
+    "hits": 15,
+    "status": "passed"
+  },
+  {
+    "names": [
+      "HUGE",
+      "Deep Six"
+    ],
+    "winner": 0,
+    "reason": "Count-out",
+    "seconds": 43.6,
+    "hits": 8,
+    "status": "passed"
+  },
+  {
+    "names": [
+      "SawBlaze",
+      "Deep Six"
+    ],
+    "winner": 0,
+    "reason": "Structural KO",
+    "seconds": 50.7,
+    "hits": 12,
+    "status": "passed"
+  }
+]

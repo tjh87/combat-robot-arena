@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Clipped plate mass moments match independently constructed Rapier hulls",
+    "status": "passed",
+    "detail": {
+      "momentsCompared": 33
+    }
+  },
+  {
+    "name": "Compact preset geometry preserves legal envelopes and underside blade clearance",
+    "status": "passed",
+    "detail": {
+      "masses": [
+        98.23659268915691,
+        110.5628247298954,
+        91.80393489523587
+      ],
+      "bladeFloorGap": 0.006,
+      "bladeTopGap": 0.007999999999999993,
+      "rpm": [
+        665.9922791829879,
+        1285.0678279350732
+      ]
+    }
+  },
+  {
+    "name": "Body-mounted POV uses the interpolated robot heading, pitch and roll",
+    "status": "passed",
+    "detail": {
+      "livePoses": 4,
+      "recordedReplayPose": true
+    }
+  },
+  {
+    "name": "Detailed arena and robots retain finite geometry within the triangle budget",
+    "status": "passed",
+    "detail": {
+      "triangles": 44570,
+      "meshBatches": 212,
+      "paintedSurfaces": 9,
+      "actualWebGL": "unverified"
+    }
+  },
+  {
+    "name": "Painted top armour survives replay cycles without disposing live textures",
+    "status": "passed",
+    "detail": {
+      "replayCycles": 10,
+      "textureDisposalsAfterCleanup": 1
+    }
+  }
+]

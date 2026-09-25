@@ -1,0 +1,216 @@
+{
+  "checked": "2026-09-23",
+  "basePublishedVersion": 24,
+  "targetedRuns": [
+    {
+      "command": "CASE='Six seeded' MATCH_INDEX=0 node --import tsx tests/engagement-update.ts",
+      "scope": "One selected match, Tombstone versus Quantum, easy, hazards enabled. Does not claim all six matches were rerun.",
+      "results": {
+        "date": "2026-09-23T14:03:02.281Z",
+        "results": [
+          {
+            "name": "Six seeded matches cover all eleven templates and all three difficulties",
+            "status": "passed",
+            "detail": [
+              {
+                "a": "Tombstone",
+                "b": "Quantum",
+                "difficulty": "easy",
+                "seconds": 138.8,
+                "reason": "Count-out",
+                "impacts": 49
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": "CASE='Every spinning' node --import tsx tests/engagement-update.ts",
+      "scope": "All nine spinners, one direct contact fixture per preset.",
+      "results": {
+        "date": "2026-09-23T14:13:50.873Z",
+        "results": [
+          {
+            "name": "Every spinning weapon loses speed when it strikes a robot",
+            "status": "passed",
+            "detail": [
+              {
+                "name": "Tombstone",
+                "energyBeforeJ": 48488.519736523485,
+                "energyAfterJ": 4248.590406608666,
+                "rpmLossPercent": 70.39923268783946,
+                "maxBiteMm": 11.905406622814251,
+                "maxEngagement": 0.050432277198072216
+              },
+              {
+                "name": "Minotaur",
+                "energyBeforeJ": 88582.39874476312,
+                "energyAfterJ": 6599.328217191811,
+                "rpmLossPercent": 72.70543696247445,
+                "maxBiteMm": 6.582540947138707,
+                "maxEngagement": 0.0716286139326755
+              },
+              {
+                "name": "ICEwave",
+                "energyBeforeJ": 25289.756667856862,
+                "energyAfterJ": 0.0004740528700174533,
+                "rpmLossPercent": 99.98630881418225,
+                "maxBiteMm": 35,
+                "maxEngagement": 0.8354528742554258
+              },
+              {
+                "name": "HyperShock",
+                "energyBeforeJ": 41696.59218380095,
+                "energyAfterJ": 821.8214999051299,
+                "rpmLossPercent": 85.96092583292535,
+                "maxBiteMm": 0,
+                "maxEngagement": 0
+              },
+              {
+                "name": "Gigabyte",
+                "energyBeforeJ": 102468.3126189907,
+                "energyAfterJ": 70735.68824285899,
+                "rpmLossPercent": 16.914641246177364,
+                "maxBiteMm": 8.088674214056567,
+                "maxEngagement": 0.0303189895426317
+              },
+              {
+                "name": "Son of Whyachi",
+                "energyBeforeJ": 48649.61892376118,
+                "energyAfterJ": 1936.5727331105898,
+                "rpmLossPercent": 80.048425004614,
+                "maxBiteMm": 15.601385315533566,
+                "maxEngagement": 0.44485479975641473
+              },
+              {
+                "name": "HUGE",
+                "energyBeforeJ": 21267.616025310872,
+                "energyAfterJ": 0.047489666658557333,
+                "rpmLossPercent": 99.85056918841067,
+                "maxBiteMm": 1.5893909903315628,
+                "maxEngagement": 0.030018290005920413
+              },
+              {
+                "name": "SawBlaze",
+                "energyBeforeJ": 29043.65284300916,
+                "energyAfterJ": 779.1727044532198,
+                "rpmLossPercent": 83.6208542849049,
+                "maxBiteMm": 7.590207776247915,
+                "maxEngagement": 0.16858718906082876
+              },
+              {
+                "name": "Deep Six",
+                "energyBeforeJ": 72023.49212039755,
+                "energyAfterJ": 2083.2954155919815,
+                "rpmLossPercent": 82.99258372216953,
+                "maxBiteMm": 16.79635425157644,
+                "maxEngagement": 0.2501288188879752
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": "CASE='controls stay' node --import tsx tests/huge-control-update.ts",
+      "scope": "Eight HUGE drive cases: forward and reverse at four central-body angles.",
+      "results": [
+        {
+          "name": "HUGE controls stay consistent across four body pitch orientations",
+          "status": "passed",
+          "detail": [
+            {
+              "pitch": 0,
+              "direction": -1,
+              "progressM": 1.5260143280029297
+            },
+            {
+              "pitch": 0,
+              "direction": 1,
+              "progressM": 1.5463749170303345
+            },
+            {
+              "pitch": 1.5707963267948966,
+              "direction": -1,
+              "progressM": 1.675370693206787
+            },
+            {
+              "pitch": 1.5707963267948966,
+              "direction": 1,
+              "progressM": 1.6498527526855469
+            },
+            {
+              "pitch": 3.141592653589793,
+              "direction": -1,
+              "progressM": 1.6711442470550537
+            },
+            {
+              "pitch": 3.141592653589793,
+              "direction": 1,
+              "progressM": 1.6561616659164429
+            },
+            {
+              "pitch": -1.5707963267948966,
+              "direction": -1,
+              "progressM": 1.6688601970672607
+            },
+            {
+              "pitch": -1.5707963267948966,
+              "direction": 1,
+              "progressM": 1.6604286432266235
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Offline DOM tests mock WebGL. Browser GPU rendering and audible playback remain unverified."
+  ],
+  "completeSuites": [
+    {
+      "command": "node --import tsx tests/weapon-specs-update.ts",
+      "report": "docs/weapon-specs-results.json",
+      "passedGroups": 9,
+      "failedGroups": 0
+    },
+    {
+      "command": "node --import tsx tests/review-core.ts",
+      "report": "docs/review-core-results.json",
+      "passedGroups": 14,
+      "failedGroups": 0
+    },
+    {
+      "command": "node --import tsx tests/review-ui.ts",
+      "report": "docs/review-ui-results.json",
+      "passedGroups": 58,
+      "failedGroups": 0
+    },
+    {
+      "command": "node --import tsx tests/roster.ts",
+      "report": "docs/roster-results.json",
+      "passedGroups": 8,
+      "failedGroups": 0
+    },
+    {
+      "command": "node --import tsx tests/crusher-update.ts",
+      "report": "docs/crusher-update-results.json",
+      "passedGroups": 8,
+      "failedGroups": 0
+    },
+    {
+      "command": "node --import tsx tests/handling-effects-update.ts",
+      "report": "docs/handling-effects-update-results.json",
+      "passedGroups": 22,
+      "failedGroups": 0
+    }
+  ],
+  "passedGroups": 122,
+  "findingsFixed": [
+    "Triangular scoop mass moments used an incorrect rectangular projection.",
+    "Jaw speed limiting could request excessive braking torque after a high-speed strike.",
+    "HUGE straight reverse yaw grew into gyroscopic sideways lift with new masses; bounded drive-motor correction resolves it."
+  ],
+  "build": "TypeScript and Vite production build passed. Bundle audit is run again by the publication workflow."
+}

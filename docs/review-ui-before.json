@@ -1,0 +1,84 @@
+[
+  {
+    "name": "Repeated Settings clicks return to the paused match with unchanged physics",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'menu' !== 'paused'\n"
+  },
+  {
+    "name": "Clearing purchases clears the orders that Commit actually applies",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1740 !== 1700\n"
+  },
+  {
+    "name": "Settings preserve staged repairs, name, colour, and the repair window",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'menu' !== 'repair'\n"
+  },
+  {
+    "name": "Commit reads the visible repair input even before its change event fires",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1700 !== 1725\n"
+  },
+  {
+    "name": "An invalid builder value remains editable after Settings closes",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Uncaught [Error: chassis.width: use 0.5 to 1]\n\n1 !== 0\n"
+  },
+  {
+    "name": "A blank robot name cannot be bypassed by changing another field",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(f.$('#builder-error')||f.$('#test-build').disabled)\n"
+  },
+  {
+    "name": "Paused competitive navigation requires Leave confirmation",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'menu' !== 'paused'\n"
+  },
+  {
+    "name": "Context loss during replay ends replay and requires Resume after restoration",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'replay' !== 'paused'\n"
+  },
+  {
+    "name": "Graphics retry keeps the current match and does not reset its condition",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: The original simulation must remain active"
+  },
+  {
+    "name": "Keyboard menus and matches work when gamepad access is denied",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'' !== '0 CONNECTED'\n"
+  },
+  {
+    "name": "Denied audio never delays match startup",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'menu'\n- 'countdown'\n"
+  },
+  {
+    "name": "Practice reset, share/import, result, and tournament menu flows remain usable",
+    "status": "passed",
+    "detail": {
+      "flows": 6
+    }
+  },
+  {
+    "name": "Agent menu actions cannot replace a competitive match through Settings",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Missing expected exception."
+  },
+  {
+    "name": "Agent status can read an invalid builder draft without throwing",
+    "status": "failed",
+    "error": "Error: chassis.width: use 0.5 to 1"
+  },
+  {
+    "name": "Tournament repair windows cannot launch an unrelated practice match",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'practice'\n- 'repair'\n"
+  },
+  {
+    "name": "Modal keyboard focus cannot reach background setup controls",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Expected \"actual\" not to be reference-equal to \"expected\":\n\nHTMLButtonElement {}"
+  }
+]

@@ -1,0 +1,132 @@
+{
+  "checked": "2026-09-23",
+  "baseVersion": 25,
+  "completeSuites": [
+    {
+      "command": "node --import tsx tests/traction-landing-update.ts",
+      "report": "docs/traction-landing-results.json",
+      "passedGroups": 9,
+      "failedGroups": 0
+    },
+    {
+      "command": "node --import tsx tests/handling-effects-update.ts",
+      "report": "docs/handling-effects-update-results.json",
+      "passedGroups": 22,
+      "failedGroups": 0
+    },
+    {
+      "command": "node --import tsx tests/huge-control-update.ts",
+      "report": "docs/huge-control-update-results.json",
+      "passedGroups": 9,
+      "failedGroups": 0
+    },
+    {
+      "command": "node --import tsx tests/review-core.ts",
+      "report": "docs/review-core-results.json",
+      "passedGroups": 14,
+      "failedGroups": 0
+    },
+    {
+      "command": "node --import tsx tests/crusher-update.ts",
+      "report": "docs/crusher-update-results.json",
+      "passedGroups": 8,
+      "failedGroups": 0
+    },
+    {
+      "command": "node --import tsx tests/review-ui.ts",
+      "report": "docs/review-ui-results.json",
+      "passedGroups": 59,
+      "failedGroups": 0
+    }
+  ],
+  "targetedRuns": [
+    {
+      "command": "CASE='Six seeded' MATCH_INDEX=5 node --import tsx tests/engagement-update.ts",
+      "scope": "One complete HUGE versus Tombstone match; hard difficulty, hazards enabled. Does not claim all six matches were rerun.",
+      "results": {
+        "date": "2026-09-23T15:21:10.992Z",
+        "results": [
+          {
+            "name": "Six seeded matches cover all eleven templates and all three difficulties",
+            "status": "passed",
+            "detail": [
+              {
+                "a": "HUGE",
+                "b": "Tombstone",
+                "difficulty": "hard",
+                "seconds": 180,
+                "reason": "Judges\u2019 decision",
+                "impacts": 62
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "sideRecoveryComparison": {
+    "conditions": "Five seconds, both side poses, blade starts at full target RPM, 40% forward command, hazards and automatic unstick disabled. Same preset mass and geometry.",
+    "before": [
+      {
+        "side": -1,
+        "recovered": 2.8958333333333335,
+        "maxYaw": 19.82828712463379,
+        "sideSpin": 1.6499999999999955,
+        "finalYaw": 0.0003592364373616874,
+        "finalAxle": -8.060432693389463e-05,
+        "p": {
+          "x": 3.956423282623291,
+          "y": 0.4787718653678894,
+          "z": 4.43594217300415
+        }
+      },
+      {
+        "side": 1,
+        "recovered": 3.0708333333333333,
+        "maxYaw": 19.548627853393555,
+        "sideSpin": 1.6541666666666621,
+        "finalYaw": -0.0002070047048619017,
+        "finalAxle": 0.00013594535618328268,
+        "p": {
+          "x": 3.6260874271392822,
+          "y": 0.47946882247924805,
+          "z": 0.5463945865631104
+        }
+      }
+    ],
+    "after": [
+      {
+        "side": -1,
+        "recovered": 0.7166666666666667,
+        "maxYaw": 6.543295383453369,
+        "sideSpin": 0.21250000000000024,
+        "finalYaw": 0.000638374185655266,
+        "finalAxle": -2.2248433264121514e-05,
+        "p": {
+          "x": 5.676860809326172,
+          "y": 0.4787500500679016,
+          "z": 4.689432621002197
+        }
+      },
+      {
+        "side": 1,
+        "recovered": 0.7166666666666667,
+        "maxYaw": 6.736544609069824,
+        "sideSpin": 0.241666666666667,
+        "finalYaw": -8.475258073303849e-05,
+        "finalAxle": -7.511145354556492e-05,
+        "p": {
+          "x": 5.190676212310791,
+          "y": 0.47890084981918335,
+          "z": -1.4353840351104736
+        }
+      }
+    ]
+  },
+  "passedGroups": 122,
+  "limits": [
+    "Offline interface tests use a mocked WebGL renderer.",
+    "Live GPU rendering and audible playback remain unverified.",
+    "Handling recovery figures describe the named test conditions; real collision poses vary."
+  ]
+}

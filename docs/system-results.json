@@ -1,0 +1,81 @@
+[
+  {
+    "name": "G07 Physical roll arm and flipper recover from inversion without position resets",
+    "status": "passed",
+    "detail": [
+      {
+        "type": "roll_arm",
+        "maxUp": 0.999999999589479,
+        "finalUp": 0.9999999763818954,
+        "maxWork": 1134.4000739466119,
+        "energySpent": 2446.0300303978147
+      },
+      {
+        "type": "flipper",
+        "maxUp": 0.9999999944815755,
+        "finalUp": -0.9999955847214679,
+        "maxWork": 4199.999999999994,
+        "energySpent": 3394.644324292778
+      }
+    ]
+  },
+  {
+    "name": "G04 Roof contact contains a fast robot; invalid positions pause with no winner",
+    "status": "passed",
+    "detail": {
+      "maxHeight": 5.917616844177246,
+      "faultStopsTime": true,
+      "noInventedWinner": true
+    }
+  },
+  {
+    "name": "G08 Forced-hazard attribution expires after 1.5 seconds",
+    "status": "passed",
+    "detail": {
+      "qualifiedIntervalSeconds": 0.004166666666666667,
+      "expired": true
+    }
+  },
+  {
+    "name": "G03 A pause inside an input callback leaves no negative scheduling remainder",
+    "status": "passed",
+    "detail": {
+      "callbacks": 1,
+      "accumulator": 0
+    }
+  },
+  {
+    "name": "G07 Feed-per-tooth diagnostics handle zero and reverse speed safely",
+    "status": "passed",
+    "detail": {
+      "oneMetrePerSecondTwoTeeth100Radians": 0.031415926535897934
+    }
+  },
+  {
+    "name": "G10 Every authored numeric range rejects nonfinite and outside values",
+    "status": "passed",
+    "detail": {
+      "numericPaths": 47,
+      "assertions": 291,
+      "innerRadiusInterference": true,
+      "integerCounts": true
+    }
+  },
+  {
+    "name": "G09 Synthetic input: keyboard, two pads, mixed pair, edges, remapping and focus loss",
+    "status": "passed",
+    "detail": {
+      "splitKeyboard": true,
+      "twoSyntheticPads": true,
+      "mixedPair": true,
+      "deadzone": true,
+      "edgeTriggered": true,
+      "tank": true,
+      "remapConflict": true,
+      "focusPause": true,
+      "disconnectPause": true,
+      "listenerCleanup": true,
+      "physicalHardware": "unverified"
+    }
+  }
+]

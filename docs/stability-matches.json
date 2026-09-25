@@ -1,0 +1,24 @@
+[
+  {
+    "names": [
+      "Hydra",
+      "Minotaur"
+    ],
+    "winner": 0,
+    "reason": "Count-out",
+    "seconds": 114.4,
+    "weaponHits": 78,
+    "status": "passed"
+  },
+  {
+    "names": [
+      "Hydra",
+      "Gigabyte"
+    ],
+    "winner": 1,
+    "reason": "Structural KO",
+    "seconds": 136.44583333333333,
+    "weaponHits": 84,
+    "status": "passed"
+  }
+]

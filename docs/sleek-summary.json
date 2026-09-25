@@ -1,0 +1,112 @@
+{
+  "status": "passed",
+  "focused_checks": 85,
+  "groups": {
+    "sleek": 7,
+    "review-ui": 33,
+    "review-core": 14,
+    "roster": 8,
+    "gameplay": 11,
+    "system": 7,
+    "visual": 5
+  },
+  "complete_ai_matches": 5,
+  "match_weapon_hits": 38,
+  "templates": 10,
+  "physical_part_moments": 1902,
+  "geometry_max_triangles_per_robot": 28027,
+  "inverted_drive": [
+    {
+      "name": "Minotaur",
+      "rpm": 2061.6930845077836,
+      "travel": 4.915102977272871,
+      "up": -0.9999967667875207
+    },
+    {
+      "name": "HyperShock",
+      "rpm": 1748.6380923762435,
+      "travel": 2.338798401914235,
+      "up": -0.9548718812062895
+    },
+    {
+      "name": "Deep Six",
+      "rpm": 268.32847261211924,
+      "travel": 6.584678265561202,
+      "up": -0.9998894521589003
+    }
+  ],
+  "huge_speed": {
+    "reverse": 2.5118180412192186,
+    "forward": 2.5159155823744035,
+    "differencePercent": 0.16286481088200244
+  },
+  "sawblaze_recovery": {
+    "recoveredSeconds": 0.6416666666666667,
+    "armWorkJ": 102.5018443979644,
+    "maxStep": 0.005415971161280811
+  },
+  "weapon_energy": [
+    {
+      "name": "Tombstone",
+      "mass": 98.23659268915691,
+      "energyKJ": 40.812421425445045,
+      "increasePercent": 5.94594150772052
+    },
+    {
+      "name": "Minotaur",
+      "mass": 110.5628247298954,
+      "energyKJ": 75.65524790973438,
+      "increasePercent": 23.393263520915685
+    },
+    {
+      "name": "Hydra",
+      "mass": 91.80393489523587,
+      "energyKJ": 4.2,
+      "increasePercent": 40.000000000000014
+    },
+    {
+      "name": "ICEwave",
+      "mass": 100.87351782202416,
+      "energyKJ": 43.55601541173407,
+      "increasePercent": 12.519204832191466
+    },
+    {
+      "name": "HyperShock",
+      "mass": 100.33704578332663,
+      "energyKJ": 72.20021478000395,
+      "increasePercent": 27.650828251632543
+    },
+    {
+      "name": "Gigabyte",
+      "mass": 83.73622872586881,
+      "energyKJ": 130.30298750695312,
+      "increasePercent": 10.116543821748403
+    },
+    {
+      "name": "Son of Whyachi",
+      "mass": 98.52493138808398,
+      "energyKJ": 82.81436786458274,
+      "increasePercent": 18.84252519021945
+    },
+    {
+      "name": "HUGE",
+      "mass": 85.92028117409964,
+      "energyKJ": 30.263158918002382,
+      "increasePercent": 57.53709188566884
+    },
+    {
+      "name": "SawBlaze",
+      "mass": 86.49824522056781,
+      "energyKJ": 44.87502056569624,
+      "increasePercent": 26.410324671414266
+    },
+    {
+      "name": "Deep Six",
+      "mass": 111.3993381443961,
+      "energyKJ": 134.08840456853883,
+      "increasePercent": 200.69249250679212
+    }
+  ],
+  "browser_graphics": "unverified: managed preview cannot create WebGL",
+  "new_runtime_dependencies": 0
+}

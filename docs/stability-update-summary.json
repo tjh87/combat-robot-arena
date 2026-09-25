@@ -1,0 +1,75 @@
+{
+  "status": "passed",
+  "date": "2026-09-20T02:18:30.933165+00:00",
+  "automated_groups": 65,
+  "groups": {
+    "stability-update": 5,
+    "blades-update": 7,
+    "review-ui": 43,
+    "wedge-update": 8,
+    "recovery-update": 2
+  },
+  "loaded_flip_cases": [
+    {
+      "offsetM": 0,
+      "opponentPeakM": 1.5582903623580933,
+      "hydraPeakM": 0.2456577569246292,
+      "maxTiltDegrees": 16.84599316615142,
+      "workJ": 1410.2614559440597
+    },
+    {
+      "offsetM": 0.15,
+      "opponentPeakM": 1.720763087272644,
+      "hydraPeakM": 0.39469993114471436,
+      "maxTiltDegrees": 51.4978746498256,
+      "workJ": 1456.3179856488518
+    },
+    {
+      "offsetM": -0.15,
+      "opponentPeakM": 1.542203664779663,
+      "hydraPeakM": 0.2595602571964264,
+      "maxTiltDegrees": 15.348652929663677,
+      "workJ": 1626.6397724941878
+    }
+  ],
+  "manual_recovery_templates": 10,
+  "hydra_self_right_cases": [
+    {
+      "axis": {
+        "x": 1,
+        "y": 0,
+        "z": 0
+      },
+      "maxUp": 0.9999999969300614,
+      "finalUp": 0.9999997778921085
+    },
+    {
+      "axis": {
+        "x": 0,
+        "y": 0,
+        "z": 1
+      },
+      "maxUp": 0.9999999968775091,
+      "finalUp": 0.9999997577629363
+    }
+  ],
+  "empty_flips": 20,
+  "ai_matches": 2,
+  "weapon_hits": 162,
+  "recorded_steel_samples": 8,
+  "audio_sample_bytes": 307035,
+  "audio_source": "https://freesound.org/people/Nox_Sound/sounds/569555/",
+  "audio_license": "CC0",
+  "production_build": "passed",
+  "bundle_audit": "passed",
+  "browser_gpu": "unverified: WebGL context unavailable in managed preview",
+  "audible_playback": "unverified",
+  "dependencies_added": 0,
+  "scope": "Recovery suite filtered to Hydra and marker removal. Earlier full-suite reports are historical, not counted.",
+  "archive": {
+    "valid": true,
+    "files": 24,
+    "bytes": 5442056,
+    "sha256": "af525d8c267c077f759617b28aa0be63e456705e23d5297035e6818b16bd20e4"
+  }
+}

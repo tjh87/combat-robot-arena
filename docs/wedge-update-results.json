@@ -1,0 +1,207 @@
+[
+  {
+    "name": "Low clearance blocks a wedge while higher clearance allows entry and lifting",
+    "status": "passed",
+    "detail": [
+      {
+        "clearanceMm": 3,
+        "insertionMm": -5.743190050125024,
+        "liftMm": 1.1986717581748962
+      },
+      {
+        "clearanceMm": 8,
+        "insertionMm": 118.71109962463366,
+        "liftMm": 26.603609323501587
+      },
+      {
+        "clearanceMm": 30,
+        "insertionMm": 120.52880287170397,
+        "liftMm": 14.65132087469101
+      },
+      {
+        "clearanceMm": 100,
+        "insertionMm": 125.12324810028086,
+        "liftMm": 0.1424849033355713
+      }
+    ]
+  },
+  {
+    "name": "Hydra can enter beneath each opposing robot using actual wedge contacts",
+    "status": "passed",
+    "detail": [
+      {
+        "name": "Tombstone",
+        "supportingContacts": 1953,
+        "chassisInsertionMm": 100.04135131835935,
+        "liftMm": 25.37338435649872,
+        "approach": "front"
+      },
+      {
+        "name": "Minotaur",
+        "supportingContacts": 8115,
+        "chassisInsertionMm": 192.99598693847653,
+        "liftMm": 50.413116812705994,
+        "approach": "front"
+      },
+      {
+        "name": "Hydra",
+        "supportingContacts": 6309,
+        "chassisInsertionMm": 232.7479839324953,
+        "liftMm": 70.60261070728302,
+        "approach": "side of equal-height wedge"
+      },
+      {
+        "name": "ICEwave",
+        "supportingContacts": 29423,
+        "chassisInsertionMm": -68.64480018615725,
+        "liftMm": 3.8236677646636963,
+        "approach": "front"
+      },
+      {
+        "name": "HyperShock",
+        "supportingContacts": 22138,
+        "chassisInsertionMm": -207.86559104919445,
+        "liftMm": 5.622997879981995,
+        "approach": "front"
+      },
+      {
+        "name": "Gigabyte",
+        "supportingContacts": 7241,
+        "chassisInsertionMm": 228.55982780456551,
+        "liftMm": 87.07891404628754,
+        "approach": "front"
+      },
+      {
+        "name": "Son of Whyachi",
+        "supportingContacts": 17784,
+        "chassisInsertionMm": 81.1413002014163,
+        "liftMm": 51.95782333612442,
+        "approach": "front"
+      },
+      {
+        "name": "HUGE",
+        "supportingContacts": 19457,
+        "chassisInsertionMm": -34.952020645141246,
+        "liftMm": 35.64029932022095,
+        "approach": "front"
+      },
+      {
+        "name": "SawBlaze",
+        "supportingContacts": 7550,
+        "chassisInsertionMm": 255.3188037872314,
+        "liftMm": 62.6191645860672,
+        "approach": "front"
+      },
+      {
+        "name": "Deep Six",
+        "supportingContacts": 8755,
+        "chassisInsertionMm": 51.726408004760806,
+        "liftMm": 1.3904720544815063,
+        "approach": "front"
+      }
+    ]
+  },
+  {
+    "name": "Hydra performs twenty flips without a charge limit and still enforces cooldown and damage",
+    "status": "passed",
+    "detail": {
+      "flips": 20,
+      "chargesRemaining": 0,
+      "maxWorkJ": 1366.8353323032413,
+      "energySpentJ": 40386.76094204793
+    }
+  },
+  {
+    "name": "Minotaur drum is recessed and Deep Six has no upper wheels or struts",
+    "status": "passed",
+    "detail": {
+      "drumHubMovedBackMm": 90,
+      "minotaurMassKg": 103.75168523562252,
+      "deepSixMassKg": 105.09680728950278,
+      "deepSixParts": 51
+    }
+  },
+  {
+    "name": "Flight measurements follow the line endpoint and stay within desktop and mobile viewports",
+    "status": "passed",
+    "detail": {
+      "viewports": 2,
+      "distance": "3.46 m",
+      "peakHeight": "1.23 m",
+      "hiddenOffscreen": true
+    }
+  },
+  {
+    "name": "Hit strength and contact material produce distinct, louder impact sounds",
+    "status": "passed",
+    "detail": {
+      "profiles": [
+        {
+          "energy": 40,
+          "strength": 0.08081373200135519,
+          "style": "tap",
+          "gain": 0.14860751389911447,
+          "duration": 0.17980216168100283,
+          "frequency": 130.95931339993223,
+          "cutoff": 8702.034330003387
+        },
+        {
+          "energy": 1000,
+          "strength": 0.5187451707091998,
+          "style": "strike",
+          "gain": 0.5377848454355678,
+          "duration": 0.5038714263248079,
+          "frequency": 109.06274146454001,
+          "cutoff": 9796.862926773
+        },
+        {
+          "energy": 12000,
+          "strength": 1,
+          "style": "crash",
+          "gain": 0.885,
+          "duration": 0.86,
+          "frequency": 85,
+          "cutoff": 11000
+        }
+      ],
+      "surfaces": 3,
+      "delayMs": 41.666666666666664
+    }
+  },
+  {
+    "name": "Impact playback creates bounded waveforms, obeys the voice limit, and releases audio nodes",
+    "status": "passed",
+    "detail": {
+      "waveforms": [
+        {
+          "energy": 40,
+          "rms": 0.015647829111004236,
+          "samples": 1439
+        },
+        {
+          "energy": 1000,
+          "rms": 0.060085809722391074,
+          "samples": 4031
+        },
+        {
+          "energy": 12000,
+          "rms": 0.11340018660360122,
+          "samples": 6880
+        }
+      ],
+      "maxConcurrentImpacts": 12,
+      "releasedNodes": true
+    }
+  },
+  {
+    "name": "ICEwave uses a separate pulsed exhaust loop while electrical spinners and actuators keep their own layers",
+    "status": "passed",
+    "detail": {
+      "exhaustLayers": 2,
+      "idleRate": 0.52,
+      "runningRate": 1.456477102102102,
+      "actuatorSound": true,
+      "mutedOnPause": true
+    }
+  }
+]

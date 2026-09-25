@@ -1,0 +1,81 @@
+{
+  "sources": [
+    "https://freesound.org/people/Nox_Sound/sounds/569555/",
+    "https://freesound.org/people/SamsterBirdies/sounds/587443/"
+  ],
+  "license": "CC0",
+  "files": [
+    {
+      "file": "steel_tap_01.mp3",
+      "durationSeconds": 0.26,
+      "bytes": 6314,
+      "peak": 0.8067,
+      "sourceStartSeconds": 0,
+      "source": "Nox_Sound + SamsterBirdies (CC0)",
+      "processing": "Transient preserved; persistent resonances suppressed; recorded low body; short irregular tail"
+    },
+    {
+      "file": "steel_tap_02.mp3",
+      "durationSeconds": 0.29,
+      "bytes": 7359,
+      "peak": 0.8074,
+      "sourceStartSeconds": 6.08,
+      "source": "Nox_Sound + SamsterBirdies (CC0)",
+      "processing": "Transient preserved; persistent resonances suppressed; recorded low body; short irregular tail"
+    },
+    {
+      "file": "steel_strike_01.mp3",
+      "durationSeconds": 0.43,
+      "bytes": 9971,
+      "peak": 0.8067,
+      "sourceStartSeconds": 30.68,
+      "source": "Nox_Sound + SamsterBirdies (CC0)",
+      "processing": "Transient preserved; persistent resonances suppressed; recorded low body; short irregular tail"
+    },
+    {
+      "file": "steel_strike_02.mp3",
+      "durationSeconds": 0.48,
+      "bytes": 11016,
+      "peak": 0.8094,
+      "sourceStartSeconds": 33.71,
+      "source": "Nox_Sound + SamsterBirdies (CC0)",
+      "processing": "Transient preserved; persistent resonances suppressed; recorded low body; short irregular tail"
+    },
+    {
+      "file": "steel_strike_03.mp3",
+      "durationSeconds": 0.46,
+      "bytes": 10494,
+      "peak": 0.8049,
+      "sourceStartSeconds": 35.89,
+      "source": "Nox_Sound + SamsterBirdies (CC0)",
+      "processing": "Transient preserved; persistent resonances suppressed; recorded low body; short irregular tail"
+    },
+    {
+      "file": "steel_crash_01.mp3",
+      "durationSeconds": 0.68,
+      "bytes": 15196,
+      "peak": 0.8063,
+      "sourceStartSeconds": 20.6,
+      "source": "Nox_Sound + SamsterBirdies (CC0)",
+      "processing": "Transient preserved; persistent resonances suppressed; recorded low body; short irregular tail"
+    },
+    {
+      "file": "steel_crash_02.mp3",
+      "durationSeconds": 0.75,
+      "bytes": 16241,
+      "peak": 0.8089,
+      "sourceStartSeconds": 23.49,
+      "source": "Nox_Sound + SamsterBirdies (CC0)",
+      "processing": "Transient preserved; persistent resonances suppressed; recorded low body; short irregular tail"
+    },
+    {
+      "file": "steel_crash_03.mp3",
+      "durationSeconds": 0.79,
+      "bytes": 17285,
+      "peak": 0.8094,
+      "sourceStartSeconds": 26.71,
+      "source": "Nox_Sound + SamsterBirdies (CC0)",
+      "processing": "Transient preserved; persistent resonances suppressed; recorded low body; short irregular tail"
+    }
+  ]
+}

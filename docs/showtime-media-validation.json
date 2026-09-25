@@ -1,0 +1,89 @@
+{
+  "audio": [
+    {
+      "file": "public/audio/icewave-idling.mp3",
+      "seconds": 5.85,
+      "peak": 0.786579430103302,
+      "decoded": true
+    },
+    {
+      "file": "public/audio/icewave-running.mp3",
+      "seconds": 5.85,
+      "peak": 0.7807415723800659,
+      "decoded": true
+    },
+    {
+      "file": "public/audio/landing_heavy_01.mp3",
+      "seconds": 1.85,
+      "peak": 0.940298318862915,
+      "decoded": true
+    },
+    {
+      "file": "public/audio/landing_heavy_02.mp3",
+      "seconds": 2.4,
+      "peak": 0.9394786953926086,
+      "decoded": true
+    },
+    {
+      "file": "public/audio/landing_light_01.mp3",
+      "seconds": 1.6,
+      "peak": 0.9458889961242676,
+      "decoded": true
+    },
+    {
+      "file": "public/audio/match-start.mp3",
+      "seconds": 3.4829931972789114,
+      "peak": 0.37570443749427795,
+      "decoded": true
+    },
+    {
+      "file": "public/audio/steel_crash_01.mp3",
+      "seconds": 2.65,
+      "peak": 0.7017855048179626,
+      "decoded": true
+    },
+    {
+      "file": "public/audio/steel_crash_02.mp3",
+      "seconds": 2.85,
+      "peak": 0.8911977410316467,
+      "decoded": true
+    },
+    {
+      "file": "public/audio/steel_crash_03.mp3",
+      "seconds": 2.95,
+      "peak": 0.8853137493133545,
+      "decoded": true
+    },
+    {
+      "file": "public/audio/steel_strike_01.mp3",
+      "seconds": 1.45,
+      "peak": 0.7664469480514526,
+      "decoded": true
+    },
+    {
+      "file": "public/audio/steel_strike_02.mp3",
+      "seconds": 1.45,
+      "peak": 0.8769913911819458,
+      "decoded": true
+    },
+    {
+      "file": "public/audio/steel_strike_03.mp3",
+      "seconds": 1.45,
+      "peak": 0.8797064423561096,
+      "decoded": true
+    },
+    {
+      "file": "public/audio/steel_tap_01.mp3",
+      "seconds": 0.95,
+      "peak": 0.8737432360649109,
+      "decoded": true
+    },
+    {
+      "file": "public/audio/steel_tap_02.mp3",
+      "seconds": 1.05,
+      "peak": 0.8859120607376099,
+      "decoded": true
+    }
+  ],
+  "videoFiles": 0
+}

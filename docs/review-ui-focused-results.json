@@ -1,0 +1,11 @@
+[
+  {
+    "name": "Results display matching robot portraits, winner confetti, and reduced-motion support",
+    "status": "passed",
+    "detail": {
+      "portraits": 2,
+      "confetti": 24,
+      "reducedMotion": true
+    }
+  }
+]

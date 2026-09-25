@@ -1,0 +1,71 @@
+[
+  {
+    "name": "Asymmetric armour leaves eight millimetres of clearance on each wheel side",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: right wheel touches armour"
+  },
+  {
+    "name": "An invalid final physics tick pauses without inventing a winner",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ {\n+   damage: [\n+     0,\n+     0\n+   ],\n+   metrics: [\n+     [\n+       0,\n+       0.5,\n+       0.5\n+     ],\n+     [\n+       0,\n+       0.5,\n+       0.5\n+     ]\n+   ],\n+   raw: {\n+     closing: [\n+       0,\n+       0\n+     ],\n+     engage: [\n+       0,\n+       0\n+     ],\n+     forced: [\n+       0,\n+       0\n+     ],\n+     pin: [\n+       0,\n+       0\n+     ],\n+     stable: [\n+       0,\n+       0\n+     ]\n+   },\n+   reason: 'Judges\u2019 decision',\n+   scores: [\n+     [\n+       3,\n+       1,\n+       2\n+     ],\n+     [\n+       2,\n+       2,\n+       1\n+     ]\n+   ],\n+   tick: 43200,\n+   ties: [\n+     'Damage',\n+     'Aggression',\n+     'Control'\n+   ],\n+   winner: 0\n+ }\n- undefined\n"
+  },
+  {
+    "name": "A solver exception becomes a recoverable fault with no result",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Got unwanted exception.\nActual message: \"Injected solver failure\""
+  },
+  {
+    "name": "Damage carry-over cannot bypass build legality",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Missing expected exception."
+  },
+  {
+    "name": "A depleted flipper can use its fitted roll arm",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(sim.requestSelfRight(b))\n"
+  },
+  {
+    "name": "Flipper work appears in powered travel telemetry",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(work>0)\n"
+  },
+  {
+    "name": "Arena contact with a weapon credits the affected robot, not a nonexistent opponent",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== null\n"
+  },
+  {
+    "name": "A failed computer match waits for explicit retry",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n"
+  },
+  {
+    "name": "Blocked gamepad access does not stop keyboard play",
+    "status": "failed",
+    "error": "SecurityError: Blocked"
+  },
+  {
+    "name": "Polling detects a missing assigned controller without a browser disconnect event",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n"
+  },
+  {
+    "name": "Stored duplicate bindings reset to a usable keyboard map",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n13 !== 14\n"
+  },
+  {
+    "name": "Replay restores historical armour thickness without mutating live meshes across fifty transitions",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0.2 !== 1\n"
+  },
+  {
+    "name": "Armour wear follows its exact health fraction below four percent",
+    "status": "failed",
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0.04 !== 0.02\n"
+  },
+  {
+    "name": "Replay camera keeps recorded robot positions inside the frame",
+    "status": "passed"
+  }
+]

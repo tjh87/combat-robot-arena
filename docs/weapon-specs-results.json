@@ -1,0 +1,200 @@
+{
+  "date": "2026-09-23T14:07:44.971Z",
+  "results": [
+    {
+      "name": "All 11 references produce legal heavyweights, exact rotor masses and honest source labels",
+      "status": "passed",
+      "detail": [
+        {
+          "name": "Tombstone",
+          "weaponKg": 31.751465900000003,
+          "rpm": 2541,
+          "massBasis": "published",
+          "speedBasis": "derived"
+        },
+        {
+          "name": "Minotaur",
+          "weaponKg": 22.6796185,
+          "rpm": 6885,
+          "massBasis": "published",
+          "speedBasis": "published"
+        },
+        {
+          "name": "Hydra",
+          "weaponKg": 3.4194599999999995,
+          "rpm": null,
+          "massBasis": "geometry",
+          "speedBasis": "not applicable"
+        },
+        {
+          "name": "ICEwave",
+          "weaponKg": 24.493987979999993,
+          "rpm": 1524,
+          "massBasis": "published",
+          "speedBasis": "derived"
+        },
+        {
+          "name": "HyperShock",
+          "weaponKg": 20.411656649999994,
+          "rpm": 6800,
+          "massBasis": "published",
+          "speedBasis": "estimate"
+        },
+        {
+          "name": "Gigabyte",
+          "weaponKg": 54.43108439999994,
+          "rpm": 1689,
+          "massBasis": "estimate",
+          "speedBasis": "estimate"
+        },
+        {
+          "name": "Son of Whyachi",
+          "weaponKg": 54.43108439999998,
+          "rpm": 1295,
+          "massBasis": "estimate",
+          "speedBasis": "derived"
+        },
+        {
+          "name": "HUGE",
+          "weaponKg": 13.607771099999999,
+          "rpm": 2180,
+          "massBasis": "published",
+          "speedBasis": "derived"
+        },
+        {
+          "name": "SawBlaze",
+          "weaponKg": 13.607771100000006,
+          "rpm": 5252,
+          "massBasis": "estimate",
+          "speedBasis": "derived"
+        },
+        {
+          "name": "Deep Six",
+          "weaponKg": 36.2873896,
+          "rpm": 1860,
+          "massBasis": "published",
+          "speedBasis": "estimate"
+        },
+        {
+          "name": "Quantum",
+          "weaponKg": 24.76607419581875,
+          "rpm": null,
+          "massBasis": "geometry",
+          "speedBasis": "not applicable"
+        }
+      ]
+    },
+    {
+      "name": "Changing rotor mass changes inertia, spin-up and solver mass; legacy imports stay valid",
+      "status": "passed",
+      "detail": {
+        "fullInertia": 0.19321683341620371,
+        "halfInertia": 0.09660841670810186,
+        "fullSpinup": 2.7041666666666666,
+        "halfSpinup": 1.3541666666666667
+      }
+    },
+    {
+      "name": "Authored centers and moments match Rapier for every part including triangular scoops",
+      "status": "passed",
+      "detail": {
+        "moments": 2793,
+        "maxError": 0.000008049194177732477
+      }
+    },
+    {
+      "name": "HUGE poles lie horizontally at both wheel centers with physical matching endpoints",
+      "status": "passed",
+      "detail": [
+        {
+          "a": {
+            "x": -0.44700000000000006,
+            "y": -7.993605777301126e-17,
+            "z": 0
+          },
+          "b": {
+            "x": -0.8069999999999999,
+            "y": 7.993605777301126e-17,
+            "z": 0
+          }
+        },
+        {
+          "a": {
+            "x": 0.44700000000000006,
+            "y": -7.993605777301126e-17,
+            "z": 0
+          },
+          "b": {
+            "x": 0.8069999999999999,
+            "y": 7.993605777301126e-17,
+            "z": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "SawBlaze hammer motion has zero disc RPM and retains hammer damage with the disc stopped",
+      "status": "passed",
+      "detail": {
+        "hammerSpeed": 1.1247154712677,
+        "discWork": 0,
+        "hammerDamageScale": 1,
+        "independentDiscRadPerSecond": 100
+      }
+    },
+    {
+      "name": "Quantum closes quickly in free air, uses 4WD, and releases with zero phantom pressure",
+      "status": "passed",
+      "detail": {
+        "closeSeconds": 0.26666666666666666,
+        "maxPressure": 0,
+        "peakPower": 1066.4313068217898,
+        "maxWork": 9.642886837525065
+      }
+    },
+    {
+      "name": "A struck Quantum jaw cannot brake with torque beyond its actuator rating",
+      "status": "passed",
+      "detail": [
+        {
+          "jawRadPerSecond": -100,
+          "brakingTorqueNm": 2025
+        },
+        {
+          "jawRadPerSecond": 100,
+          "brakingTorqueNm": -4500
+        }
+      ]
+    },
+    {
+      "name": "Quantum front and rear contact pressure follows 35000 and 50000 lbf with bounded pump work",
+      "status": "passed",
+      "detail": [
+        {
+          "kind": "front",
+          "forceLbf": 35139.68189878153,
+          "pressureTicks": 666,
+          "pumpWatts": 2188.3272960575337,
+          "workJ": 5451.644965826967
+        },
+        {
+          "kind": "rear",
+          "forceLbf": 50000,
+          "pressureTicks": 700,
+          "pumpWatts": 3119.731512764293,
+          "workJ": 7918.6347830272625
+        }
+      ]
+    },
+    {
+      "name": "Quantum auto release retreats two full robot lengths then re-engages without another bite",
+      "status": "passed",
+      "detail": {
+        "targetM": 1.9920000000000004,
+        "actualM": 1.9780057668685913,
+        "releaseFrames": 244,
+        "nextState": "approach"
+      }
+    }
+  ]
+}

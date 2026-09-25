@@ -1,0 +1,91 @@
+{
+  "date": "2026-09-19T11:05:42.442898+00:00",
+  "passed": 89,
+  "failed": 0,
+  "groupsByFile": {
+    "test-results.json": 22,
+    "extended-results.json": 8,
+    "system-results.json": 7,
+    "review-core-results.json": 14,
+    "review-ui-results.json": 25,
+    "visual-results.json": 5,
+    "roster-results.json": 8
+  },
+  "presets": 10,
+  "activeWeaponMechanisms": 8,
+  "collisionCases": 448,
+  "completedSeededAIMatches": 20,
+  "tournamentMatches": 7,
+  "build": "passed",
+  "bundleAudit": "passed",
+  "browserRendering": "unverified: approved cloud preview reports GL_RENDERER Disabled",
+  "physicalGamepads": "unverified",
+  "roster": [
+    {
+      "name": "Crosscut",
+      "reference": "Tombstone",
+      "mass": 91.17219315698716,
+      "parts": 42
+    },
+    {
+      "name": "Upturn",
+      "reference": "Minotaur",
+      "mass": 109.27220724828574,
+      "parts": 53
+    },
+    {
+      "name": "Springboard",
+      "reference": "Hydra",
+      "mass": 91.80393489523587,
+      "parts": 41
+    },
+    {
+      "name": "Whiteout",
+      "reference": "ICEwave",
+      "mass": 92.79870092553581,
+      "parts": 38
+    },
+    {
+      "name": "Aftershock",
+      "reference": "HyperShock",
+      "mass": 97.51021807457293,
+      "parts": 213
+    },
+    {
+      "name": "Prism",
+      "reference": "Gigabyte",
+      "mass": 79.0322356782222,
+      "parts": 80
+    },
+    {
+      "name": "Triad",
+      "reference": "Son of Whyachi",
+      "mass": 90.987680294334,
+      "parts": 45
+    },
+    {
+      "name": "Colossus",
+      "reference": "HUGE",
+      "mass": 76.57679232836979,
+      "parts": 119
+    },
+    {
+      "name": "Firebreak",
+      "reference": "SawBlaze",
+      "mass": 86.96961318931784,
+      "parts": 66
+    },
+    {
+      "name": "Undertow",
+      "reference": "Deep Six",
+      "mass": 70.74906934918324,
+      "parts": 49
+    }
+  ],
+  "publication": {
+    "status": "succeeded",
+    "version": 3,
+    "source": "bdf8a41e1a5f0047d8a0cfbb158d1d4bccea4ede",
+    "url": "https://combat-robot-arena.aeonlegacy471949.chatgpt.site"
+  }
+}

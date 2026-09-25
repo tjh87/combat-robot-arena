@@ -1,0 +1,248 @@
+[
+  {
+    "name": "All eleven weapons keep reduced output after mid-match damage and loss of drive power",
+    "status": "passed",
+    "detail": [
+      {
+        "name": "Tombstone",
+        "peakRPM": 1664,
+        "lateRPM": 640,
+        "armTravel": 0,
+        "weaponFunctional": true
+      },
+      {
+        "name": "Minotaur",
+        "peakRPM": 3929,
+        "lateRPM": 756,
+        "armTravel": 0,
+        "weaponFunctional": true
+      },
+      {
+        "name": "Hydra",
+        "peakRPM": 1005,
+        "lateRPM": 0,
+        "armTravel": 1.472742940381624,
+        "weaponFunctional": true
+      },
+      {
+        "name": "ICEwave",
+        "peakRPM": 1231,
+        "lateRPM": 324,
+        "armTravel": 0,
+        "weaponFunctional": true
+      },
+      {
+        "name": "HyperShock",
+        "peakRPM": 4440,
+        "lateRPM": 1345,
+        "armTravel": 0,
+        "weaponFunctional": true
+      },
+      {
+        "name": "Gigabyte",
+        "peakRPM": 1299,
+        "lateRPM": 173,
+        "armTravel": 0,
+        "weaponFunctional": true
+      },
+      {
+        "name": "Son of Whyachi",
+        "peakRPM": 1253,
+        "lateRPM": 229,
+        "armTravel": 0,
+        "weaponFunctional": true
+      },
+      {
+        "name": "HUGE",
+        "peakRPM": 1524,
+        "lateRPM": 455,
+        "armTravel": 0,
+        "weaponFunctional": true
+      },
+      {
+        "name": "SawBlaze",
+        "peakRPM": 3452,
+        "lateRPM": 2180,
+        "armTravel": 1.1216013757058014,
+        "weaponFunctional": true
+      },
+      {
+        "name": "Deep Six",
+        "peakRPM": 1240,
+        "lateRPM": 208,
+        "armTravel": 0,
+        "weaponFunctional": true
+      },
+      {
+        "name": "Quantum",
+        "peakRPM": 87,
+        "lateRPM": 16,
+        "armTravel": 0.4800076129192784,
+        "weaponFunctional": true
+      }
+    ]
+  },
+  {
+    "name": "All five vertical rotors transmit gyroscopic precession through their joints",
+    "status": "passed",
+    "detail": [
+      {
+        "name": "Minotaur",
+        "spin": 1,
+        "roll": 0.04721516585584941,
+        "torque": 44.601758341471715,
+        "up": {
+          "x": -0.04610388950623168,
+          "y": 0.9988847423303588,
+          "z": -0.010183479719258481
+        },
+        "unspunRoll": 0.0010000697657385192
+      },
+      {
+        "name": "HyperShock",
+        "spin": 1,
+        "roll": 0.047015867017171385,
+        "torque": 13.98927558559572,
+        "up": {
+          "x": -0.045793726921623756,
+          "y": 0.9988941428022863,
+          "z": -0.010650179623090672
+        },
+        "unspunRoll": 0.006991203220679055
+      },
+      {
+        "name": "HUGE",
+        "spin": 1,
+        "roll": 0.04273629779127291,
+        "torque": 212.9151305831636,
+        "up": {
+          "x": -0.016903393886769424,
+          "y": 0.9990863871960209,
+          "z": -0.03925132385045227
+        },
+        "unspunRoll": 0.004482771783825627
+      },
+      {
+        "name": "SawBlaze",
+        "spin": 1,
+        "roll": 0.03560843298620409,
+        "torque": 35.15307017589202,
+        "up": {
+          "x": 0.015160501297365403,
+          "y": 0.9993658186696669,
+          "z": -0.03221986499266516
+        },
+        "unspunRoll": 0.04415872212850397
+      },
+      {
+        "name": "Deep Six",
+        "spin": 1,
+        "roll": 0.055930537327759065,
+        "torque": 7883.592447782498,
+        "up": {
+          "x": -0.051249886664531896,
+          "y": 0.9984346624574254,
+          "z": 0.022398083012715286
+        },
+        "unspunRoll": 0.01276006694645043
+      }
+    ]
+  },
+  {
+    "name": "Eleven weapon timbres produce distinct bounded waveforms",
+    "status": "passed",
+    "detail": [
+      {
+        "name": "Tombstone",
+        "timbre": "Heavy bar · twin chop",
+        "peak": 0.6240907311439514,
+        "rms": 0.19443241717340945
+      },
+      {
+        "name": "Minotaur",
+        "timbre": "Drum · dense rasp",
+        "peak": 0.6382879614830017,
+        "rms": 0.24996156697185515
+      },
+      {
+        "name": "Hydra",
+        "timbre": "Hydraulics · pressure release",
+        "peak": 0.6515272259712219,
+        "rms": 0.36107921420415506
+      },
+      {
+        "name": "ICEwave",
+        "timbre": "Two-stroke · combustion pulses",
+        "peak": 0.6329519152641296,
+        "rms": 0.1922207689910216
+      },
+      {
+        "name": "HyperShock",
+        "timbre": "Twin discs · electric whine",
+        "peak": 0.6290704011917114,
+        "rms": 0.3012653804402148
+      },
+      {
+        "name": "Gigabyte",
+        "timbre": "Shell · hollow turbine",
+        "peak": 0.6855544447898865,
+        "rms": 0.2913281431342613
+      },
+      {
+        "name": "Son of Whyachi",
+        "timbre": "Three hammers · triple beat",
+        "peak": 0.6269187331199646,
+        "rms": 0.16731119276183817
+      },
+      {
+        "name": "HUGE",
+        "timbre": "Wide bar · slow blade sweep",
+        "peak": 0.6399262547492981,
+        "rms": 0.20094452333304388
+      },
+      {
+        "name": "SawBlaze",
+        "timbre": "Hammer saw · chain rasp",
+        "peak": 0.6495376825332642,
+        "rms": 0.2406692951605684
+      },
+      {
+        "name": "Deep Six",
+        "timbre": "Heavy vertical · flywheel roar",
+        "peak": 0.6700888276100159,
+        "rms": 0.18033247366591812
+      },
+      {
+        "name": "Quantum",
+        "timbre": "Crusher · loaded hydraulic pump",
+        "peak": 0.6334834694862366,
+        "rms": 0.28954951189351436
+      }
+    ]
+  },
+  {
+    "name": "Spark shaders clip corners and stronger impacts create more molten trails",
+    "status": "passed",
+    "detail": {
+      "small": {
+        "count": 26,
+        "speed": 2.0203609595401018,
+        "life": 0.2690517968008453
+      },
+      "big": {
+        "count": 260,
+        "speed": 10,
+        "life": 0.9
+      },
+      "squareCornersDiscarded": true
+    }
+  },
+  {
+    "name": "Start signals match three amber flashes followed by green",
+    "status": "passed",
+    "detail": {
+      "amberFlashes": 3,
+      "greenSeconds": 3.15
+    }
+  }
+]

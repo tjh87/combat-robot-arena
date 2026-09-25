@@ -1,0 +1,205 @@
+{
+  "date": "2026-09-23T15:19:30.127Z",
+  "results": [
+    {
+      "name": "Landing energy scales with mass and speed squared without adding gravity twice",
+      "status": "passed",
+      "detail": {
+        "twoMetreJ": 1962.0000000000005,
+        "doubleMassJ": 3924.000000000001,
+        "doubleSpeedJ": 7848.000000000002,
+        "cushionJ": 117.72
+      }
+    },
+    {
+      "name": "Real drops use one whole-robot budget and higher falls cause more damage",
+      "status": "passed",
+      "detail": [
+        {
+          "height": 0.06,
+          "fallEvents": 0,
+          "hpLost": 0
+        },
+        {
+          "height": 0.5,
+          "fallEvents": 1,
+          "hpLost": 5.977546212175014,
+          "mass": 113.20000457763672,
+          "measuredDrop": 0.5176176336633258,
+          "impactSpeed": 3.1843134924428482,
+          "energy": 573.9156700757724,
+          "budget": 573.9156700757724
+        },
+        {
+          "height": 1,
+          "fallEvents": 1,
+          "hpLost": 14.030294187222808,
+          "mass": 113.20000457763672,
+          "measuredDrop": 1.0096523779616233,
+          "impactSpeed": 4.439183848423982,
+          "energy": 1115.3796384943957,
+          "budget": 1115.3796384943957
+        },
+        {
+          "height": 2,
+          "fallEvents": 1,
+          "hpLost": 28.24129055242537,
+          "mass": 113.20000457763672,
+          "measuredDrop": 2.012556528608462,
+          "impactSpeed": 6.256580288445856,
+          "energy": 2215.595594461868,
+          "budget": 2215.595594461868
+        }
+      ]
+    },
+    {
+      "name": "Downward launch speed raises landing damage but lateral speed does not become fall energy",
+      "status": "passed",
+      "detail": [
+        {
+          "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "energy": 1115.382390976927,
+          "gravity": 1115.382390976927,
+          "hp": 14.030333508402009
+        },
+        {
+          "velocity": {
+            "x": 0,
+            "y": -5,
+            "z": 0
+          },
+          "energy": 2540.9897274959017,
+          "gravity": 1137.0810409985472,
+          "hp": 32.19341485337111
+        },
+        {
+          "velocity": {
+            "x": 3,
+            "y": 0,
+            "z": 0
+          },
+          "energy": 1115.3871577853754,
+          "gravity": 1115.3871577853754,
+          "hp": 14.030401605665304
+        }
+      ]
+    },
+    {
+      "name": "A heavier version of the same robot receives more landing energy and damage",
+      "status": "passed",
+      "detail": [
+        {
+          "mass": 106.76460266113281,
+          "energy": 1052.379736720834,
+          "hp": 13.238520663830684
+        },
+        {
+          "mass": 113.20000457763672,
+          "energy": 1115.3796384943957,
+          "hp": 14.030294187222808
+        }
+      ]
+    },
+    {
+      "name": "A shelf landing uses the shelf height and produces one event",
+      "status": "passed",
+      "detail": {
+        "surfaceHeight": 0.3129117786884308,
+        "dropHeight": 1.264311620616788,
+        "energy": 1394.023786980303,
+        "hp": 16.861409818148672
+      }
+    },
+    {
+      "name": "All eleven resting robots avoid repeated fall damage",
+      "status": "passed",
+      "detail": [
+        {
+          "bot": "Tombstone",
+          "damage": 0
+        },
+        {
+          "bot": "Minotaur",
+          "damage": 0
+        },
+        {
+          "bot": "Hydra",
+          "damage": 0
+        },
+        {
+          "bot": "ICEwave",
+          "damage": 0
+        },
+        {
+          "bot": "HyperShock",
+          "damage": 0
+        },
+        {
+          "bot": "Gigabyte",
+          "damage": 0
+        },
+        {
+          "bot": "Son of Whyachi",
+          "damage": 0
+        },
+        {
+          "bot": "HUGE",
+          "damage": 0
+        },
+        {
+          "bot": "SawBlaze",
+          "damage": 0
+        },
+        {
+          "bot": "Deep Six",
+          "damage": 0
+        },
+        {
+          "bot": "Quantum",
+          "damage": 0
+        }
+      ]
+    },
+    {
+      "name": "HUGE stays level and controls turn speed with its blade running",
+      "status": "passed",
+      "detail": {
+        "friction": 2.1,
+        "maxTiltDegrees": 2.5778545663709576,
+        "maxYawRadPerSecond": 2.6380114555358887,
+        "forwardMps": 2.602307960102506,
+        "reverseMps": 2.6111571631224266,
+        "finalYaw": 0.00013508596748579293
+      }
+    },
+    {
+      "name": "HUGE returns from both supported sides without persistent spinning",
+      "status": "passed",
+      "detail": [
+        {
+          "side": -1,
+          "recoveredSeconds": 0.7166666666666667,
+          "maxYawRadPerSecond": 6.543295383453369,
+          "sideSpinSeconds": 0.21250000000000024
+        },
+        {
+          "side": 1,
+          "recoveredSeconds": 0.7166666666666667,
+          "maxYawRadPerSecond": 6.736544609069824,
+          "sideSpinSeconds": 0.241666666666667
+        }
+      ]
+    },
+    {
+      "name": "HUGE support correction adds no torque in free flight",
+      "status": "passed",
+      "detail": {
+        "unsupportedCorrectionTorque": 0
+      }
+    }
+  ]
+}

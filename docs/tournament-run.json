@@ -1,0 +1,77 @@
+{
+  "matches": 7,
+  "champion": "Hydra",
+  "rounds": 3,
+  "results": [
+    {
+      "round": 0,
+      "player": true,
+      "winner": 0,
+      "reason": "Count-out",
+      "carriedChassis": 1800
+    },
+    {
+      "round": 0,
+      "match": 0,
+      "a": "Hydra",
+      "b": "Minotaur",
+      "winner": "Hydra",
+      "reason": "Count-out"
+    },
+    {
+      "round": 0,
+      "match": 1,
+      "a": "Hydra",
+      "b": "Deep Six",
+      "winner": "Hydra",
+      "reason": "Count-out"
+    },
+    {
+      "round": 0,
+      "match": 2,
+      "a": "ICEwave",
+      "b": "HUGE",
+      "winner": "HUGE",
+      "reason": "Count-out"
+    },
+    {
+      "round": 0,
+      "match": 3,
+      "a": "Tombstone",
+      "b": "ICEwave 2",
+      "winner": "Tombstone",
+      "reason": "Count-out"
+    },
+    {
+      "round": 1,
+      "player": true,
+      "winner": 1,
+      "reason": "Count-out",
+      "carriedChassis": 1800
+    },
+    {
+      "round": 1,
+      "match": 0,
+      "a": "Hydra",
+      "b": "Hydra",
+      "winner": "Hydra",
+      "reason": "Count-out"
+    },
+    {
+      "round": 1,
+      "match": 1,
+      "a": "HUGE",
+      "b": "Tombstone",
+      "winner": "HUGE",
+      "reason": "Count-out"
+    },
+    {
+      "round": 2,
+      "match": 0,
+      "a": "Hydra",
+      "b": "HUGE",
+      "winner": "Hydra",
+      "reason": "Count-out"
+    }
+  ]
+}

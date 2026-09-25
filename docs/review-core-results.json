@@ -1,0 +1,129 @@
+[
+  {
+    "name": "Asymmetric armour leaves eight millimetres of clearance on each wheel side",
+    "status": "passed",
+    "detail": [
+      {
+        "side": "left",
+        "gap": 0.008000000000000007
+      },
+      {
+        "side": "right",
+        "gap": 0.008000000000000028
+      }
+    ]
+  },
+  {
+    "name": "An invalid final physics tick pauses without inventing a winner",
+    "status": "passed",
+    "detail": {
+      "fault": "A robot has an invalid physics state. Restart this match.",
+      "tick": 43200
+    }
+  },
+  {
+    "name": "A solver exception becomes a recoverable fault with no result",
+    "status": "passed",
+    "detail": {
+      "fault": "Injected solver failure Restart this match."
+    }
+  },
+  {
+    "name": "Damage carry-over cannot bypass build legality",
+    "status": "passed"
+  },
+  {
+    "name": "A flipper with an unavailable actuator can use its fitted roll arm",
+    "status": "passed",
+    "detail": {
+      "charges": 8,
+      "rollStart": 0
+    }
+  },
+  {
+    "name": "Flipper work appears in powered travel telemetry",
+    "status": "passed",
+    "detail": {
+      "poweredWork": 1469.9151405237671,
+      "flipperWork": 1284.7678555062967
+    }
+  },
+  {
+    "name": "Arena contact with a weapon credits the affected robot, not a nonexistent opponent",
+    "status": "passed",
+    "detail": {
+      "id": 1,
+      "tick": 1,
+      "episode": "arena:b0/weapon/bar@1",
+      "source": "Arena contact",
+      "attacker": null,
+      "target": 0,
+      "module": "weapon",
+      "energy": 500,
+      "impulse": 100,
+      "closing": 10,
+      "point": {
+        "x": 1,
+        "y": 1,
+        "z": 0
+      },
+      "rotorBefore": [
+        0,
+        0
+      ],
+      "rotorAfter": [
+        3.832913730884588e-28,
+        1.642495895820828e-17
+      ],
+      "allocations": [
+        {
+          "bot": 0,
+          "module": "weapon",
+          "energy": 500,
+          "hp": 4
+        }
+      ],
+      "cause": "landing / arena",
+      "sparkDirection": {
+        "x": 1,
+        "y": 0,
+        "z": 0
+      }
+    }
+  },
+  {
+    "name": "A failed computer match waits for explicit retry",
+    "status": "passed",
+    "detail": {
+      "automaticRestarts": 0
+    }
+  },
+  {
+    "name": "Blocked gamepad access does not stop keyboard play",
+    "status": "passed"
+  },
+  {
+    "name": "Polling detects a missing assigned controller without a browser disconnect event",
+    "status": "passed"
+  },
+  {
+    "name": "Stored duplicate bindings reset to a usable keyboard map",
+    "status": "passed"
+  },
+  {
+    "name": "Replay restores historical armour thickness without mutating live meshes across fifty transitions",
+    "status": "passed",
+    "detail": {
+      "transitions": 50,
+      "liveGeometryDisposedDuringReplay": 0
+    }
+  },
+  {
+    "name": "Armour wear follows its exact health fraction below four percent",
+    "status": "passed"
+  },
+  {
+    "name": "Replay camera keeps recorded robot positions inside the frame",
+    "status": "passed"
+  }
+]

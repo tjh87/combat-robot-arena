@@ -1,0 +1,255 @@
+[
+  {
+    "name": "All eleven templates meet the limits and survive build-link round trips",
+    "status": "passed",
+    "detail": [
+      {
+        "name": "Tombstone",
+        "reference": "Tombstone",
+        "mass": 113.20000000000003,
+        "parts": 44
+      },
+      {
+        "name": "Minotaur",
+        "reference": "Minotaur",
+        "mass": 113.20000000000003,
+        "parts": 64
+      },
+      {
+        "name": "Hydra",
+        "reference": "Hydra",
+        "mass": 113.20000000000002,
+        "parts": 45
+      },
+      {
+        "name": "ICEwave",
+        "reference": "ICEwave",
+        "mass": 113.19999999999999,
+        "parts": 40
+      },
+      {
+        "name": "HyperShock",
+        "reference": "HyperShock",
+        "mass": 113.20000000000006,
+        "parts": 253
+      },
+      {
+        "name": "Gigabyte",
+        "reference": "Gigabyte",
+        "mass": 113.19999999999995,
+        "parts": 89
+      },
+      {
+        "name": "Son of Whyachi",
+        "reference": "Son of Whyachi",
+        "mass": 113.19999999999999,
+        "parts": 47
+      },
+      {
+        "name": "HUGE",
+        "reference": "HUGE",
+        "mass": 113.19999999999996,
+        "parts": 127
+      },
+      {
+        "name": "SawBlaze",
+        "reference": "SawBlaze",
+        "mass": 113.20000000000002,
+        "parts": 94
+      },
+      {
+        "name": "Deep Six",
+        "reference": "Deep Six",
+        "mass": 113.19999999999997,
+        "parts": 57
+      },
+      {
+        "name": "Quantum",
+        "reference": "Quantum",
+        "mass": 113.20000000000003,
+        "parts": 71
+      }
+    ]
+  },
+  {
+    "name": "Every new convex part has mass moments consistent with Rapier",
+    "status": "passed",
+    "detail": {
+      "moments": 2334,
+      "maxAbsoluteError": 0.000008049194177732477
+    }
+  },
+  {
+    "name": "Every template can drive and each spinner gains rotor speed with the correct axis",
+    "status": "passed",
+    "detail": [
+      {
+        "name": "Tombstone",
+        "rpm": 1534.1619377336215,
+        "freeRPM": 1157.6135609912358,
+        "travel": 2.606268857068714
+      },
+      {
+        "name": "Minotaur",
+        "rpm": 1632.4590486601924,
+        "freeRPM": 1249.8544972338043,
+        "travel": 2.3831493181491377
+      },
+      {
+        "name": "Hydra",
+        "rpm": 0.5100871915659102,
+        "freeRPM": 0.005762577716474785,
+        "travel": 2.888877317139833
+      },
+      {
+        "name": "ICEwave",
+        "rpm": 1064.0758946118783,
+        "freeRPM": 800.9128543195155,
+        "travel": 2.545691798739729
+      },
+      {
+        "name": "HyperShock",
+        "rpm": 3101.3120109714605,
+        "freeRPM": 2436.7815234642926,
+        "travel": 3.3715846366501974
+      },
+      {
+        "name": "Gigabyte",
+        "rpm": 409.1122776230446,
+        "freeRPM": 307.16041097905077,
+        "travel": 1.4765425604802527
+      },
+      {
+        "name": "Son of Whyachi",
+        "rpm": 505.27804493099774,
+        "freeRPM": 378.99408748663456,
+        "travel": 2.3613486260240837
+      },
+      {
+        "name": "HUGE",
+        "rpm": 1577.0103064340644,
+        "freeRPM": 1192.9615394131122,
+        "travel": 1.5185142492658368
+      },
+      {
+        "name": "SawBlaze",
+        "rpm": 5226.604975342399,
+        "freeRPM": 5214.944066394061,
+        "travel": 2.420168516450526
+      },
+      {
+        "name": "Deep Six",
+        "rpm": 795.6358519996845,
+        "freeRPM": 597.8757455665998,
+        "travel": 1.5768699266054582
+      },
+      {
+        "name": "Quantum",
+        "rpm": 0.08794328452031626,
+        "freeRPM": 0.06583997312791727,
+        "travel": 3.600438624928349
+      }
+    ]
+  },
+  {
+    "name": "Hammer-saw swings twice, returns, conserves its hinge anchors, and respects its work budget",
+    "status": "passed",
+    "detail": {
+      "strokes": 2,
+      "minimumAngle": -1.1202141853895984,
+      "returnAngle": 0.0005636389803991993,
+      "maximumWork": 67.79387303338483,
+      "anchorError": 8.221234636453106e-7
+    }
+  },
+  {
+    "name": "New templates retain their distinct physical features and reject overlapping custom rotors",
+    "status": "passed",
+    "detail": {
+      "splitChassis": true,
+      "hollowWheels": true,
+      "spinningShell": true,
+      "threeArmCage": true,
+      "largeVertical": true
+    }
+  },
+  {
+    "name": "All eleven POV mounts follow actual body pose and face forward in live and replay views",
+    "status": "passed",
+    "detail": {
+      "templates": 11
+    }
+  },
+  {
+    "name": "Tournament entrants can draw from the full roster without illegal builds",
+    "status": "passed",
+    "detail": {
+      "seeds": 8,
+      "templates": 11
+    }
+  },
+  {
+    "name": "All templates create finite, bounded builder geometry and complete cleanup",
+    "status": "passed",
+    "detail": {
+      "counts": [
+        {
+          "name": "Tombstone",
+          "triangles": 15759,
+          "meshes": 52
+        },
+        {
+          "name": "Minotaur",
+          "triangles": 19967,
+          "meshes": 75
+        },
+        {
+          "name": "Hydra",
+          "triangles": 17543,
+          "meshes": 56
+        },
+        {
+          "name": "ICEwave",
+          "triangles": 20307,
+          "meshes": 53
+        },
+        {
+          "name": "HyperShock",
+          "triangles": 44039,
+          "meshes": 117
+        },
+        {
+          "name": "Gigabyte",
+          "triangles": 24235,
+          "meshes": 118
+        },
+        {
+          "name": "Son of Whyachi",
+          "triangles": 21427,
+          "meshes": 58
+        },
+        {
+          "name": "HUGE",
+          "triangles": 29045,
+          "meshes": 69
+        },
+        {
+          "name": "SawBlaze",
+          "triangles": 32683,
+          "meshes": 102
+        },
+        {
+          "name": "Deep Six",
+          "triangles": 21309,
+          "meshes": 68
+        },
+        {
+          "name": "Quantum",
+          "triangles": 57179,
+          "meshes": 65
+        }
+      ],
+      "actualWebGL": "unverified: cloud renderer is disabled"
+    }
+  }
+]

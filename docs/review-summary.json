@@ -1,0 +1,50 @@
+{
+  "reviewedAt": "2026-09-19T09:48:45.852057+00:00",
+  "checks": [
+    {
+      "file": "test-results.json",
+      "passed": 22,
+      "failed": 0
+    },
+    {
+      "file": "extended-results.json",
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "file": "system-results.json",
+      "passed": 7,
+      "failed": 0
+    },
+    {
+      "file": "review-core-results.json",
+      "passed": 14,
+      "failed": 0
+    },
+    {
+      "file": "review-ui-results.json",
+      "passed": 19,
+      "failed": 0
+    }
+  ],
+  "totalPassed": 70,
+  "totalFailed": 0,
+  "newReviewGroups": 33,
+  "reproducedFailingScenarios": 28,
+  "collisionCasesPassed": 448,
+  "aiMatchesCompleted": 20,
+  "tournamentMatchesCompleted": 7,
+  "productionDependencyAudit": {
+    "command": "npm audit --omit=dev --json",
+    "reportedVulnerabilities": 0
+  },
+  "browserVerification": "unverified: supported browser blocked managed preview",
+  "offlineDomScope": "Real app and Rapier; jsdom DOM with WebGL and device test doubles. No website was fetched.",
+  "hardwareVerification": "unverified: no representative GPU or physical controllers",
+  "deployment": {
+    "status": "succeeded",
+    "url": "https://combat-robot-arena.aeonlegacy471949.chatgpt.site",
+    "versionId": "appgprj_6aae3d316f848191b90f6f15b5c02b76~appgver_17a109ac11d48191adfd19f71c564aca",
+    "sourceCommit": "b3499ca611fdca92fab93faec5e0d1976a513a2b"
+  }
+}

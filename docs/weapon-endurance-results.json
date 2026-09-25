@@ -1,0 +1,43 @@
+[
+  {
+    "status": "passed",
+    "name": "Three-minute no-hit endurance: Minotaur / SawBlaze",
+    "bots": [
+      {
+        "name": "Minotaur",
+        "seconds": 180,
+        "batteryPercent": 23.692458306180505,
+        "rpm": 5934.279412292045
+      },
+      {
+        "name": "SawBlaze",
+        "seconds": 180,
+        "batteryPercent": 36.92745331893939,
+        "rpm": 5175.0334982896775
+      }
+    ]
+  },
+  {
+    "status": "passed",
+    "name": "Three-minute no-hit endurance: HyperShock / Quantum",
+    "bots": [
+      {
+        "name": "HyperShock",
+        "seconds": 180,
+        "batteryPercent": 37.01980934597224,
+        "rpm": 4757.626935815174
+      },
+      {
+        "name": "Quantum",
+        "seconds": 180,
+        "batteryPercent": 99.61701602650841,
+        "rpm": 0.025247279306831367
+      }
+    ]
+  },
+  {
+    "status": "passed",
+    "name": "Tournament packs retain template capacity",
+    "checked": 64
+  }
+]

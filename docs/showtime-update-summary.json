@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "date": "2026-09-20T04:40:16.517003+00:00",
+  "automated_groups": 62,
+  "groups": {
+    "review-ui": 49,
+    "blades-update": 7,
+    "showtime-update": 5,
+    "core-protected-drive-and-weapon": 1
+  },
+  "protected_weapon_templates": 11,
+  "gyro_vertical_templates": 5,
+  "weapon_sound_profiles": 11,
+  "recorded_audio_clips": 14,
+  "video_files": 0,
+  "confetti_particles": 96,
+  "spark_pool": 720,
+  "max_sparks_per_hit": 260,
+  "production_build": "passed",
+  "bundle_audit": "passed",
+  "built_files": 30,
+  "browser_layout": "passed: exact result and countdown markup inspected in a temporary preview fixture",
+  "browser_gpu": "unverified: Error creating WebGL context in managed preview",
+  "audible_playback": "unverified: recordings decode and audio routing passes offline checks",
+  "dependencies_added": 0,
+  "scope": "Only the three named suites and one filtered core case are counted. Historical aggregates are excluded."
+}

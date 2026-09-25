@@ -1,0 +1,62 @@
+{
+  "files": [
+    {
+      "file": "steel_crash_01.mp3",
+      "seconds": 2.65,
+      "peak": 0.7239596843719482,
+      "firstAttackMs": 29.05,
+      "rms": 0.07126078534982436
+    },
+    {
+      "file": "steel_crash_02.mp3",
+      "seconds": 2.85,
+      "peak": 0.8827670216560364,
+      "firstAttackMs": 26.69,
+      "rms": 0.09969911464305115
+    },
+    {
+      "file": "steel_crash_03.mp3",
+      "seconds": 2.95,
+      "peak": 0.8734357357025146,
+      "firstAttackMs": 10.57,
+      "rms": 0.11230741213719307
+    },
+    {
+      "file": "steel_strike_01.mp3",
+      "seconds": 1.45,
+      "peak": 0.7664469480514526,
+      "firstAttackMs": 25.92,
+      "rms": 0.09542065233830017
+    },
+    {
+      "file": "steel_strike_02.mp3",
+      "seconds": 1.45,
+      "peak": 0.8769913911819458,
+      "firstAttackMs": 29.21,
+      "rms": 0.0912896849847167
+    },
+    {
+      "file": "steel_strike_03.mp3",
+      "seconds": 1.45,
+      "peak": 0.8797064423561096,
+      "firstAttackMs": 27.32,
+      "rms": 0.08746124456043056
+    },
+    {
+      "file": "steel_tap_01.mp3",
+      "seconds": 0.95,
+      "peak": 0.8737432360649109,
+      "firstAttackMs": 14.01,
+      "rms": 0.08609610934230646
+    },
+    {
+      "file": "steel_tap_02.mp3",
+      "seconds": 1.05,
+      "peak": 0.8859120607376099,
+      "firstAttackMs": 26.58,
+      "rms": 0.09266323489629633
+    }
+  ],
+  "decoded": true,
+  "audiblePlayback": "unverified"
+}

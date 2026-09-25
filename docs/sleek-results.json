@@ -1,0 +1,146 @@
+[
+  {
+    "name": "All templates remain legal, every weapon gains energy, and Deep Six has the highest rotor energy",
+    "status": "passed",
+    "detail": [
+      {
+        "name": "Tombstone",
+        "mass": 109.31583693493084,
+        "energyKJ": 50.89794176301254,
+        "increasePercent": 32.12718512030042
+      },
+      {
+        "name": "Minotaur",
+        "mass": 103.75168523562252,
+        "energyKJ": 75.65524790973438,
+        "increasePercent": 23.393263520915685
+      },
+      {
+        "name": "Hydra",
+        "mass": 94.48522435728876,
+        "energyKJ": 12.6,
+        "increasePercent": 320
+      },
+      {
+        "name": "ICEwave",
+        "mass": 111.76093554703405,
+        "energyKJ": 55.65066886024846,
+        "increasePercent": 43.76358694298339
+      },
+      {
+        "name": "HyperShock",
+        "mass": 101.66648347081099,
+        "energyKJ": 72.20021478000395,
+        "increasePercent": 27.650828251632543
+      },
+      {
+        "name": "Gigabyte",
+        "mass": 91.38358465836257,
+        "energyKJ": 130.30298750695312,
+        "increasePercent": 10.116543821748403
+      },
+      {
+        "name": "Son of Whyachi",
+        "mass": 110.72529063808398,
+        "energyKJ": 101.89964254615806,
+        "increasePercent": 46.230794829809255
+      },
+      {
+        "name": "HUGE",
+        "mass": 88.72777724033031,
+        "energyKJ": 30.263158918002382,
+        "increasePercent": 57.53709188566884
+      },
+      {
+        "name": "SawBlaze",
+        "mass": 81.80958811237035,
+        "energyKJ": 44.87502056569624,
+        "increasePercent": 26.410324671414266
+      },
+      {
+        "name": "Deep Six",
+        "mass": 105.09680728950278,
+        "energyKJ": 134.08840456853883,
+        "increasePercent": 200.69249250679212
+      }
+    ]
+  },
+  {
+    "name": "Son of Whyachi strikes 36 mm lower with clearance above its own armour",
+    "status": "passed",
+    "detail": {
+      "loweredMm": 36.00000000000001,
+      "armourGapMm": 20.99999999999999
+    }
+  },
+  {
+    "name": "Minotaur and HyperShock drive inverted with powered reversed weapons",
+    "status": "passed",
+    "detail": [
+      {
+        "name": "Minotaur",
+        "rpm": 2061.669208388962,
+        "travel": 6.448368704226494,
+        "up": -0.9999975529216873
+      },
+      {
+        "name": "HyperShock",
+        "rpm": 1748.4099631189633,
+        "travel": 2.0964194945602213,
+        "up": -0.9483479039124765
+      }
+    ]
+  },
+  {
+    "name": "Every vertical spinner reverses its motor direction when inverted",
+    "status": "passed",
+    "detail": [
+      {
+        "name": "Minotaur",
+        "signedRPM": -661.3857590192015
+      },
+      {
+        "name": "HyperShock",
+        "signedRPM": -548.9260932782946
+      },
+      {
+        "name": "HUGE",
+        "signedRPM": -521.0355713246
+      },
+      {
+        "name": "SawBlaze",
+        "signedRPM": -1930.2376817912348
+      },
+      {
+        "name": "Deep Six",
+        "signedRPM": -161.7203014313595
+      }
+    ]
+  },
+  {
+    "name": "HUGE has equal forward and reverse drive speed within two percent",
+    "status": "passed",
+    "detail": {
+      "reverse": 2.535394801404547,
+      "forward": 2.5320555069273674,
+      "differencePercent": 0.13170708070118403
+    }
+  },
+  {
+    "name": "SawBlaze physically self-rights with its saw arm and returns to its driving pose",
+    "status": "passed",
+    "detail": {
+      "recoveredSeconds": 0.6583333333333333,
+      "armWorkJ": 126.7184629837937,
+      "maxStep": 0.005191834655105043
+    }
+  },
+  {
+    "name": "Every model has bounded smooth geometry and an always-visible front marker",
+    "status": "passed",
+    "detail": {
+      "models": 10,
+      "parts": 699
+    }
+  }
+]

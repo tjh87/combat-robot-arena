@@ -1,0 +1,325 @@
+{
+  "date": "2026-09-20T04:37:24.954Z",
+  "settings": {
+    "id": "arena-v1",
+    "hz": 240,
+    "dt": 0.004166666666666667,
+    "maxSteps": 16,
+    "lateFrame": 0.25,
+    "matchTicks": 43200,
+    "floor": 14.63,
+    "weight": 113.398,
+    "tip": 111.76,
+    "repair": 900,
+    "debris": 30,
+    "solverIterations": 12,
+    "ccdSubsteps": 1,
+    "flipJoules": 4200
+  },
+  "checks": [
+    {
+      "name": "Three legal presets; part mass equals physics mass",
+      "gate": "G02",
+      "status": "passed",
+      "detail": [
+        {
+          "name": "Tombstone",
+          "mass": 98.23659268915691,
+          "physicsMass": 98.2365951538086,
+          "parts": 42,
+          "spinup": 11.2625
+        },
+        {
+          "name": "Minotaur",
+          "mass": 103.3313900898954,
+          "physicsMass": 103.3313980102539,
+          "parts": 60,
+          "spinup": 17.883333333333333
+        },
+        {
+          "name": "Hydra",
+          "mass": 94.48522435728876,
+          "physicsMass": 94.48521995544434,
+          "parts": 41,
+          "spinup": 0
+        }
+      ],
+      "ms": 205.020399
+    },
+    {
+      "name": "Armour, battery, magnets and absent slots affect physical totals",
+      "gate": "G02",
+      "status": "passed",
+      "detail": {
+        "batteryDelta": 1,
+        "magnetDelta": 1,
+        "removedTopMass": 9.094444800000005
+      },
+      "ms": 32.51307500000007
+    },
+    {
+      "name": "Tick-stamped inputs at 30, 60 and 144 render FPS",
+      "gate": "G03",
+      "status": "passed",
+      "detail": {
+        "ticks": 720,
+        "frameRates": [
+          30,
+          60,
+          144
+        ],
+        "identical": true
+      },
+      "ms": 3243.031013
+    },
+    {
+      "name": "Manual pause freezes time; frame hitches resume with bounded fixed steps",
+      "gate": "G03",
+      "status": "passed",
+      "detail": {
+        "pauseStable": true,
+        "hitchDoesNotPause": true,
+        "maxSteps": 16
+      },
+      "ms": 248.9094500000001
+    },
+    {
+      "name": "Airborne wheels and magnets do not translate the chassis horizontally",
+      "gate": "G03",
+      "status": "passed",
+      "detail": {
+        "horizontalDrift": 0.0007609298053043459
+      },
+      "ms": 143.6611670000002
+    },
+    {
+      "name": "200 isolated hits and 200 near misses, unchanged high-speed cases",
+      "gate": "G04",
+      "status": "passed",
+      "detail": {
+        "hz": 240,
+        "hits": 200,
+        "nearMisses": 200,
+        "file": "contact-cases-240hz.json"
+      },
+      "ms": 232.39617299999918
+    },
+    {
+      "name": "Free-space momentum and total kinetic energy in 24 impacts",
+      "gate": "G05",
+      "status": "passed",
+      "detail": {
+        "cases": 24,
+        "maxMomentumError": 3.9238878193592223e-07,
+        "maxEnergyRatio": 0.28316132029589225
+      },
+      "ms": 85.41570700000011
+    },
+    {
+      "name": "10 kJ removes exactly 80 of 400 HP from the reference steel panel",
+      "gate": "G06",
+      "status": "passed",
+      "detail": {
+        "before": 400,
+        "after": 320,
+        "lossPercent": 20,
+        "excessRouting": true
+      },
+      "ms": 121.18532899999991
+    },
+    {
+      "name": "Detached armour transfers mass and carries parent point velocity",
+      "gate": "G06",
+      "status": "passed",
+      "detail": {
+        "before": 98.2365951538086,
+        "after": 94.4780158996582,
+        "debrisMass": 3.758579730987549,
+        "noCombatantCollision": true
+      },
+      "ms": 123.5803020000003
+    },
+    {
+      "name": "Battery never increases through reverse drive or braking",
+      "gate": "G06",
+      "status": "passed",
+      "detail": {
+        "nonIncreasing": true,
+        "minimum": 0
+      },
+      "ms": 1039.35228
+    },
+    {
+      "name": "Missed flips consume charges, cooldown rejects duplicates, work remains bounded",
+      "gate": "G07",
+      "status": "passed",
+      "detail": {
+        "missedShotCostsOne": true,
+        "rejectedDuplicates": true
+      },
+      "ms": 304.5377410000001
+    },
+    {
+      "name": "Travel records agree with recorded positions and pause does not sample",
+      "gate": "G07",
+      "status": "passed",
+      "detail": {
+        "horizontal": 0.1567536135265601,
+        "exact": 0.1567536135265601,
+        "max": 0.15814144505420463,
+        "path": 0.1631758487075541,
+        "pauseStable": true
+      },
+      "ms": 297.2031829999996
+    },
+    {
+      "name": "Disabled from rest counts out after 10 seconds; simultaneous failures decide once",
+      "gate": "G08",
+      "status": "passed",
+      "detail": {
+        "countoutTicks": 2400,
+        "lastTickTerminalFirst": true
+      },
+      "ms": 2066.2271920000003
+    },
+    {
+      "name": "All category decisions allocate exactly 11 integer points",
+      "gate": "G08",
+      "status": "passed",
+      "detail": {
+        "cases": 1000,
+        "ties": {
+          "scores": [
+            [
+              3,
+              1,
+              2
+            ],
+            [
+              2,
+              2,
+              1
+            ]
+          ],
+          "ties": [
+            "Damage",
+            "Aggression",
+            "Control"
+          ]
+        }
+      },
+      "ms": 7.550452999999834
+    },
+    {
+      "name": "Carried damage is excluded from new match damage",
+      "gate": "G08",
+      "status": "passed",
+      "detail": {
+        "carriedChassisLoss": 500,
+        "newLossOnly": true
+      },
+      "ms": 27.498553999999785
+    },
+    {
+      "name": "50 malformed builds are rejected and canonical Unicode links round-trip",
+      "gate": "G10",
+      "status": "passed",
+      "detail": {
+        "malformedRejected": 50,
+        "unicodeRoundTrip": true,
+        "encodedLimit": 16384,
+        "prototypeRejected": true
+      },
+      "ms": 10.17406099999971
+    },
+    {
+      "name": "Numeric limits, envelopes, mount interference and speed are enforced",
+      "gate": "G10",
+      "status": "passed",
+      "detail": {
+        "boundaryAssertions": 36,
+        "speed": true,
+        "overlap": true,
+        "envelope": true
+      },
+      "ms": 75.07679699999971
+    },
+    {
+      "name": "Repair budget, replacements, absent slots and atomic staging",
+      "gate": "G11",
+      "status": "passed",
+      "detail": {
+        "budget": 900,
+        "cost": 900,
+        "unrelatedModulesUnchanged": true,
+        "atomic": true
+      },
+      "ms": 31.088417999999365
+    },
+    {
+      "name": "20 seeded AI matches finish with unchanged physics across difficulties",
+      "gate": "G09",
+      "status": "passed",
+      "detail": {
+        "matches": 20,
+        "completed": 20,
+        "reasons": {
+          "Count-out": 13,
+          "Structural KO": 4,
+          "Judges\u2019 decision": 3
+        }
+      },
+      "ms": 550010.805648
+    },
+    {
+      "name": "Ten worlds release resources and replay snapshots remain bounded",
+      "gate": "G12",
+      "status": "passed",
+      "detail": {
+        "matches": 10,
+        "replayCopyTransitions": 500,
+        "frameRing": 180,
+        "retainedGameCollections": 0,
+        "heapSamples": [
+          124641312,
+          149283776,
+          83345512,
+          102193808,
+          174061984,
+          63253536,
+          79422072,
+          156049976,
+          74737016,
+          92323696
+        ]
+      },
+      "ms": 6210.480686999974
+    },
+    {
+      "name": "Physical flipper overturns an equal-mass target within its work allowance",
+      "gate": "G07",
+      "status": "passed",
+      "detail": {
+        "mass": 94.48522435728876,
+        "maxHeight": 0.5705521702766418,
+        "minUp": -1.0000003763116538,
+        "work": 1875.2921741194539,
+        "charges": 8
+      },
+      "ms": 1601.2429730000001
+    },
+    {
+      "name": "Drive failures disable traction; protected weapons survive until structural KO",
+      "gate": "G06",
+      "status": "passed",
+      "detail": {
+        "driveFailure": true,
+        "actuatorProtected": true,
+        "batteryFailure": true,
+        "structuralKO": true
+      },
+      "ms": 63.10785900000002
+    }
+  ],
+  "elapsedMs": 79.75782199999998
+}

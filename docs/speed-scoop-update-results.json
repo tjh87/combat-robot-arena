@@ -1,0 +1,237 @@
+[
+  {
+    "name": "Weapon and actuator output stay full through 50% damage and retain a 45% reserve",
+    "status": "passed",
+    "detail": [
+      {
+        "slot": "weapon",
+        "damagePercent": 0,
+        "outputPercent": 100
+      },
+      {
+        "slot": "weapon",
+        "damagePercent": 49,
+        "outputPercent": 100
+      },
+      {
+        "slot": "weapon",
+        "damagePercent": 50,
+        "outputPercent": 100
+      },
+      {
+        "slot": "weapon",
+        "damagePercent": 51,
+        "outputPercent": 98.9
+      },
+      {
+        "slot": "weapon",
+        "damagePercent": 75,
+        "outputPercent": 72.5
+      },
+      {
+        "slot": "weapon",
+        "damagePercent": 100,
+        "outputPercent": 44.99999999999999
+      },
+      {
+        "slot": "weapon_actuator",
+        "damagePercent": 0,
+        "outputPercent": 100
+      },
+      {
+        "slot": "weapon_actuator",
+        "damagePercent": 49,
+        "outputPercent": 100
+      },
+      {
+        "slot": "weapon_actuator",
+        "damagePercent": 50,
+        "outputPercent": 100
+      },
+      {
+        "slot": "weapon_actuator",
+        "damagePercent": 51,
+        "outputPercent": 98.9
+      },
+      {
+        "slot": "weapon_actuator",
+        "damagePercent": 75,
+        "outputPercent": 72.5
+      },
+      {
+        "slot": "weapon_actuator",
+        "damagePercent": 100,
+        "outputPercent": 44.99999999999999
+      }
+    ]
+  },
+  {
+    "name": "Both scoop edges slide under an opponent during an in-place turn using real ramp contacts",
+    "status": "passed",
+    "detail": [
+      {
+        "bot": "Hydra",
+        "side": -1,
+        "liftMm": 7.042713463306427,
+        "supportingContacts": 281,
+        "massKg": 94.57028035728877
+      },
+      {
+        "bot": "Hydra",
+        "side": 1,
+        "liftMm": 6.80512934923172,
+        "supportingContacts": 254,
+        "massKg": 94.57028035728877
+      },
+      {
+        "bot": "Quantum",
+        "side": -1,
+        "liftMm": 7.9453811049461365,
+        "supportingContacts": 117,
+        "massKg": 110.29963901051035
+      },
+      {
+        "bot": "Quantum",
+        "side": 1,
+        "liftMm": 7.48077780008316,
+        "supportingContacts": 124,
+        "massKg": 110.29963901051035
+      }
+    ]
+  },
+  {
+    "name": "The new side lips clear the floor in forward and reverse driving",
+    "status": "passed",
+    "detail": [
+      {
+        "bot": "Hydra",
+        "direction": -1,
+        "distanceM": 1.5620088577270508
+      },
+      {
+        "bot": "Hydra",
+        "direction": 1,
+        "distanceM": 1.6063241064548492
+      },
+      {
+        "bot": "Quantum",
+        "direction": -1,
+        "distanceM": 1.8064360618591309
+      },
+      {
+        "bot": "Quantum",
+        "direction": 1,
+        "distanceM": 1.8614230006933212
+      }
+    ]
+  },
+  {
+    "name": "Match highlights exclude arena damage, recoil, powered escape and post-landing travel",
+    "status": "passed",
+    "detail": [
+      {
+        "furthestTravel": 0,
+        "maxHeight": 0,
+        "hardestHit": 15000,
+        "hardestReceived": 9000
+      },
+      {
+        "furthestTravel": 4.2,
+        "maxHeight": 0,
+        "hardestHit": 9000,
+        "hardestReceived": 15000
+      }
+    ]
+  },
+  {
+    "name": "ICEwave pitch follows measured RPM immediately, including a hit slowdown and a restart",
+    "status": "passed",
+    "detail": [
+      {
+        "weaponRPM": 0,
+        "firingHz": 48,
+        "audible": [
+          "idle"
+        ]
+      },
+      {
+        "weaponRPM": 462.5,
+        "firingHz": 84.94622150164103,
+        "audible": [
+          "idle",
+          "mid"
+        ]
+      },
+      {
+        "weaponRPM": 925,
+        "firingHz": 112.32710787983396,
+        "audible": [
+          "mid"
+        ]
+      },
+      {
+        "weaponRPM": 1850,
+        "firingHz": 160,
+        "audible": [
+          "full"
+        ]
+      },
+      {
+        "weaponRPM": 277.5,
+        "firingHz": 72.55223486724834,
+        "audible": [
+          "idle",
+          "mid"
+        ]
+      },
+      {
+        "weaponRPM": 0,
+        "firingHz": 48,
+        "audible": [
+          "idle"
+        ]
+      },
+      {
+        "weaponRPM": 1850,
+        "firingHz": 160,
+        "audible": [
+          "full"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Each match gets three start tones and a distinct fight tone, independent of hit sounds",
+    "status": "passed",
+    "detail": {
+      "matches": 3,
+      "tones": 12,
+      "resumedAudio": true,
+      "independentOfImpactLimit": true
+    }
+  },
+  {
+    "name": "Engine voices have bounded, non-clipped transients and distinct speed bands",
+    "status": "passed",
+    "detail": [
+      {
+        "mode": "idle",
+        "rms": 0.05187836363519793,
+        "peak": 0.7900000214576721,
+        "firingHz": 48
+      },
+      {
+        "mode": "mid",
+        "rms": 0.08451453270509561,
+        "peak": 0.7900000214576721,
+        "firingHz": 96
+      },
+      {
+        "mode": "full",
+        "rms": 0.10906432541932008,
+        "peak": 0.7900000214576721,
+        "firingHz": 160
+      }
+    ]
+  }
+]

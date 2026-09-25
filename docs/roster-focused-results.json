@@ -1,0 +1,66 @@
+[
+  {
+    "name": "All templates create finite, bounded builder geometry and complete cleanup",
+    "status": "passed",
+    "detail": {
+      "counts": [
+        {
+          "name": "Tombstone",
+          "triangles": 16911,
+          "meshes": 52
+        },
+        {
+          "name": "Minotaur",
+          "triangles": 21519,
+          "meshes": 75
+        },
+        {
+          "name": "Hydra",
+          "triangles": 19847,
+          "meshes": 56
+        },
+        {
+          "name": "ICEwave",
+          "triangles": 22899,
+          "meshes": 53
+        },
+        {
+          "name": "HyperShock",
+          "triangles": 50151,
+          "meshes": 117
+        },
+        {
+          "name": "Gigabyte",
+          "triangles": 26827,
+          "meshes": 118
+        },
+        {
+          "name": "Son of Whyachi",
+          "triangles": 24307,
+          "meshes": 58
+        },
+        {
+          "name": "HUGE",
+          "triangles": 34645,
+          "meshes": 69
+        },
+        {
+          "name": "SawBlaze",
+          "triangles": 35099,
+          "meshes": 102
+        },
+        {
+          "name": "Deep Six",
+          "triangles": 22749,
+          "meshes": 68
+        },
+        {
+          "name": "Quantum",
+          "triangles": 59195,
+          "meshes": 65
+        }
+      ],
+      "actualWebGL": "unverified: cloud renderer is disabled"
+    }
+  }
+]
