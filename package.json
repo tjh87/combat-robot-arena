@@ -1,0 +1,34 @@
+{
+  "name": "combat-robot-arena",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --import tsx tests/run.ts",
+    "test:systems": "node --import tsx tests/systems.ts",
+    "test:extended": "node --import tsx tests/extended.ts",
+    "test:review": "node --import tsx tests/review-core.ts && node --import tsx tests/review-ui.ts",
+    "test:visuals": "node --import tsx tests/visuals.ts",
+    "test:roster": "node --import tsx tests/roster.ts",
+    "start": "node scripts/serve.mjs --open",
+    "verify": "node scripts/verify.mjs",
+    "verify:physics": "node scripts/verify.mjs --physics"
+  },
+  "dependencies": {
+    "@dimforge/rapier3d-compat": "0.19.0",
+    "three": "0.180.0"
+  },
+  "devDependencies": {
+    "@types/three": "0.180.0",
+    "esbuild": "0.25.12",
+    "jsdom": "26.1.0",
+    "tsx": "4.20.5",
+    "typescript": "5.9.2",
+    "vite": "7.1.7"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

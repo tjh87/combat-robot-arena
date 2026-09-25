@@ -1,0 +1,12 @@
+node_modules/
+runtime/
+dist/
+.offline-cache/
+.artifacts/
+.sites-runtime/
+.env*
+*.log
+*.zip
+*.tar.gz
+__pycache__/
+*.pyc
