@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Minotaur uses drum precession and steering to recover onto its wheels from either side",
+    "status": "passed",
+    "detail": [
+      {
+        "side": -1,
+        "recoveredSeconds": 0.23333333333333334,
+        "gyroTorqueNm": 118.62078978376184,
+        "driveDistanceM": 3.425030715553941,
+        "inverted": true
+      },
+      {
+        "side": 1,
+        "recoveredSeconds": 0.2,
+        "gyroTorqueNm": 120.83081312737288,
+        "driveDistanceM": 3.367787294396211,
+        "inverted": true
+      }
+    ]
+  },
+  {
+    "name": "The gyro inertial step changes precession without increasing rotational energy",
+    "status": "passed",
+    "detail": {
+      "initialEnergyJ": 170.31666104495525,
+      "finalEnergyJ": 137.55541661359396,
+      "maximumEnergyRatio": 1
+    }
+  }
+]

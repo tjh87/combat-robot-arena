@@ -1,0 +1,40 @@
+[
+  {
+    "name": "Only a Quantum battery strike ignites at 70 percent damage",
+    "status": "passed",
+    "detail": {
+      "thresholdPercent": 70,
+      "seconds": 8
+    }
+  },
+  {
+    "name": "A centred crush penetrates top armour into the battery before destroying the chassis",
+    "status": "passed",
+    "detail": {
+      "chassisHP": 1200,
+      "batteryHP": 100,
+      "allocations": [
+        {
+          "bot": 1,
+          "module": "armour_top",
+          "energy": 622.7510261364699,
+          "hp": 4.9820082090917595
+        },
+        {
+          "bot": 1,
+          "module": "battery",
+          "energy": 4500,
+          "hp": 250
+        }
+      ]
+    }
+  },
+  {
+    "name": "Fire lasts eight simulation seconds, damages its owner, and stops at match end",
+    "status": "passed",
+    "detail": {
+      "burnDamageHP": 240,
+      "weaponRPM": 6284.276302065766
+    }
+  }
+]

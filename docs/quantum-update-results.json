@@ -1,0 +1,125 @@
+[
+  {
+    "name": "Quantum self-rights from both sides and two inverted orientations using its folding arm",
+    "status": "passed",
+    "detail": [
+      {
+        "axis": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "angle": 3.141592653589793,
+        "recoveredSeconds": 1.5916666666666666,
+        "armWorkJ": 1284.7733896335933,
+        "massKg": 112.71670333570898
+      },
+      {
+        "axis": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "angle": 1.5707963267948966,
+        "recoveredSeconds": 1.75,
+        "armWorkJ": 2041.504384831269,
+        "massKg": 112.71670333570898
+      },
+      {
+        "axis": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "angle": -1.5707963267948966,
+        "recoveredSeconds": 1.7541666666666667,
+        "armWorkJ": 2046.2080092261415,
+        "massKg": 112.71670333570898
+      },
+      {
+        "axis": {
+          "x": 1,
+          "y": 0,
+          "z": 0
+        },
+        "angle": 3.141592653589793,
+        "recoveredSeconds": 1.5916666666666666,
+        "armWorkJ": 1277.4406777764223,
+        "massKg": 112.71670333570898
+      }
+    ]
+  },
+  {
+    "name": "Quantum has a smooth open skull, real cutouts, and pointed inner fangs",
+    "status": "passed",
+    "detail": {
+      "meshes": 7,
+      "holes": 9,
+      "triangles": 15512,
+      "size": {
+        "x": 0.22288000068962574,
+        "y": 0.4647087510675192,
+        "z": 0.664305672980845
+      }
+    }
+  },
+  {
+    "name": "Hit readouts count actual HP once, combine contacts, and expire on simulation time",
+    "status": "passed",
+    "detail": {
+      "contacts": 2,
+      "totalTargetHP": 57,
+      "recoilHP": 3,
+      "duplicateHP": 0,
+      "lifetimeSeconds": 1.3
+    }
+  },
+  {
+    "name": "The attacking blade is protected in both contact orders and unequal blade clashes",
+    "status": "passed",
+    "detail": {
+      "contactOrders": 2,
+      "bladeCases": 4,
+      "attackerShare": 0
+    }
+  },
+  {
+    "name": "ICEwave camera clears its engine and exhaust stack",
+    "status": "passed",
+    "detail": {
+      "previousHeightM": 0.37,
+      "heightM": 0.7000000000000001,
+      "increaseM": 0.33000000000000007
+    }
+  },
+  {
+    "name": "Original combustion audio stays bounded and rises from idle to full throttle",
+    "status": "passed",
+    "detail": [
+      {
+        "mode": "idle",
+        "duration": 4,
+        "max": 0.7900000214576721,
+        "rms": 0.05187836363519793,
+        "startHz": 48,
+        "endHz": 48
+      },
+      {
+        "mode": "mid",
+        "duration": 4,
+        "max": 0.7900000214576721,
+        "rms": 0.08451453270509561,
+        "startHz": 96,
+        "endHz": 96
+      },
+      {
+        "mode": "full",
+        "duration": 4,
+        "max": 0.7900000214576721,
+        "rms": 0.10906432541932008,
+        "startHz": 158,
+        "endHz": 158
+      }
+    ]
+  }
+]

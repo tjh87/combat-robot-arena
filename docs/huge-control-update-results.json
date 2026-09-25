@@ -1,0 +1,189 @@
+[
+  {
+    "name": "HUGE uses two continuous wheel contacts while retaining its exact mass",
+    "status": "passed",
+    "detail": {
+      "continuousContacts": 2,
+      "massKg": 113.1999921798706
+    }
+  },
+  {
+    "name": "HUGE controls stay consistent across four body pitch orientations",
+    "status": "passed",
+    "detail": [
+      {
+        "pitch": 0,
+        "direction": -1,
+        "progressM": 1.548536777496338
+      },
+      {
+        "pitch": 0,
+        "direction": 1,
+        "progressM": 1.5528000593185425
+      },
+      {
+        "pitch": 1.5707963267948966,
+        "direction": -1,
+        "progressM": 1.674943447113037
+      },
+      {
+        "pitch": 1.5707963267948966,
+        "direction": 1,
+        "progressM": 1.6480649709701538
+      },
+      {
+        "pitch": 3.141592653589793,
+        "direction": -1,
+        "progressM": 1.6705918312072754
+      },
+      {
+        "pitch": 3.141592653589793,
+        "direction": 1,
+        "progressM": 1.656466007232666
+      },
+      {
+        "pitch": -1.5707963267948966,
+        "direction": -1,
+        "progressM": 1.6721632480621338
+      },
+      {
+        "pitch": -1.5707963267948966,
+        "direction": 1,
+        "progressM": 1.6554852724075317
+      }
+    ]
+  },
+  {
+    "name": "Wheel damage and body rotation do not reverse or derate HUGE weapon power",
+    "status": "passed",
+    "detail": {
+      "beforeRPM": 2167.7096345529526,
+      "afterRPM": 2167.7546563285036,
+      "weaponOutput": 1
+    }
+  },
+  {
+    "name": "Deep Six has the highest stock full-speed strike energy rating",
+    "status": "passed",
+    "detail": [
+      {
+        "name": "Deep Six",
+        "rating": 288883.95190779,
+        "multiplier": 4
+      },
+      {
+        "name": "Gigabyte",
+        "rating": 153987.577881106,
+        "multiplier": 1.5
+      },
+      {
+        "name": "Minotaur",
+        "rating": 89937.99090395556,
+        "multiplier": 1
+      },
+      {
+        "name": "Son of Whyachi",
+        "rating": 73161.634415543,
+        "multiplier": 1.5
+      },
+      {
+        "name": "Tombstone",
+        "rating": 73005.62412115873,
+        "multiplier": 1.5
+      },
+      {
+        "name": "HUGE",
+        "rating": 64429.588352416555,
+        "multiplier": 3
+      },
+      {
+        "name": "HyperShock",
+        "rating": 42631.83322325079,
+        "multiplier": 1
+      },
+      {
+        "name": "ICEwave",
+        "rating": 38110.582154680436,
+        "multiplier": 1.5
+      },
+      {
+        "name": "SawBlaze",
+        "rating": 29222.787190269144,
+        "multiplier": 1
+      },
+      {
+        "name": "Hydra",
+        "rating": 0,
+        "multiplier": 1.5
+      },
+      {
+        "name": "Quantum",
+        "rating": 0,
+        "multiplier": 1
+      }
+    ]
+  },
+  {
+    "name": "All eleven result photos are embedded and mapped to both podium positions",
+    "status": "passed",
+    "detail": {
+      "photos": 11,
+      "podiumCombinations": 22
+    }
+  },
+  {
+    "name": "HUGE turns in the requested direction upright and inverted",
+    "status": "passed",
+    "detail": [
+      {
+        "pitch": 0,
+        "direction": -1,
+        "headingX": -0.3710320330893311
+      },
+      {
+        "pitch": 0,
+        "direction": 1,
+        "headingX": 0.3730062279033117
+      },
+      {
+        "pitch": 3.141592653589793,
+        "direction": -1,
+        "headingX": -0.3732191320231229
+      },
+      {
+        "pitch": 3.141592653589793,
+        "direction": 1,
+        "headingX": 0.37325452449912633
+      }
+    ]
+  },
+  {
+    "name": "HUGE reverses away from both end walls without wheel interlocking",
+    "status": "passed",
+    "detail": [
+      {
+        "wall": -1,
+        "escapeM": 1.4497909545898438
+      },
+      {
+        "wall": 1,
+        "escapeM": 1.4520244598388672
+      }
+    ]
+  },
+  {
+    "name": "HUGE POV follows the drive heading instead of body pitch",
+    "status": "passed",
+    "detail": {
+      "pitchOrientations": 4
+    }
+  },
+  {
+    "name": "A real HUGE blade hit scales damage by engagement and records rotor energy loss",
+    "status": "passed",
+    "detail": {
+      "hits": 1,
+      "maximumDamageScale": 0.5326632881867578
+    }
+  }
+]

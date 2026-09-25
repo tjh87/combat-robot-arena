@@ -1,0 +1,38 @@
+[
+  {
+    "name": "The weapon panel reports measured RPM and power, while both count-out timers identify the robot",
+    "status": "passed"
+  },
+  {
+    "name": "Hydra shows unlimited flips in setup, builder and HUD even with zero stored charges",
+    "status": "passed"
+  },
+  {
+    "name": "Quantum appears as a selectable opponent, editable crusher, and force gauge",
+    "status": "passed",
+    "detail": {
+      "templates": 11,
+      "crusherGauge": "4.3 kN"
+    }
+  },
+  {
+    "name": "Weapon gauges and robot warnings report damage and reduced output",
+    "status": "passed",
+    "detail": {
+      "protectedFailures": 3
+    }
+  },
+  {
+    "name": "All eleven robot weapon panels show clear labels and current control keys",
+    "status": "passed",
+    "detail": {
+      "robots": 11,
+      "remappedKeys": 2,
+      "emptyControlLabels": 0
+    }
+  },
+  {
+    "name": "Hydra assist, gauge and captions share a non-overlapping layout container",
+    "status": "passed"
+  }
+]

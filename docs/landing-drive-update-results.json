@@ -1,0 +1,132 @@
+[
+  {
+    "name": "The upgraded drive saves and loads, remains legal, and supports old builds",
+    "status": "passed",
+    "detail": {
+      "beforeKg": 99.53198087828993,
+      "afterKg": 104.53198087828991,
+      "enduranceEstimateSeconds": 298.55193683900336,
+      "oldBuildCompatible": true
+    }
+  },
+  {
+    "name": "HyperShock accelerates and turns faster with a fully spinning disc",
+    "status": "passed",
+    "detail": {
+      "before": {
+        "speedAtHalfSecond": 3.6668076312580187,
+        "peakSpeed": 6.757228094878139,
+        "turnDegrees": 0.01550712001411939,
+        "minUp": 0.9997309088983247
+      },
+      "after": {
+        "speedAtHalfSecond": 4.481351153039621,
+        "peakSpeed": 7.899153264348965,
+        "turnDegrees": 1.1285038988679241,
+        "minUp": 0.9995977187067017
+      },
+      "turnBefore": {
+        "speedAtHalfSecond": 1.3582360210887063,
+        "peakSpeed": 3.155937208487458,
+        "turnDegrees": 99.97147083787716,
+        "minUp": 0.9994003652963832
+      },
+      "turnAfter": {
+        "speedAtHalfSecond": 1.7853274229307166,
+        "peakSpeed": 4.00226617830357,
+        "turnDegrees": 134.63874495030586,
+        "minUp": 0.9983185909351789
+      },
+      "accelerationGainPercent": 22.213969307742133,
+      "peakSpeedGainPercent": 16.89931364513779,
+      "turnGainPercent": 34.67716721768384
+    }
+  },
+  {
+    "name": "HyperShock reverses and brakes without tipping or dragging its scoop",
+    "status": "passed",
+    "detail": [
+      {
+        "direction": -1,
+        "distanceM": 1.705979160964489,
+        "driveSpeed": 4.141667567243439,
+        "stoppedSpeed": 0.09241225533592555,
+        "minUp": 0.9999093875008053
+      },
+      {
+        "direction": 1,
+        "distanceM": 2.3985148146748543,
+        "driveSpeed": 5.143621128042369,
+        "stoppedSpeed": 0.050119771877993935,
+        "minUp": 0.9997458284994409
+      }
+    ]
+  },
+  {
+    "name": "Floor contacts from one landing share one sound while separate attacks remain distinct",
+    "status": "passed",
+    "detail": {
+      "contacts": 5,
+      "sounds": 4,
+      "firstLandingJ": 2400
+    }
+  },
+  {
+    "name": "Actual low and high falls create landing audio events with measured height",
+    "status": "passed",
+    "detail": [
+      {
+        "dropHeight": 0.75,
+        "sounds": 1,
+        "largestContactJ": 226.01606541553735,
+        "measuredHeight": 0.7558610623026774
+      },
+      {
+        "dropHeight": 2.5,
+        "sounds": 1,
+        "largestContactJ": 2846.8416742932613,
+        "measuredHeight": 2.494096133928801
+      }
+    ]
+  },
+  {
+    "name": "Landing assets decode with short tails and encoding headroom",
+    "status": "passed",
+    "detail": [
+      {
+        "name": "landing_light_01",
+        "duration": 0.3,
+        "peak": 0.7789621949195862,
+        "tailPercent": 0
+      },
+      {
+        "name": "landing_heavy_01",
+        "duration": 0.52,
+        "peak": 0.7789995074272156,
+        "tailPercent": 0.011340493512404005
+      },
+      {
+        "name": "landing_heavy_02",
+        "duration": 0.64,
+        "peak": 0.7789103388786316,
+        "tailPercent": 0.04003921182128799
+      }
+    ]
+  },
+  {
+    "name": "Landing playback uses its own softer filter and heavier sample for high falls",
+    "status": "passed",
+    "detail": [
+      {
+        "height": 0.2,
+        "gain": 0.3951169519819944,
+        "cutoff": 3000
+      },
+      {
+        "height": 2.5,
+        "gain": 0.8307931550287182,
+        "cutoff": 2100
+      }
+    ]
+  }
+]

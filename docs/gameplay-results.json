@@ -1,0 +1,159 @@
+[
+  {
+    "name": "Healthy waiting robots do not lose without combat or a blocked drive request",
+    "status": "passed",
+    "detail": {
+      "seconds": 16,
+      "counts": [
+        0,
+        0
+      ]
+    }
+  },
+  {
+    "name": "A disabled robot receives the full visible countdown and loses at ten seconds",
+    "status": "passed",
+    "detail": {
+      "seconds": 10,
+      "remaining": [
+        9,
+        8,
+        7,
+        6,
+        5,
+        4,
+        3,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "name": "HUGE reaches operating speed without floor strikes or chassis overturning",
+    "status": "passed",
+    "detail": {
+      "minimumClearance": 0.06414373874664309,
+      "minimumUp": 0.9998740322158771,
+      "rpm": 2386.63353431228
+    }
+  },
+  {
+    "name": "Five robot families escape a corner using the actual drive and AI",
+    "status": "passed",
+    "detail": [
+      {
+        "name": "Tombstone",
+        "escapeSeconds": 2.279166666666667
+      },
+      {
+        "name": "Minotaur",
+        "escapeSeconds": 2.15
+      },
+      {
+        "name": "Hydra",
+        "escapeSeconds": 1.3541666666666667
+      },
+      {
+        "name": "HUGE",
+        "escapeSeconds": 2.3666666666666667
+      },
+      {
+        "name": "Deep Six",
+        "escapeSeconds": 2.408333333333333
+      }
+    ]
+  },
+  {
+    "name": "Automatic assistance reverses a blocked player and clears the count without teleporting",
+    "status": "passed",
+    "detail": {
+      "assistSeconds": 4.504166666666666,
+      "maxStep": 0.021007090574907638,
+      "count": 0
+    }
+  },
+  {
+    "name": "Launch trails record the flight and stop following the robot after landing",
+    "status": "passed",
+    "detail": {
+      "distance": 2.552050257956663,
+      "height": 1.8178259283304214,
+      "airtime": 1.199999999999997,
+      "samples": 44,
+      "reason": "Landed"
+    }
+  },
+  {
+    "name": "Mirror matches use distinct liveries without changing physics or the saved build",
+    "status": "passed",
+    "detail": {
+      "templates": 10
+    }
+  },
+  {
+    "name": "Rotor exposure trails appear at speed, animate, and vanish when stopped",
+    "status": "passed",
+    "detail": {
+      "spinnerTemplates": 9
+    }
+  },
+  {
+    "name": "Opponent direction remains on screen for targets in front, behind and on either side",
+    "status": "passed",
+    "detail": [
+      {
+        "x": 50,
+        "y": 50.479795712675774,
+        "angle": 3.141592653589793,
+        "distance": 4.021989557420556,
+        "behind": false
+      },
+      {
+        "x": 50,
+        "y": 77.5,
+        "angle": 3.141592653589793,
+        "distance": 4.021989557420556,
+        "behind": true
+      },
+      {
+        "x": 7.5,
+        "y": 52.975,
+        "angle": -1.6406823284295393,
+        "distance": 4.021989557420556,
+        "behind": false
+      },
+      {
+        "x": 92.5,
+        "y": 52.975,
+        "angle": 1.6406823284295393,
+        "distance": 4.021989557420556,
+        "behind": false
+      },
+      {
+        "x": 22.499999999999996,
+        "y": 77.5,
+        "angle": -2.356194490192345,
+        "distance": 5.672424525720902,
+        "behind": true
+      }
+    ]
+  },
+  {
+    "name": "Weapon sound frequencies follow rotor RPM, blade count and motor ratio",
+    "status": "passed",
+    "detail": {
+      "voices": 8,
+      "airLayers": 2
+    }
+  },
+  {
+    "name": "Impacts leave bounded visible scars and damaged armour changes its finish",
+    "status": "passed",
+    "detail": {
+      "retainedMarks": 12,
+      "scarsVisible": true,
+      "armourDeformed": true
+    }
+  }
+]

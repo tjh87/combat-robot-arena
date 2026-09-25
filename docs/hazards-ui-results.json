@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Workshop identifies battery targets and marks estimated positions for all eleven robots",
+    "status": "passed",
+    "detail": {
+      "robots": 11,
+      "estimatedPositionsDisclosed": true
+    }
+  },
+  {
+    "name": "Workshop exposes real weapon mass, references, estimates, and Quantum pressure ratings",
+    "status": "passed"
+  },
+  {
+    "name": "Quantum appears as a selectable opponent, editable crusher, and force gauge",
+    "status": "passed"
+  }
+]

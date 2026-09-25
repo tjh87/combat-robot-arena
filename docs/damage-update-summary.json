@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "date": "2026-09-20T05:25:31.524934+00:00",
+  "automated_groups": 69,
+  "groups": {
+    "review-ui": 50,
+    "blades-update": 7,
+    "showtime-update": 5,
+    "damage-update": 7
+  },
+  "protected_weapon_templates": 11,
+  "gyro_vertical_templates": 5,
+  "real_ai_matchups": 3,
+  "recorded_audio_clips": 15,
+  "rebuilt_metal_impacts": 8,
+  "icewave_engine_stages": [
+    "idle",
+    "recorded acceleration",
+    "full power"
+  ],
+  "production_build": "passed",
+  "bundle_audit": "passed",
+  "built_files": 31,
+  "browser_layout": "passed: actual warning markup and CSS in a temporary fixture; overlap behavior covered by DOM integration",
+  "browser_gpu": "unverified: Error creating WebGL context in the managed preview",
+  "audible_playback": "unverified: all recordings decode and audio routing/lifecycle passes automated checks",
+  "dependencies_added": 0,
+  "scope": "Only the four named suites run for this update are counted. Historical totals are excluded."
+}

@@ -1,0 +1,212 @@
+[
+  {
+    "name": "All eleven robots and builder configurations use 1200 chassis HP",
+    "status": "passed",
+    "detail": [
+      {
+        "bot": "Tombstone",
+        "hp": 1200,
+        "massKg": 109.31583693493084
+      },
+      {
+        "bot": "Minotaur",
+        "hp": 1200,
+        "massKg": 105.14057412451142
+      },
+      {
+        "bot": "Hydra",
+        "hp": 1200,
+        "massKg": 94.57028035728877
+      },
+      {
+        "bot": "ICEwave",
+        "hp": 1200,
+        "massKg": 111.76093554703405
+      },
+      {
+        "bot": "HyperShock",
+        "hp": 1200,
+        "massKg": 94.79580093509938
+      },
+      {
+        "bot": "Gigabyte",
+        "hp": 1200,
+        "massKg": 98.75915283456679
+      },
+      {
+        "bot": "Son of Whyachi",
+        "hp": 1200,
+        "massKg": 110.72529063808398
+      },
+      {
+        "bot": "HUGE",
+        "hp": 1200,
+        "massKg": 89.9367014681616
+      },
+      {
+        "bot": "SawBlaze",
+        "hp": 1200,
+        "massKg": 84.44626618576807
+      },
+      {
+        "bot": "Deep Six",
+        "hp": 1200,
+        "massKg": 101.16073878950279
+      },
+      {
+        "bot": "Quantum",
+        "hp": 1200,
+        "massKg": 113.29963901051035
+      }
+    ]
+  },
+  {
+    "name": "Quantum has a 50 percent wider cast head and a smooth concave scoop",
+    "status": "passed",
+    "detail": {
+      "headWidthM": 0.36,
+      "headTriangles": 23680,
+      "scoopVertices": 1025
+    }
+  },
+  {
+    "name": "HyperShock has two separate cutters with 15 mm upright and inverted clearance",
+    "status": "passed",
+    "detail": {
+      "bladeCentresM": [
+        -0.05900000000000001,
+        0.05900000000000001
+      ],
+      "uprightClearanceM": 0.014999999999999986,
+      "invertedClearanceM": 0.015000000000000013
+    }
+  },
+  {
+    "name": "HyperShock drives both ways inverted with spinning blades clear of the floor",
+    "status": "passed",
+    "detail": [
+      {
+        "inverted": false,
+        "direction": -1,
+        "rpm": 6508.416464686508,
+        "distanceM": 3.379836009630828,
+        "peakSpeedKmh": 20.622185369097156,
+        "minBladeY": 0.012220458388328553,
+        "floorHits": 0
+      },
+      {
+        "inverted": false,
+        "direction": 1,
+        "rpm": 6508.416464686508,
+        "distanceM": 3.801252791487808,
+        "peakSpeedKmh": 21.94406458843955,
+        "minBladeY": 0.012220458388328553,
+        "floorHits": 0
+      },
+      {
+        "inverted": true,
+        "direction": -1,
+        "rpm": 6508.3470415957945,
+        "distanceM": 0.876461229870201,
+        "peakSpeedKmh": 6.181448647596921,
+        "minBladeY": 0.010252894163131715,
+        "floorHits": 0
+      },
+      {
+        "inverted": true,
+        "direction": 1,
+        "rpm": 6508.3470415957945,
+        "distanceM": 0.9819426597110853,
+        "peakSpeedKmh": 6.781257486728699,
+        "minBladeY": 0.010617957711219789,
+        "floorHits": 0
+      }
+    ]
+  },
+  {
+    "name": "Only a Quantum battery strike ignites at 70 percent damage",
+    "status": "passed",
+    "detail": {
+      "thresholdPercent": 70,
+      "seconds": 8
+    }
+  },
+  {
+    "name": "A centred crush penetrates top armour into the battery before destroying the chassis",
+    "status": "passed",
+    "detail": {
+      "chassisHP": 1200,
+      "batteryHP": 100,
+      "allocations": [
+        {
+          "bot": 1,
+          "module": "armour_top",
+          "energy": 33763.2,
+          "hp": 270.1056
+        },
+        {
+          "bot": 1,
+          "module": "battery",
+          "energy": 17500,
+          "hp": 250
+        }
+      ]
+    }
+  },
+  {
+    "name": "Fire lasts eight simulation seconds, damages its owner, and stops at match end",
+    "status": "passed",
+    "detail": {
+      "burnDamageHP": 240,
+      "weaponRPM": 3282.699508310013
+    }
+  },
+  {
+    "name": "Both result cards show matching dealt and received hit maxima with clear colour and underlines",
+    "status": "passed",
+    "detail": [
+      {
+        "furthestTravel": 0,
+        "maxHeight": 0,
+        "hardestHit": 15500,
+        "hardestReceived": 4300
+      },
+      {
+        "furthestTravel": 0,
+        "maxHeight": 0,
+        "hardestHit": 4300,
+        "hardestReceived": 15500
+      }
+    ]
+  },
+  {
+    "name": "Fire visuals use a fixed pool and reproduce the same replay time",
+    "status": "passed",
+    "detail": {
+      "flames": 96,
+      "smoke": 48,
+      "deterministic": true
+    }
+  },
+  {
+    "name": "Inverted HyperShock POV remains above its chassis and points forward",
+    "status": "passed",
+    "detail": [
+      {
+        "inverted": false,
+        "eyeHeightM": 0.6330000119209289
+      },
+      {
+        "inverted": true,
+        "eyeHeightM": 0.6330000119209289
+      }
+    ]
+  },
+  {
+    "name": "Opponent-only fire audio resets and mutes safely on a new match",
+    "status": "passed",
+    "detail": {
+      "opponentOnlyFireMuted": true
+    }
+  }
+]

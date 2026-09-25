@@ -1,0 +1,322 @@
+[
+  {
+    "name": "Tombstone",
+    "spinning": false,
+    "direction": -1,
+    "travel": 2.281299292084588,
+    "speed": 1.9774446773592518,
+    "stalled": 0
+  },
+  {
+    "name": "Tombstone",
+    "spinning": false,
+    "direction": 1,
+    "travel": 2.778999485467092,
+    "speed": 2.183212211670161,
+    "stalled": 0
+  },
+  {
+    "name": "Tombstone",
+    "spinning": true,
+    "direction": -1,
+    "travel": 1.8603774200940175,
+    "speed": 1.5999310120670354,
+    "stalled": 0
+  },
+  {
+    "name": "Tombstone",
+    "spinning": true,
+    "direction": 1,
+    "travel": 2.7551192409000205,
+    "speed": 2.17187730491372,
+    "stalled": 0
+  },
+  {
+    "name": "Minotaur",
+    "spinning": false,
+    "direction": -1,
+    "travel": 3.259928801871233,
+    "speed": 2.6845067339448367,
+    "stalled": 0
+  },
+  {
+    "name": "Minotaur",
+    "spinning": false,
+    "direction": 1,
+    "travel": 3.3496026363277407,
+    "speed": 2.739659008677753,
+    "stalled": 0
+  },
+  {
+    "name": "Minotaur",
+    "spinning": true,
+    "direction": -1,
+    "travel": 3.2413133362220043,
+    "speed": 2.6704548941144606,
+    "stalled": 0
+  },
+  {
+    "name": "Minotaur",
+    "spinning": true,
+    "direction": 1,
+    "travel": 3.347666700370925,
+    "speed": 2.7306542912026344,
+    "stalled": 0
+  },
+  {
+    "name": "Hydra",
+    "spinning": false,
+    "direction": -1,
+    "travel": 2.5130071326619614,
+    "speed": 1.8725686756414446,
+    "stalled": 0
+  },
+  {
+    "name": "Hydra",
+    "spinning": false,
+    "direction": 1,
+    "travel": 2.5513244042618877,
+    "speed": 1.8675003477634446,
+    "stalled": 0
+  },
+  {
+    "name": "Hydra",
+    "spinning": true,
+    "direction": -1,
+    "travel": 2.5130071326619614,
+    "speed": 1.8725686756414446,
+    "stalled": 0
+  },
+  {
+    "name": "Hydra",
+    "spinning": true,
+    "direction": 1,
+    "travel": 2.5513244042618877,
+    "speed": 1.8675003477634446,
+    "stalled": 0
+  },
+  {
+    "name": "ICEwave",
+    "spinning": false,
+    "direction": -1,
+    "travel": 2.2069906892067284,
+    "speed": 1.6659385803810551,
+    "stalled": 0
+  },
+  {
+    "name": "ICEwave",
+    "spinning": false,
+    "direction": 1,
+    "travel": 2.197956770113762,
+    "speed": 1.6659812541641668,
+    "stalled": 0
+  },
+  {
+    "name": "ICEwave",
+    "spinning": true,
+    "direction": -1,
+    "travel": 2.2027376146266597,
+    "speed": 1.6647740264858644,
+    "stalled": 0
+  },
+  {
+    "name": "ICEwave",
+    "spinning": true,
+    "direction": 1,
+    "travel": 2.1981737820301444,
+    "speed": 1.664710486712168,
+    "stalled": 0
+  },
+  {
+    "name": "HyperShock",
+    "spinning": false,
+    "direction": -1,
+    "travel": 2.260410151631294,
+    "speed": 1.8176501214986738,
+    "stalled": 0
+  },
+  {
+    "name": "HyperShock",
+    "spinning": false,
+    "direction": 1,
+    "travel": 2.640775939133262,
+    "speed": 2.047673425184266,
+    "stalled": 0
+  },
+  {
+    "name": "HyperShock",
+    "spinning": true,
+    "direction": -1,
+    "travel": 2.2431725408030747,
+    "speed": 1.7921113653880032,
+    "stalled": 0
+  },
+  {
+    "name": "HyperShock",
+    "spinning": true,
+    "direction": 1,
+    "travel": 2.4294607659283365,
+    "speed": 1.8729866661728687,
+    "stalled": 0
+  },
+  {
+    "name": "Gigabyte",
+    "spinning": false,
+    "direction": -1,
+    "travel": 1.7579042868530472,
+    "speed": 1.362979454361125,
+    "stalled": 0
+  },
+  {
+    "name": "Gigabyte",
+    "spinning": false,
+    "direction": 1,
+    "travel": 1.773006258868544,
+    "speed": 1.3649294171945925,
+    "stalled": 0
+  },
+  {
+    "name": "Gigabyte",
+    "spinning": true,
+    "direction": -1,
+    "travel": 1.7151979730444402,
+    "speed": 1.327604012898674,
+    "stalled": 0
+  },
+  {
+    "name": "Gigabyte",
+    "spinning": true,
+    "direction": 1,
+    "travel": 1.738723853237372,
+    "speed": 1.3434953628685307,
+    "stalled": 0
+  },
+  {
+    "name": "Son of Whyachi",
+    "spinning": false,
+    "direction": -1,
+    "travel": 2.023105816077129,
+    "speed": 1.5440958070016415,
+    "stalled": 0
+  },
+  {
+    "name": "Son of Whyachi",
+    "spinning": false,
+    "direction": 1,
+    "travel": 2.039297462553682,
+    "speed": 1.5471865297855298,
+    "stalled": 0
+  },
+  {
+    "name": "Son of Whyachi",
+    "spinning": true,
+    "direction": -1,
+    "travel": 2.0255013685015406,
+    "speed": 1.542006723471622,
+    "stalled": 0
+  },
+  {
+    "name": "Son of Whyachi",
+    "spinning": true,
+    "direction": 1,
+    "travel": 2.0324618780627275,
+    "speed": 1.5430143276829325,
+    "stalled": 0
+  },
+  {
+    "name": "HUGE",
+    "spinning": false,
+    "direction": -1,
+    "travel": 1.5238764382684151,
+    "speed": 1.1389650132049638,
+    "stalled": 0
+  },
+  {
+    "name": "HUGE",
+    "spinning": false,
+    "direction": 1,
+    "travel": 1.540940739019784,
+    "speed": 1.1520372486439459,
+    "stalled": 0
+  },
+  {
+    "name": "HUGE",
+    "spinning": true,
+    "direction": -1,
+    "travel": 1.5050637993629656,
+    "speed": 1.1424094115016175,
+    "stalled": 0
+  },
+  {
+    "name": "HUGE",
+    "spinning": true,
+    "direction": 1,
+    "travel": 1.5470385781644072,
+    "speed": 1.1552383661876817,
+    "stalled": 0
+  },
+  {
+    "name": "SawBlaze",
+    "spinning": false,
+    "direction": -1,
+    "travel": 2.5088023615600346,
+    "speed": 1.9302887548632526,
+    "stalled": 0
+  },
+  {
+    "name": "SawBlaze",
+    "spinning": false,
+    "direction": 1,
+    "travel": 2.2064742046908568,
+    "speed": 1.8145393087984385,
+    "stalled": 0
+  },
+  {
+    "name": "SawBlaze",
+    "spinning": true,
+    "direction": -1,
+    "travel": 2.4600924512985767,
+    "speed": 1.908052026903314,
+    "stalled": 0
+  },
+  {
+    "name": "SawBlaze",
+    "spinning": true,
+    "direction": 1,
+    "travel": 2.416046001125437,
+    "speed": 1.9040246425270844,
+    "stalled": 0
+  },
+  {
+    "name": "Deep Six",
+    "spinning": false,
+    "direction": -1,
+    "travel": 1.341681944083759,
+    "speed": 1.0550592638345755,
+    "stalled": 0
+  },
+  {
+    "name": "Deep Six",
+    "spinning": false,
+    "direction": 1,
+    "travel": 1.3563695508307414,
+    "speed": 1.0626522351911658,
+    "stalled": 0
+  },
+  {
+    "name": "Deep Six",
+    "spinning": true,
+    "direction": -1,
+    "travel": 1.3440268702394351,
+    "speed": 1.0642932103555998,
+    "stalled": 0
+  },
+  {
+    "name": "Deep Six",
+    "spinning": true,
+    "direction": 1,
+    "travel": 1.3499621169928175,
+    "speed": 1.0630292685951124,
+    "stalled": 0
+  }
+]

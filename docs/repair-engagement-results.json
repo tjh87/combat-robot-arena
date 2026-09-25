@@ -1,0 +1,213 @@
+{
+  "date": "2026-09-24T15:40:47.033Z",
+  "results": [
+    {
+      "name": "Bite follows tooth spacing, feed, insertion and strike angle",
+      "status": "passed",
+      "detail": {
+        "shallowBiteMm": 8.726646259971648,
+        "deepBiteMm": 40,
+        "shallowDamagePercent": 28.486635129047087,
+        "deepDamagePercent": 76.81818181818181
+      }
+    },
+    {
+      "name": "Every spinning weapon loses speed when it strikes a robot",
+      "status": "passed",
+      "detail": [
+        {
+          "name": "Tombstone",
+          "energyBeforeJ": 48488.519736523485,
+          "energyAfterJ": 4248.590406608666,
+          "rpmLossPercent": 70.39923268783946,
+          "maxBiteMm": 33.020002862676776,
+          "maxEngagement": 0.1398754356075919
+        },
+        {
+          "name": "Minotaur",
+          "energyBeforeJ": 88927.68470083163,
+          "energyAfterJ": 2394.9759874249467,
+          "rpmLossPercent": 83.58911171530123,
+          "maxBiteMm": 4.486340400436003,
+          "maxEngagement": 0.075729022333123
+        },
+        {
+          "name": "ICEwave",
+          "energyBeforeJ": 25289.756667856862,
+          "energyAfterJ": 0.0004740528700174533,
+          "rpmLossPercent": 99.98630881418225,
+          "maxBiteMm": 35,
+          "maxEngagement": 0.8354528742554258
+        },
+        {
+          "name": "HyperShock",
+          "energyBeforeJ": 41696.59218380095,
+          "energyAfterJ": 821.8214999051299,
+          "rpmLossPercent": 85.96092583292535,
+          "maxBiteMm": 0,
+          "maxEngagement": 0
+        },
+        {
+          "name": "Gigabyte",
+          "energyBeforeJ": 102313.9547138145,
+          "energyAfterJ": 59524.922128255304,
+          "rpmLossPercent": 23.725041129211334,
+          "maxBiteMm": 14.954366667377956,
+          "maxEngagement": 0.0843705347108651
+        },
+        {
+          "name": "Son of Whyachi",
+          "energyBeforeJ": 48649.61892376118,
+          "energyAfterJ": 1936.5727331105898,
+          "rpmLossPercent": 80.048425004614,
+          "maxBiteMm": 32.22104261770972,
+          "maxEngagement": 0.918744404535204
+        },
+        {
+          "name": "HUGE",
+          "energyBeforeJ": 21274.308739398486,
+          "energyAfterJ": 45.86661848900391,
+          "rpmLossPercent": 95.35676533889882,
+          "maxBiteMm": 15.500763066456742,
+          "maxEngagement": 0.14746548971182144
+        },
+        {
+          "name": "SawBlaze",
+          "energyBeforeJ": 29043.65284300916,
+          "energyAfterJ": 779.1727044532198,
+          "rpmLossPercent": 83.6208542849049,
+          "maxBiteMm": 9.583847057254873,
+          "maxEngagement": 0.21286819589149567
+        },
+        {
+          "name": "Deep Six",
+          "energyBeforeJ": 72023.49212039755,
+          "energyAfterJ": 2083.2954155919815,
+          "rpmLossPercent": 82.99258372216953,
+          "maxBiteMm": 19.376660684708426,
+          "maxEngagement": 0.28855435997989237
+        }
+      ]
+    },
+    {
+      "name": "Walls stop low crossings at high speed and only permit clearance over the rim",
+      "status": "passed",
+      "detail": {
+        "cases": 48,
+        "contained": 46,
+        "clearedRim": 2,
+        "maxSpeedMps": 150,
+        "maxChassisCoordinateM": 7.369054317474365,
+        "wallInnerCoordinateM": 7.315,
+        "ccdSubsteps": 1
+      }
+    },
+    {
+      "name": "A robot can leave only by clearing the top of a wall",
+      "status": "passed",
+      "detail": {
+        "reason": "Out of arena",
+        "wallHeightM": 2.7
+      }
+    },
+    {
+      "name": "An unpowered impact does not add launch energy or cancel physical recoil",
+      "status": "passed",
+      "detail": {
+        "initialEnergyJ": 49179.733976478594,
+        "finalEnergyJ": 22082.000969966477,
+        "maximumEnergyJ": 49179.733976478594,
+        "momentumErrorPercent": 0.8254547025375815,
+        "hitTick": 94
+      }
+    },
+    {
+      "name": "A coasting weapon loses energy against both a wall and the floor",
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: floor did not slow the blade"
+    },
+    {
+      "name": "A hammer has one finite 3500 J charge per cycle and Quantum survives the strike",
+      "status": "passed",
+      "detail": {
+        "headMassKg": 100,
+        "maximumKineticEnergyJ": 3499.9998086394044,
+        "assignedImpactEnergyJ": 1470.6845717164974,
+        "chassisHp": 1200
+      }
+    },
+    {
+      "name": "Static pushing pressure makes no smoke, and slipping tires respond to load",
+      "status": "passed",
+      "detail": {
+        "stationary": 0,
+        "sliding": 0.15,
+        "pushed": 0.43000000000000005,
+        "powered": 0.78
+      }
+    },
+    {
+      "name": "Fast tooth sweeps keep all 200 hits and reject all 200 near misses",
+      "status": "passed",
+      "detail": {
+        "hits": 200,
+        "nearMisses": 200,
+        "hz": 240
+      }
+    },
+    {
+      "name": "Six seeded matches cover all eleven templates and all three difficulties",
+      "status": "passed",
+      "detail": [
+        {
+          "a": "Tombstone",
+          "b": "Quantum",
+          "difficulty": "easy",
+          "seconds": 76.9,
+          "reason": "Count-out",
+          "impacts": 47
+        },
+        {
+          "a": "Minotaur",
+          "b": "Gigabyte",
+          "difficulty": "medium",
+          "seconds": 114.04166666666667,
+          "reason": "Out of arena",
+          "impacts": 89
+        },
+        {
+          "a": "Hydra",
+          "b": "Deep Six",
+          "difficulty": "hard",
+          "seconds": 124.34166666666667,
+          "reason": "Structural KO",
+          "impacts": 167
+        },
+        {
+          "a": "ICEwave",
+          "b": "HyperShock",
+          "difficulty": "easy",
+          "seconds": 94.9,
+          "reason": "Count-out",
+          "impacts": 37
+        },
+        {
+          "a": "Son of Whyachi",
+          "b": "SawBlaze",
+          "difficulty": "medium",
+          "seconds": 43.5,
+          "reason": "Count-out",
+          "impacts": 60
+        },
+        {
+          "a": "HUGE",
+          "b": "Tombstone",
+          "difficulty": "hard",
+          "seconds": 180,
+          "reason": "Judges’ decision",
+          "impacts": 62
+        }
+      ]
+    }
+  ]
+}

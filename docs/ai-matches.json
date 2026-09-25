@@ -1,0 +1,282 @@
+[
+  {
+    "seed": 4200,
+    "a": 0,
+    "b": 1,
+    "winner": 0,
+    "reason": "Count-out",
+    "ticks": 27048,
+    "impacts": 84,
+    "charges": [
+      0,
+      0
+    ],
+    "maxFlipWork": 0
+  },
+  {
+    "seed": 4201,
+    "a": 1,
+    "b": 1,
+    "winner": 1,
+    "reason": "Count-out",
+    "ticks": 23376,
+    "impacts": 76,
+    "charges": [
+      0,
+      0
+    ],
+    "maxFlipWork": 0
+  },
+  {
+    "seed": 4202,
+    "a": 2,
+    "b": 1,
+    "winner": 0,
+    "reason": "Count-out",
+    "ticks": 24216,
+    "impacts": 123,
+    "charges": [
+      8,
+      0
+    ],
+    "maxFlipWork": 4199.999999999776
+  },
+  {
+    "seed": 4203,
+    "a": 0,
+    "b": 2,
+    "winner": 1,
+    "reason": "Count-out",
+    "ticks": 35760,
+    "impacts": 36,
+    "charges": [
+      0,
+      8
+    ],
+    "maxFlipWork": 2272.185604035367
+  },
+  {
+    "seed": 4204,
+    "a": 1,
+    "b": 2,
+    "winner": 0,
+    "reason": "Structural KO",
+    "ticks": 9706,
+    "impacts": 61,
+    "charges": [
+      0,
+      8
+    ],
+    "maxFlipWork": 4199.99999999819
+  },
+  {
+    "seed": 4205,
+    "a": 2,
+    "b": 2,
+    "winner": 1,
+    "reason": "Judges’ decision",
+    "ticks": 43200,
+    "impacts": 28,
+    "charges": [
+      8,
+      8
+    ],
+    "maxFlipWork": 4200
+  },
+  {
+    "seed": 4206,
+    "a": 0,
+    "b": 0,
+    "winner": 0,
+    "reason": "Count-out",
+    "ticks": 8832,
+    "impacts": 14,
+    "charges": [
+      0,
+      0
+    ],
+    "maxFlipWork": 0
+  },
+  {
+    "seed": 4207,
+    "a": 1,
+    "b": 0,
+    "winner": 0,
+    "reason": "Count-out",
+    "ticks": 14040,
+    "impacts": 46,
+    "charges": [
+      0,
+      0
+    ],
+    "maxFlipWork": 0
+  },
+  {
+    "seed": 4208,
+    "a": 2,
+    "b": 0,
+    "winner": 0,
+    "reason": "Count-out",
+    "ticks": 37224,
+    "impacts": 23,
+    "charges": [
+      8,
+      0
+    ],
+    "maxFlipWork": 4199.999999996703
+  },
+  {
+    "seed": 4209,
+    "a": 0,
+    "b": 1,
+    "winner": 0,
+    "reason": "Count-out",
+    "ticks": 26448,
+    "impacts": 52,
+    "charges": [
+      0,
+      0
+    ],
+    "maxFlipWork": 0
+  },
+  {
+    "seed": 4210,
+    "a": 1,
+    "b": 1,
+    "winner": 0,
+    "reason": "Count-out",
+    "ticks": 24528,
+    "impacts": 111,
+    "charges": [
+      0,
+      0
+    ],
+    "maxFlipWork": 0
+  },
+  {
+    "seed": 4211,
+    "a": 2,
+    "b": 1,
+    "winner": 0,
+    "reason": "Count-out",
+    "ticks": 33408,
+    "impacts": 142,
+    "charges": [
+      8,
+      0
+    ],
+    "maxFlipWork": 4199.999999999995
+  },
+  {
+    "seed": 4212,
+    "a": 0,
+    "b": 2,
+    "winner": 1,
+    "reason": "Judges’ decision",
+    "ticks": 43200,
+    "impacts": 31,
+    "charges": [
+      0,
+      8
+    ],
+    "maxFlipWork": 4199.999999999385
+  },
+  {
+    "seed": 4213,
+    "a": 1,
+    "b": 2,
+    "winner": 1,
+    "reason": "Count-out",
+    "ticks": 34848,
+    "impacts": 117,
+    "charges": [
+      0,
+      8
+    ],
+    "maxFlipWork": 4199.999999999705
+  },
+  {
+    "seed": 4214,
+    "a": 2,
+    "b": 2,
+    "winner": 0,
+    "reason": "Structural KO",
+    "ticks": 21420,
+    "impacts": 65,
+    "charges": [
+      8,
+      8
+    ],
+    "maxFlipWork": 4199.999999997188
+  },
+  {
+    "seed": 4215,
+    "a": 0,
+    "b": 0,
+    "winner": 0,
+    "reason": "Count-out",
+    "ticks": 33096,
+    "impacts": 39,
+    "charges": [
+      0,
+      0
+    ],
+    "maxFlipWork": 0
+  },
+  {
+    "seed": 4216,
+    "a": 1,
+    "b": 0,
+    "winner": 0,
+    "reason": "Structural KO",
+    "ticks": 14221,
+    "impacts": 51,
+    "charges": [
+      0,
+      0
+    ],
+    "maxFlipWork": 0
+  },
+  {
+    "seed": 4217,
+    "a": 2,
+    "b": 0,
+    "winner": 0,
+    "reason": "Judges’ decision",
+    "ticks": 43200,
+    "impacts": 65,
+    "charges": [
+      8,
+      0
+    ],
+    "maxFlipWork": 4199.99999999814
+  },
+  {
+    "seed": 4218,
+    "a": 0,
+    "b": 1,
+    "winner": 1,
+    "reason": "Structural KO",
+    "ticks": 6826,
+    "impacts": 47,
+    "charges": [
+      0,
+      0
+    ],
+    "maxFlipWork": 0
+  },
+  {
+    "seed": 4219,
+    "a": 1,
+    "b": 1,
+    "winner": 1,
+    "reason": "Count-out",
+    "ticks": 27408,
+    "impacts": 80,
+    "charges": [
+      0,
+      0
+    ],
+    "maxFlipWork": 0
+  }
+]

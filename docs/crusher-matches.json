@@ -1,0 +1,28 @@
+[
+  {
+    "names": [
+      "Quantum",
+      "Minotaur"
+    ],
+    "winner": 0,
+    "reason": "Judges’ decision",
+    "seconds": 180,
+    "weaponHits": 34,
+    "crushBites": 11,
+    "peakCrushForceN": 28793.007202148438,
+    "status": "passed"
+  },
+  {
+    "names": [
+      "Hydra",
+      "Gigabyte"
+    ],
+    "winner": 0,
+    "reason": "Count-out",
+    "seconds": 55,
+    "weaponHits": 24,
+    "crushBites": 0,
+    "peakCrushForceN": 0,
+    "status": "passed"
+  }
+]

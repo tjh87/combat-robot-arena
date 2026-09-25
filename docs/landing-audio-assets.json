@@ -1,0 +1,65 @@
+[
+  {
+    "file": "landing_light_01.mp3",
+    "source": "https://freesound.org/people/SamsterBirdies/sounds/587443/",
+    "license": "CC0",
+    "sourceExcerpt": "landing_heavy_01.mp3",
+    "sourceSha256": "408015fbcbb7d42317c465301c9c6bfd151ba94e9167414549cc83180ce780bc",
+    "before": {
+      "durationSeconds": 1.6,
+      "peak": 0.9459,
+      "energyBelow1200HzPercent": 22.63,
+      "energyAfter400msPercent": 0.363
+    },
+    "after": {
+      "durationSeconds": 0.3,
+      "peak": 0.779,
+      "energyBelow1200HzPercent": 95.08,
+      "energyAfter400msPercent": 0.0
+    },
+    "bytes": 7359,
+    "processing": "Isolated attack; narrow resonance suppression; recorded low body; short damped tail"
+  },
+  {
+    "file": "landing_heavy_01.mp3",
+    "source": "https://freesound.org/people/SamsterBirdies/sounds/587443/",
+    "license": "CC0",
+    "sourceExcerpt": "landing_heavy_01.mp3",
+    "sourceSha256": "408015fbcbb7d42317c465301c9c6bfd151ba94e9167414549cc83180ce780bc",
+    "before": {
+      "durationSeconds": 1.85,
+      "peak": 0.9403,
+      "energyBelow1200HzPercent": 44.3,
+      "energyAfter400msPercent": 65.317
+    },
+    "after": {
+      "durationSeconds": 0.52,
+      "peak": 0.779,
+      "energyBelow1200HzPercent": 99.38,
+      "energyAfter400msPercent": 0.011
+    },
+    "bytes": 11538,
+    "processing": "Isolated attack; narrow resonance suppression; recorded low body; short damped tail"
+  },
+  {
+    "file": "landing_heavy_02.mp3",
+    "source": "https://freesound.org/people/SamsterBirdies/sounds/587443/",
+    "license": "CC0",
+    "sourceExcerpt": "landing_heavy_02.mp3",
+    "sourceSha256": "c5939e927fc5b4c232f849aa700ca23b135cf78fa4aab9d5020792f727f8c6cd",
+    "before": {
+      "durationSeconds": 2.4,
+      "peak": 0.9395,
+      "energyBelow1200HzPercent": 20.84,
+      "energyAfter400msPercent": 54.044
+    },
+    "after": {
+      "durationSeconds": 0.64,
+      "peak": 0.7789,
+      "energyBelow1200HzPercent": 99.08,
+      "energyAfter400msPercent": 0.04
+    },
+    "bytes": 14151,
+    "processing": "Isolated attack; narrow resonance suppression; recorded low body; short damped tail"
+  }
+]

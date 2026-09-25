@@ -1,0 +1,115 @@
+[
+  {
+    "name": "Crusher builds reject teeth that would close into the floor",
+    "status": "passed",
+    "detail": {
+      "defaultValid": true,
+      "floorIntersectionRejected": true
+    }
+  },
+  {
+    "name": "Quantum drives forward and backward, turns, and has the shared chassis health and stronger drive modules",
+    "status": "passed",
+    "detail": {
+      "massKg": 113.2,
+      "forwardMps": 7.639816132572965,
+      "reverseMps": 7.619659290302309,
+      "turnRadiansPerSecond": 9.787684440612793,
+      "maxTiltDegrees": 0.6132069535632788,
+      "chassisHP": 1200,
+      "driveHP": 550
+    }
+  },
+  {
+    "name": "Large hits emit more, faster, longer sparks in a fixed pool, and pause freezes them",
+    "status": "passed",
+    "detail": {
+      "profiles": [
+        {
+          "count": 18,
+          "speed": 1.7579978791828053,
+          "life": 0.2483068090516637
+        },
+        {
+          "count": 50,
+          "speed": 2.8252152274561944,
+          "life": 0.3326914365895596
+        },
+        {
+          "count": 130,
+          "speed": 5.576103023539753,
+          "life": 0.5502034948845386
+        },
+        {
+          "count": 260,
+          "speed": 10,
+          "life": 0.9
+        }
+      ],
+      "maxPerHit": 260,
+      "pool": 720,
+      "paused": true
+    }
+  },
+  {
+    "name": "A real two-metre fall creates height-tagged landing events and does not misclassify weapon hits",
+    "status": "passed",
+    "detail": {
+      "floorEvents": 1,
+      "peakHeightM": 2.038725487170275,
+      "energyJ": 2246.4014289526285
+    }
+  },
+  {
+    "name": "Simultaneous wheel landings play one drop sound and crusher pressure does not make impact pings",
+    "status": "passed",
+    "detail": {
+      "contacts": 3,
+      "dropVoices": 2,
+      "crushVoices": 0
+    }
+  },
+  {
+    "name": "Getting farther under the same opponent gives Hydra a stronger launch",
+    "status": "passed",
+    "detail": [
+      {
+        "insertion": 0,
+        "peakM": 0.7321301102638245,
+        "workJ": 3092.4410753891975
+      },
+      {
+        "insertion": 0.5158520381249414,
+        "peakM": 0.7514756321907043,
+        "workJ": 1238.0675421636183
+      },
+      {
+        "insertion": 1,
+        "peakM": 2.4886226654052734,
+        "workJ": 1988.0567283217388
+      }
+    ]
+  },
+  {
+    "name": "Gigabyte stays upright during full-speed shell operation and six steering changes before wall contact",
+    "status": "passed",
+    "detail": {
+      "maxTiltDegrees": 0.5450306445331076,
+      "maxSpeedMps": 1.7353165628551608,
+      "pathM": 5.7337563969445755,
+      "finalRPM": 1685.3506643885182
+    }
+  },
+  {
+    "name": "Quantum grips through physical tooth contacts, damages armour, and releases within 2.1 seconds",
+    "status": "passed",
+    "detail": {
+      "peakForceN": 156053.28445536696,
+      "damageHP": 20.031816279020934,
+      "releaseSeconds": 1.3333333333333333,
+      "workJ": 2517.6101020400943,
+      "maxTiltDegrees": 0.45739025814703455,
+      "allocationRows": 1
+    }
+  }
+]

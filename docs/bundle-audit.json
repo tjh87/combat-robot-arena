@@ -1,0 +1,152 @@
+{
+  "status": "passed",
+  "assetReferences": [
+    "/favicon.svg",
+    "/assets/index-DdQHNgYu.js",
+    "/assets/index-DmQm7yMY.css"
+  ],
+  "embeddedWasmBytes": 1555075,
+  "testFixturesExcluded": true,
+  "files": [
+    {
+      "path": "favicon.svg",
+      "bytes": 260,
+      "sha256": "1cdf8c7a0affdc34ab65aaeaa59828011c534b2590168a06d9483b8c218559d4"
+    },
+    {
+      "path": "index.html",
+      "bytes": 515,
+      "sha256": "e9fde7fc798543f6be72fe37b81edf8c3ba0ae63a0ab36d2d50b33163115d2cf"
+    },
+    {
+      "path": "assets/index-DdQHNgYu.js",
+      "bytes": 3173017,
+      "sha256": "d9386fec670cfd9f5d0867805a603c85719d6ee192508284e22b4fd13d3ac14b"
+    },
+    {
+      "path": "assets/index-DmQm7yMY.css",
+      "bytes": 57848,
+      "sha256": "67e59bd4078d1d6ab514ae8d2a5f943ede71b8b28c242d21a7c687f48bbb42f8"
+    },
+    {
+      "path": "audio/License.txt",
+      "bytes": 2255,
+      "sha256": "e60eebeb1acf79ece3206d3e4cd1f07aa8e21b41cb0b1c114a303af686a2bef7"
+    },
+    {
+      "path": "audio/landing_heavy_01.mp3",
+      "bytes": 11538,
+      "sha256": "f536b439064d842a60f653071dc075737376423632cf5caab192a4a384964937"
+    },
+    {
+      "path": "audio/landing_heavy_02.mp3",
+      "bytes": 14151,
+      "sha256": "6d945a48daf371372484fbd1e661d99b5d15ae6516ad792d59f604103fa6d7fd"
+    },
+    {
+      "path": "audio/landing_light_01.mp3",
+      "bytes": 7359,
+      "sha256": "72734460fd294868f9cdd497f28f2256c76792a21a0525a6227e6e624ebb26b6"
+    },
+    {
+      "path": "audio/match-start.mp3",
+      "bytes": 56989,
+      "sha256": "e15d01328df33748628234b0cbcc856060a353c8e4411841de7daf971d74eb2d"
+    },
+    {
+      "path": "audio/steel_crash_01.mp3",
+      "bytes": 15196,
+      "sha256": "4a71f45f7f1b6de83b4bf31a0787ea3e845196270d29c7c7e24fc38c785a7c46"
+    },
+    {
+      "path": "audio/steel_crash_02.mp3",
+      "bytes": 16241,
+      "sha256": "114361aeb9f5dc3fbd65927755dc03b1f729ed306afe2a3a864652aa1c063ccf"
+    },
+    {
+      "path": "audio/steel_crash_03.mp3",
+      "bytes": 17285,
+      "sha256": "0132cab6e829aff1d040ad206ee34276907e88b802dc601c98780264f9d658d6"
+    },
+    {
+      "path": "audio/steel_strike_01.mp3",
+      "bytes": 9971,
+      "sha256": "ed4c72d2abb0e3452ca6530a8ad7c41f01a0caf5a5724e090fb349d5793975e0"
+    },
+    {
+      "path": "audio/steel_strike_02.mp3",
+      "bytes": 11016,
+      "sha256": "78654599120bbd56af9f830c01ca961678b613e16319a3729142a9ecd21e4c4a"
+    },
+    {
+      "path": "audio/steel_strike_03.mp3",
+      "bytes": 10494,
+      "sha256": "292ca9bca1c74788ba216fa4735b2c1ba62bd94a85304b55e5e3c3fc8103e0d2"
+    },
+    {
+      "path": "audio/steel_tap_01.mp3",
+      "bytes": 6314,
+      "sha256": "d93576732632bc17c3d6cd1e002f88916cbb06718d9f4a6bb83e8f4edceee2a6"
+    },
+    {
+      "path": "audio/steel_tap_02.mp3",
+      "bytes": 7359,
+      "sha256": "84aaafe3cc1c73d82d7f478ad9c0f7cb1d33cd2b729b792f7c7f7d575b9f2200"
+    },
+    {
+      "path": "robots/deep_six.png",
+      "bytes": 210391,
+      "sha256": "3beff43120ae1a5f929482a5d22ea8325bd74f4227bbc39f33d70bf7b6a28838"
+    },
+    {
+      "path": "robots/gigabyte.png",
+      "bytes": 546155,
+      "sha256": "80c8f9b655c6eb2884e41552215223d984191667b93dc01cbabc80135c395c5c"
+    },
+    {
+      "path": "robots/huge.png",
+      "bytes": 333745,
+      "sha256": "7a6fc7c18b635a09731e3e2ffa1ff9b7197b140de7b466308af23933775dbb0c"
+    },
+    {
+      "path": "robots/hydra.png",
+      "bytes": 522259,
+      "sha256": "7c765f42d4de69db5f1cb4ceb3f6e7845227787369207f7bf2068005192c3708"
+    },
+    {
+      "path": "robots/hypershock.png",
+      "bytes": 295793,
+      "sha256": "5af07f1f8860cb2eb6b733099d1f99cf3c4571ac286af0f141c4b5c69c32a122"
+    },
+    {
+      "path": "robots/icewave.png",
+      "bytes": 539109,
+      "sha256": "fa70864ac6d3943cb3305b0ef000a76668db114410539a375bd95667cc342293"
+    },
+    {
+      "path": "robots/minotaur.png",
+      "bytes": 583860,
+      "sha256": "2fb993393c1bbb235f0dedb7b5e3c560c386fee713ce020bc61340faf34caf95"
+    },
+    {
+      "path": "robots/quantum.png",
+      "bytes": 333759,
+      "sha256": "4902c84408ea6959918cd8ad2533c9fdc88e6e7a11fb86030f7a44fc2d371b1c"
+    },
+    {
+      "path": "robots/sawblaze.png",
+      "bytes": 258033,
+      "sha256": "6541559cfd9a04d8dc6c1319f27d416286b0a33d90ba68ca8145fe3eb854df3b"
+    },
+    {
+      "path": "robots/tombstone.png",
+      "bytes": 409632,
+      "sha256": "50f7901e2ed94b98e864e18a747d6354777b4305f0b86859a7d894c53a1d9492"
+    },
+    {
+      "path": "robots/whyachi.png",
+      "bytes": 415081,
+      "sha256": "63c90f90ddeb7f8455169ea50cfae2739a48227b3b7ea9ecb1dec12470cceb19"
+    }
+  ]
+}

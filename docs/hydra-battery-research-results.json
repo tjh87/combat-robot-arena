@@ -1,0 +1,78 @@
+{
+  "batteryTargets": {
+    "status": "passed",
+    "attackerTargetPairs": 121,
+    "rotatedZoneHitWeakHitMissChecks": 594,
+    "hintChecks": "Both robots, multiple zones, POV own markers hidden"
+  },
+  "geometry": [
+    {
+      "name": "All 11 robots have fitted, mass-accounted battery targets",
+      "status": "passed",
+      "detail": {
+        "robots": 11,
+        "zones": 18,
+        "stockMassKg": 113.2
+      }
+    }
+  ],
+  "ui": [
+    {
+      "name": "Hydra shows flip assist in setup, builder and HUD even with zero stored charges",
+      "status": "passed"
+    },
+    {
+      "name": "The flipper assist shows contact readiness and the current weapon key only for Hydra",
+      "status": "passed"
+    },
+    {
+      "name": "Weapon gauges and robot warnings report damage and reduced output",
+      "status": "passed",
+      "detail": {
+        "protectedFailures": 3
+      }
+    },
+    {
+      "name": "All eleven robot weapon panels show clear labels and current control keys",
+      "status": "passed",
+      "detail": {
+        "robots": 11,
+        "remappedKeys": 2,
+        "emptyControlLabels": 0
+      }
+    },
+    {
+      "name": "Hydra assist, gauge and captions share a non-overlapping layout container",
+      "status": "passed"
+    },
+    {
+      "name": "Battery hints cover both robots and POV switches the compact gauge layout",
+      "status": "passed"
+    }
+  ],
+  "browserLayout": {
+    "status": "passed",
+    "method": "Browser measurements of DOM snapshots from the real HUD, with the renderer stubbed",
+    "tactical": {
+      "panelWidthPx": 320,
+      "panelHeightPx": 194.1875,
+      "assistFits": true
+    },
+    "pov1280x720": {
+      "panelWidthPx": 300,
+      "panelHeightPx": 141.6875,
+      "assistFits": true
+    },
+    "limitation": "The cloud browser cannot create a WebGL context, so live 3D rendering was not visually verified."
+  },
+  "gyroRecovery": {
+    "status": "passed",
+    "scenarios": 12,
+    "manualScenarios": 9,
+    "automaticScenarios": 3,
+    "minRecoverySeconds": 4.670833333333333,
+    "maxRecoverySeconds": 22.929166666666667,
+    "guards": "Level pose, damaged drive, empty battery, unsupported spin-up, interrupted recovery",
+    "regression": "Two side-recovery cases stalled after moving the battery mass; both recover after the motor-braking correction."
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "status": "passed",
+  "groups": {
+    "Core": 22,
+    "Extended": 8,
+    "Systems": 7,
+    "Review-core": 14,
+    "Offline DOM": 30,
+    "Scene": 5,
+    "Roster": 8,
+    "Gameplay": 11
+  },
+  "total": 105,
+  "robotTemplates": 10,
+  "localPhotographs": 10,
+  "newRegressionGroups": 16,
+  "browserGameplay": "unverified: WebGL disabled",
+  "audioPlayback": "unverified: procedural node parameters tested",
+  "fullTournament": 7,
+  "tournamentChampion": "Hydra",
+  "performance": {
+    "simulatedSeconds": 180,
+    "ticks": 43200,
+    "wallSeconds": 32.074362391,
+    "physicsTickMs": {
+      "p50": 0.6259710000013001,
+      "p95": 1.1212159999995492,
+      "p99": 2.103283000004012
+    },
+    "maxBodies": 26,
+    "maxDebris": 3,
+    "triangleBudget": 150000,
+    "graphicsStatus": "unverified",
+    "reason": "Cloud browser loads the preview but reports GL_RENDERER Disabled; no representative GPU or physical gamepads are available.",
+    "runtime": {
+      "node": "v24.19.0",
+      "os": "linux",
+      "arch": "x64"
+    },
+    "heapBytes": 76660304
+  }
+}

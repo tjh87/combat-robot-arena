@@ -1,0 +1,36 @@
+[
+  {
+    "name": "Hydra stays upright at four additional off-centre contact positions",
+    "status": "passed",
+    "detail": [
+      {
+        "offsetM": 0.08,
+        "opponentPeakM": 3.3568789958953857,
+        "hydraPeakM": 0.11141016334295273,
+        "maxTiltDegrees": 5.053751990501841,
+        "workJ": 2253.277462589862
+      },
+      {
+        "offsetM": -0.08,
+        "opponentPeakM": 2.51338267326355,
+        "hydraPeakM": 0.10882850736379623,
+        "maxTiltDegrees": 3.4708030569315875,
+        "workJ": 1743.4021350010978
+      },
+      {
+        "offsetM": 0.2,
+        "opponentPeakM": 2.012578010559082,
+        "hydraPeakM": 0.10223152488470078,
+        "maxTiltDegrees": 2.7782544376734473,
+        "workJ": 3592.602027509574
+      },
+      {
+        "offsetM": -0.2,
+        "opponentPeakM": 2.3227145671844482,
+        "hydraPeakM": 0.11393523961305618,
+        "maxTiltDegrees": 5.3629676068369,
+        "workJ": 3177.125595118216
+      }
+    ]
+  }
+]

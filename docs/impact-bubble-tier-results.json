@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Results display matching robot portraits, winner confetti, and reduced-motion support",
+    "status": "passed",
+    "detail": {
+      "portraits": 2,
+      "confetti": 24,
+      "reducedMotion": true
+    }
+  },
+  {
+    "name": "Both robots show numeric HP and speed, and hit numbers reflect actual losses",
+    "status": "passed"
+  },
+  {
+    "name": "Damage borders increase through seven tiers and respect reduced motion",
+    "status": "passed",
+    "detail": {
+      "tiers": 7,
+      "thresholdsHP": [
+        40,
+        100,
+        250,
+        500,
+        800,
+        1000
+      ],
+      "boundaryCases": 14,
+      "maxPopPercent": 34,
+      "wordsAbove": 0,
+      "reducedMotion": true
+    }
+  },
+  {
+    "name": "Replay damage borders use recorded hit time without extra words",
+    "status": "passed"
+  }
+]

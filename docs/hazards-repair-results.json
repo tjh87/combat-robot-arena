@@ -1,0 +1,98 @@
+[
+  {
+    "name": "Small damage is counted once and long episodes get unique bubbles",
+    "status": "passed",
+    "detail": {
+      "increments": 200,
+      "actualHP": 0.20000000000000015,
+      "uniqueBubbles": 7
+    }
+  },
+  {
+    "name": "Crushing emits one accumulated release bubble without counting HP twice",
+    "status": "passed",
+    "detail": {
+      "damageHP": 100,
+      "bubbles": 1
+    }
+  },
+  {
+    "name": "Quantum opens sooner and retreats no more than two robot lengths",
+    "status": "passed",
+    "detail": {
+      "releaseSeconds": 2.1083333333333334,
+      "openingSeconds": 0.08333333333333333,
+      "retreatM": 1.9672258617117386,
+      "limitM": 1.9920000000000004
+    }
+  },
+  {
+    "name": "Quantum manual release preserves the completed crushing event",
+    "status": "passed",
+    "detail": {
+      "releasedHP": 73
+    }
+  },
+  {
+    "name": "Gigabyte keeps heading while spinning and brakes after steering",
+    "status": "passed",
+    "detail": [
+      {
+        "spin": -1,
+        "straightYaw": 0.48440298438072205,
+        "turnYaw": -0.7807112861763351,
+        "forward": 2.370538845424372,
+        "reverse": 2.371031370209817,
+        "finalYaw": 0.47065815329551697
+      },
+      {
+        "spin": 1,
+        "straightYaw": 0.404357373714447,
+        "turnYaw": -1.0217213701118124,
+        "forward": 2.370982930286782,
+        "reverse": 2.3711807257814974,
+        "finalYaw": -0.44819560647010803
+      }
+    ]
+  },
+  {
+    "name": "Treads have the highest grip, legal fitting and physical roller travel",
+    "status": "passed",
+    "detail": {
+      "legalStockConversions": [
+        "Tombstone",
+        "Minotaur",
+        "Hydra",
+        "ICEwave",
+        "HyperShock",
+        "Gigabyte",
+        "SawBlaze",
+        "Deep Six",
+        "Quantum"
+      ],
+      "grip": 2.6,
+      "travelM": 3.4560993212575135,
+      "beltTravelM": [
+        3.718736712888807,
+        3.736568061724717
+      ]
+    }
+  },
+  {
+    "name": "Ring-out height and distance follow the losing flight after the result",
+    "status": "passed",
+    "detail": {
+      "bot": 0,
+      "heightM": 3.8507059067487717,
+      "distanceM": 8.406910896302056
+    }
+  },
+  {
+    "name": "Track meshes stay finite and replay travel restores the same shoe positions",
+    "status": "passed",
+    "detail": {
+      "belts": 2,
+      "deterministicAnimation": true
+    }
+  }
+]

@@ -1,0 +1,55 @@
+{
+  "status": "passed",
+  "date": "2026-09-19T16:10:48.111449+00:00",
+  "automated_groups": 99,
+  "groups": {
+    "recovery-update": 8,
+    "wedge-update": 8,
+    "mobility": 3,
+    "roster": 8,
+    "gameplay": 11,
+    "review-core": 14,
+    "review-ui": 39,
+    "sleek": 7,
+    "focused-core-flipper": 1
+  },
+  "movement_cases": 40,
+  "movement_stalled_samples": 0,
+  "ai_matches": 5,
+  "weapon_hits": 68,
+  "older_core_suite": "Only the equal-mass flipper group rerun; remaining full core results are historical.",
+  "robot_templates": 10,
+  "horizontal_energy_increase_percent": [
+    24.71188913892657,
+    27.768043826286416,
+    23.04584961969811
+  ],
+  "hydra_flip_allowance_j": 12600,
+  "hydra_extension_torque_limit_nm": 10800,
+  "hydra_consecutive_flips": 20,
+  "gigabyte_recovery": [
+    {
+      "startRPM": 0,
+      "recoveredSeconds": 0.9708333333333333,
+      "armWorkJ": 1184.5468047808517
+    },
+    {
+      "startRPM": 1000,
+      "recoveredSeconds": 3.225,
+      "armWorkJ": 1113.8058847375567
+    },
+    {
+      "startRPM": 1950,
+      "recoveredSeconds": 6.058333333333334,
+      "armWorkJ": 1141.911090581214
+    }
+  ],
+  "huge_side_supports": 2,
+  "exhaust_particle_limit": 96,
+  "automatic_replay_minimum_j": 12000,
+  "production_build": "passed",
+  "bundle_audit": "passed",
+  "browser_gpu": "unverified: WebGL context unavailable in managed preview",
+  "audible_playback": "unverified",
+  "dependencies_added": 0
+}

@@ -1,0 +1,138 @@
+[
+  {
+    "name": "All eleven templates meet the limits and survive build-link round trips",
+    "status": "passed",
+    "detail": [
+      {
+        "name": "Tombstone",
+        "reference": "Tombstone",
+        "mass": 113.20000000000003,
+        "parts": 44
+      },
+      {
+        "name": "Minotaur",
+        "reference": "Minotaur",
+        "mass": 113.20000000000002,
+        "parts": 66
+      },
+      {
+        "name": "Hydra",
+        "reference": "Hydra",
+        "mass": 113.20000000000002,
+        "parts": 46
+      },
+      {
+        "name": "ICEwave",
+        "reference": "ICEwave",
+        "mass": 113.19999999999999,
+        "parts": 40
+      },
+      {
+        "name": "HyperShock",
+        "reference": "HyperShock",
+        "mass": 113.20000000000006,
+        "parts": 253
+      },
+      {
+        "name": "Gigabyte",
+        "reference": "Gigabyte",
+        "mass": 113.19999999999995,
+        "parts": 90
+      },
+      {
+        "name": "Son of Whyachi",
+        "reference": "Son of Whyachi",
+        "mass": 113.19999999999999,
+        "parts": 47
+      },
+      {
+        "name": "HUGE",
+        "reference": "HUGE",
+        "mass": 113.19999999999999,
+        "parts": 128
+      },
+      {
+        "name": "SawBlaze",
+        "reference": "SawBlaze",
+        "mass": 113.20000000000002,
+        "parts": 94
+      },
+      {
+        "name": "Deep Six",
+        "reference": "Deep Six",
+        "mass": 113.19999999999997,
+        "parts": 58
+      },
+      {
+        "name": "Quantum",
+        "reference": "Quantum",
+        "mass": 113.2,
+        "parts": 72
+      }
+    ]
+  },
+  {
+    "name": "All templates create finite, bounded builder geometry and complete cleanup",
+    "status": "passed",
+    "detail": {
+      "counts": [
+        {
+          "name": "Tombstone",
+          "triangles": 17499,
+          "meshes": 53
+        },
+        {
+          "name": "Minotaur",
+          "triangles": 23283,
+          "meshes": 78
+        },
+        {
+          "name": "Hydra",
+          "triangles": 21023,
+          "meshes": 58
+        },
+        {
+          "name": "ICEwave",
+          "triangles": 23487,
+          "meshes": 54
+        },
+        {
+          "name": "HyperShock",
+          "triangles": 50739,
+          "meshes": 118
+        },
+        {
+          "name": "Gigabyte",
+          "triangles": 28003,
+          "meshes": 120
+        },
+        {
+          "name": "Son of Whyachi",
+          "triangles": 24895,
+          "meshes": 59
+        },
+        {
+          "name": "HUGE",
+          "triangles": 35821,
+          "meshes": 71
+        },
+        {
+          "name": "SawBlaze",
+          "triangles": 35687,
+          "meshes": 103
+        },
+        {
+          "name": "Deep Six",
+          "triangles": 23925,
+          "meshes": 70
+        },
+        {
+          "name": "Quantum",
+          "triangles": 59795,
+          "meshes": 67
+        }
+      ],
+      "actualWebGL": "unverified: cloud renderer is disabled"
+    }
+  }
+]

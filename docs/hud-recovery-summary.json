@@ -1,0 +1,42 @@
+{
+  "checks": [
+    {
+      "report": "review-ui-results.json",
+      "groups": 53,
+      "passed": 53
+    },
+    {
+      "report": "quantum-update-results.json",
+      "groups": 6,
+      "passed": 6
+    },
+    {
+      "report": "hud-recovery-update-results.json",
+      "groups": 6,
+      "passed": 6
+    },
+    {
+      "report": "stability-update-results.json",
+      "groups": 5,
+      "passed": 5
+    },
+    {
+      "report": "blades-update-results.json",
+      "groups": 7,
+      "passed": 7
+    },
+    {
+      "report": "damage-update-results.json",
+      "groups": 7,
+      "passed": 7
+    },
+    {
+      "report": "hydra-offset-results.json",
+      "groups": 1,
+      "passed": 1
+    }
+  ],
+  "passedGroups": 85,
+  "webglPlaytest": "unverified: managed browser has no WebGL context",
+  "browserReview": "real serialized HUD and results DOM with production CSS"
+}

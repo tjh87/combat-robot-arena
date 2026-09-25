@@ -1,0 +1,185 @@
+[
+  {
+    "name": "Weapon output stays full through 50% damage, then derates without stopping",
+    "status": "passed",
+    "detail": [
+      {
+        "weaponDamage": 0,
+        "batteryDamage": 0,
+        "rpm": 2490.5205456424255,
+        "output": 1
+      },
+      {
+        "weaponDamage": 0.5,
+        "batteryDamage": 0,
+        "rpm": 2490.5205456424255,
+        "output": 1
+      },
+      {
+        "weaponDamage": 0,
+        "batteryDamage": 0.5,
+        "rpm": 2490.5205456424255,
+        "output": 1
+      },
+      {
+        "weaponDamage": 0.75,
+        "batteryDamage": 0,
+        "rpm": 2117.7896549613374,
+        "output": 0.725
+      },
+      {
+        "weaponDamage": 1,
+        "batteryDamage": 1,
+        "rpm": 1663.5040470744111,
+        "output": 0.44999999999999996
+      }
+    ]
+  },
+  {
+    "name": "Side, rear, top and bottom hits receive more damage than blade clashes in either contact order",
+    "status": "passed",
+    "detail": [
+      {
+        "swap": false,
+        "slot": "armour_left",
+        "targetEnergy": 144,
+        "clashEnergy": 60
+      },
+      {
+        "swap": false,
+        "slot": "armour_right",
+        "targetEnergy": 144,
+        "clashEnergy": 60
+      },
+      {
+        "swap": false,
+        "slot": "armour_rear",
+        "targetEnergy": 144,
+        "clashEnergy": 60
+      },
+      {
+        "swap": false,
+        "slot": "armour_top",
+        "targetEnergy": 144,
+        "clashEnergy": 60
+      },
+      {
+        "swap": false,
+        "slot": "chassis",
+        "targetEnergy": 144,
+        "clashEnergy": 60
+      },
+      {
+        "swap": true,
+        "slot": "armour_left",
+        "targetEnergy": 144,
+        "clashEnergy": 60
+      },
+      {
+        "swap": true,
+        "slot": "armour_right",
+        "targetEnergy": 144,
+        "clashEnergy": 60
+      },
+      {
+        "swap": true,
+        "slot": "armour_rear",
+        "targetEnergy": 144,
+        "clashEnergy": 60
+      },
+      {
+        "swap": true,
+        "slot": "armour_top",
+        "targetEnergy": 144,
+        "clashEnergy": 60
+      },
+      {
+        "swap": true,
+        "slot": "chassis",
+        "targetEnergy": 144,
+        "clashEnergy": 60
+      }
+    ]
+  },
+  {
+    "name": "Passive sides and rear cause no damage; a translating ram does",
+    "status": "passed",
+    "detail": [
+      {
+        "slot": "armour_left",
+        "ramEnergy": 200
+      },
+      {
+        "slot": "armour_right",
+        "ramEnergy": 200
+      },
+      {
+        "slot": "armour_rear",
+        "ramEnergy": 200
+      }
+    ]
+  },
+  {
+    "name": "Damage warning projection follows both robot positions and hides behind the POV camera",
+    "status": "passed",
+    "detail": {
+      "p1": {
+        "x": 32.242619313144786,
+        "y": 45.65166843152934,
+        "visible": true
+      },
+      "p2": {
+        "x": 67.78922994561286,
+        "y": 45.44416132807175,
+        "visible": true
+      },
+      "behindHidden": true
+    }
+  },
+  {
+    "name": "One strike crossing multiple panels produces one sound; separate hits and landings remain distinct",
+    "status": "passed",
+    "detail": {
+      "contacts": 6,
+      "sounds": 3,
+      "energies": [
+        9000,
+        2000,
+        5000
+      ]
+    }
+  },
+  {
+    "name": "Real AI fights register blade hits and damage without simulation faults",
+    "status": "passed",
+    "detail": [
+      {
+        "bots": [
+          "Tombstone",
+          "Minotaur"
+        ],
+        "seconds": 35,
+        "strikes": 7,
+        "result": "ongoing"
+      },
+      {
+        "bots": [
+          "ICEwave",
+          "Gigabyte"
+        ],
+        "seconds": 35,
+        "strikes": 5,
+        "result": "ongoing"
+      },
+      {
+        "bots": [
+          "Deep Six",
+          "Quantum"
+        ],
+        "seconds": 15.579166666666667,
+        "strikes": 4,
+        "result": "Out of arena"
+      }
+    ]
+  }
+]

@@ -1,0 +1,151 @@
+[
+  {
+    "name": "All 11 robots have fitted, mass-accounted battery targets",
+    "status": "passed",
+    "detail": {
+      "robots": 11,
+      "zones": 18,
+      "stockMassKg": 113.2
+    }
+  },
+  {
+    "name": "Quantum reaches every battery zone through a local puncture, with no damage on a miss",
+    "status": "passed",
+    "detail": {
+      "rotatedHitAndMissChecks": 54,
+      "robots": [
+        {
+          "robot": "Tombstone",
+          "zones": 1
+        },
+        {
+          "robot": "Minotaur",
+          "zones": 3
+        },
+        {
+          "robot": "Hydra",
+          "zones": 2
+        },
+        {
+          "robot": "ICEwave",
+          "zones": 1
+        },
+        {
+          "robot": "HyperShock",
+          "zones": 1
+        },
+        {
+          "robot": "Gigabyte",
+          "zones": 2
+        },
+        {
+          "robot": "Son of Whyachi",
+          "zones": 1
+        },
+        {
+          "robot": "HUGE",
+          "zones": 2
+        },
+        {
+          "robot": "SawBlaze",
+          "zones": 1
+        },
+        {
+          "robot": "Deep Six",
+          "zones": 2
+        },
+        {
+          "robot": "Quantum",
+          "zones": 2
+        }
+      ]
+    }
+  },
+  {
+    "name": "A held Quantum bite punctures armour and crushes the battery through real tooth contacts",
+    "status": "passed",
+    "detail": {
+      "batteryDamageHP": 69.48274523840178,
+      "armourDamageHP": 9.964016418183576,
+      "workJ": 2496.191466564173
+    }
+  },
+  {
+    "name": "Hammer heads are 50 lb, swing on a hinge and keep one finite strike budget",
+    "status": "passed",
+    "detail": {
+      "headKg": 22.67961883544922,
+      "movingKg": 25.67961883544922,
+      "maxEnergyJ": 3499.2843153203917,
+      "pivotErrorM": 0.00013626860608582732,
+      "hits": 1
+    }
+  },
+  {
+    "name": "Paired saw discs emerge, cut on contact and retract below the floor",
+    "status": "passed",
+    "detail": {
+      "blades": 2,
+      "minTipM": -0.0350000786781311,
+      "maxTipM": 0.285059120208025,
+      "maxRPM": 267.8211339103357,
+      "damageHP": 1.631419369818181
+    }
+  },
+  {
+    "name": "Deck screws lift inward, detect a pinned robot and reverse automatically",
+    "status": "passed",
+    "detail": {
+      "upwardContactVelocity": 0.8500001621246338,
+      "jamDetectionSeconds": 1.2583333333333333,
+      "reverseSeconds": 1.8,
+      "returnsToForward": true
+    }
+  },
+  {
+    "name": "Hazard geometry matches the moving collision assemblies",
+    "status": "passed",
+    "detail": [
+      {
+        "kind": "hammer",
+        "deck": false,
+        "triangles": 368,
+        "size": [
+          0.43799999356269836,
+          1.3289999699592592,
+          0.33000001311302185
+        ]
+      },
+      {
+        "kind": "blade",
+        "deck": false,
+        "triangles": 3728,
+        "size": [
+          0.3799999952316284,
+          0.6433215141296387,
+          0.6433215141296387
+        ]
+      },
+      {
+        "kind": "auger",
+        "deck": false,
+        "triangles": 2048,
+        "size": [
+          3.3399999141693115,
+          0.3400000035762787,
+          0.3400000035762787
+        ]
+      },
+      {
+        "kind": "auger",
+        "deck": true,
+        "triangles": 1184,
+        "size": [
+          1.4199999570846558,
+          0.3400000035762787,
+          0.3400000035762787
+        ]
+      }
+    ]
+  }
+]

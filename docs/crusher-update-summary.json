@@ -1,0 +1,170 @@
+{
+  "status": "passed",
+  "date": "2026-09-20T03:16:33.528930+00:00",
+  "automated_groups": 80,
+  "groups": {
+    "crusher-update": 8,
+    "weapon-endurance": 3,
+    "stability-update": 5,
+    "blades-update": 7,
+    "review-ui": 48,
+    "roster": 8,
+    "recovery-update": 1
+  },
+  "templates": 11,
+  "manual_recovery_templates": 11,
+  "ai_matches": [
+    {
+      "names": [
+        "Quantum",
+        "Minotaur"
+      ],
+      "winner": 0,
+      "reason": "Judges\u2019 decision",
+      "seconds": 180,
+      "weaponHits": 34,
+      "crushBites": 11,
+      "peakCrushForceN": 28793.007202148438,
+      "status": "passed"
+    },
+    {
+      "names": [
+        "Hydra",
+        "Gigabyte"
+      ],
+      "winner": 0,
+      "reason": "Count-out",
+      "seconds": 55,
+      "weaponHits": 24,
+      "crushBites": 0,
+      "peakCrushForceN": 0,
+      "status": "passed"
+    }
+  ],
+  "weapon_hits": 58,
+  "quantum": {
+    "massKg": 111.87065869013665,
+    "chassisHP": 2200,
+    "driveHP": 550,
+    "releaseSeconds": 3.5,
+    "crushWorkLimitJ": 12000
+  },
+  "hydra": {
+    "minimumPressurePercent": 40,
+    "maximumPressurePercent": 100,
+    "depthCases": [
+      {
+        "insertion": 0.08747894704481562,
+        "peakM": 1.0629044771194458,
+        "workJ": 1084.3414503686058
+      },
+      {
+        "insertion": 0.5733365000271656,
+        "peakM": 1.1663258075714111,
+        "workJ": 1153.2265919102138
+      },
+      {
+        "insertion": 1,
+        "peakM": 1.5582903623580933,
+        "workJ": 1410.2614559440597
+      }
+    ]
+  },
+  "gigabyte": {
+    "widthChangePercent": 26.666666666666682,
+    "lengthChangePercent": 15.789473684210531,
+    "heightChangePercent": -15.384615384615385,
+    "recoversAndRestartsAtRPM": [
+      0,
+      1000,
+      1950
+    ]
+  },
+  "sparks": {
+    "maxPerHit": 260,
+    "pool": 720,
+    "previousMaxPerHit": 36,
+    "previousPool": 180
+  },
+  "audio": {
+    "recordedClips": 11,
+    "newLandingClips": 3,
+    "sources": [
+      "https://freesound.org/people/Nox_Sound/sounds/569555/",
+      "https://freesound.org/people/kyles/sounds/453351/",
+      "https://freesound.org/people/SamsterBirdies/sounds/587443/"
+    ],
+    "license": "CC0",
+    "decodedPeakMax": 0.97187
+  },
+  "video": {
+    "source": "User-supplied BattleBots countdown excerpt",
+    "containerSeconds": 3.482993,
+    "countdownSeconds": 3.47,
+    "fallback": "Countdown lights and tones"
+  },
+  "endurance": [
+    {
+      "status": "passed",
+      "name": "Three-minute no-hit endurance: Minotaur / SawBlaze",
+      "bots": [
+        {
+          "name": "Minotaur",
+          "seconds": 180,
+          "batteryPercent": 23.692458306180505,
+          "rpm": 5934.279412292045
+        },
+        {
+          "name": "SawBlaze",
+          "seconds": 180,
+          "batteryPercent": 36.92745331893939,
+          "rpm": 5175.0334982896775
+        }
+      ]
+    },
+    {
+      "status": "passed",
+      "name": "Three-minute no-hit endurance: HyperShock / Quantum",
+      "bots": [
+        {
+          "name": "HyperShock",
+          "seconds": 180,
+          "batteryPercent": 37.01980934597224,
+          "rpm": 4757.626935815174
+        },
+        {
+          "name": "Quantum",
+          "seconds": 180,
+          "batteryPercent": 99.61701602650841,
+          "rpm": 0.025247279306831367
+        }
+      ]
+    },
+    {
+      "status": "passed",
+      "name": "Tournament packs retain template capacity",
+      "checked": 64
+    }
+  ],
+  "keyboardRecovery": "R; remappable in Settings",
+  "production_build": "passed",
+  "bundle_audit": "passed",
+  "built_files": 29,
+  "browser_gpu": "unverified: WebGL unavailable in managed preview",
+  "audible_playback": "unverified",
+  "dependencies_added": 0,
+  "scope": "Recovery test filtered to Gigabyte; historical aggregate summaries are not counted.",
+  "archive": {
+    "valid": true,
+    "files": 30,
+    "bytes": 6437652,
+    "sha256": "f94bcc6026d688981aef2f0a2239b7ca7d702f54808cec2655b9385577b5df90",
+    "saved": {
+      "archive_format": "tar",
+      "sediment_file_id": "file_00000000128c82118a800719a1ee1ac1",
+      "content_hash": "sha256:4f75eb03c402bfe6d5a5e0df63760efeb5b5fa9943dc218918f8602bc2e84f55",
+      "size_bytes": 8488960,
+      "file_count": 30
+    }
+  }
+}

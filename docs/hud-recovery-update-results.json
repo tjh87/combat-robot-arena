@@ -1,0 +1,232 @@
+[
+  {
+    "name": "Quantum and HyperShock recover from six orientations through vertical arm contact",
+    "status": "passed",
+    "detail": [
+      {
+        "bot": "HyperShock",
+        "orientation": "inverted roll",
+        "recoveredSeconds": 1.2416666666666667,
+        "armWorkJ": 844.7118511078525,
+        "massKg": 94.79580093509938
+      },
+      {
+        "bot": "HyperShock",
+        "orientation": "left",
+        "recoveredSeconds": 3.9916666666666667,
+        "armWorkJ": 3424.621483069554,
+        "massKg": 94.79580093509938
+      },
+      {
+        "bot": "HyperShock",
+        "orientation": "right",
+        "recoveredSeconds": 2.8666666666666667,
+        "armWorkJ": 2753.137404213603,
+        "massKg": 94.79580093509938
+      },
+      {
+        "bot": "HyperShock",
+        "orientation": "front",
+        "recoveredSeconds": 0,
+        "armWorkJ": 0,
+        "massKg": 94.79580093509938
+      },
+      {
+        "bot": "HyperShock",
+        "orientation": "rear",
+        "recoveredSeconds": 1.2208333333333334,
+        "armWorkJ": 948.0297067381665,
+        "massKg": 94.79580093509938
+      },
+      {
+        "bot": "HyperShock",
+        "orientation": "inverted pitch",
+        "recoveredSeconds": 1.2416666666666667,
+        "armWorkJ": 845.4206686969014,
+        "massKg": 94.79580093509938
+      },
+      {
+        "bot": "Quantum",
+        "orientation": "inverted roll",
+        "recoveredSeconds": 1.5541666666666667,
+        "armWorkJ": 1244.2698676833006,
+        "massKg": 110.29963901051035
+      },
+      {
+        "bot": "Quantum",
+        "orientation": "left",
+        "recoveredSeconds": 1.6208333333333333,
+        "armWorkJ": 1623.1918193904621,
+        "massKg": 110.29963901051035
+      },
+      {
+        "bot": "Quantum",
+        "orientation": "right",
+        "recoveredSeconds": 1.6208333333333333,
+        "armWorkJ": 1619.8639051052025,
+        "massKg": 110.29963901051035
+      },
+      {
+        "bot": "Quantum",
+        "orientation": "front",
+        "recoveredSeconds": 1.55,
+        "armWorkJ": 1358.8742191508934,
+        "massKg": 110.29963901051035
+      },
+      {
+        "bot": "Quantum",
+        "orientation": "rear",
+        "recoveredSeconds": 1.4708333333333334,
+        "armWorkJ": 356.9421883192102,
+        "massKg": 110.29963901051035
+      },
+      {
+        "bot": "Quantum",
+        "orientation": "inverted pitch",
+        "recoveredSeconds": 1.5583333333333333,
+        "armWorkJ": 1244.0209047341962,
+        "massKg": 110.29963901051035
+      }
+    ]
+  },
+  {
+    "name": "HyperShock brakes a running disc, rights itself, and restores its weapon",
+    "status": "passed",
+    "detail": [
+      {
+        "axis": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "angle": 3.141592653589793,
+        "recoveredSeconds": 1.4916666666666667,
+        "endRPM": 4753.450658056431
+      },
+      {
+        "axis": {
+          "x": 1,
+          "y": 0,
+          "z": 0
+        },
+        "angle": -1.5707963267948966,
+        "recoveredSeconds": 1.4708333333333334,
+        "endRPM": 4761.521522156365
+      }
+    ]
+  },
+  {
+    "name": "Only the requested weapons receive the exact strike multipliers",
+    "status": "passed",
+    "detail": [
+      {
+        "bot": "Tombstone",
+        "multiplier": 1.5
+      },
+      {
+        "bot": "Minotaur",
+        "multiplier": 1
+      },
+      {
+        "bot": "Hydra",
+        "multiplier": 1.5
+      },
+      {
+        "bot": "ICEwave",
+        "multiplier": 1.5
+      },
+      {
+        "bot": "HyperShock",
+        "multiplier": 1
+      },
+      {
+        "bot": "Gigabyte",
+        "multiplier": 1.5
+      },
+      {
+        "bot": "Son of Whyachi",
+        "multiplier": 1.5
+      },
+      {
+        "bot": "HUGE",
+        "multiplier": 10
+      },
+      {
+        "bot": "SawBlaze",
+        "multiplier": 1
+      },
+      {
+        "bot": "Deep Six",
+        "multiplier": 2
+      },
+      {
+        "bot": "Quantum",
+        "multiplier": 1
+      }
+    ]
+  },
+  {
+    "name": "Powered strike assistance preserves momentum, spends its added energy, and excludes coasting blades",
+    "status": "passed",
+    "detail": [
+      {
+        "bot": "Tombstone",
+        "impulseNs": 67.42346141747669,
+        "addedEnergyJ": 42.41091858481684
+      },
+      {
+        "bot": "ICEwave",
+        "impulseNs": 67.42346141747669,
+        "addedEnergyJ": 41.95601400486275
+      },
+      {
+        "bot": "Gigabyte",
+        "impulseNs": 67.42346141747669,
+        "addedEnergyJ": 45.66758268581597
+      },
+      {
+        "bot": "Son of Whyachi",
+        "impulseNs": 67.42346141747669,
+        "addedEnergyJ": 42.146241462275555
+      },
+      {
+        "bot": "HUGE",
+        "impulseNs": 648.6832980505138,
+        "addedEnergyJ": 4372.3239658218945
+      },
+      {
+        "bot": "Deep Six",
+        "impulseNs": 124.26406871192854,
+        "addedEnergyJ": 146.89641441986328
+      }
+    ]
+  },
+  {
+    "name": "Vertical recovery arms stay folded during ordinary driving and repeated recovery requests",
+    "status": "passed",
+    "detail": [
+      {
+        "bot": "HyperShock",
+        "stowedAngleDegrees": 0.5816675894264696
+      },
+      {
+        "bot": "Quantum",
+        "stowedAngleDegrees": -0.5591600095584626
+      }
+    ]
+  },
+  {
+    "name": "Saved stock arms migrate without discarding custom colours or other settings",
+    "status": "passed",
+    "detail": [
+      {
+        "profile": "hypershock",
+        "migrated": true
+      },
+      {
+        "profile": "quantum",
+        "migrated": true
+      }
+    ]
+  }
+]

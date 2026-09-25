@@ -1,0 +1,191 @@
+[
+  {
+    "name": "Tombstone reverses during faster spin-up without turning around, and still responds to steering",
+    "status": "passed",
+    "detail": [
+      {
+        "direction": -1,
+        "travelM": 1.8603774200940175,
+        "headingChangeDegrees": 21.10010876434727,
+        "steeringChangeDegrees": 45.711297314115846
+      },
+      {
+        "direction": 1,
+        "travelM": 2.7551192409000205,
+        "headingChangeDegrees": 6.689070327739802,
+        "steeringChangeDegrees": 12.310133761924993
+      }
+    ]
+  },
+  {
+    "name": "A knockout does not display losing judge totals as the winning score",
+    "status": "passed",
+    "detail": {
+      "knockoutWinner": 0,
+      "judgeTotals": [
+        5,
+        6
+      ],
+      "judgedWinner": 1,
+      "unusedScoresCollapsed": true
+    }
+  },
+  {
+    "name": "Fast rotor trails leave the blade faces visible for every spinner",
+    "status": "passed",
+    "detail": [
+      {
+        "name": "Tombstone",
+        "coveragePercent": 1.7966161187544534
+      },
+      {
+        "name": "Minotaur",
+        "coveragePercent": 3.5932322375089103
+      },
+      {
+        "name": "ICEwave",
+        "coveragePercent": 1.7966161187544527
+      },
+      {
+        "name": "HyperShock",
+        "coveragePercent": 1.796616118754454
+      },
+      {
+        "name": "Gigabyte",
+        "coveragePercent": 3.5932322375089116
+      },
+      {
+        "name": "Son of Whyachi",
+        "coveragePercent": 1.7966161187544527
+      },
+      {
+        "name": "HUGE",
+        "coveragePercent": 1.796616118754454
+      },
+      {
+        "name": "SawBlaze",
+        "coveragePercent": 1.7966161187544503
+      },
+      {
+        "name": "Deep Six",
+        "coveragePercent": 1.7966161187544492
+      }
+    ]
+  },
+  {
+    "name": "Weapon faces retain their cutting edges without damage markers",
+    "status": "passed",
+    "detail": [
+      {
+        "name": "Tombstone",
+        "damageMarkers": 0
+      },
+      {
+        "name": "Minotaur",
+        "damageMarkers": 0
+      },
+      {
+        "name": "Gigabyte",
+        "damageMarkers": 0
+      },
+      {
+        "name": "Son of Whyachi",
+        "damageMarkers": 0
+      },
+      {
+        "name": "SawBlaze",
+        "damageMarkers": 0
+      },
+      {
+        "name": "Deep Six",
+        "damageMarkers": 0
+      }
+    ]
+  },
+  {
+    "name": "Six requested weapons reach operating speed at least fifty percent sooner without changing rotor energy",
+    "status": "passed",
+    "detail": [
+      {
+        "name": "Tombstone",
+        "beforeSeconds": 14.045833333333333,
+        "afterSeconds": 6.7749999999999995,
+        "reductionPercent": 51.76505487985761,
+        "massKg": 109.31583693493084
+      },
+      {
+        "name": "ICEwave",
+        "beforeSeconds": 20.416666666666668,
+        "afterSeconds": 9.945833333333333,
+        "reductionPercent": 51.28571428571429,
+        "massKg": 111.76093554703405
+      },
+      {
+        "name": "Gigabyte",
+        "beforeSeconds": 35.92916666666667,
+        "afterSeconds": 17.575,
+        "reductionPercent": 51.084309405079445,
+        "massKg": 94.51267648143235
+      },
+      {
+        "name": "Son of Whyachi",
+        "beforeSeconds": 29.1125,
+        "afterSeconds": 14.254166666666666,
+        "reductionPercent": 51.037641333905825,
+        "massKg": 110.72529063808398
+      },
+      {
+        "name": "SawBlaze",
+        "beforeSeconds": 9.479166666666666,
+        "afterSeconds": 4.1625,
+        "reductionPercent": 56.08791208791209,
+        "massKg": 82.92069922348145
+      },
+      {
+        "name": "Deep Six",
+        "beforeSeconds": 33.975,
+        "afterSeconds": 16.683333333333334,
+        "reductionPercent": 50.89526612705421,
+        "massKg": 105.09680728950278
+      }
+    ]
+  },
+  {
+    "name": "Hydra gives a contact-based flip cue and launches an equal-mass opponent higher",
+    "status": "passed",
+    "detail": {
+      "massKg": 94.48522435728876,
+      "previousPeakM": 0.5705521702766418,
+      "peakM": 3.8595621585845947,
+      "workJ": 1427.1002201874987,
+      "firstCueSeconds": 0.4166666666666667,
+      "readySamples": 350
+    }
+  },
+  {
+    "name": "Recorded impacts, ICEwave engines and eleven unique weapon voices load and release",
+    "status": "passed",
+    "detail": {
+      "weaponProfiles": 11,
+      "samples": 11,
+      "bytes": 214695,
+      "hits": [
+        {
+          "energy": 40,
+          "gain": 0.14860751389911447,
+          "playbackRate": 0.9799186267998645
+        },
+        {
+          "energy": 1000,
+          "gain": 0.5377848454355678,
+          "playbackRate": 0.94812548292908
+        },
+        {
+          "energy": 12000,
+          "gain": 0.885,
+          "playbackRate": 0.912
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "date": "2026-09-24T15:44:19.970Z",
+  "results": [
+    {
+      "name": "A coasting weapon loses energy against both a wall and the floor",
+      "status": "passed",
+      "detail": [
+        {
+          "surface": "wall",
+          "energyBeforeJ": 48361.137185055864,
+          "energyAfterJ": 1216.0457249413148
+        },
+        {
+          "surface": "floor",
+          "energyBeforeJ": 48138.71833429476,
+          "energyAfterJ": 39542.15777402753
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "status": "succeeded",
+  "url": "https://combat-robot-arena.aeonlegacy471949.chatgpt.site",
+  "project_id": "appgprj_6aae3d316f848191b90f6f15b5c02b76",
+  "version_id": "appgprj_6aae3d316f848191b90f6f15b5c02b76~appgver_d255420bc4d081918c6e035dad4c87ad",
+  "version_number": 12,
+  "deployment_id": "appgdep_6aaf6eafb920819180ee760414d4b2ad",
+  "source_commit": "4c67fb1254981900c61765ec111e7c094506e57a",
+  "published_at": "2026-09-20T05:27:38.269222+00:00",
+  "audience": "owner-private",
+  "archive": {
+    "valid": true,
+    "files": 32,
+    "bytes": 6128759,
+    "sha256": "243190f9af30fc3f15b9b40a8a6906a942c8b50211a2a63e9578ff16d1b943d6",
+    "saved": {
+      "archive_format": "tar",
+      "sediment_file_id": "file_0000000002e4821184e09e0513163635",
+      "content_hash": "sha256:dbb3d72832d610ef45389200bcb63bb20360fd55d21cb2d6d1466cc6cf80a909",
+      "size_bytes": 8192000,
+      "file_count": 32
+    }
+  },
+  "validation": {
+    "status": "passed",
+    "date": "2026-09-20T05:25:31.524934+00:00",
+    "automated_groups": 69,
+    "groups": {
+      "review-ui": 50,
+      "blades-update": 7,
+      "showtime-update": 5,
+      "damage-update": 7
+    },
+    "protected_weapon_templates": 11,
+    "gyro_vertical_templates": 5,
+    "real_ai_matchups": 3,
+    "recorded_audio_clips": 15,
+    "rebuilt_metal_impacts": 8,
+    "icewave_engine_stages": [
+      "idle",
+      "recorded acceleration",
+      "full power"
+    ],
+    "production_build": "passed",
+    "bundle_audit": "passed",
+    "built_files": 31,
+    "browser_layout": "passed: actual warning markup and CSS in a temporary fixture; overlap behavior covered by DOM integration",
+    "browser_gpu": "unverified: Error creating WebGL context in the managed preview",
+    "audible_playback": "unverified: all recordings decode and audio routing/lifecycle passes automated checks",
+    "dependencies_added": 0,
+    "scope": "Only the four named suites run for this update are counted. Historical totals are excluded."
+  }
+}

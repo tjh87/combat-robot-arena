@@ -1,0 +1,344 @@
+[
+  {
+    "name": "All eleven builds stay legal and HUGE keeps 20 mm blade clearance",
+    "status": "passed",
+    "detail": {
+      "robots": [
+        {
+          "name": "Tombstone",
+          "massKg": 113.20000000000003
+        },
+        {
+          "name": "Minotaur",
+          "massKg": 113.20000000000003
+        },
+        {
+          "name": "Hydra",
+          "massKg": 113.20000000000002
+        },
+        {
+          "name": "ICEwave",
+          "massKg": 113.19999999999999
+        },
+        {
+          "name": "HyperShock",
+          "massKg": 113.20000000000006
+        },
+        {
+          "name": "Gigabyte",
+          "massKg": 113.19999999999995
+        },
+        {
+          "name": "Son of Whyachi",
+          "massKg": 113.19999999999999
+        },
+        {
+          "name": "HUGE",
+          "massKg": 113.19999999999996
+        },
+        {
+          "name": "SawBlaze",
+          "massKg": 113.20000000000002
+        },
+        {
+          "name": "Deep Six",
+          "massKg": 113.19999999999997
+        },
+        {
+          "name": "Quantum",
+          "massKg": 113.20000000000003
+        }
+      ],
+      "hugeBladeDiameterM": 0.92,
+      "wheelDiameterM": 0.96,
+      "clearanceMm": 20
+    }
+  },
+  {
+    "name": "HUGE body stays level during forward, reverse, and turning with its blade running",
+    "status": "passed",
+    "detail": {
+      "maxTiltDegrees": 2.7810971978033803,
+      "minBladeClearanceMm": 19.394733905792215,
+      "forwardMps": 2.804361882732172,
+      "reverseMps": 2.1267277564583176
+    }
+  },
+  {
+    "name": "HUGE blade makes a real weapon contact with every opposing template",
+    "status": "passed",
+    "detail": [
+      {
+        "opponent": "Tombstone",
+        "bladeHits": 1
+      },
+      {
+        "opponent": "Minotaur",
+        "bladeHits": 1
+      },
+      {
+        "opponent": "Hydra",
+        "bladeHits": 1
+      },
+      {
+        "opponent": "ICEwave",
+        "bladeHits": 2
+      },
+      {
+        "opponent": "HyperShock",
+        "bladeHits": 1
+      },
+      {
+        "opponent": "Gigabyte",
+        "bladeHits": 1
+      },
+      {
+        "opponent": "Son of Whyachi",
+        "bladeHits": 2
+      },
+      {
+        "opponent": "HUGE",
+        "bladeHits": 2
+      },
+      {
+        "opponent": "SawBlaze",
+        "bladeHits": 1
+      },
+      {
+        "opponent": "Deep Six",
+        "bladeHits": 2
+      },
+      {
+        "opponent": "Quantum",
+        "bladeHits": 1
+      }
+    ]
+  },
+  {
+    "name": "Gigabyte remains stable and its folded arm stays latched through drive and impact",
+    "status": "passed",
+    "detail": {
+      "maxTiltDegrees": 0.7253073343630587,
+      "maxArmMotionDegrees": 0.45929466757099907,
+      "floorAttractionN": 180
+    }
+  },
+  {
+    "name": "Gigabyte unlocks its arm only for deliberate self-righting and stows it again",
+    "status": "passed",
+    "detail": {
+      "maxArmDegrees": 174.95651568109486,
+      "finalArmDegrees": -0.4583662933478187,
+      "up": 0.9999999826959495
+    }
+  },
+  {
+    "name": "SawBlaze has a rear saw guard and a full 180 degree arm sweep",
+    "status": "passed",
+    "detail": {
+      "guardSegments": 24,
+      "sweepDegrees": 179.99999817876716
+    }
+  },
+  {
+    "name": "SawBlaze floating forks get below the opponent and lift it",
+    "status": "passed",
+    "detail": {
+      "supportContacts": 7827,
+      "liftMm": 43.320707976818085
+    }
+  },
+  {
+    "name": "Quantum has more tyre grip and motor torque, with 60 percent less release throttle",
+    "status": "passed",
+    "detail": {
+      "oldTorqueNm": 40.817382315321176,
+      "newTorqueNm": 66.9677784246036,
+      "increasePercent": 64.06681326907784,
+      "oldReleaseThrottle": 0.85,
+      "newReleaseThrottle": 0.34,
+      "gripCoefficient": 1.8
+    }
+  },
+  {
+    "name": "A robot thrown over the wall loses by ring-out, while ground rams remain inside",
+    "status": "passed",
+    "detail": [
+      {
+        "thrown": false,
+        "x": 6.664909362792969,
+        "y": 0.12951335310935974,
+        "result": "continues"
+      },
+      {
+        "thrown": true,
+        "x": 7.718860626220703,
+        "y": 3.41802716255188,
+        "result": "Out of arena"
+      }
+    ]
+  },
+  {
+    "name": "Final motion preserves HP, winner and match clock while recording the last hit",
+    "status": "passed",
+    "detail": {
+      "frames": 46,
+      "resultTick": 60,
+      "animationTick": 180
+    }
+  },
+  {
+    "name": "Sparks follow the contact and launch direction with varied lengths and forks",
+    "status": "passed",
+    "detail": {
+      "particles": 260,
+      "minDirectionAlignment": 0.8575425965034835,
+      "trailLengths": 248,
+      "headSizes": 258,
+      "forkedSparks": 24
+    }
+  },
+  {
+    "name": "Spark sounds have three short bounded noise envelopes",
+    "status": "passed",
+    "detail": [
+      {
+        "level": 0,
+        "durationMs": 100,
+        "peak": 0.6766213774681091
+      },
+      {
+        "level": 1,
+        "durationMs": 180,
+        "peak": 0.7635311484336853
+      },
+      {
+        "level": 2,
+        "durationMs": 260,
+        "peak": 0.7197590470314026
+      }
+    ]
+  },
+  {
+    "name": "Deep Six has two swept hooked blades within its original 570 mm radius",
+    "status": "passed",
+    "detail": {
+      "tips": 2,
+      "sweptSections": 8,
+      "bladeRadiusM": 0.5685499098584046,
+      "maximumRadiusM": 0.57
+    }
+  },
+  {
+    "name": "A corner hammer strike no longer knocks out Quantum through the floor",
+    "status": "passed",
+    "detail": {
+      "hammerHits": 1,
+      "chassisHp": 1200,
+      "hammerFloorEnergyJ": []
+    }
+  },
+  {
+    "name": "Skid marks get stronger with speed, turning and braking",
+    "status": "passed",
+    "detail": {
+      "slow": 0.07440000000000001,
+      "fast": 0.3,
+      "corner": 0.39,
+      "brake": 0.49,
+      "markOpacity": 0.3
+    }
+  },
+  {
+    "name": "Repeated material updates are skipped when damage has not changed",
+    "status": "passed",
+    "detail": {
+      "frames": 120,
+      "materialUpdates": 1,
+      "skippedPercent": 99.16666666666667
+    }
+  },
+  {
+    "name": "Random selection covers every alternative and excludes invalid indices",
+    "status": "passed",
+    "detail": {
+      "currentRobots": 11,
+      "alternativesEach": 10
+    }
+  },
+  {
+    "name": "SawBlaze self-rights with the guarded arm and returns to its driving pose",
+    "status": "passed",
+    "detail": {
+      "recoveredSeconds": 0.7625,
+      "finalArmAngle": 0.0017798355304581386
+    }
+  },
+  {
+    "name": "SawBlaze rear guard meets the floor before the spinning teeth",
+    "status": "passed",
+    "detail": {
+      "guardFloorContacts": 810,
+      "toothFloorContacts": 0
+    }
+  },
+  {
+    "name": "Slow-motion transforms interpolate between saved frames",
+    "status": "passed",
+    "detail": {
+      "interpolatedX": 2,
+      "interpolatedYawDegrees": 45
+    }
+  },
+  {
+    "name": "The decisive hit remains available after a ten-second count-out delay",
+    "status": "passed",
+    "detail": {
+      "savedFrames": 58,
+      "delaySeconds": 11,
+      "damageHP": 180
+    }
+  },
+  {
+    "name": "Quantum retains physical self-righting with its stronger drive hardware",
+    "status": "passed",
+    "detail": [
+      {
+        "axis": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "angle": 3.141592653589793,
+        "recoveredSeconds": 1.5708333333333333
+      },
+      {
+        "axis": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "angle": 1.5707963267948966,
+        "recoveredSeconds": 1.6208333333333333
+      },
+      {
+        "axis": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "angle": -1.5707963267948966,
+        "recoveredSeconds": 1.6166666666666667
+      },
+      {
+        "axis": {
+          "x": 1,
+          "y": 0,
+          "z": 0
+        },
+        "angle": 3.141592653589793,
+        "recoveredSeconds": 1.575
+      }
+    ]
+  }
+]

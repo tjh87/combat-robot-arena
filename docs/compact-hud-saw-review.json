@@ -1,0 +1,88 @@
+{
+  "strikeAngleRadians": -0.9,
+  "before": [
+    {
+      "spinning": false,
+      "fired": true,
+      "downSeconds": 0.2,
+      "minAngle": -1.1202258634050966,
+      "maxWork": 66.69278995194779,
+      "returnAngle": 0.0008538278145943325,
+      "fault": null
+    },
+    {
+      "spinning": true,
+      "fired": true,
+      "downSeconds": 0.17916666666666667,
+      "minAngle": -1.1201078900933923,
+      "maxWork": 54.52304588120263,
+      "returnAngle": 0.001149132938908336,
+      "fault": null
+    }
+  ],
+  "after": [
+    {
+      "spinning": false,
+      "fired": true,
+      "downSeconds": 0.14166666666666666,
+      "minAngle": -1.1211072883103979,
+      "maxWork": 135.0672840755949,
+      "returnAngle": 0.0009729291446063402,
+      "fault": null
+    },
+    {
+      "spinning": true,
+      "fired": true,
+      "downSeconds": 0.1375,
+      "minAngle": -1.1210159292452966,
+      "maxWork": 122.09582200069732,
+      "returnAngle": 0.0009127043142006703,
+      "fault": null
+    }
+  ],
+  "checks": [
+    {
+      "name": "Hammer-saw swings twice, returns, conserves its hinge anchors, and respects its work budget",
+      "status": "passed",
+      "detail": {
+        "strokes": 2,
+        "timeToStrike": 0.1375,
+        "minimumAngle": -1.1225295466770429,
+        "returnAngle": 0.0002466429159180631,
+        "maximumWork": 138.5667952802944,
+        "anchorError": 9.932540440288108e-07
+      }
+    },
+    {
+      "name": "SawBlaze self-rights with the guarded arm and returns to its driving pose",
+      "status": "passed",
+      "detail": {
+        "recoveredSeconds": 0.7625,
+        "finalArmAngle": 0.0020122285948291955
+      }
+    },
+    {
+      "name": "The weapon panel reports measured RPM and power, while both count-out timers identify the robot",
+      "status": "passed"
+    }
+  ],
+  "layout": {
+    "widthPx": 320,
+    "hydraHeightAt720p": 170.1875,
+    "placement": "lower right",
+    "fontColoursPreserved": true,
+    "robotsChecked": 11,
+    "numericAndNameOverflow": false,
+    "viewports": [
+      [
+        1280,
+        720
+      ],
+      [
+        1363,
+        936
+      ]
+    ],
+    "bar": "Measured speed, jaw force, or flipper readiness"
+  }
+}

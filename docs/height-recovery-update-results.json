@@ -1,0 +1,113 @@
+[
+  {
+    "name": "Height keeps the highest hit rise for each robot and excludes unrelated movement",
+    "status": "passed",
+    "detail": [
+      {
+        "furthestTravel": 2,
+        "maxHeight": 1.5,
+        "hardestHit": 0,
+        "hardestReceived": 0
+      },
+      {
+        "furthestTravel": 2,
+        "maxHeight": 2.75,
+        "hardestHit": 0,
+        "hardestReceived": 0
+      }
+    ]
+  },
+  {
+    "name": "A real physics flight records its peak rise and retains it when the match ends",
+    "status": "passed",
+    "detail": {
+      "peakRiseM": 1.817777469754219,
+      "resultHeightM": 1.8177769929170609
+    }
+  },
+  {
+    "name": "Airborne AI robots do not deploy recovery arms before landing",
+    "status": "passed",
+    "detail": [
+      {
+        "bot": "HyperShock",
+        "airborneSeconds": 0.4,
+        "automaticDeployments": 0
+      },
+      {
+        "bot": "Gigabyte",
+        "airborneSeconds": 0.4,
+        "automaticDeployments": 0
+      },
+      {
+        "bot": "Quantum",
+        "airborneSeconds": 0.4,
+        "automaticDeployments": 0
+      }
+    ]
+  },
+  {
+    "name": "Recovery arm movement cannot increase hit travel or height",
+    "status": "passed",
+    "detail": {
+      "recoveryExcluded": true
+    }
+  },
+  {
+    "name": "AI recovery still starts after a sustained tip with floor support",
+    "status": "passed",
+    "detail": [
+      {
+        "bot": "HyperShock",
+        "firstAutomaticRecoverySeconds": 3.004166666666667
+      },
+      {
+        "bot": "Gigabyte",
+        "firstAutomaticRecoverySeconds": 3.004166666666667
+      },
+      {
+        "bot": "Quantum",
+        "firstAutomaticRecoverySeconds": 3.004166666666667
+      }
+    ]
+  },
+  {
+    "name": "Unstick recovery helps a stranded shell only when automatic assistance is enabled",
+    "status": "passed",
+    "detail": [
+      {
+        "autoUnstick": false,
+        "recoveryRequested": false
+      },
+      {
+        "autoUnstick": true,
+        "recoveryRequested": true
+      }
+    ]
+  },
+  {
+    "name": "Upright driving leaves recovery arms stowed and does not enter recovery settling",
+    "status": "passed",
+    "detail": [
+      {
+        "bot": "HyperShock",
+        "maxArmDegrees": 1.178961829082214
+      },
+      {
+        "bot": "Gigabyte",
+        "maxArmDegrees": 1.146180001022995
+      },
+      {
+        "bot": "Quantum",
+        "maxArmDegrees": 2.3756191602069086
+      }
+    ]
+  },
+  {
+    "name": "Old recovery observations cannot deploy an arm after the robot returns upright",
+    "status": "passed",
+    "detail": {
+      "staleObservationIgnored": true
+    }
+  }
+]

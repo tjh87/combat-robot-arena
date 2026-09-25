@@ -1,0 +1,13 @@
+{
+  "valid": true,
+  "files": 30,
+  "bytes": 6437652,
+  "sha256": "f94bcc6026d688981aef2f0a2239b7ca7d702f54808cec2655b9385577b5df90",
+  "saved": {
+    "archive_format": "tar",
+    "sediment_file_id": "file_00000000128c82118a800719a1ee1ac1",
+    "content_hash": "sha256:4f75eb03c402bfe6d5a5e0df63760efeb5b5fa9943dc218918f8602bc2e84f55",
+    "size_bytes": 8488960,
+    "file_count": 30
+  }
+}

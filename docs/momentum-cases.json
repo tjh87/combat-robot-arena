@@ -1,0 +1,122 @@
+[
+  {
+    "case": 0,
+    "momentumError": 1.7104168827625306e-7,
+    "energyRatio": 0.21973304147472436
+  },
+  {
+    "case": 1,
+    "momentumError": 2.120257292860245e-7,
+    "energyRatio": 0.2473404169353225
+  },
+  {
+    "case": 2,
+    "momentumError": 5.01261561279743e-8,
+    "energyRatio": 0.28316132029589225
+  },
+  {
+    "case": 3,
+    "momentumError": 1.3061918575711672e-7,
+    "energyRatio": 0.2420076206631732
+  },
+  {
+    "case": 4,
+    "momentumError": 2.775404047563106e-7,
+    "energyRatio": 0.2240737280369022
+  },
+  {
+    "case": 5,
+    "momentumError": 6.418352314144586e-8,
+    "energyRatio": 0.2383079635491728
+  },
+  {
+    "case": 6,
+    "momentumError": 1.3688201310212868e-7,
+    "energyRatio": 0.23825270146808358
+  },
+  {
+    "case": 7,
+    "momentumError": 2.055135445857233e-7,
+    "energyRatio": 0.23476117495803867
+  },
+  {
+    "case": 8,
+    "momentumError": 3.9238878193592223e-7,
+    "energyRatio": 0.2381219648549526
+  },
+  {
+    "case": 9,
+    "momentumError": 7.232259581815516e-8,
+    "energyRatio": 0.249700638657881
+  },
+  {
+    "case": 10,
+    "momentumError": 1.2520688209712311e-7,
+    "energyRatio": 0.2425453866982352
+  },
+  {
+    "case": 11,
+    "momentumError": 2.816099997403778e-7,
+    "energyRatio": 0.24505528284072614
+  },
+  {
+    "case": 12,
+    "momentumError": 1.4898587801545265e-7,
+    "energyRatio": 0.2580015605794391
+  },
+  {
+    "case": 13,
+    "momentumError": 1.6756664574052413e-7,
+    "energyRatio": 0.24821421030010565
+  },
+  {
+    "case": 14,
+    "momentumError": 2.316756076673332e-7,
+    "energyRatio": 0.25021543545927755
+  },
+  {
+    "case": 15,
+    "momentumError": 4.76837158203125e-8,
+    "energyRatio": 0.2622408290901852
+  },
+  {
+    "case": 16,
+    "momentumError": 2.0562138020306923e-7,
+    "energyRatio": 0.25168638115707437
+  },
+  {
+    "case": 17,
+    "momentumError": 7.566556266314173e-8,
+    "energyRatio": 0.2540394590438895
+  },
+  {
+    "case": 18,
+    "momentumError": 1.2057994595496726e-7,
+    "energyRatio": 0.2616248859912535
+  },
+  {
+    "case": 19,
+    "momentumError": 2.1047679266635455e-7,
+    "energyRatio": 0.2544968936305042
+  },
+  {
+    "case": 20,
+    "momentumError": 2.666793785978451e-7,
+    "energyRatio": 0.2550672409872054
+  },
+  {
+    "case": 21,
+    "momentumError": 6.883294841679424e-8,
+    "energyRatio": 0.26681914696651127
+  },
+  {
+    "case": 22,
+    "momentumError": 3.0361139082967297e-7,
+    "energyRatio": 0.2554848736956717
+  },
+  {
+    "case": 23,
+    "momentumError": 1.1407949935135243e-7,
+    "energyRatio": 0.2560664602588867
+  }
+]

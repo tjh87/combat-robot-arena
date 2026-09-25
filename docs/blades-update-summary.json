@@ -1,0 +1,81 @@
+{
+  "status": "passed",
+  "date": "2026-09-20T01:40:22.741352+00:00",
+  "automated_groups": 75,
+  "groups": {
+    "blades-update": 7,
+    "wedge-update": 8,
+    "mobility": 3,
+    "roster": 8,
+    "review-ui": 41,
+    "sleek": 7,
+    "recovery-update": 1
+  },
+  "movement_cases": 40,
+  "movement_stalled_samples": 0,
+  "ai_matches": 5,
+  "weapon_hits": 56,
+  "robot_templates": 10,
+  "hydra": {
+    "massKg": 94.48522435728876,
+    "previousPeakM": 0.5705521702766418,
+    "peakM": 1.3916667699813843,
+    "workJ": 8572.269051219979,
+    "firstCueSeconds": 0.4166666666666667,
+    "readySamples": 350
+  },
+  "spinup": [
+    {
+      "name": "Tombstone",
+      "beforeSeconds": 14.045833333333333,
+      "afterSeconds": 6.7749999999999995,
+      "reductionPercent": 51.76505487985761,
+      "massKg": 109.31583693493084
+    },
+    {
+      "name": "ICEwave",
+      "beforeSeconds": 20.416666666666668,
+      "afterSeconds": 9.945833333333333,
+      "reductionPercent": 51.28571428571429,
+      "massKg": 111.76093554703405
+    },
+    {
+      "name": "Gigabyte",
+      "beforeSeconds": 35.92916666666667,
+      "afterSeconds": 17.575,
+      "reductionPercent": 51.084309405079445,
+      "massKg": 91.38358465836257
+    },
+    {
+      "name": "Son of Whyachi",
+      "beforeSeconds": 29.1125,
+      "afterSeconds": 14.254166666666666,
+      "reductionPercent": 51.037641333905825,
+      "massKg": 110.72529063808398
+    },
+    {
+      "name": "SawBlaze",
+      "beforeSeconds": 9.479166666666666,
+      "afterSeconds": 4.1625,
+      "reductionPercent": 56.08791208791209,
+      "massKg": 81.80958811237035
+    },
+    {
+      "name": "Deep Six",
+      "beforeSeconds": 33.975,
+      "afterSeconds": 16.683333333333334,
+      "reductionPercent": 50.89526612705421,
+      "massKg": 105.09680728950278
+    }
+  ],
+  "recorded_metal_samples": 7,
+  "audio_sample_bytes": 34577,
+  "audio_source": "https://kenney.nl/assets/impact-sounds",
+  "audio_license": "CC0",
+  "production_build": "passed",
+  "bundle_audit": "passed",
+  "browser_gpu": "unverified: WebGL context unavailable in managed preview",
+  "audible_playback": "unverified",
+  "dependencies_added": 0,
+  "scope": "The recovery suite was filtered to Gigabyte. Earlier core, gameplay and recovery reports are historical; they were not rerun in full."
+}
