@@ -1,4 +1,4 @@
-param([string]$Name = 'combat-robot-arena', [Parameter(Mandatory=$true)][string]$ZipPath, [switch]$Public)
+param([string]$Name = 'combat-robot-arena', [Parameter(Mandatory=$true)][string]$ZipPath)
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
 function Run([string]$Tool, [string[]]$Arguments) {
@@ -28,10 +28,13 @@ Run 'git' @('add','--all')
 & git diff --cached --quiet
 if ($LASTEXITCODE -eq 1) { Run 'git' @('commit','-m','Prepare complete offline Combat Robot Arena handover') }
 elseif ($LASTEXITCODE -ne 0) { throw 'Cannot inspect staged changes.' }
+if ($Exists) {
+    $Visibility = (& gh repo view $Repo --json visibility --jq .visibility).Trim()
+    if ($LASTEXITCODE -ne 0 -or $Visibility -ne 'PRIVATE') { throw 'This project must remain private. Verify repository visibility before publishing.' }
+}
 if (!$Exists) {
-    $Visibility = if ($Public) { '--public' } else { '--private' }
-    Run 'gh' @('repo','create',$Repo,$Visibility,'--source','.','--remote','origin','--push')
+    Run 'gh' @('repo','create',$Repo,'--private','--source','.','--remote','origin','--push')
 } else { Run 'git' @('push','-u','origin','HEAD') }
 $Tag = 'offline-' + (Get-Date).ToUniversalTime().ToString('yyyyMMdd-HHmmss')
-Run 'gh' @('release','create',$Tag,$ZipPath,'--repo',$Repo,'--title','Complete offline Codex development package','--notes-file','handover/RELEASE_NOTES.md')
+Run 'gh' @('release','create',$Tag,$ZipPath,'--repo',$Repo,'--title','Windows offline build and Codex development package','--notes-file','handover/RELEASE_NOTES.md')
 Write-Host "Published https://github.com/$Repo and release $Tag"

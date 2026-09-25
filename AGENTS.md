@@ -14,7 +14,7 @@ Treat older `docs/` updates and reports as history. Do not restore old settings 
 - Keep the app playable offline. Use local images, audio, fonts, modules and physics WASM.
 - Do not add Sites, remote APIs, login, analytics, subscriptions or cloud storage without a new user request.
 - Do not fetch packages or reference pages when the user requires offline work.
-- Preserve lockfile versions. The full ZIP already contains build dependencies and Windows/Linux x64 native tools.
+- Preserve lockfile versions. The Windows ZIP already contains build dependencies and Windows x64 tools. The optional combined package also includes a Linux runtime.
 - Do not run `npm ci` in the full offline ZIP unless online dependency replacement is intended.
 - Use the supplied Node scripts. They do not require operating-system-specific npm command shims.
 - Use SI units in physics. Preserve real contact forces, shared energy budgets and finite motor work.
@@ -36,4 +36,5 @@ Treat older `docs/` updates and reports as history. Do not restore old settings 
 `node scripts/dev.mjs` runs the development server.
 `node scripts/verify.mjs` verifies the offline app and server.
 `node scripts/verify.mjs --physics` also checks core, battery and gyro behavior.
-Use `runtime/windows-x64/node.exe` or `runtime/linux-x64/bin/node` if Node is not installed.
+Use `runtime/windows-x64/node.exe` if Node is not installed. A Linux runtime is included only in the optional combined package.
+Read `WINDOWS_SETUP.md` before installing anything. Keep `tjh87/combat-robot-arena` private.

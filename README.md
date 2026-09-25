@@ -1,56 +1,130 @@
-# Combat Robot Arena — offline Codex development package
+# 🤖 Combat Robot Arena
 
-A complete local browser game with 11 combat robots, a builder, practice, local two-player matches, AI opponents and tournaments.
+**Build a machine. Pick a rival. Take the arena.**
 
-## Play without internet
+A local 3D robot-combat game with 11 heavyweight machines, physics-driven weapons, a custom robot builder, AI opponents, local two-player battles and tournaments. Drive from the tactical camera or robot POV, use the arena hazards, watch damage and battery failures unfold, then replay the decisive hit.
 
-1. Extract the entire offline ZIP. Do not run files inside the ZIP viewer.
-2. On Windows x64, double-click **START-WINDOWS.cmd**.
-3. On Linux x64, run `sh start.sh`.
-4. Keep the server window open. Open `http://127.0.0.1:4173/` if the browser does not open.
+🪟 **Windows x64 offline package** · 🛠️ **Complete editable source** · ⚔️ **11 stock robots** · 🔒 **Private repository**
 
-No account, ChatGPT Sites connection, API key, CDN or internet connection is needed for gameplay.
-Use a current desktop browser with WebGL and hardware acceleration. Click the game to enable sound.
-The Windows runtime is included. No administrator install is needed. Windows execution still needs a check on a Windows computer.
+## 🪟 Start here: what to install
 
-## Continue development
+For the **full Windows release ZIP**, you need Windows x64 and a browser with WebGL 2/hardware acceleration. **Node.js, npm, build dependencies and native Windows build tools are already included.** Extract the whole ZIP and double-click `START-WINDOWS.cmd`.
 
-Open this folder in Codex. Paste [CODEX_CONTINUE_PROMPT.md](handover/CODEX_CONTINUE_PROMPT.md).
-For a complete build instruction, use [CODEX_BUILD_ALL_PROMPT.md](handover/CODEX_BUILD_ALL_PROMPT.md).
-For a focused bug review, use [CODEX_REVIEW_PROMPT.md](handover/CODEX_REVIEW_PROMPT.md).
-For the eight original visual examples and their intended use, read [VISUAL_REFERENCES.md](handover/VISUAL_REFERENCES.md).
+For a **source-only clone**, install Node.js 22.12+ and Git, then run `npm.cmd ci`, `npm.cmd run build` and `npm.cmd start` while online for the initial install.
 
-- **DEVELOP-WINDOWS.cmd** starts the local development server.
-- **BUILD-WINDOWS.cmd** checks TypeScript and builds `dist/`.
-- **TEST-WINDOWS.cmd** checks the build and local server.
-- `TEST-WINDOWS.cmd --physics` also runs the core, battery and gyro checks.
+For **Codex development**, install Codex separately and sign in. An editor is optional. Git/GitHub CLI are only needed for repository sync/publication; Python is only needed to regenerate the full ZIP.
 
-Stop the play server before starting the development server. Both use port 4173.
-Source edits do not change the packaged app until you build again.
+➡️ **[Detailed Windows installation and setup](WINDOWS_SETUP.md)** — exact prerequisites, PowerShell commands, offline rules, Codex installation and troubleshooting.
 
-## Read in this order
+Download **Combat_Robot_Arena_Windows_Offline_Codex.zip** from [Releases](https://github.com/tjh87/combat-robot-arena/releases). GitHub's automatic “Source code” downloads do not contain the bundled runtime or installed dependencies.
 
-1. [START_HERE.md](handover/START_HERE.md)
-2. [CURRENT_REQUIREMENTS.md](handover/CURRENT_REQUIREMENTS.md)
-3. [ARCHITECTURE.md](handover/ARCHITECTURE.md)
-4. [OFFLINE_SETUP.md](handover/OFFLINE_SETUP.md)
-5. [TEST_PLAN.md](handover/TEST_PLAN.md)
-6. [DO_AND_DO_NOT.md](handover/DO_AND_DO_NOT.md)
+## 📸 Interface screenshots
 
-`handover/ROBOT_SPECIFICATIONS.json` contains values exported from the actual game code.
-The old `docs/` files are development history. Some contain old settings or old test results.
-The current requirements and source code take priority over those old files.
+These are screenshots of the current menu, builder and settings UI. The capture browser lacked WebGL, so the 3D renderer was omitted in a labeled UI preview. They do **not** show or certify live arena graphics. Game source and physics settings were preserved.
 
-## GitHub source versus offline ZIP
+| Choose a robot | Tune your machine |
+| --- | --- |
+| ![Robot selection interface preview](docs/screenshots/match-setup-ui.jpg) | ![Robot builder interface preview](docs/screenshots/robot-builder-ui.jpg) |
 
-The repository contains source, game assets, tests, prompts and launch scripts.
-The full offline ZIP also contains `dist/`, `node_modules/` and portable runtimes.
-These generated folders are excluded from normal Git commits. Attach the full ZIP to a GitHub Release.
-A normal Git clone needs one online `npm ci`, then `npm run build`. The full ZIP does not.
+![Settings interface preview](docs/screenshots/settings-ui.jpg)
 
-See [GITHUB_PUBLISH.md](handover/GITHUB_PUBLISH.md) for publication and release instructions.
-See [THIRD_PARTY_NOTICES.md](handover/THIRD_PARTY_NOTICES.md) for asset and dependency notes.
+## ⚔️ What is in the game?
 
-The ZIP includes `handover/FILE_MANIFEST.json`, with a SHA-256 checksum for each included file except the manifest itself.
-Run `node scripts/verify-manifest.mjs` before editing to check the extracted copy.
-Changes made during development will correctly change those checksums.
+- **Physics-driven fights:** separate spinning weapons, articulated arms, hydraulic crushing, flippers, gyroscopic recovery, contact damage, fall damage and ring-outs.
+- **A hazardous arena:** rising paired floor saws, 50 lb hammer heads, an upper deck and lifting screws that reverse when a robot jams.
+- **Robot workshop:** chassis, armour, weapons, motors, batteries, wheels and caterpillar treads; mass limits, saved builds and import/export codes.
+- **Several ways to play:** Quick Fight, practice, three AI difficulties, local two-player control, tournament progression and repairs.
+- **Readable action:** compact weapon gauges, Hydra Flip Assist, battery-location hints, speed in km/h and sharp animated damage bubbles with seven damage tiers.
+- **Match presentation:** countdown, local audio, impact effects, replay/highlights, result statistics and small winner-only confetti.
+- **Fully local game:** local assets, local saves and embedded physics WASM. No gameplay account, API key, CDN, backend or ChatGPT Sites connection.
+
+## 🦾 Stock roster
+
+| Robot | Main weapon / character |
+| --- | --- |
+| Tombstone | Horizontal bar spinner |
+| Minotaur | Drum spinner and gyroscopic self-righting |
+| Hydra | Hydraulic flipper with Flip Assist |
+| ICEwave | Overhead horizontal blade and engine audio |
+| HyperShock | Four-wheel vertical disc spinner |
+| Gigabyte | Full-body spinning shell with separate drive heading |
+| Son of Whyachi | Horizontal cage rotor |
+| HUGE | Large wheels, horizontal outer poles and central vertical blade |
+| SawBlaze | Fast overhead hammer arm carrying an independent spinning saw |
+| Deep Six | Large vertical bar spinner |
+| Quantum | Hydraulic crushing jaw, battery penetration and short release retreat |
+
+Each stock machine has 1,200 chassis HP. These are reference-inspired game models with custom rules. Weapon references, derived values and estimates are distinguished in the source. Battery coordinates are fitted game estimates, not certified hardware measurements.
+
+## 🎮 Controls
+
+| Action | Player 1 | Player 2 |
+| --- | --- | --- |
+| Drive | Arrow keys | I / J / K / L |
+| Weapon | Space | Enter |
+| Strike / self-right | Q | U |
+| Camera | E | O |
+| Manual Unstick | R | P |
+| Pause | Escape | Escape |
+| After the match | **R** rematch · **M** arena menu | Same result shortcuts |
+
+Controls can be remapped. Manual Unstick is separate from physical self-righting. Click the game to enable audio.
+
+## 🛠️ Continue building on Windows
+
+Extract to a folder such as `C:\Games\combat-robot-arena`. Open PowerShell there:
+
+```powershell
+.\runtime\windows-x64\node.exe scripts\verify-manifest.mjs
+.\DEVELOP-WINDOWS.cmd
+```
+
+Check the manifest before making edits. Stop development with Ctrl+C, then run:
+
+```powershell
+.\BUILD-WINDOWS.cmd
+.\TEST-WINDOWS.cmd
+.\START-WINDOWS.cmd
+```
+
+`TEST-WINDOWS.cmd --physics` adds core, battery and gyro checks. Play and development share port 4173; run one server at a time. The browser address is `http://127.0.0.1:4173/`. Keep the server window open.
+
+**Do not run `npm ci` in the full offline ZIP.** Its dependencies are already installed. Source edits need a fresh build before they appear through START.
+
+### 🧠 Ready-to-paste Codex prompts
+
+Every prompt begins with **what to install and how to build/run on Windows**, then the task and its do/don't rules.
+
+| Prompt | Use it for |
+| --- | --- |
+| [Continue development](handover/CODEX_CONTINUE_PROMPT.md) | Resume work on this existing project |
+| [Complete build specification](handover/CODEX_BUILD_ALL_PROMPT.md) | Detailed full-game specification and implementation sequence |
+| [Review and fix bugs](handover/CODEX_REVIEW_PROMPT.md) | Focused review, reproduction, repair and validation |
+| [Feature template](handover/CODEX_FEATURE_PROMPT_TEMPLATE.md) | Add your next requested change |
+
+The game and included build tools run offline. Codex and AI models are separate; hosted AI requires internet. The package does not promise disconnected Codex inference.
+
+## 📦 Package and source map
+
+| Path | Contents |
+| --- | --- |
+| `src/` | TypeScript game, physics, rendering, builder and UI |
+| `public/` | 11 robot photos, 12 local audio files and notices |
+| `tests/` | Physics, geometry, UI and packaging checks |
+| `handover/` | Prompts, current requirements, specifications, architecture and validation |
+| `reference-images/` | Eight original user visual references |
+| `docs/` | Historical research, reports and screenshots |
+| `scripts/` | Local servers, build, verification and packaging helpers |
+| `dist/`, `node_modules/`, `runtime/` | Generated game and portable tools, included in the release ZIP only |
+
+Stack: **TypeScript · Three.js 0.180.0 · Rapier 0.19.0 · Vite 7.1.7**. Dependencies are locked. Physics uses SI units and a fixed 240 Hz timestep.
+
+Start with [START_HERE](handover/START_HERE.md), [current requirements](handover/CURRENT_REQUIREMENTS.md), [architecture](handover/ARCHITECTURE.md), [do/don't rules](handover/DO_AND_DO_NOT.md) and [test plan](handover/TEST_PLAN.md). Current instructions and source take precedence over historical `docs/` reports.
+
+## ✅ Validation and private publication
+
+See [Windows package validation](handover/WINDOWS_PACKAGE_VALIDATION.json) for the checks run for this package. Windows native execution, real WebGL rendering, audible playback and a disconnected target-PC smoke check remain manual checks. A Linux build or binary-header inspection is not a Windows execution test.
+
+The full ZIP includes SHA-256 checksums for its files. A separate `.sha256` file verifies the ZIP itself. To regenerate it after building and testing, install Python and run `py -3 scripts\package-offline.py --target windows`.
+
+Keep source in this **private** repository and attach full offline ZIPs to its private releases. See [GitHub publication](handover/GITHUB_PUBLISH.md) and [third-party notices](handover/THIRD_PARTY_NOTICES.md). Robot names and images remain their respective owners' material; this repository does not grant new rights to those assets.
