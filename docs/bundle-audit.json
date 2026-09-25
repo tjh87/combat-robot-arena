@@ -2,7 +2,7 @@
   "status": "passed",
   "assetReferences": [
     "/favicon.svg",
-    "/assets/index-DdQHNgYu.js",
+    "/assets/index-CvhLVZbX.js",
     "/assets/index-DmQm7yMY.css"
   ],
   "embeddedWasmBytes": 1555075,
@@ -16,12 +16,12 @@
     {
       "path": "index.html",
       "bytes": 515,
-      "sha256": "e9fde7fc798543f6be72fe37b81edf8c3ba0ae63a0ab36d2d50b33163115d2cf"
+      "sha256": "43e23319abbb571b61095416dda7fbaca2b28a62a32dff69da831fa678b9905c"
     },
     {
-      "path": "assets/index-DdQHNgYu.js",
-      "bytes": 3173017,
-      "sha256": "d9386fec670cfd9f5d0867805a603c85719d6ee192508284e22b4fd13d3ac14b"
+      "path": "assets/index-CvhLVZbX.js",
+      "bytes": 3174965,
+      "sha256": "85ce93b93c4043dd655954620138b51089ae657b9bf3b59892c8e1606ebaa301"
     },
     {
       "path": "assets/index-DmQm7yMY.css",
