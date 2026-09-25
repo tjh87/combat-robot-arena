@@ -1,0 +1,61 @@
+{
+  "date": "2026-09-25",
+  "sourceCommit": "15056c8e80233054f240a13f98047b40e219e38f",
+  "exportPurpose": "Standalone offline handover; no gameplay source edits in this export",
+  "changedGameSourceFiles": 0,
+  "preservedGameSourceFiles": 39,
+  "currentChecks": {
+    "productionBuild": "passed",
+    "typescript": "passed",
+    "localAssetAndEmbeddedWasmAudit": "passed",
+    "staticServerRoutesAndBoundaries": "passed",
+    "uiDomRegression": {
+      "passed": 65,
+      "failed": 0
+    },
+    "newDocumentationLinks": "passed; zero missing local targets",
+    "linuxBundledNode": "v24.21.0 executed successfully",
+    "linuxBundledNpm": "11.19.0 executed successfully",
+    "windowsBinaries": "PE32+ AMD64 headers checked; execution not tested",
+    "freshZipExtraction": {
+      "status": "passed",
+      "fileChecksums": 10941,
+      "bundledRuntimeBuild": "passed",
+      "bundledRuntimeVerification": "passed",
+      "pathWithSpaces": "passed",
+      "npmInstallRequired": false,
+      "buildOutputMatchesSourcePackage": true,
+      "networkIsolation": "Not available in this runner; no package download/install was used. Disconnected target check remains manual."
+    }
+  },
+  "previousGameUpdateEvidence": {
+    "notRerunForThisExport": true,
+    "batteryHitCases": 594,
+    "gyroScenarios": 12,
+    "focusedUiGroups": 6,
+    "report": "docs/hydra-battery-research-results.json"
+  },
+  "included": {
+    "stockRobots": 11,
+    "batteryZones": 18,
+    "robotPictures": 11,
+    "localAudioFiles": 12,
+    "userReferenceImages": 8,
+    "developmentPrompts": 4,
+    "portableRuntimeTargets": [
+      "Windows x64",
+      "Linux x64"
+    ]
+  },
+  "manualChecksRequired": [
+    "Windows launcher/build execution",
+    "Real WebGL graphics on target hardware",
+    "Audible playback and levels",
+    "Disconnected target-computer smoke check"
+  ],
+  "limitations": [
+    "Battery locations remain fitted game estimates; seven robot regions lack reliable team confirmation.",
+    "Codex application and AI model are not included.",
+    "No GitHub publication is claimed by this validation report."
+  ]
+}

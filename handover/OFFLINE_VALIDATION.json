@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "htmlAssets": 3,
+  "localRobotImage": true,
+  "localAudio": true,
+  "sourceFilesNotServed": true,
+  "traversalRejected": true,
+  "methodsChecked": [
+    "GET",
+    "HEAD",
+    "POST"
+  ],
+  "server": "127.0.0.1 only",
+  "webgl": "Manual browser check required"
+}

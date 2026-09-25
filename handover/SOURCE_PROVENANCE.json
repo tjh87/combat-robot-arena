@@ -1,0 +1,14 @@
+{
+  "exportDate": "2026-09-25",
+  "sourceCommit": "15056c8e80233054f240a13f98047b40e219e38f",
+  "sourceProject": "Combat Robot Arena",
+  "purpose": "Standalone offline game and continued Codex development",
+  "sourceFilesAtExport": 239,
+  "hostingDependency": "Removed from standalone copy",
+  "gameplaySourceChangesDuringExport": 0,
+  "runtimeTargets": [
+    "windows-x64",
+    "linux-x64"
+  ],
+  "nodeRuntime": "v24.21.0"
+}

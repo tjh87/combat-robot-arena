@@ -1,0 +1,1377 @@
+{
+  "sourceCommit": "15056c8e80233054f240a13f98047b40e219e38f",
+  "rules": {
+    "id": "arena-v1",
+    "hz": 240,
+    "dt": 0.004166666666666667,
+    "maxSteps": 16,
+    "lateFrame": 0.25,
+    "matchTicks": 43200,
+    "floor": 14.63,
+    "wallHeight": 2.7,
+    "wallThickness": 0.6,
+    "weight": 113.398,
+    "tip": 111.76,
+    "repair": 900,
+    "debris": 30,
+    "solverIterations": 12,
+    "ccdSubsteps": 1,
+    "flipJoules": 4200
+  },
+  "quantumHydraulics": {
+    "frontForce": 155687.75653411748,
+    "rearForce": 222411.08076302498,
+    "closeSeconds": 0.3,
+    "pressureRiseSeconds": 0.12,
+    "pumpWatts": 3500,
+    "indentSpeed": 0.014,
+    "cycleJoules": 12000
+  },
+  "arenaHazards": {
+    "headKg": 22.6796185,
+    "armKg": 3,
+    "armLength": 1.18,
+    "hammerJ": 3500,
+    "sawRadius": 0.32,
+    "sawWidth": 0.014,
+    "sawSpacing": 0.24,
+    "sawRPM": 1200,
+    "sawWatts": 750,
+    "screwRadius": 0.17,
+    "screwCore": 0.065,
+    "screwLength": 1.38,
+    "screwRate": 5,
+    "screwWatts": 600,
+    "jamSeconds": 1.25,
+    "reverseSeconds": 1.8
+  },
+  "robots": [
+    {
+      "name": "Tombstone",
+      "profile": "tombstone",
+      "totalMassKg": 113.20000000000003,
+      "chassis": {
+        "profile": "tombstone",
+        "form": "box",
+        "length": 0.6,
+        "width": 0.5,
+        "height": 0.15,
+        "material": "aluminium7075",
+        "thickness": 0.009,
+        "wedgeAngle": 25,
+        "clearance": 0.055,
+        "equipmentMassKg": 6.435393187296512
+      },
+      "weapon": {
+        "type": "horizontal_bar",
+        "radius": 0.42,
+        "innerRadius": 0,
+        "width": 0.16,
+        "thickness": 0.04000000000000001,
+        "teeth": 2,
+        "toothDepth": 0.055,
+        "toothWidth": 0.1,
+        "toothHeight": 0.028,
+        "material": "hardox",
+        "mount": {
+          "x": 0,
+          "y": -0.103,
+          "z": -0.43
+        },
+        "motor": "spin48dual",
+        "ratio": 2.4,
+        "rpm": 2541,
+        "direction": 1,
+        "massKg": 31.751465900000003
+      },
+      "weaponReference": {
+        "massLb": 70,
+        "massBasis": "published",
+        "tipMph": 250,
+        "speedBasis": "derived",
+        "configuration": "2019 Ray Billings interview",
+        "note": "The Ringer’s original interview with Ray Billings reports a 70 lb bar limited to 250 mph in competition. RPM is calculated for the game radius; interchangeable real bars vary.",
+        "sources": [
+          {
+            "label": "Ray Billings interview: The Ringer",
+            "url": "https://www.theringer.com/2019/06/11/tv/battlebots-season-9-premiere-discovery-science"
+          }
+        ]
+      },
+      "rotorInertiaKgM2": 1.374765068648132,
+      "drive": {
+        "layout": 2,
+        "radius": 0.13,
+        "width": 0.09,
+        "material": "rubber",
+        "motor": "drive48",
+        "ratio": 14,
+        "magnet": 80
+      },
+      "battery": {
+        "pack": "P48",
+        "capacityWh": 250
+      },
+      "batteryLayout": {
+        "zone": "Rear battery bay",
+        "note": "Rear bay retained as a game estimate. The team AMA does not establish measured battery positions.",
+        "sources": [
+          {
+            "label": "Ray Billings team AMA",
+            "url": "https://www.reddit.com/r/battlebots/comments/lyptp2/tombstone_ama_ask_me_anything/"
+          },
+          {
+            "label": "Hardcore Robotics",
+            "url": "https://hardcorerobotics.com/team.html"
+          }
+        ],
+        "centres": [
+          [
+            0,
+            0.29
+          ]
+        ],
+        "size": [
+          0.52,
+          0.23
+        ]
+      },
+      "batteryZones": [
+        {
+          "id": "battery",
+          "position": {
+            "x": 0,
+            "y": -0.022,
+            "z": 0.174
+          },
+          "size": {
+            "x": 0.26,
+            "y": 0.08,
+            "z": 0.138
+          },
+          "fraction": 1
+        }
+      ],
+      "selfRight": {
+        "type": "none"
+      },
+      "flipperEnergyJ": null
+    },
+    {
+      "name": "Minotaur",
+      "profile": "minotaur",
+      "totalMassKg": 113.20000000000002,
+      "chassis": {
+        "profile": "minotaur",
+        "form": "box",
+        "length": 0.6,
+        "width": 0.58,
+        "height": 0.16,
+        "material": "aluminium7075",
+        "thickness": 0.009,
+        "wedgeAngle": 25,
+        "clearance": 0.082,
+        "equipmentMassKg": 6.300812393224504
+      },
+      "weapon": {
+        "type": "drum",
+        "radius": 0.155,
+        "innerRadius": 0.113,
+        "width": 0.38,
+        "thickness": 0.035,
+        "teeth": 4,
+        "toothDepth": 0.035,
+        "toothWidth": 0.34,
+        "toothHeight": 0.035,
+        "material": "hardox",
+        "mount": {
+          "x": 0,
+          "y": 0,
+          "z": -0.378
+        },
+        "motor": "spin48dual",
+        "ratio": 1.3694366635543105,
+        "rpm": 6885,
+        "direction": 1,
+        "massKg": 22.6796185
+      },
+      "weaponReference": {
+        "massLb": 50,
+        "massBasis": "published",
+        "rpm": 8000,
+        "speedBasis": "published",
+        "configuration": "2019 designer interview",
+        "note": "Stevens interviews lead designer Rodrigo Nogueira: 50 lb drum, 8,000 RPM. The game caps the target to 250 mph for its modeled drum radius.",
+        "sources": [
+          {
+            "label": "Stevens: designer interview",
+            "url": "https://www.stevens.edu/news/stevens-student-returns-battlebots-2019-season"
+          }
+        ]
+      },
+      "rotorInertiaKgM2": 0.34602545812114377,
+      "drive": {
+        "layout": 2,
+        "radius": 0.162,
+        "width": 0.07,
+        "material": "rubber",
+        "motor": "drive48sport",
+        "ratio": 24,
+        "magnet": 0
+      },
+      "battery": {
+        "pack": "P48",
+        "capacityWh": 500
+      },
+      "batteryLayout": {
+        "zone": "Low rear battery bays, including both rear corners",
+        "note": "SawBlaze reports a battery hit at a rear underside corner. RioBotz confirms separate drive and weapon supplies. Both corner positions and the centre drive zone are game estimates; the exact drive-pack position remains unconfirmed.",
+        "sources": [
+          {
+            "label": "SawBlaze fight report, reproduced on Reddit",
+            "url": "https://www.reddit.com/r/battlebots/comments/141gblg/sawblaze_v_minotaur_aftermath/"
+          },
+          {
+            "label": "RioBotz team AMA",
+            "url": "https://www.reddit.com/r/battlebots/comments/13u7k9r/ama_with_minotaurs_team_riobotz_at_7pm_et/"
+          }
+        ],
+        "centres": [
+          [
+            -0.23,
+            0.28
+          ],
+          [
+            0.23,
+            0.28
+          ],
+          [
+            0,
+            0.283334
+          ]
+        ],
+        "size": [
+          0.22,
+          0.2
+        ],
+        "bottomClearance": 0.006
+      },
+      "batteryZones": [
+        {
+          "id": "battery",
+          "position": {
+            "x": -0.1334,
+            "y": -0.034,
+            "z": 0.168
+          },
+          "size": {
+            "x": 0.1276,
+            "y": 0.08,
+            "z": 0.12
+          },
+          "fraction": 0.3333333333333333
+        },
+        {
+          "id": "battery_1",
+          "position": {
+            "x": 0.1334,
+            "y": -0.034,
+            "z": 0.168
+          },
+          "size": {
+            "x": 0.1276,
+            "y": 0.08,
+            "z": 0.12
+          },
+          "fraction": 0.3333333333333333
+        },
+        {
+          "id": "battery_2",
+          "position": {
+            "x": 0,
+            "y": -0.034,
+            "z": 0.17000039999999997
+          },
+          "size": {
+            "x": 0.1276,
+            "y": 0.08,
+            "z": 0.12
+          },
+          "fraction": 0.3333333333333333
+        }
+      ],
+      "selfRight": {
+        "type": "none"
+      },
+      "flipperEnergyJ": null
+    },
+    {
+      "name": "Hydra",
+      "profile": "hydra",
+      "totalMassKg": 113.20000000000002,
+      "chassis": {
+        "profile": "hydra",
+        "form": "wedge",
+        "length": 0.64,
+        "width": 0.58,
+        "height": 0.16,
+        "material": "aluminium7075",
+        "thickness": 0.009,
+        "wedgeAngle": 25,
+        "clearance": 0.018,
+        "equipmentMassKg": 18.629719642711223
+      },
+      "weapon": {
+        "type": "flipper",
+        "length": 0.3,
+        "width": 0.22,
+        "thickness": 0.012,
+        "material": "hardox",
+        "mount": {
+          "x": 0,
+          "y": 0.101,
+          "z": -0.335
+        },
+        "travel": 1.48,
+        "actuator": "F3000",
+        "stroke": 0.2,
+        "charges": 8
+      },
+      "weaponReference": {
+        "massBasis": "geometry",
+        "speedBasis": "not applicable",
+        "configuration": "Hydraulic flipper",
+        "note": "No spinning rotor. Moving arm mass is calculated from the game geometry; a reliable separate arm mass was not found. Hydraulic hardware is not a rotating weapon.",
+        "sources": [
+          {
+            "label": "Team Whyachi",
+            "url": "https://whyachi.com/bots/"
+          }
+        ]
+      },
+      "rotorInertiaKgM2": 0.08699017541279973,
+      "drive": {
+        "layout": 4,
+        "radius": 0.1,
+        "width": 0.075,
+        "material": "rubber",
+        "motor": "drive48",
+        "ratio": 14,
+        "magnet": 0
+      },
+      "battery": {
+        "pack": "P48",
+        "capacityWh": 250
+      },
+      "batteryLayout": {
+        "zone": "Rear side bays beside the hydraulic assembly",
+        "note": "Unconfirmed placement. Team material describes the hydraulic system, but does not locate the battery packs. Rear side bays remain game estimates.",
+        "sources": [
+          {
+            "label": "Team Whyachi",
+            "url": "https://whyachi.com/"
+          },
+          {
+            "label": "Team hydraulic layout",
+            "url": "https://www.facebook.com/Whyachi/posts/2588424261170373/"
+          }
+        ],
+        "centres": [
+          [
+            -0.25,
+            0.24
+          ],
+          [
+            0.25,
+            0.24
+          ]
+        ],
+        "size": [
+          0.22,
+          0.22
+        ]
+      },
+      "batteryZones": [
+        {
+          "id": "battery",
+          "position": {
+            "x": -0.145,
+            "y": -0.022,
+            "z": 0.1536
+          },
+          "size": {
+            "x": 0.1276,
+            "y": 0.08,
+            "z": 0.1408
+          },
+          "fraction": 0.5
+        },
+        {
+          "id": "battery_1",
+          "position": {
+            "x": 0.145,
+            "y": -0.022,
+            "z": 0.1536
+          },
+          "size": {
+            "x": 0.1276,
+            "y": 0.08,
+            "z": 0.1408
+          },
+          "fraction": 0.5
+        }
+      ],
+      "selfRight": {
+        "type": "none"
+      },
+      "flipperEnergyJ": 18900
+    },
+    {
+      "name": "ICEwave",
+      "profile": "icewave",
+      "totalMassKg": 113.19999999999999,
+      "chassis": {
+        "profile": "icewave",
+        "form": "box",
+        "length": 0.6,
+        "width": 0.48,
+        "height": 0.13,
+        "material": "aluminium7075",
+        "thickness": 0.006,
+        "wedgeAngle": 25,
+        "clearance": 0.018,
+        "equipmentMassKg": 13.35351405970961
+      },
+      "weapon": {
+        "type": "horizontal_bar",
+        "radius": 0.56,
+        "innerRadius": 0,
+        "width": 0.125,
+        "thickness": 0.038400000000000004,
+        "teeth": 2,
+        "toothDepth": 0.035,
+        "toothWidth": 0.085,
+        "toothHeight": 0.025,
+        "material": "hardox",
+        "mount": {
+          "x": 0,
+          "y": 0.15,
+          "z": 0
+        },
+        "motor": "spin48dual",
+        "ratio": 2.4,
+        "rpm": 1524,
+        "direction": 1,
+        "massKg": 24.49398798
+      },
+      "weaponReference": {
+        "massLb": 54,
+        "massBasis": "published",
+        "tipMph": 200,
+        "speedBasis": "derived",
+        "configuration": "Season 6 team modal study (2022)",
+        "note": "The team’s joint engineering report specifies a 54 lb blade and 200 mph tips. RPM is calculated for the game radius. The game uses its electric motor approximation.",
+        "sources": [
+          {
+            "label": "Team Icewave / PCB engineering report",
+            "url": "https://www.pcb.com/contentstore/MktgContent/linkeddocuments/technotes/TN-38_ModalTesting_Icewave.pdf"
+          }
+        ]
+      },
+      "rotorInertiaKgM2": 1.9950654582898184,
+      "drive": {
+        "layout": 4,
+        "radius": 0.09,
+        "width": 0.06,
+        "material": "rubber",
+        "motor": "drive48",
+        "ratio": 14,
+        "magnet": 0
+      },
+      "battery": {
+        "pack": "P48",
+        "capacityWh": 250
+      },
+      "batteryLayout": {
+        "zone": "Low rear drive battery bay",
+        "note": "Unconfirmed placement. The electric drive supply belongs in the lower chassis; the rear location remains a game estimate. The upper engine is not a battery target.",
+        "sources": [
+          {
+            "label": "BattleBots ICEwave profile",
+            "url": "https://battlebots.com/robot/icewave-2021/"
+          }
+        ],
+        "centres": [
+          [
+            0,
+            0.28
+          ]
+        ],
+        "size": [
+          0.46,
+          0.23
+        ]
+      },
+      "batteryZones": [
+        {
+          "id": "battery",
+          "position": {
+            "x": 0,
+            "y": -0.020249999999999997,
+            "z": 0.168
+          },
+          "size": {
+            "x": 0.2208,
+            "y": 0.07150000000000001,
+            "z": 0.138
+          },
+          "fraction": 1
+        }
+      ],
+      "selfRight": {
+        "type": "none"
+      },
+      "flipperEnergyJ": null
+    },
+    {
+      "name": "HyperShock",
+      "profile": "hypershock",
+      "totalMassKg": 113.20000000000006,
+      "chassis": {
+        "profile": "hypershock",
+        "form": "box",
+        "length": 0.565,
+        "width": 0.36,
+        "height": 0.12,
+        "material": "aluminium7075",
+        "thickness": 0.006,
+        "wedgeAngle": 25,
+        "clearance": 0.018,
+        "equipmentMassKg": 19.68041249939857
+      },
+      "weapon": {
+        "type": "vertical_disc",
+        "radius": 0.155,
+        "innerRadius": 0.063,
+        "width": 0.14,
+        "thickness": 0.022,
+        "teeth": 2,
+        "toothDepth": 0.026,
+        "toothWidth": 0.022,
+        "toothHeight": 0.062,
+        "material": "hardox",
+        "mount": {
+          "x": 0,
+          "y": 0.092,
+          "z": -0.45
+        },
+        "motor": "spin48",
+        "ratio": 1.3865546218487392,
+        "rpm": 6800,
+        "direction": 1,
+        "massKg": 20.41165665
+      },
+      "weaponReference": {
+        "massLb": 45,
+        "massBasis": "published",
+        "rpm": 6800,
+        "speedBasis": "estimate",
+        "configuration": "2019 double-disc mass; game speed",
+        "note": "Will Bales gave approximately 45 lb for the double-disc spinning assembly in the 2019 team AMA. The 6,800 RPM setting is a game estimate, not a verified team specification.",
+        "sources": [
+          {
+            "label": "Will Bales: team AMA",
+            "url": "https://www.reddit.com/r/battlebots/comments/cspm64/"
+          }
+        ]
+      },
+      "rotorInertiaKgM2": 0.16814693004845416,
+      "drive": {
+        "layout": 4,
+        "radius": 0.17,
+        "width": 0.095,
+        "material": "rubber",
+        "motor": "drive48sport",
+        "ratio": 14,
+        "magnet": 240
+      },
+      "battery": {
+        "pack": "P48",
+        "capacityWh": 400
+      },
+      "batteryLayout": {
+        "zone": "Central battery box between drive pods",
+        "note": "The team power-system log and interior photo support a central shared battery box between drive pods. The box hangs clear of the base plate. Coordinates and clearance are game estimates.",
+        "sources": [
+          {
+            "label": "Team power-system build log",
+            "url": "https://hypershock.tv/blogs/inside-the-bot/putting-the-shock-in-hypershock"
+          }
+        ],
+        "centres": [
+          [
+            0,
+            -0.02
+          ]
+        ],
+        "size": [
+          0.44,
+          0.42
+        ],
+        "bottomClearance": 0.025
+      },
+      "batteryZones": [
+        {
+          "id": "battery",
+          "position": {
+            "x": 0,
+            "y": -0.001999999999999995,
+            "z": -0.0113
+          },
+          "size": {
+            "x": 0.15839999999999999,
+            "y": 0.066,
+            "z": 0.23729999999999996
+          },
+          "fraction": 1
+        }
+      ],
+      "selfRight": {
+        "type": "roll_arm",
+        "mount": {
+          "x": 0,
+          "y": 0.11,
+          "z": -0.25
+        },
+        "length": 0.57,
+        "actuator": "R600"
+      },
+      "flipperEnergyJ": null
+    },
+    {
+      "name": "Gigabyte",
+      "profile": "gigabyte",
+      "totalMassKg": 113.19999999999995,
+      "chassis": {
+        "profile": "gigabyte",
+        "form": "box",
+        "length": 0.46,
+        "width": 0.42,
+        "height": 0.11,
+        "material": "aluminium7075",
+        "thickness": 0.006,
+        "wedgeAngle": 25,
+        "clearance": 0.022,
+        "equipmentMassKg": 8.792865524547523
+      },
+      "weapon": {
+        "type": "shell_spinner",
+        "radius": 0.48,
+        "innerRadius": 0,
+        "width": 0.235,
+        "thickness": 0.008,
+        "teeth": 3,
+        "toothDepth": 0.035,
+        "toothWidth": 0.095,
+        "toothHeight": 0.027,
+        "material": "hardox",
+        "mount": {
+          "x": 0,
+          "y": -0.053,
+          "z": 0
+        },
+        "motor": "spin48dual",
+        "ratio": 3,
+        "rpm": 1689,
+        "direction": 1,
+        "massKg": 54.4310844
+      },
+      "weaponReference": {
+        "massLb": 120,
+        "massBasis": "estimate",
+        "tipMph": 190,
+        "speedBasis": "estimate",
+        "configuration": "Game shell configuration",
+        "note": "120 lb / 190 mph are game estimates. Accessible official team profiles did not establish exact shell mass and speed. RPM is calculated for the game radius.",
+        "sources": [
+          {
+            "label": "BattleBots team profile",
+            "url": "https://battlebots.com/robot/gigabyte-wcvii/"
+          }
+        ]
+      },
+      "rotorInertiaKgM2": 6.563082891231354,
+      "drive": {
+        "layout": 4,
+        "radius": 0.075,
+        "width": 0.045,
+        "material": "rubber",
+        "motor": "drive48sport",
+        "ratio": 16,
+        "magnet": 180
+      },
+      "battery": {
+        "pack": "P48",
+        "capacityWh": 250
+      },
+      "batteryLayout": {
+        "zone": "Low side bays under the spinning shell",
+        "note": "The team confirms a battery puncture through the bottom plate. Low mounting is supported; the two side-bay positions and dimensions remain game estimates.",
+        "sources": [
+          {
+            "label": "Public post-fight report",
+            "url": "https://www.reddit.com/r/battlebots/comments/17c0od2/gigabyte_sin_city_slugfest_post_fight/"
+          }
+        ],
+        "centres": [
+          [
+            -0.25,
+            0.16
+          ],
+          [
+            0.25,
+            0.16
+          ]
+        ],
+        "size": [
+          0.23,
+          0.3
+        ],
+        "bottomClearance": 0.006
+      },
+      "batteryZones": [
+        {
+          "id": "battery",
+          "position": {
+            "x": -0.105,
+            "y": -0.018749999999999996,
+            "z": 0.0736
+          },
+          "size": {
+            "x": 0.0966,
+            "y": 0.060500000000000005,
+            "z": 0.138
+          },
+          "fraction": 0.5
+        },
+        {
+          "id": "battery_1",
+          "position": {
+            "x": 0.105,
+            "y": -0.018749999999999996,
+            "z": 0.0736
+          },
+          "size": {
+            "x": 0.0966,
+            "y": 0.060500000000000005,
+            "z": 0.138
+          },
+          "fraction": 0.5
+        }
+      ],
+      "selfRight": {
+        "type": "roll_arm",
+        "mount": {
+          "x": -0.27,
+          "y": 0.215,
+          "z": 0
+        },
+        "length": 0.55,
+        "actuator": "R600"
+      },
+      "flipperEnergyJ": null
+    },
+    {
+      "name": "Son of Whyachi",
+      "profile": "whyachi",
+      "totalMassKg": 113.19999999999999,
+      "chassis": {
+        "profile": "whyachi",
+        "form": "box",
+        "length": 0.57,
+        "width": 0.49,
+        "height": 0.14,
+        "material": "aluminium7075",
+        "thickness": 0.006,
+        "wedgeAngle": 25,
+        "clearance": 0.018,
+        "equipmentMassKg": 2.0010660906816895
+      },
+      "weapon": {
+        "type": "horizontal_cage",
+        "radius": 0.56,
+        "innerRadius": 0,
+        "width": 0.11,
+        "thickness": 0.0338,
+        "teeth": 3,
+        "toothDepth": 0.035,
+        "toothWidth": 0.07,
+        "toothHeight": 0.05,
+        "material": "hardox",
+        "mount": {
+          "x": 0,
+          "y": 0.119,
+          "z": 0
+        },
+        "motor": "spin48dual",
+        "ratio": 3,
+        "rpm": 1295,
+        "direction": 1,
+        "massKg": 54.4310844
+      },
+      "weaponReference": {
+        "massLb": 120,
+        "massBasis": "estimate",
+        "tipMph": 170,
+        "speedBasis": "derived",
+        "configuration": "2016–2019 team tip-speed reference",
+        "note": "Team Whyachi specifies up to 170 mph. RPM is calculated for the game radius. Cage mass is a 120 lb game estimate; the team page does not publish it.",
+        "sources": [
+          {
+            "label": "Team Whyachi: Son of Whyachi",
+            "url": "https://whyachi.com/bots/"
+          }
+        ]
+      },
+      "rotorInertiaKgM2": 5.304266826928028,
+      "drive": {
+        "layout": 4,
+        "radius": 0.085,
+        "width": 0.055,
+        "material": "rubber",
+        "motor": "drive48",
+        "ratio": 14,
+        "magnet": 0
+      },
+      "battery": {
+        "pack": "P48",
+        "capacityWh": 250
+      },
+      "batteryLayout": {
+        "zone": "Low rear chassis bay under the rotor",
+        "note": "Unconfirmed placement. The team site does not locate the packs in the modern wheeled robot. The rear bay remains a game estimate.",
+        "sources": [
+          {
+            "label": "Team Whyachi",
+            "url": "https://whyachi.com/"
+          }
+        ],
+        "centres": [
+          [
+            0,
+            0.25
+          ]
+        ],
+        "size": [
+          0.46,
+          0.25
+        ]
+      },
+      "batteryZones": [
+        {
+          "id": "battery",
+          "position": {
+            "x": 0,
+            "y": -0.022,
+            "z": 0.1425
+          },
+          "size": {
+            "x": 0.22540000000000002,
+            "y": 0.07700000000000001,
+            "z": 0.1425
+          },
+          "fraction": 1
+        }
+      ],
+      "selfRight": {
+        "type": "none"
+      },
+      "flipperEnergyJ": null
+    },
+    {
+      "name": "HUGE",
+      "profile": "huge",
+      "totalMassKg": 113.19999999999999,
+      "chassis": {
+        "profile": "huge",
+        "form": "box",
+        "length": 0.23,
+        "width": 0.82,
+        "height": 0.14,
+        "material": "aluminium7075",
+        "thickness": 0.006,
+        "wedgeAngle": 25,
+        "clearance": 0.41,
+        "equipmentMassKg": 31.984550667214933
+      },
+      "weapon": {
+        "type": "vertical_bar",
+        "radius": 0.46,
+        "innerRadius": 0,
+        "width": 0.095,
+        "thickness": 0.041,
+        "teeth": 2,
+        "toothDepth": 0.035,
+        "toothWidth": 0.026,
+        "toothHeight": 0.095,
+        "material": "hardox",
+        "mount": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "motor": "spin48",
+        "ratio": 3,
+        "rpm": 2180,
+        "direction": 1,
+        "massKg": 13.6077711
+      },
+      "weaponReference": {
+        "massLb": 30,
+        "massBasis": "published",
+        "tipMph": 235,
+        "speedBasis": "derived",
+        "configuration": "Team robot specification",
+        "note": "The team specifies 30 lb bars and 220–250 mph depending on bar length. This preset uses the 235 mph midpoint, converted to RPM for the game radius.",
+        "sources": [
+          {
+            "label": "Team HUGE: robot specifications",
+            "url": "https://hugebattlebots.com/about-the-robot"
+          }
+        ]
+      },
+      "rotorInertiaKgM2": 0.8241834214445869,
+      "drive": {
+        "layout": 2,
+        "radius": 0.48,
+        "width": 0.05,
+        "material": "rubber",
+        "motor": "drive48",
+        "ratio": 35,
+        "magnet": 0
+      },
+      "battery": {
+        "pack": "P48",
+        "capacityWh": 250
+      },
+      "batteryLayout": {
+        "zone": "Left and right chassis pods",
+        "note": "Team CAD shows mirrored chassis halves. The later Fusion report identifies battery access through the wheel area. Both chassis-pod zones are retained; exact positions remain game estimates.",
+        "sources": [
+          {
+            "label": "Team HUGE build log and CAD",
+            "url": "https://hugebattlebots.com/team-huge-battlebots-blog/huge-build-log-2018"
+          },
+          {
+            "label": "Team HUGE: Fusion fight report",
+            "url": "https://hugebattlebots.com/team-huge-battlebots-blog/huge-vs-fusion"
+          }
+        ],
+        "centres": [
+          [
+            -0.29,
+            0
+          ],
+          [
+            0.29,
+            0
+          ]
+        ],
+        "size": [
+          0.24,
+          0.5
+        ]
+      },
+      "batteryZones": [
+        {
+          "id": "battery",
+          "position": {
+            "x": -0.23779999999999996,
+            "y": -0.022,
+            "z": 0
+          },
+          "size": {
+            "x": 0.19679999999999997,
+            "y": 0.07700000000000001,
+            "z": 0.115
+          },
+          "fraction": 0.5
+        },
+        {
+          "id": "battery_1",
+          "position": {
+            "x": 0.23779999999999996,
+            "y": -0.022,
+            "z": 0
+          },
+          "size": {
+            "x": 0.19679999999999997,
+            "y": 0.07700000000000001,
+            "z": 0.115
+          },
+          "fraction": 0.5
+        }
+      ],
+      "selfRight": {
+        "type": "none"
+      },
+      "flipperEnergyJ": null
+    },
+    {
+      "name": "SawBlaze",
+      "profile": "sawblaze",
+      "totalMassKg": 113.20000000000002,
+      "chassis": {
+        "profile": "sawblaze",
+        "form": "box",
+        "length": 0.52,
+        "width": 0.47,
+        "height": 0.14,
+        "material": "aluminium7075",
+        "thickness": 0.006,
+        "wedgeAngle": 25,
+        "clearance": 0.018,
+        "equipmentMassKg": 36.91569411874849
+      },
+      "weapon": {
+        "type": "hammer_saw",
+        "radius": 0.2032,
+        "innerRadius": 0.072,
+        "width": 0.025,
+        "thickness": 0.025,
+        "teeth": 4,
+        "toothDepth": 0.035,
+        "toothWidth": 0.025,
+        "toothHeight": 0.075,
+        "material": "hardox",
+        "mount": {
+          "x": 0,
+          "y": 0.115,
+          "z": 0.115
+        },
+        "motor": "spin48dual",
+        "ratio": 1.7952344685017951,
+        "rpm": 5252,
+        "direction": 1,
+        "armLength": 0.5,
+        "armTravel": 1.12,
+        "massKg": 13.6077711
+      },
+      "weaponReference": {
+        "massLb": 30,
+        "massBasis": "estimate",
+        "tipMph": 250,
+        "speedBasis": "derived",
+        "configuration": "2023 builder specification; estimated disc mass",
+        "note": "Jamison Go specifies a 16-inch hammer-saw disc and 250 mph tips. RPM follows from that diameter. Disc mass is a 30 lb game estimate, excluding the separate swinging arm.",
+        "sources": [
+          {
+            "label": "Jamison Go: SawBlaze",
+            "url": "https://jamisongo.com/projects/sawblaze/"
+          }
+        ]
+      },
+      "rotorInertiaKgM2": 0.19321683341620371,
+      "drive": {
+        "layout": 2,
+        "radius": 0.105,
+        "width": 0.075,
+        "material": "rubber",
+        "motor": "drive48",
+        "ratio": 14,
+        "magnet": 0
+      },
+      "battery": {
+        "pack": "P48",
+        "capacityWh": 450
+      },
+      "batteryLayout": {
+        "zone": "Rear chassis battery bay",
+        "note": "Unconfirmed placement. The builder specifies a 12s4p supply but does not locate its packs. The rear bay remains a game estimate.",
+        "sources": [
+          {
+            "label": "Jamison Go: SawBlaze",
+            "url": "https://jamisongo.com/projects/sawblaze/"
+          }
+        ],
+        "centres": [
+          [
+            0,
+            0.25
+          ]
+        ],
+        "size": [
+          0.46,
+          0.25
+        ]
+      },
+      "batteryZones": [
+        {
+          "id": "battery",
+          "position": {
+            "x": 0,
+            "y": -0.022,
+            "z": 0.13
+          },
+          "size": {
+            "x": 0.2162,
+            "y": 0.07700000000000001,
+            "z": 0.13
+          },
+          "fraction": 1
+        }
+      ],
+      "selfRight": {
+        "type": "none"
+      },
+      "flipperEnergyJ": null
+    },
+    {
+      "name": "Deep Six",
+      "profile": "deep_six",
+      "totalMassKg": 113.19999999999997,
+      "chassis": {
+        "profile": "deep_six",
+        "form": "box",
+        "length": 0.32,
+        "width": 0.82,
+        "height": 0.1,
+        "material": "aluminium7075",
+        "thickness": 0.005,
+        "wedgeAngle": 25,
+        "clearance": 0.018,
+        "equipmentMassKg": 40.113146979726864
+      },
+      "weapon": {
+        "type": "vertical_bar",
+        "radius": 0.57,
+        "innerRadius": 0,
+        "width": 0.145,
+        "thickness": 0.076,
+        "teeth": 2,
+        "toothDepth": 0.065,
+        "toothWidth": 0.03,
+        "toothHeight": 0.13,
+        "material": "hardox",
+        "mount": {
+          "x": 0,
+          "y": 0.555,
+          "z": -0.04
+        },
+        "motor": "spin48dual",
+        "ratio": 3.4,
+        "rpm": 1860,
+        "direction": 1,
+        "massKg": 36.287389600000004
+      },
+      "weaponReference": {
+        "massLb": 80,
+        "massBasis": "published",
+        "rpm": 1860,
+        "speedBasis": "estimate",
+        "configuration": "2021 weapon; game speed",
+        "note": "The official team profile states an 80 lb weapon. 1,860 RPM is a game estimate within the modeled blade’s 250 mph limit; exact operating RPM was not confirmed.",
+        "sources": [
+          {
+            "label": "BattleBots: Deep Six 2021",
+            "url": "https://battlebots.com/robot/deep-six-2021/"
+          }
+        ]
+      },
+      "rotorInertiaKgM2": 3.807240367140149,
+      "drive": {
+        "layout": 2,
+        "radius": 0.082,
+        "width": 0.07,
+        "material": "rubber",
+        "motor": "drive48",
+        "ratio": 18,
+        "magnet": 0
+      },
+      "battery": {
+        "pack": "P48",
+        "capacityWh": 250
+      },
+      "batteryLayout": {
+        "zone": "Left and right lower chassis pods",
+        "note": "Unconfirmed placement. The team AMA does not establish battery positions. The two lower chassis zones remain game estimates.",
+        "sources": [
+          {
+            "label": "Team Deep Six AMA",
+            "url": "https://www.reddit.com/r/battlebots/comments/coottd/ama_with_deep_six/"
+          }
+        ],
+        "centres": [
+          [
+            -0.29,
+            0
+          ],
+          [
+            0.29,
+            0
+          ]
+        ],
+        "size": [
+          0.24,
+          0.38
+        ]
+      },
+      "batteryZones": [
+        {
+          "id": "battery",
+          "position": {
+            "x": -0.23779999999999996,
+            "y": -0.0135,
+            "z": 0
+          },
+          "size": {
+            "x": 0.19679999999999997,
+            "y": 0.05500000000000001,
+            "z": 0.1216
+          },
+          "fraction": 0.5
+        },
+        {
+          "id": "battery_1",
+          "position": {
+            "x": 0.23779999999999996,
+            "y": -0.0135,
+            "z": 0
+          },
+          "size": {
+            "x": 0.19679999999999997,
+            "y": 0.05500000000000001,
+            "z": 0.1216
+          },
+          "fraction": 0.5
+        }
+      ],
+      "selfRight": {
+        "type": "none"
+      },
+      "flipperEnergyJ": null
+    },
+    {
+      "name": "Quantum",
+      "profile": "quantum",
+      "totalMassKg": 113.2,
+      "chassis": {
+        "profile": "quantum",
+        "form": "box",
+        "length": 0.62,
+        "width": 0.52,
+        "height": 0.12,
+        "material": "aluminium7075",
+        "thickness": 0.005,
+        "wedgeAngle": 25,
+        "clearance": 0.022,
+        "equipmentMassKg": 1.0866998156176066
+      },
+      "weapon": {
+        "type": "crusher",
+        "length": 0.66,
+        "width": 0.36,
+        "thickness": 0.014,
+        "material": "hardox",
+        "mount": {
+          "x": 0,
+          "y": 0.13,
+          "z": 0.11
+        },
+        "travel": 0.48,
+        "torque": 4500
+      },
+      "weaponReference": {
+        "massBasis": "geometry",
+        "speedBasis": "not applicable",
+        "configuration": "Hydraulic crusher",
+        "note": "No spinning rotor. Jaw mass is calculated from the game geometry. BattleBots confirms 35,000 lbf; the rear 50,000 lbf rating and two-stage action follow the requested specification.",
+        "sources": [
+          {
+            "label": "BattleBots: Quantum 2019",
+            "url": "https://battlebots.com/robot/quantum-2019/"
+          }
+        ]
+      },
+      "rotorInertiaKgM2": 5.4294001380469785,
+      "drive": {
+        "layout": 4,
+        "radius": 0.105,
+        "width": 0.065,
+        "material": "rubber",
+        "motor": "drive48sport",
+        "ratio": 14,
+        "magnet": 80
+      },
+      "battery": {
+        "pack": "P48",
+        "capacityWh": 350
+      },
+      "batteryLayout": {
+        "zone": "Rear chassis bays beside the hydraulic unit",
+        "note": "Unconfirmed placement. The team AMA discusses opponent batteries, not the position of Quantum packs. The rear side bays remain game estimates.",
+        "sources": [
+          {
+            "label": "RoboChallenge team AMA",
+            "url": "https://www.reddit.com/r/battlebots/comments/13hmmck/quantum_ama_with_james_grant_cooper/"
+          }
+        ],
+        "centres": [
+          [
+            -0.23,
+            0.25
+          ],
+          [
+            0.23,
+            0.25
+          ]
+        ],
+        "size": [
+          0.24,
+          0.23
+        ]
+      },
+      "batteryZones": [
+        {
+          "id": "battery",
+          "position": {
+            "x": -0.11960000000000001,
+            "y": -0.017999999999999995,
+            "z": 0.155
+          },
+          "size": {
+            "x": 0.1248,
+            "y": 0.066,
+            "z": 0.1426
+          },
+          "fraction": 0.5
+        },
+        {
+          "id": "battery_1",
+          "position": {
+            "x": 0.11960000000000001,
+            "y": -0.017999999999999995,
+            "z": 0.155
+          },
+          "size": {
+            "x": 0.1248,
+            "y": 0.066,
+            "z": 0.1426
+          },
+          "fraction": 0.5
+        }
+      ],
+      "selfRight": {
+        "type": "roll_arm",
+        "mount": {
+          "x": 0,
+          "y": 0.12,
+          "z": 0.245
+        },
+        "length": 0.54,
+        "actuator": "R600"
+      },
+      "flipperEnergyJ": null
+    }
+  ]
+}
