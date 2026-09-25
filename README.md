@@ -4,7 +4,7 @@
 
 A local 3D robot-combat game with 11 heavyweight machines, physics-driven weapons, a custom robot builder, AI opponents, local two-player battles and tournaments. Drive from the tactical camera or robot POV, use the arena hazards, watch damage and battery failures unfold, then replay the decisive hit.
 
-🪟 **Windows x64 offline package** · 🛠️ **Complete editable source** · ⚔️ **11 stock robots** · 🔒 **Private repository**
+🪟 **Windows x64 offline package** · 🛠️ **Complete editable source** · ⚔️ **11 stock robots**
 
 ## 🪟 Start here: what to install
 
