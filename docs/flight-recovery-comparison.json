@@ -1,0 +1,56 @@
+{
+  "current": [
+    {
+      "name": "Gigabyte brakes its shell and self-rights through its folding arm",
+      "status": "passed",
+      "detail": [
+        {
+          "startRPM": 0,
+          "recoveredSeconds": 0.9583333333333334,
+          "armWorkJ": 1606.5045134645788
+        },
+        {
+          "startRPM": 1000,
+          "recoveredSeconds": 2.845833333333333,
+          "armWorkJ": 1618.2744995208566
+        },
+        {
+          "startRPM": 1950,
+          "recoveredSeconds": 4.9875,
+          "armWorkJ": 1611.1457088128661
+        }
+      ]
+    },
+    {
+      "name": "Minotaur uses drum precession and steering to recover onto its wheels from either side",
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(b.grounded&&Math.abs(s.axis(b,v(0,1,0)).y)>.9)\n"
+    },
+    {
+      "name": "HUGE has two physical side supports and can move after a fall on either side",
+      "status": "passed",
+      "detail": {
+        "supports": 2,
+        "massKg": 1.9640030898664407,
+        "rows": [
+          {
+            "side": -1,
+            "travelM": 7.195447692772423
+          },
+          {
+            "side": 1,
+            "travelM": 7.199337128478262
+          }
+        ]
+      }
+    }
+  ],
+  "unchangedParent": [
+    {
+      "name": "Minotaur uses drum precession and steering to recover onto its wheels from either side",
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(b.grounded&&Math.abs(s.axis(b,v(0,1,0)).y)>.9)\n"
+    }
+  ],
+  "baselineCommit": "69440acb14521e8910f10f32264268a22b79aadc"
+}

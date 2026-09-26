@@ -1,0 +1,101 @@
+[
+  {
+    "name": "All eleven robots stay below the flight ceiling after a strong launch and then fall",
+    "status": "passed",
+    "detail": [
+      {
+        "robot": "Tombstone",
+        "peakCentreM": 3.325959635739504
+      },
+      {
+        "robot": "Minotaur",
+        "peakCentreM": 3.3242624140222743
+      },
+      {
+        "robot": "Hydra",
+        "peakCentreM": 3.3181070945933597
+      },
+      {
+        "robot": "ICEwave",
+        "peakCentreM": 3.3241165402308006
+      },
+      {
+        "robot": "HyperShock",
+        "peakCentreM": 3.3277581091574273
+      },
+      {
+        "robot": "Gigabyte",
+        "peakCentreM": 3.332533153487759
+      },
+      {
+        "robot": "Son of Whyachi",
+        "peakCentreM": 3.33248295793518
+      },
+      {
+        "robot": "HUGE",
+        "peakCentreM": 3.3286353515821485
+      },
+      {
+        "robot": "SawBlaze",
+        "peakCentreM": 3.323641215057299
+      },
+      {
+        "robot": "Deep Six",
+        "peakCentreM": 3.328069068034307
+      },
+      {
+        "robot": "Quantum",
+        "peakCentreM": 3.325999838624348
+      }
+    ]
+  },
+  {
+    "name": "The limiter preserves horizontal velocity, body spin and relative joint motion",
+    "status": "passed",
+    "detail": {
+      "bodies": 8,
+      "commonUpwardSpeedRemoved": 23.396991729736328
+    }
+  },
+  {
+    "name": "Small jumps and normal falls retain their velocity",
+    "status": "passed",
+    "detail": {
+      "cases": 4
+    }
+  },
+  {
+    "name": "A solver overshoot moves the complete assembly together without changing its pose",
+    "status": "passed",
+    "detail": {
+      "limitM": 3.35
+    }
+  },
+  {
+    "name": "All eleven upright robots can still cross the wall and receive a ring-out result",
+    "status": "passed",
+    "detail": {
+      "robots": [
+        "Tombstone",
+        "Minotaur",
+        "Hydra",
+        "ICEwave",
+        "HyperShock",
+        "Gigabyte",
+        "Son of Whyachi",
+        "HUGE",
+        "SawBlaze",
+        "Deep Six",
+        "Quantum"
+      ]
+    }
+  },
+  {
+    "name": "Post-match motion and recorded frames retain the same flight limit",
+    "status": "passed",
+    "detail": {
+      "peakCentreM": 3.328624118117338,
+      "frames": 56
+    }
+  }
+]

@@ -4,7 +4,7 @@ import {WEAPON_REFERENCES,LB_TO_KG,referenceRPM} from './weapon-specs';
 // Shared authored geometry and game catalogue. All physics quantities are SI.
 // Keep one CCD pass so every solved contact remains available to the hit ledger.
 // Swept assembly bounds provide the additional wall containment guard.
-export const RULES = { id:'arena-v1', hz:240, dt:1/240, maxSteps:16, lateFrame:.25, matchTicks:43200, floor:14.63, wallHeight:2.70, wallThickness:.60, weight:113.398, tip:111.76, repair:900, debris:30, solverIterations:12, ccdSubsteps:1, flipJoules:4200 } as const;
+export const RULES = { id:'arena-v1', hz:240, dt:1/240, maxSteps:16, lateFrame:.25, matchTicks:43200, floor:14.63, wallHeight:2.70, maxFlightHeight:3.35, wallThickness:.60, weight:113.398, tip:111.76, repair:900, debris:30, solverIterations:12, ccdSubsteps:1, flipJoules:4200 } as const;
 export const SLOTS = ['chassis','weapon','weapon_actuator','drive_left','drive_right','battery','self_right','armour_front','armour_left','armour_right','armour_rear','armour_top'] as const;
 export type Slot = typeof SLOTS[number];
 export const MOUNTS = ['front','left','right','rear','top'] as const;

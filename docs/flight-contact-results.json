@@ -1,0 +1,171 @@
+{
+  "date": "2026-09-26T03:58:30.755Z",
+  "results": [
+    {
+      "name": "Bite follows tooth spacing, feed, insertion and strike angle",
+      "status": "passed",
+      "detail": {
+        "shallowBiteMm": 8.726646259971648,
+        "deepBiteMm": 40,
+        "shallowDamagePercent": 28.486635129047087,
+        "deepDamagePercent": 76.81818181818181
+      }
+    },
+    {
+      "name": "Every spinning weapon loses speed when it strikes a robot",
+      "status": "passed",
+      "detail": [
+        {
+          "name": "Tombstone",
+          "energyBeforeJ": 48489.98178435649,
+          "energyAfterJ": 4204.214010479034,
+          "rpmLossPercent": 70.55467195383687,
+          "maxBiteMm": 33.04077393271306,
+          "maxEngagement": 0.1406801183415887
+        },
+        {
+          "name": "Minotaur",
+          "energyBeforeJ": 88930.07027390522,
+          "energyAfterJ": 4201.53304542073,
+          "rpmLossPercent": 78.26400256914685,
+          "maxBiteMm": 4.857529245909923,
+          "maxEngagement": 0.06778471623358695
+        },
+        {
+          "name": "ICEwave",
+          "energyBeforeJ": 25319.441733900498,
+          "energyAfterJ": 21985.813575254568,
+          "rpmLossPercent": 6.815386615611885,
+          "maxBiteMm": 35,
+          "maxEngagement": 0.07527913029233003
+        },
+        {
+          "name": "HyperShock",
+          "energyBeforeJ": 41881.09221813246,
+          "energyAfterJ": 537.6713697883529,
+          "rpmLossPercent": 88.66949005782546,
+          "maxBiteMm": 0,
+          "maxEngagement": 0
+        },
+        {
+          "name": "Gigabyte",
+          "energyBeforeJ": 102776.60861091242,
+          "energyAfterJ": 59403.280623106395,
+          "rpmLossPercent": 23.97471206981362,
+          "maxBiteMm": 14.770819352854824,
+          "maxEngagement": 0.08354688594139174
+        },
+        {
+          "name": "Son of Whyachi",
+          "energyBeforeJ": 48664.62096587849,
+          "energyAfterJ": 1977.2535898214999,
+          "rpmLossPercent": 79.84306414417432,
+          "maxBiteMm": 32.252022210395594,
+          "maxEngagement": 0.9196272991079896
+        },
+        {
+          "name": "HUGE",
+          "energyBeforeJ": 21273.06290781326,
+          "energyAfterJ": 31.812461185531525,
+          "rpmLossPercent": 96.13291584968417,
+          "maxBiteMm": 15.56068069960795,
+          "maxEngagement": 0.16224890819605267
+        },
+        {
+          "name": "SawBlaze",
+          "energyBeforeJ": 29175.757628379342,
+          "energyAfterJ": 1081.74653709552,
+          "rpmLossPercent": 80.7446380978321,
+          "maxBiteMm": 13.503095153848566,
+          "maxEngagement": 0.29605164519846344
+        },
+        {
+          "name": "Deep Six",
+          "energyBeforeJ": 72024.57439685213,
+          "energyAfterJ": 2230.900748249977,
+          "rpmLossPercent": 82.40052251039765,
+          "maxBiteMm": 19.425715523930045,
+          "maxEngagement": 0.294499868738151
+        }
+      ]
+    },
+    {
+      "name": "Walls stop low crossings at high speed and only permit clearance over the rim",
+      "status": "passed",
+      "detail": {
+        "cases": 48,
+        "contained": 48,
+        "clearedRim": 0,
+        "maxSpeedMps": 150,
+        "maxChassisCoordinateM": 7.1607666015625,
+        "wallInnerCoordinateM": 7.315,
+        "ccdSubsteps": 1
+      }
+    },
+    {
+      "name": "A robot can leave only by clearing the top of a wall",
+      "status": "passed",
+      "detail": {
+        "reason": "Out of arena",
+        "wallHeightM": 2.7
+      }
+    },
+    {
+      "name": "An unpowered impact does not add launch energy or cancel physical recoil",
+      "status": "passed",
+      "detail": {
+        "initialEnergyJ": 49179.733976478594,
+        "finalEnergyJ": 42745.15747561121,
+        "maximumEnergyJ": 49179.733976478594,
+        "momentumErrorPercent": 0.7281750969452446,
+        "hitTick": 87
+      }
+    },
+    {
+      "name": "A coasting weapon loses energy against both a wall and the floor",
+      "status": "passed",
+      "detail": [
+        {
+          "surface": "wall",
+          "energyBeforeJ": 48419.50548439578,
+          "energyAfterJ": 1394.3683795702877
+        },
+        {
+          "surface": "floor",
+          "energyBeforeJ": 48139.63549264124,
+          "energyAfterJ": 39781.56303540692
+        }
+      ]
+    },
+    {
+      "name": "A hammer has one finite 3500 J charge per cycle and Quantum survives the strike",
+      "status": "passed",
+      "detail": {
+        "headMassKg": 25.67961883544922,
+        "maximumKineticEnergyJ": 3329.7430483134203,
+        "assignedImpactEnergyJ": 2203.6405707222098,
+        "chassisHp": 1200
+      }
+    },
+    {
+      "name": "Static pushing pressure makes no smoke, and slipping tires respond to load",
+      "status": "passed",
+      "detail": {
+        "stationary": 0,
+        "sliding": 0.15,
+        "pushed": 0.43000000000000005,
+        "powered": 0.78
+      }
+    },
+    {
+      "name": "Fast tooth sweeps keep all 200 hits and reject all 200 near misses",
+      "status": "passed",
+      "detail": {
+        "hits": 200,
+        "nearMisses": 200,
+        "hz": 240
+      }
+    }
+  ],
+  "scope": "Nine completed contact checks. The optional six-match soak was stopped after three completed matches and is not counted as passed."
+}

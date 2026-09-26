@@ -386,7 +386,26 @@ export class Simulation{
    b.wall=true;this.world.propagateModifiedBodyPositionsToColliders();
   }
  }
+ // Gameplay flight ceiling, measured at the complete robot's centre of mass.
+ // Remove only excess upward translation; retain horizontal motion, spin and
+ // relative body velocities. The ballistic limit produces a natural apex.
+ private limitFlightHeight(){
+  const gravity=Math.max(0,-this.world.gravity.y);
+  for(const b of this.bots){
+   let mass=0,height=0,up=0;for(const body of b.bodies.values()){const m=body.mass();mass+=m;height+=body.worldCom().y*m;up+=body.linvel().y*m;}
+   if(mass<=0)continue;height/=mass;up/=mass;
+   const overshoot=Math.max(0,height-RULES.maxFlightHeight),allowed=height>=RULES.maxFlightHeight?0:gravity>0?Math.sqrt(2*gravity*(RULES.maxFlightHeight-height)):Infinity,remove=Math.max(0,up-allowed);
+   if(!overshoot&&!remove)continue;
+   for(const body of b.bodies.values()){
+    if(overshoot){const p=body.translation();body.setTranslation(v(p.x,p.y-overshoot,p.z),true);}
+    if(remove){const velocity=body.linvel();body.setLinvel(v(velocity.x,velocity.y-remove,velocity.z),true);}
+   }
+   // Catch a contact impulse that crosses the ceiling within this solver step.
+   if(overshoot)this.world.propagateModifiedBodyPositionsToColliders();
+  }
+ }
  private integrateWorld(){
+  this.limitFlightHeight();
   const gyro=this.bots.filter(b=>selfRightKind(b.compiled.config)==='gyro'&&b.rollStart>=0&&b.rotor);
   this.substepContacts=undefined;if(!gyro.length){this.world.step(this.queue);return;}this.substepContacts=[];
   const base=gyro.map(b=>sub(b.rotor!.userTorque(),gyroInertialTorque(b.rotor!))),dt=RULES.dt/4;this.world.timestep=dt;
@@ -398,7 +417,7 @@ export class Simulation{
   if(!this.result||this.fault||this.disposed)return;
   this.pre.clear();for(const b of this.bots)for(const body of b.bodies.values())this.pre.set(body.handle,{p:{...body.translation()},com:{...body.worldCom()},q:{...body.rotation()},lin:{...body.linvel()},ang:{...body.angvel()}});
   for(const b of this.bots){b.command=neutral();this.motors(b);}
-  this.integrateWorld();this.tick++;this.containArena();this.sampleTravel();this.updateRingOut();
+  this.integrateWorld();this.tick++;this.containArena();this.limitFlightHeight();this.sampleTravel();this.updateRingOut();
   for(const b of this.bots)b.rpm=Math.abs(this.omega(b))*30/Math.PI;
   if(this.tick%(RULES.hz/60)===0&&this.frames.at(-1)?.tick!==this.tick)this.capture();
  }
@@ -449,7 +468,7 @@ export class Simulation{
  this.pre.clear();for(const b of this.bots)for(const body of b.bodies.values())this.pre.set(body.handle,{p:{...body.translation()},com:{...body.worldCom()},q:{...body.rotation()},lin:{...body.linvel()},ang:{...body.angvel()}});
  const requestedDrive=this.bots.map(b=>({left:b.command.left,right:b.command.right})),rotorBefore=this.bots.map(b=>.5*b.compiled.rotorInertia*this.omega(b)**2);for(const b of this.bots){this.recoverStuck(b);this.motors(b);}this.hazardsStep();for(const h of this.hazards){const body=h.body;this.pre.set(body.handle,{p:{...body.translation()},com:{...body.worldCom()},q:{...body.rotation()},lin:{...body.linvel()},ang:{...body.angvel()}});}this.integrateWorld();this.tick++;this.startedContacts.clear();this.queue.drainCollisionEvents((a,b,started)=>{if(started)this.startedContacts.add(`${Math.min(a,b)}:${Math.max(a,b)}`);});
  for(const b of this.bots){for(const body of b.bodies.values())if(![body.translation(),body.rotation(),body.linvel(),body.angvel()].every(value=>Object.values(value).every(Number.isFinite)))throw Error('A robot has an invalid physics state.');}
- this.contacts(rotorBefore);this.containArena();this.crushing();this.burnBatteries();this.sampleTravel();this.rules();for(const b of this.bots)Object.assign(b.command,requestedDrive[b.id]);
+ this.contacts(rotorBefore);this.containArena();this.crushing();this.burnBatteries();this.limitFlightHeight();this.sampleTravel();this.rules();for(const b of this.bots)Object.assign(b.command,requestedDrive[b.id]);
  for(const b of this.bots){b.rpm=Math.abs(this.omega(b))*30/Math.PI;b.rotorEnergy=.5*b.compiled.rotorInertia*this.omega(b)**2;}
  if(this.tick%(RULES.hz/60)===0&&this.frames.at(-1)?.tick!==this.tick)this.capture();
  }catch(error){this.result=undefined;this.fault=(error instanceof Error?error.message:'Physics could not continue.')+' Restart this match.';}finally{this.physicsMs=performance.now()-start;}
