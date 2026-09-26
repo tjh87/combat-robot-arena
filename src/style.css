@@ -194,10 +194,9 @@
 
 .hud-bottom .telemetry{position:absolute;left:25px;bottom:150px;max-width:280px}
 
-/* Internal battery locations: tiny, quiet cues for both competitors. */
+/* The match cues stay legible when the 3D outline is distant or behind a weapon. */
 #battery-hints{position:absolute;inset:0;pointer-events:none}
-.battery-target-hint{position:absolute;width:12px;height:7px;transform:translate(-50%,-50%);border:1px solid #ffe1a1;border-radius:1px;background:#11202c33;box-shadow:0 0 2px #000;opacity:.65}
-.battery-target-hint::after{content:'';position:absolute;right:-3px;top:1px;width:2px;height:3px;background:#ffe1a1}
+.battery-target-hint{position:absolute;width:22px;height:15px;transform:translate(-50%,-50%);border:2px dotted #ff354b;border-radius:2px;background:#ff354b19;filter:drop-shadow(0 1px 2px #080b0e);opacity:.95}
 /* Keep the first-person sightline open without shrinking essential text. */
 [data-camera="pov"] .weapon-instruments{right:12px;bottom:12px;max-width:300px}
 [data-camera="pov"] .weapon-gauge{width:300px;background:rgba(10,22,31,.72);box-shadow:none}
