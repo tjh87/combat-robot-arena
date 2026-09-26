@@ -31,6 +31,7 @@ Keep each stock robot below the existing 60,000-triangle target.
 
 The floor is 14.63 metres square. The containment rim is 7.30 metres high.
 Walls use 0.60-metre overlapping collision geometry and the existing swept assembly guard.
+Do not render vertical wall posts or their mounting hardware. Keep the glass, impact cracks and wall collision geometry.
 Robots must not cross walls below the rim. They can leave the arena above the rim.
 Strong wall impacts leave cosmetic cracks without removing collision geometry. Use measured contact impulse and contact energy. Current game thresholds are 20 N·s and 200 J per impact step; these are visual tuning values, not measured panel fracture data. Keep at most 48 cracks, 0.25-second local repeat suppression, replay snapshots, and reset them for each match.
 The centre-of-mass flight ceiling is 7.95 metres. Limit excess upward speed using v = sqrt(2 g remainingHeight), without boosting weaker impacts. Keep horizontal motion and spin. Require the complete robot to clear the rim for ring-outs.

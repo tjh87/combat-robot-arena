@@ -86,10 +86,7 @@ export function buildFoundry(parent:THREE.Group){
  for(const axis of[0,1])for(const side of[-1,1]){
   const wall=new THREE.Group();wall.position.set(axis===0?side*(edge+.08):0,0,axis===1?side*(edge+.08):0);wall.rotation.y=axis===0?Math.PI/2:0;
   const b=new Batch();b.box([RULES.floor+.22,.3,.18],[0,.15,0],black);b.box([RULES.floor,.07,.08],[0,.32,-.04],edgeMetal);b.box([RULES.floor,.11,.12],[0,RULES.wallHeight-.055,0],steel);
-  for(let i=0;i<=8;i++){
-   const x=-edge+i*RULES.floor/8;b.box([.11,RULES.wallHeight,.11],[x,RULES.wallHeight/2,0],steel);b.box([.2,.12,.15],[x,.39,0],edgeMetal);b.box([.2,.12,.15],[x,RULES.wallHeight-.13,0],edgeMetal);
-   for(const y of[.38,RULES.wallHeight-.13])b.cylinder(.023,.016,[x,y,-.085],black,rotation(Math.PI/2));
-  }
+  // Keep wall glass unobstructed: no vertical posts or their mounting hardware.
   // Thin horizontal reinforcement and painted kick plates behind the glass.
   b.box([RULES.floor,.035,.04],[0,1.1,0],steel);
   b.box([RULES.floor,.1,.022],[0,.22,-.107],axis===0?(side<0?blue:red):steel);
