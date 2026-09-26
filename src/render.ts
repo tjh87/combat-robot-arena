@@ -10,7 +10,7 @@ import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {buildFoundry,detailPart,hazardVisual,templateColor} from './visuals';
 import {rotorMotion,updateRotorMotion} from './combat-visuals';
 import {FlightLabel} from './flight-label';
-import {finishedGeometry,frontMarker} from './finish-geometry';
+import {finishedGeometry,frontMarker,hugeWheelGeometry} from './finish-geometry';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import {RULES,batteryPosition,clamp,SLOTS,MATERIALS,compile,bodyOrigin,povMount,povDirection,identity,rotate,add,v,type BotConfig,type Part,type Vec} from './model';
 import {Simulation,type VisualFrame} from './sim';
@@ -49,6 +49,7 @@ export class ArenaRenderer{
  if(p.id.startsWith('lid')||p.id.startsWith('armour_')||p.id==='wedge'){material.color.set(p.id.startsWith('armour_top')||p.id.startsWith('lid')?config.identity.primary:config.identity.secondary);material.roughness=['minotaur','tombstone','deep_six'].includes(config.chassis.profile??'')?.28:.20;material.clearcoat=.85;material.clearcoatRoughness=.18;}
  if(config.weapon.type==='horizontal_bar'&&p.id.startsWith('armour_')&&p.id!=='armour_top')material.color.lerp(new THREE.Color('#151a20'),.85);
  if(p.module==='weapon'){material.color.set(config.weapon.type==='horizontal_bar'?'#b61e27':config.weapon.type==='flipper'?config.identity.primary:p.tooth!==undefined?'#d3dce0':'#59656c');material.roughness=p.tooth!==undefined?.16:.28;}if(p.id.startsWith('frame_'))material.color.set('#1b2027');if(p.id.startsWith('drum_bearing_'))material.color.set(config.identity.primary);const paint=templateColor(p,config);if(paint)material.color.set(paint);const mesh=new THREE.Mesh(this.geometry(p,config),material);mesh.userData={module:p.module,part:p.id,material:p.material,baseColor:material.color.getHex(),baseRoughness:material.roughness};mesh.position.copy(vec(p.position));mesh.quaternion.set(p.rotation.x,p.rotation.y,p.rotation.z,p.rotation.w);mesh.castShadow=true;mesh.receiveShadow=true;
+ if(mesh.geometry.userData.profileHood){material.vertexColors=true;material.color.set(0xffffff);mesh.userData.baseColor=0xffffff;}
  if(config.chassis.profile==='quantum'&&p.module==='weapon'){material.roughness=.12;material.metalness=.97;}detailPart(mesh,p,config);
  return mesh;}
  displayParts(config:BotConfig,parts:Part[]){
@@ -68,11 +69,16 @@ export class ArenaRenderer{
   // authored surfaces by finish; the independent collision sectors remain intact.
   for(const [body,list]of wheels){
    const origin=vec(bodyOrigin(config,body)),groups=new Map<string,{geometries:THREE.BufferGeometry[],material:THREE.MeshStandardMaterial,kind:string}>();
-   for(const p of list){const root=this.part(p,config);root.position.sub(origin);root.updateMatrixWorld(true);
-    root.traverse(o=>{if(!(o instanceof THREE.Mesh))return;const m=o.material as THREE.MeshStandardMaterial,key=[m.color.getHex(),m.roughness,m.metalness].join('/');let group=groups.get(key);if(!group){group={geometries:[],material:m.clone(),kind:p.material};groups.set(key,group);}const geo=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone();geo.deleteAttribute('uv');geo.applyMatrix4(o.matrixWorld);group.geometries.push(geo);});
+   const moulded=config.chassis.profile==='huge';let wheelSkin=false;
+   for(const p of list){let root:THREE.Mesh;
+    if(moulded&&p.material==='uhmw'){
+     if(wheelSkin)continue;wheelSkin=true;root=new THREE.Mesh(hugeWheelGeometry(config.drive.radius,config.drive.width),this.material(config.identity.primary,.52,.03));root.position.copy(origin);
+    }else root=this.part(p,config);
+    root.position.sub(origin);root.updateMatrixWorld(true);
+    root.traverse(o=>{if(!(o instanceof THREE.Mesh))return;const m=o.material as THREE.MeshStandardMaterial,key=[m.color.getHex(),m.roughness,m.metalness,m.map?.uuid??'',m.side,m.transparent,m.opacity].join('/');let group=groups.get(key);if(!group){const material=m.clone();if(m.map)material.map=m.map.clone();group={geometries:[],material,kind:p.material};groups.set(key,group);}const geo=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone();if(!geo.getAttribute('uv'))geo.setAttribute('uv',new THREE.Float32BufferAttribute(new Float32Array(geo.getAttribute('position').count*2),2));geo.applyMatrix4(o.matrixWorld);group.geometries.push(geo);});
     this.disposeObject(root);
    }
-   let i=0;for(const group of groups.values()){const p=list[i++],geo=mergeGeometries(group.geometries)!;group.geometries.forEach(g=>g.dispose());const mesh=new THREE.Mesh(geo,group.material);mesh.position.copy(origin);mesh.castShadow=mesh.receiveShadow=true;mesh.userData={module:p.module,part:p.id,material:group.kind,baseColor:group.material.color.getHex(),baseRoughness:group.material.roughness};out.push({p,mesh});}
+   let i=0;for(const group of groups.values()){const p=list[i++],geo=compactGeometry(mergeGeometries(group.geometries)!);group.geometries.forEach(g=>g.dispose());const mesh=new THREE.Mesh(geo,group.material);mesh.position.copy(origin);mesh.castShadow=mesh.receiveShadow=true;mesh.userData={module:p.module,part:p.id,material:group.kind,baseColor:group.material.color.getHex(),baseRoughness:group.material.roughness};if(moulded&&group.kind==='uhmw')mesh.name='huge-moulded-five-spoke-wheel';out.push({p,mesh});}
   }return out;
  }
  attach(sim:Simulation){this.shadowDirty=true;this.needsRender=true;this.lastVisualTick=-1;this.clear(this.bots);this.bodyGroups.clear();this.partMeshes.clear();this.hazardMeshes.clear();this.lastImpact=0;this.endReplay();this.particleAges.fill(-1);this.smokeAges.fill(-1);this.smokeClock=0;this.exhaust?.reset();this.tireEffects.reset();

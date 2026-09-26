@@ -252,14 +252,24 @@
     "status": "passed"
   },
   {
-    "name": "Damage bubbles use whole HP, a minimum of one, and matching rounded tiers",
+    "name": "Damage bubbles suppress one-HP labels in live play and replay while retaining precise damage",
     "status": "passed",
     "detail": {
       "liveCases": 8,
       "replayCases": 1,
-      "minimumDisplayedHP": 1,
+      "minimumDisplayedHP": 2,
       "decimalPlaces": 0,
       "physicsPrecisionPreserved": true
+    }
+  },
+  {
+    "name": "A main impact is not followed by a stream of one-HP bubbles on either robot",
+    "status": "passed",
+    "detail": {
+      "robots": 2,
+      "trailingUpdates": 600,
+      "oneHPBubbles": 0,
+      "preciseHPPerRobot": 85.2
     }
   },
   {
@@ -332,5 +342,38 @@
   {
     "name": "Battery hints cover both robots and POV switches the compact gauge layout",
     "status": "passed"
+  },
+  {
+    "name": "Performance: hidden tabs pause physics, stop drawing, and stay paused when visible again",
+    "status": "passed",
+    "detail": {
+      "hiddenFrames": 20,
+      "extraHiddenDraws": 0,
+      "explicitResume": true
+    }
+  },
+  {
+    "name": "Performance: high refresh displays retain 240 Hz physics with at most 60 rendered frames per second",
+    "status": "passed",
+    "detail": {
+      "physicsTicks": 240,
+      "draws": 60
+    }
+  },
+  {
+    "name": "Performance: adaptive display preference saves without changing camera, controls, or quality",
+    "status": "passed",
+    "detail": {
+      "saved": true,
+      "quality": "medium"
+    }
+  },
+  {
+    "name": "Performance: countdown and replay audio are not suspended by the HUD timer",
+    "status": "passed",
+    "detail": {
+      "countdownMuted": false,
+      "replayMuted": false
+    }
   }
 ]

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {TessellateModifier} from 'three/addons/modifiers/TessellateModifier.js';
+import {compactGeometry} from './geometry-memory';
 import {type BotConfig} from './model';
 
 function casting(shape:THREE.Shape,depth:number){
@@ -22,7 +23,7 @@ export function quantumFang(c:BotConfig,side:number){
  shape.moveTo(.565,.38);shape.quadraticCurveTo(.62,.37,.645,.34);shape.quadraticCurveTo(.66,.27,.661,.179);shape.quadraticCurveTo(.612,.233,.595,.25);shape.quadraticCurveTo(.571,.29,.565,.38);
  const g=casting(shape,.018),p=g.getAttribute('position');
  for(let i=0;i<p.count;i++)p.setXYZ(i,p.getZ(i)-.009,p.getY(i)*scale,-p.getX(i)*scale);smoothCasting(g);
- const mesh=new THREE.Mesh(g,new THREE.MeshPhysicalMaterial({color:0x262d35,metalness:.94,roughness:.22,clearcoat:.5}));mesh.name='quantum-piercing-fang';mesh.position.x=side*c.weapon.width*.26;mesh.castShadow=mesh.receiveShadow=true;return mesh;
+ const mesh=new THREE.Mesh(compactGeometry(g),new THREE.MeshPhysicalMaterial({color:0x262d35,metalness:.94,roughness:.22,clearcoat:.5}));mesh.name='quantum-piercing-fang';mesh.position.x=side*c.weapon.width*.26;mesh.castShadow=mesh.receiveShadow=true;return mesh;
 }
 // The curved cast skin follows the existing jaw collision ribs. Holes remain
 // open geometry, rather than dark circles painted onto a solid head.
@@ -57,7 +58,7 @@ export function quantumHead(c:BotConfig){
   const f=.50-i*.08,y=height(f)-.085,tooth=new THREE.Shape();tooth.moveTo(f-.018,y+.026);tooth.lineTo(f+.018,y+.022);tooth.quadraticCurveTo(f+.026,y-.015,f+.028,y-.069+i*.012);tooth.quadraticCurveTo(f-.010,y-.030,f-.018,y+.026);
   const g=casting(tooth,.010),p=g.getAttribute('position');for(let j=0;j<p.count;j++)p.setXYZ(j,p.getZ(j)+half+side*half*.86,p.getY(j)*scale,-p.getX(j)*scale);g.computeVertexNormals();const fang=new THREE.Mesh(g,metal.clone());fang.name='quantum-inner-fang';head.add(fang);
  }
- head.traverse(o=>{if(o instanceof THREE.Mesh){o.castShadow=true;o.receiveShadow=true;}});return head;
+ head.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry=compactGeometry(o.geometry);o.castShadow=true;o.receiveShadow=true;}});return head;
 }
 
 export function quantumScoop(c:BotConfig){
@@ -76,5 +77,5 @@ export function quantumShoulder(c:BotConfig,side:number){
  const floor=-c.chassis.height/2-c.chassis.clearance,top=c.chassis.height/2,shape=new THREE.Shape();
  shape.moveTo(.56,floor+.012);shape.bezierCurveTo(.39,floor+.025,.26,top+.10,.17,top+.20);shape.quadraticCurveTo(.06,top+.19,-.12,top+.18);shape.quadraticCurveTo(-.22,top+.08,-.23,floor+.018);shape.quadraticCurveTo(.24,floor+.006,.56,floor+.012);shape.closePath();
  const g=casting(shape,.009),p=g.getAttribute('position');for(let i=0;i<p.count;i++)p.setXYZ(i,side*c.chassis.width*.40+p.getZ(i)-.0045,p.getY(i),-p.getX(i));smoothCasting(g);
- const mesh=new THREE.Mesh(g,new THREE.MeshPhysicalMaterial({color:0x242d37,metalness:.85,roughness:.30,clearcoat:.3}));mesh.name='quantum-swept-cheek';mesh.castShadow=mesh.receiveShadow=true;return mesh;
+ const mesh=new THREE.Mesh(compactGeometry(g),new THREE.MeshPhysicalMaterial({color:0x242d37,metalness:.85,roughness:.30,clearcoat:.3}));mesh.name='quantum-swept-cheek';mesh.castShadow=mesh.receiveShadow=true;return mesh;
 }

@@ -1,0 +1,123 @@
+[
+  {
+    "name": "All eleven refined models have finite paint UVs, stay below 60k triangles, and use less geometry memory",
+    "status": "passed",
+    "detail": {
+      "counts": [
+        {
+          "name": "Tombstone",
+          "triangles": 17028,
+          "meshes": 48,
+          "geometryBytes": 589496
+        },
+        {
+          "name": "Minotaur",
+          "triangles": 23072,
+          "meshes": 71,
+          "geometryBytes": 838752
+        },
+        {
+          "name": "Hydra",
+          "triangles": 20716,
+          "meshes": 49,
+          "geometryBytes": 693880
+        },
+        {
+          "name": "ICEwave",
+          "triangles": 22374,
+          "meshes": 44,
+          "geometryBytes": 739780
+        },
+        {
+          "name": "HyperShock",
+          "triangles": 46656,
+          "meshes": 117,
+          "geometryBytes": 1427520
+        },
+        {
+          "name": "Gigabyte",
+          "triangles": 27888,
+          "meshes": 112,
+          "geometryBytes": 939136
+        },
+        {
+          "name": "Son of Whyachi",
+          "triangles": 24588,
+          "meshes": 50,
+          "geometryBytes": 797000
+        },
+        {
+          "name": "HUGE",
+          "triangles": 35856,
+          "meshes": 63,
+          "geometryBytes": 1262208
+        },
+        {
+          "name": "SawBlaze",
+          "triangles": 35476,
+          "meshes": 96,
+          "geometryBytes": 1061176
+        },
+        {
+          "name": "Deep Six",
+          "triangles": 23620,
+          "meshes": 62,
+          "geometryBytes": 850968
+        },
+        {
+          "name": "Quantum",
+          "triangles": 59492,
+          "meshes": 60,
+          "geometryBytes": 1905120
+        }
+      ],
+      "geometryBytesBefore": 19718900,
+      "geometryBytesAfter": 11105036,
+      "reductionPercent": 43.68328862157625,
+      "actualWebGL": "not measured"
+    }
+  },
+  {
+    "name": "HUGE has five real rounded openings, solid spokes, and unchanged wheel bounds",
+    "status": "passed",
+    "detail": {
+      "openings": 5,
+      "solidSpokes": 5,
+      "physicalRadius": 0.48
+    }
+  },
+  {
+    "name": "ICEwave hood tapers inside its collider, has outward normals, and retains blue/gold vertex paint",
+    "status": "passed",
+    "detail": {
+      "topRadius": 0.1445000022649765,
+      "lowerRadius": 0.17000000178813934,
+      "originalWidth": 0.34,
+      "originalHeight": 0.18
+    }
+  },
+  {
+    "name": "HyperShock rims face outward on both sides and batched tire lettering keeps its UVs",
+    "status": "passed",
+    "detail": {
+      "outwardRims": 4,
+      "letteredWheels": 4
+    }
+  },
+  {
+    "name": "Direct plate paint follows damage and replay without leaking or disposing live textures",
+    "status": "passed",
+    "detail": {
+      "models": 11,
+      "replayCycles": 33,
+      "texturesReleased": 33
+    }
+  },
+  {
+    "name": "Custom builder names still reach top and side artwork",
+    "status": "passed",
+    "detail": {
+      "customNames": 11
+    }
+  }
+]

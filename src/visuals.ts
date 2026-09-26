@@ -1,7 +1,7 @@
 import {ARENA_HAZARDS} from './arena-hazards';
 import {compactGeometry} from './geometry-memory';
 import * as THREE from 'three';
-import {deckShape} from './finish-geometry';
+import {robotDeckTexture,robotSideTexture,tireSidewallTexture} from './robot-livery';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {RULES,rng,HYDRA_TIP,unlimitedFlips,type BotConfig,type Part} from './model';
 
@@ -154,39 +154,6 @@ export function buildFoundry(parent:THREE.Group){
  batch.finish(parent);
 }
 
-function deckTexture(c:BotConfig){
- const {element,ctx}=canvas(512,512),random=rng(418),family=c.weapon.type;
- ctx.fillStyle=c.identity.primary;ctx.fillRect(0,0,512,512);
- ctx.fillStyle=c.identity.secondary;
- if(family==='horizontal_bar'){ctx.fillRect(0,0,68,512);ctx.fillRect(444,0,68,512);stripes(ctx,0,445,512,44,25);}
- else if(family==='drum'){ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(150,0);ctx.lineTo(80,512);ctx.lineTo(0,512);ctx.fill();ctx.beginPath();ctx.moveTo(512,0);ctx.lineTo(362,0);ctx.lineTo(432,512);ctx.lineTo(512,512);ctx.fill();}
- else{ctx.beginPath();ctx.moveTo(256,15);ctx.lineTo(500,455);ctx.lineTo(435,470);ctx.lineTo(256,120);ctx.lineTo(77,470);ctx.lineTo(12,455);ctx.closePath();ctx.fill();}
- ctx.strokeStyle='#ffffff36';ctx.lineWidth=3;ctx.strokeRect(83,92,346,242);ctx.fillStyle='#10151c';ctx.fillRect(93,270,326,53);
- ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='900 40px Arial';ctx.fillStyle='#eee9da';ctx.fillText(c.identity.name.toUpperCase(),256,296,308);
- ctx.font='700 13px Arial';ctx.fillText(family.replaceAll('_',' ').toUpperCase(),256,351,300);
- for(let i=0;i<8;i++){ctx.fillStyle='#0b1118';ctx.fillRect(135+i*31,148,15,65);ctx.fillStyle='#d8dada55';ctx.fillRect(135+i*31,148,2,65);}
- if(c.chassis.profile==='minotaur'){
-  ctx.strokeStyle='#e5e5db';ctx.lineWidth=13;ctx.beginPath();ctx.moveTo(188,220);ctx.quadraticCurveTo(76,182,137,107);ctx.quadraticCurveTo(127,179,211,172);ctx.moveTo(324,220);ctx.quadraticCurveTo(436,182,375,107);ctx.quadraticCurveTo(385,179,301,172);ctx.stroke();
-  ctx.fillStyle='#dadad4';ctx.beginPath();ctx.moveTo(215,169);ctx.lineTo(297,169);ctx.lineTo(280,233);ctx.lineTo(256,250);ctx.lineTo(231,230);ctx.closePath();ctx.fill();
- }else if(c.chassis.profile==='hypershock'){
-  ctx.strokeStyle='#ef5d91';ctx.lineWidth=34;for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(0,60+i*120);ctx.lineTo(116,115+i*100);ctx.lineTo(34,190+i*95);ctx.stroke();ctx.beginPath();ctx.moveTo(512,70+i*120);ctx.lineTo(418,120+i*100);ctx.lineTo(498,194+i*95);ctx.stroke();}
- }else if(c.chassis.profile==='hydra'){
-  for(const x of[72,440]){ctx.fillStyle='#d8e044';ctx.beginPath();ctx.ellipse(x,95,41,16,x<256?-.3:.3,0,Math.PI*2);ctx.fill();ctx.fillStyle='#151324';ctx.fillRect(x-3,76,6,39);}
- }else if(c.chassis.profile==='sawblaze'){
-  ctx.fillStyle=c.identity.secondary;
-  for(const side of[-1,1])for(let j=0;j<4;j++){const x=256+side*(108+j*24);ctx.beginPath();ctx.moveTo(x,480);ctx.bezierCurveTo(x-side*80,330,x+side*60,250,x-side*10,132+j*18);ctx.bezierCurveTo(x+side*88,240,x+side*8,380,x+side*26,480);ctx.fill();}
- }
- for(let i=0;i<160;i++){ctx.strokeStyle=i%2?'#b5b8a22b':'#060b1026';const x=random()*512,y=random()*512;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+random()*35,y+random()*8);ctx.stroke();}
- return texture(element);
-}
-
-function teamGraphic(c:BotConfig){
- const {element,ctx}=canvas(512,128);ctx.clearRect(0,0,512,128);ctx.fillStyle=c.identity.secondary;
- if(c.chassis.profile==='sawblaze')for(let j=0;j<6;j++){const x=j*84;ctx.beginPath();ctx.moveTo(x,128);ctx.bezierCurveTo(x+100,75,x-10,40,x+60,0);ctx.bezierCurveTo(x+30,62,x+120,68,x+90,128);ctx.fill();}
- else{for(let j=0;j<4;j++){const x=j*160;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+84,0);ctx.lineTo(x+16,72);ctx.lineTo(x+108,60);ctx.lineTo(x+28,128);ctx.lineTo(x-38,128);ctx.lineTo(x+18,85);ctx.lineTo(x-70,91);ctx.closePath();ctx.fill();}}
- ctx.fillStyle='#14181ddb';ctx.fillRect(106,43,300,43);ctx.fillStyle=c.chassis.profile==='icewave'?'#efc146':'#f4f5df';ctx.font='italic 900 35px Arial';ctx.textAlign='center';ctx.fillText(c.identity.name.toUpperCase(),256,76,282);return texture(element);
-}
-
 // Cosmetic detail is parented to the real part, so damage, wheel rotation,
 // detached panels and replay transforms all move it with the correct body.
 export function detailPart(mesh:THREE.Mesh,p:Part,c:BotConfig){
@@ -194,36 +161,39 @@ export function detailPart(mesh:THREE.Mesh,p:Part,c:BotConfig){
  if(c.chassis.profile==='hypershock'&&/^wheel_-?1_\d+_hub$/.test(p.id)){
   const r=c.drive.radius,width=c.drive.width,side=p.position.x<0?1:-1;
   const profile=[[r*.21,side*.014],[r*.35,side*.017],[r*.56,side*(width/2-.009)],[r*.67,side*(width/2-.005)],[r*.68,side*(width/2)]];
+  if(side>0)profile.reverse();
   const rim=new THREE.Mesh(new THREE.LatheGeometry(profile.map(([x,y])=>new THREE.Vector2(x,y)),48),metal(c.identity.primary,.23,.65));rim.name='hypershock-deep-dish-wheel';mesh.add(rim);
   for(let i=0;i<5;i++){const a=i*2*Math.PI/5;b.cylinder(.005,.007,[Math.cos(a)*r*.25,side*.021,Math.sin(a)*r*.25],black,undefined,6);}
-  for(let i=0;i<36;i++){const a=i*Math.PI/18;for(const edge of[-1,1])b.box([.026,width*.38,.003],[Math.sin(a)*(r-.001),edge*width*.23,Math.cos(a)*(r-.001)],black,rotation(0,a,edge*.30));}
+  const sidewall=new THREE.MeshStandardMaterial({map:tireSidewallTexture(),roughness:.88,metalness:0});
+  for(const edge of[-1,1]){const g=new THREE.RingGeometry(r*.785,r*.985,64),uv=g.getAttribute('uv'),position=g.getAttribute('position');for(let j=0;j<position.count;j++)uv.setXY(j,position.getX(j)/(2*r)+.5,position.getY(j)/(2*r)+.5);b.put(g,sidewall,[0,edge*(width/2+.0005),0],rotation(-edge*Math.PI/2));}
  }
  if(/^wheel_-?1_(?:\d+|upper)$/.test(p.id)&&p.shape.kind==='cylinder'){
   const {radius:r,width:w}=p.shape;
   for(const side of[-1,1]){
    b.cylinder(r*.69,.004,[0,side*(w/2+.001),0],black);
-   b.cylinder(r*.49,.006,[0,side*(w/2+.004),0],bright);
-   b.cylinder(r*.22,.009,[0,side*(w/2+.008),0],accent,undefined,6);
-   for(let i=0;i<6;i++){const a=i*Math.PI/3;b.cylinder(.007,.008,[Math.sin(a)*r*.35,side*(w/2+.009),Math.cos(a)*r*.35],black,undefined,6);}
+   b.cylinder(r*.28,.005,[0,side*(w/2+.004),0],bright,undefined,24);
+   b.cylinder(r*.16,.008,[0,side*(w/2+.007),0],black,undefined,12);
+   for(let i=0;i<6;i++){const a=i*Math.PI/3;b.cylinder(.007,.008,[Math.sin(a)*r*.21,side*(w/2+.008),Math.cos(a)*r*.21],black,undefined,6);}
   }
-  for(let i=0;i<24;i++){const a=i*Math.PI/12;for(const side of[-1,1])b.box([r*.11,w*.43,.003],[Math.sin(a)*(r-.001),side*w*.24,Math.cos(a)*(r-.001)],black,rotation(0,a,side*.15));}
+  // Rubber shoulders are continuous; avoid the former rows of raised blocks.
+  for(const edge of[-1,1])b.put(new THREE.TorusGeometry(r*.86,.0015,3,32),black,[0,edge*(w/2+.0005),0],rotation(Math.PI/2));
  }
- if(p.tooth!==undefined||p.module==='weapon'&&/^(bar|cage_arm|vertical_bar)/.test(p.id)){const edges=new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry,35),new THREE.LineBasicMaterial({color:0xe4eef5,transparent:true,opacity:p.tooth!==undefined?.9:.5}));edges.name='cutting-edge';mesh.add(edges);}
+ if(p.tooth!==undefined||p.module==='weapon'&&/^(bar|cage_arm|vertical_bar)/.test(p.id)){const edges=new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry,35),new THREE.LineBasicMaterial({color:0xe4eef5,transparent:true,opacity:p.tooth!==undefined?.38:.18}));edges.name='cutting-edge';mesh.add(edges);}
  const hasTop=c.armour.some(a=>a.mount==='top'&&a.thickness>0);
- if(['hypershock','sawblaze'].includes(c.chassis.profile??'')&&/^armour_(left|right)$/.test(p.id)){
+ if(['hypershock','sawblaze','quantum','deep_six','tombstone'].includes(c.chassis.profile??'')&&/^armour_(left|right)$/.test(p.id)){
   mesh.geometry.computeBoundingBox();const bounds=mesh.geometry.boundingBox!,size=bounds.getSize(new THREE.Vector3()),side=p.id.endsWith('left')?-1:1;
-  const graphic=new THREE.Mesh(new THREE.PlaneGeometry(size.z*.83,size.y*.82),new THREE.MeshPhysicalMaterial({map:teamGraphic(c),transparent:true,depthWrite:false,roughness:.3,metalness:.35,clearcoat:.6}));graphic.rotation.y=side*Math.PI/2;graphic.position.set(side*(size.x/2+.0008),0,0);graphic.userData.paint=true;graphic.name='team-side-graphic';mesh.add(graphic);
+  const graphic=new THREE.Mesh(new THREE.PlaneGeometry(size.z*.83,size.y*.82),new THREE.MeshPhysicalMaterial({map:robotSideTexture(c),transparent:true,depthWrite:false,roughness:.3,metalness:.35,clearcoat:.6}));graphic.rotation.y=side*Math.PI/2;graphic.position.set(side*(size.x/2+.0008),0,0);graphic.userData.paint=true;graphic.name='team-side-graphic';mesh.add(graphic);
  }
- if((p.id.startsWith('armour_top')||p.id.startsWith('lid')&&!hasTop)&&!p.id.includes('_wing_')){
-  mesh.geometry.computeBoundingBox();const bounds=mesh.geometry.boundingBox!,s=bounds.getSize(new THREE.Vector3()),y=bounds.max.y+.0008,map=deckTexture(c);
-  const geo=new THREE.ShapeGeometry(deckShape(s.x*.985,s.z*.985),6),pos=geo.getAttribute('position'),uv=geo.getAttribute('uv');
-  for(let i=0;i<pos.count;i++)uv.setXY(i,pos.getX(i)/s.x+.5,pos.getY(i)/s.z+.5);
-  const livery=new THREE.Mesh(geo,new THREE.MeshPhysicalMaterial({map,roughness:.23,metalness:.48,clearcoat:.85,clearcoatRoughness:.18}));livery.userData.paint=true;livery.rotation.x=-Math.PI/2;livery.position.y=y;mesh.add(livery);
-  for(const x of[-1,1])for(const z of[-.66,0,.66])b.cylinder(.007,.004,[x*(s.x/2-.021),y+.002,z*(s.z/2-.021)],bright,undefined,6);
-  for(const z of[-1,1])for(const x of[-.5,0,.5])b.cylinder(.007,.004,[x*s.x*.5,y+.002,z*(s.z/2-.019)],bright,undefined,6);
-  // Flush access hatch, lifting eyes and recessed power switch.
-  b.box([s.x*.3,.002,.042],[0,y+.002,s.z*.33],black);
-  b.cylinder(.013,.004,[-s.x*.30,y+.003,s.z*.32],gold,undefined,8);
+ if((p.id.startsWith('armour_top')||p.id.startsWith('lid')&&!hasTop)&&!p.id.includes('_wing_')||c.chassis.profile==='hydra'&&p.id==='wedge'||c.chassis.profile==='sawblaze'&&p.id.startsWith('saw_fork')){
+  // Map paint directly to the authored plate. Separate flat overlays used to
+  // hide the curved edges and float across clipped corners.
+  mesh.geometry.computeBoundingBox();const bounds=mesh.geometry.boundingBox!,s=bounds.getSize(new THREE.Vector3()),y=bounds.max.y+.0008,pos=mesh.geometry.getAttribute('position'),uv=new THREE.Float32BufferAttribute(new Float32Array(pos.count*2),2);
+  for(let i=0;i<pos.count;i++){const x=(pos.getX(i)-bounds.min.x)/s.x,z=(pos.getZ(i)-bounds.min.z)/s.z;uv.setXY(i,c.chassis.profile==='hydra'?x:1-x,c.chassis.profile==='hydra'?1-z:z);}
+  mesh.geometry.setAttribute('uv',uv);const material=mesh.material as THREE.MeshPhysicalMaterial;material.map=robotDeckTexture(c,p.id);material.color.set(0xffffff);material.roughness=c.chassis.profile==='huge'?.52:.36;material.metalness=c.chassis.profile==='huge'?.04:.45;material.clearcoat=.35;material.clearcoatRoughness=.3;mesh.userData.baseColor=0xffffff;mesh.userData.baseRoughness=material.roughness;mesh.userData.referencePaint=true;
+  if(p.id!=='wedge'&&!p.id.startsWith('saw_fork')){
+   for(const x of[-1,1])for(const z of[-.66,0,.66])b.cylinder(.0045,.002,[x*(s.x/2-.018),y,z*(s.z/2-.018)],bright,undefined,6);
+   for(const z of[-1,1])for(const x of[-.5,0,.5])b.cylinder(.0045,.002,[x*s.x*.5,y,z*(s.z/2-.016)],bright,undefined,6);
+  }
  }
  if(p.id==='bar'){
   mesh.geometry.computeBoundingBox();const s=mesh.geometry.boundingBox!.getSize(new THREE.Vector3());b.cylinder(.046,.009,[0,s.y/2+.003,0],bright);b.cylinder(.019,.014,[0,s.y/2+.008,0],black,undefined,6);
@@ -261,20 +231,19 @@ export function detailPart(mesh:THREE.Mesh,p:Part,c:BotConfig){
    b.cylinder(r*.12,.006,[0,side*(w/2+.008),0],bright,undefined,12);
    for(let j=0;j<8;j++){const a=j*Math.PI/4;b.cylinder(large?.006:.004,.004,[Math.sin(a)*r*.18,side*(w/2+.009),Math.cos(a)*r*.18],black,undefined,6);}
   }
-  for(let j=0;j<32;j++){const a=j*Math.PI/16;b.box([r*.095,w*.85,.004],[Math.sin(a)*(r-.001),0,Math.cos(a)*(r-.001)],black,rotation(0,a,.15));}
+
  }
  if(p.id==='engine_cowl'){
-  const r=.171,h=.181,bevel=.043,points=[[-r+bevel,-r],[r-bevel,-r],[r,-r+bevel],[r,r-bevel],[r-bevel,r],[-r+bevel,r],[-r,r-bevel],[-r,-r+bevel]];
-  b.put(new THREE.ShapeGeometry(new THREE.Shape(points.map(([x,z])=>new THREE.Vector2(x,z)))),gold,[0,h,0],rotation(-Math.PI/2));
+  const h=.181;
   for(const side of[-1,1])for(let j=0;j<5;j++)b.box([.001,.005,.08],[side*.171,.03+j*.011,.035],black);
   for(const x of[-.10,.10])for(const z of[-.1,.1])b.cylinder(.005,.004,[x,h+.002,z],black,undefined,6);
-  const decal=new THREE.Mesh(new THREE.PlaneGeometry(.22,.068),new THREE.MeshBasicMaterial({map:teamGraphic(c),transparent:true,depthWrite:false}));decal.position.set(0,.11,-.1715);decal.rotation.y=Math.PI;decal.name='engine-nameplate';mesh.add(decal);
+  const decal=new THREE.Mesh(new THREE.PlaneGeometry(.22,.068),new THREE.MeshBasicMaterial({map:robotSideTexture(c),transparent:true,depthWrite:false}));decal.position.set(0,.11,-.1715);decal.rotation.y=Math.PI;decal.name='engine-nameplate';mesh.add(decal);
  }
  if(p.id.startsWith('armour_front_')&&c.chassis.profile==='huge'&&p.shape.kind==='box'){
   const z=-p.shape.size.z/2-.001,side=p.id.endsWith('_-1')?-1:1;
-  b.put(new THREE.CircleGeometry(.053,24),bright,[0,0,z],rotation(0,Math.PI));
-  b.put(new THREE.CircleGeometry(.025,20),accent,[0,-.008,z-.001],rotation(0,Math.PI));
-  b.box([.127,.014,.003],[0,.038,z-.003],accent,rotation(0,0,side*.33));
+  b.put(new THREE.RingGeometry(.046,.053,32,1,Math.PI,Math.PI),accent,[0,.007,z],rotation(0,Math.PI));
+  b.put(new THREE.CircleGeometry(.014,20),black,[side*.016,-.006,z-.001],rotation(0,Math.PI));
+  b.box([.122,.009,.002],[0,.037,z-.002],accent,rotation(0,0,side*.27));
  }
  if((p.id==='disc_hub'||p.id==='vertical_hub')&&p.shape.kind==='cylinder'){
   for(const side of[-1,1]){
@@ -296,6 +265,11 @@ export function detailPart(mesh:THREE.Mesh,p:Part,c:BotConfig){
  if(p.id.startsWith('shell_panel_')&&c.weapon.type==='shell_spinner'){
   const w=c.weapon,ro=w.radius-w.toothDepth;
   for(const x of[-1,1])b.cylinder(.006,.004,[x*ro*Math.tan(Math.PI/24)*.64,.014,ro-.011],gold,rotation(Math.PI/2),6);
+  if(p.id==='shell_panel_0'){
+   const low=w.width*.18,high=w.width*.78,radius=(y:number)=>ro-.001+(ro*.64+.006-(ro-.001))*(y-.011)/(w.width-.023)+.001;
+   const paint=new THREE.MeshStandardMaterial({map:robotSideTexture(c),transparent:true,depthWrite:false,roughness:.5,metalness:.25});
+   for(const a of[0,Math.PI])b.put(new THREE.CylinderGeometry(radius(high),radius(low),high-low,48,1,true,a-Math.PI/3,Math.PI*2/3),paint,[0,(high+low)/2,0]);
+  }
  }
  b.finish(mesh);
  // Dispose unused factory materials; only the merged meshes own used ones.
@@ -339,11 +313,11 @@ export function hazardVisual(kind:'hammer'|'blade'|'auger',deck=false){
 export function templateColor(p:Part,c:BotConfig):string|undefined{
  const profile=c.chassis.profile,id=p.id;if(profile==='quantum'){if(id.startsWith('crusher_shoulder'))return '#262e36';if(p.module==='weapon'||id.startsWith('crusher_scoop'))return '#d6e0e7';if(p.module==='chassis'||p.module.startsWith('armour_'))return c.identity.primary;}
  if(profile==='deep_six'&&p.module==='weapon')return id==='vertical_hub'?'#32373a':id.startsWith('tooth_')?'#df9e78':id.startsWith('vertical_bar_tip_')?'#c27a5c':id.startsWith('vertical_bar_spur_')?'#ba7052':id.startsWith('vertical_bar_sweep_')?'#b36c51':'#a45e47';
- if(p.tooth!==undefined)return '#e4eaf0';
+ if(p.tooth!==undefined)return profile==='minotaur'?'#c6a856':'#e4eaf0';
  if(['tombstone','minotaur','hydra','hypershock','deep_six'].includes(profile??'')&&(p.module==='chassis'||p.module.startsWith('armour_')))return c.identity.primary;
  if(profile==='minotaur'){if(p.module==='weapon')return '#b99e54';if(id.startsWith('drum_'))return c.identity.primary;}
  if(profile==='hydra'&&p.module==='weapon')return '#b6a27e';
- if(profile==='icewave'){if(id==='engine_cowl'||id==='engine_plow')return c.identity.primary;if(id==='bar')return '#d14a25';if(id.startsWith('armour_'))return '#899095';}
+ if(profile==='icewave'){if(id==='engine_cowl'||id==='engine_plow'||id==='engine_exhaust')return c.identity.primary;if(id==='bar')return '#d14a25';if(id.startsWith('armour_'))return '#899095';}
  if(profile==='hypershock'){
   if(id.startsWith('hyper_disc'))return p.tooth!==undefined?'#e6ecf1':'#b8b4a0';
   if(p.module==='self_right')return c.identity.primary;
@@ -351,11 +325,11 @@ export function templateColor(p:Part,c:BotConfig):string|undefined{
   if(id.startsWith('armour_')||id.startsWith('lid'))return c.identity.primary;
  }
  if(profile==='gigabyte'&&(id.startsWith('shell_panel_')||id.startsWith('shell_crown_'))){const i=Number(id.split('_').at(-1)),n=id.includes('crown')?4:6;return [c.identity.secondary,c.identity.primary,'#339d57','#275ca2'][Math.floor(i/n)%4];}
- if(profile==='whyachi'){if(id.startsWith('cage_tie'))return c.identity.secondary;if(p.module==='weapon'&&!id.startsWith('tooth'))return '#39444f';}
+ if(profile==='whyachi'){if(id.startsWith('cage_tie'))return c.identity.secondary;if(p.module==='weapon'&&!id.startsWith('tooth'))return '#202930';}
  if(profile==='huge'){if(p.module==='weapon'&&!id.startsWith('tooth'))return c.identity.secondary;if(p.material==='uhmw')return c.identity.primary;}
  if(profile==='sawblaze'){
   if(id.startsWith('saw_arm')||id==='arm_bearing'||id==='disc_hub')return c.identity.secondary;
-  if(id.startsWith('saw_fork'))return c.identity.secondary;
+  if(id.startsWith('saw_fork'))return c.identity.primary;
   if(id.startsWith('saw_cheek')||id.startsWith('disc'))return c.identity.primary;
  }
  if(profile==='deep_six'){if(p.module==='weapon')return c.identity.secondary;if(id.startsWith('vertical_')||id.startsWith('tower_'))return c.identity.primary;}

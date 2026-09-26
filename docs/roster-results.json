@@ -12,14 +12,14 @@
       {
         "name": "Minotaur",
         "reference": "Minotaur",
-        "mass": 113.20000000000003,
-        "parts": 64
+        "mass": 113.20000000000002,
+        "parts": 66
       },
       {
         "name": "Hydra",
         "reference": "Hydra",
         "mass": 113.20000000000002,
-        "parts": 45
+        "parts": 46
       },
       {
         "name": "ICEwave",
@@ -37,7 +37,7 @@
         "name": "Gigabyte",
         "reference": "Gigabyte",
         "mass": 113.19999999999995,
-        "parts": 89
+        "parts": 90
       },
       {
         "name": "Son of Whyachi",
@@ -48,8 +48,8 @@
       {
         "name": "HUGE",
         "reference": "HUGE",
-        "mass": 113.19999999999996,
-        "parts": 127
+        "mass": 113.19999999999999,
+        "parts": 128
       },
       {
         "name": "SawBlaze",
@@ -61,13 +61,13 @@
         "name": "Deep Six",
         "reference": "Deep Six",
         "mass": 113.19999999999997,
-        "parts": 57
+        "parts": 58
       },
       {
         "name": "Quantum",
         "reference": "Quantum",
-        "mass": 113.20000000000003,
-        "parts": 71
+        "mass": 113.2,
+        "parts": 72
       }
     ]
   },
@@ -75,7 +75,7 @@
     "name": "Every new convex part has mass moments consistent with Rapier",
     "status": "passed",
     "detail": {
-      "moments": 2334,
+      "moments": 2346,
       "maxAbsoluteError": 0.000008049194177732477
     }
   },
@@ -85,69 +85,69 @@
     "detail": [
       {
         "name": "Tombstone",
-        "rpm": 1534.1619377336215,
-        "freeRPM": 1157.6135609912358,
-        "travel": 2.606268857068714
+        "rpm": 1534.1998772661625,
+        "freeRPM": 1157.5260315305625,
+        "travel": 2.613862058195873
       },
       {
         "name": "Minotaur",
-        "rpm": 1632.4590486601924,
-        "freeRPM": 1249.8544972338043,
-        "travel": 2.3831493181491377
+        "rpm": 3263.2126589175305,
+        "freeRPM": 2499.664755977344,
+        "travel": 2.915962372042591
       },
       {
         "name": "Hydra",
-        "rpm": 0.5100871915659102,
-        "freeRPM": 0.005762577716474785,
-        "travel": 2.888877317139833
+        "rpm": 0.05768097840872622,
+        "freeRPM": 0.012008131558204045,
+        "travel": 2.895917099444678
       },
       {
         "name": "ICEwave",
-        "rpm": 1064.0758946118783,
-        "freeRPM": 800.9128543195155,
-        "travel": 2.545691798739729
+        "rpm": 1064.2143444119647,
+        "freeRPM": 800.7627178428052,
+        "travel": 2.544760664348808
       },
       {
         "name": "HyperShock",
-        "rpm": 3101.3120109714605,
-        "freeRPM": 2436.7815234642926,
-        "travel": 3.3715846366501974
+        "rpm": 3109.5325035336723,
+        "freeRPM": 2436.792327074473,
+        "travel": 3.4465457976603524
       },
       {
         "name": "Gigabyte",
-        "rpm": 409.1122776230446,
-        "freeRPM": 307.16041097905077,
-        "travel": 1.4765425604802527
+        "rpm": 410.0209054153106,
+        "freeRPM": 303.173320942533,
+        "travel": 1.7386627121102127
       },
       {
         "name": "Son of Whyachi",
-        "rpm": 505.27804493099774,
-        "freeRPM": 378.99408748663456,
-        "travel": 2.3613486260240837
+        "rpm": 505.5085463826166,
+        "freeRPM": 379.24606772980354,
+        "travel": 2.3588838692485274
       },
       {
         "name": "HUGE",
-        "rpm": 1577.0103064340644,
-        "freeRPM": 1192.9615394131122,
-        "travel": 1.5185142492658368
+        "rpm": 1576.8409309606589,
+        "freeRPM": 1192.9059639917102,
+        "travel": 1.5246366303574457
       },
       {
         "name": "SawBlaze",
-        "rpm": 5226.604975342399,
-        "freeRPM": 5214.944066394061,
-        "travel": 2.420168516450526
+        "rpm": 5226.60910634779,
+        "freeRPM": 5214.91073029438,
+        "travel": 2.411527028585413
       },
       {
         "name": "Deep Six",
-        "rpm": 795.6358519996845,
-        "freeRPM": 597.8757455665998,
-        "travel": 1.5768699266054582
+        "rpm": 795.6613629089842,
+        "freeRPM": 597.8893861951899,
+        "travel": 1.5768257449773824
       },
       {
         "name": "Quantum",
-        "rpm": 0.08794328452031626,
-        "freeRPM": 0.06583997312791727,
-        "travel": 3.600438624928349
+        "rpm": 0.06050620500464521,
+        "freeRPM": 0.08749929917085829,
+        "travel": 3.5951984135036037
       }
     ]
   },
@@ -156,10 +156,11 @@
     "status": "passed",
     "detail": {
       "strokes": 2,
-      "minimumAngle": -1.1202141853895984,
-      "returnAngle": 0.0005636389803991993,
-      "maximumWork": 67.79387303338483,
-      "anchorError": 8.221234636453106e-7
+      "timeToStrike": 0.1375,
+      "minimumAngle": -1.1225295466770429,
+      "returnAngle": 0.0002466429159180631,
+      "maximumWork": 138.5667952802944,
+      "anchorError": 9.932540440288108e-7
     }
   },
   {
@@ -195,58 +196,58 @@
       "counts": [
         {
           "name": "Tombstone",
-          "triangles": 15759,
-          "meshes": 52
+          "triangles": 17045,
+          "meshes": 50
         },
         {
           "name": "Minotaur",
-          "triangles": 19967,
-          "meshes": 75
+          "triangles": 23089,
+          "meshes": 73
         },
         {
           "name": "Hydra",
-          "triangles": 17543,
-          "meshes": 56
+          "triangles": 20733,
+          "meshes": 51
         },
         {
           "name": "ICEwave",
-          "triangles": 20307,
-          "meshes": 53
+          "triangles": 22391,
+          "meshes": 46
         },
         {
           "name": "HyperShock",
-          "triangles": 44039,
-          "meshes": 117
+          "triangles": 46673,
+          "meshes": 119
         },
         {
           "name": "Gigabyte",
-          "triangles": 24235,
-          "meshes": 118
+          "triangles": 27905,
+          "meshes": 114
         },
         {
           "name": "Son of Whyachi",
-          "triangles": 21427,
-          "meshes": 58
+          "triangles": 24605,
+          "meshes": 52
         },
         {
           "name": "HUGE",
-          "triangles": 29045,
-          "meshes": 69
+          "triangles": 35873,
+          "meshes": 65
         },
         {
           "name": "SawBlaze",
-          "triangles": 32683,
-          "meshes": 102
+          "triangles": 35493,
+          "meshes": 98
         },
         {
           "name": "Deep Six",
-          "triangles": 21309,
-          "meshes": 68
+          "triangles": 23637,
+          "meshes": 64
         },
         {
           "name": "Quantum",
-          "triangles": 57179,
-          "meshes": 65
+          "triangles": 59509,
+          "meshes": 62
         }
       ],
       "actualWebGL": "unverified: cloud renderer is disabled"

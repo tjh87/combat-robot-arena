@@ -3,7 +3,7 @@
     "name": "Clipped plate mass moments match independently constructed Rapier hulls",
     "status": "passed",
     "detail": {
-      "momentsCompared": 33
+      "momentsCompared": 24
     }
   },
   {
@@ -11,15 +11,15 @@
     "status": "passed",
     "detail": {
       "masses": [
-        98.23659268915691,
-        110.5628247298954,
-        91.80393489523587
+        113.20000000000003,
+        113.20000000000002,
+        113.20000000000002
       ],
       "bladeFloorGap": 0.006,
       "bladeTopGap": 0.007999999999999993,
       "rpm": [
-        665.9922791829879,
-        1285.0678279350732
+        1157.4244016882892,
+        2499.6713020272455
       ]
     }
   },
@@ -35,9 +35,9 @@
     "name": "Detailed arena and robots retain finite geometry within the triangle budget",
     "status": "passed",
     "detail": {
-      "triangles": 44570,
-      "meshBatches": 212,
-      "paintedSurfaces": 9,
+      "triangles": 75776,
+      "meshBatches": 210,
+      "paintedSurfaces": 12,
       "actualWebGL": "unverified"
     }
   },
