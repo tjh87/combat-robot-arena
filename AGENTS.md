@@ -21,7 +21,7 @@ Treat older `docs/` updates and reports as history. Do not restore old settings 
 - Do not convert physical gyroscopic recovery into teleporting, a pose reset or added launch torque.
 - Keep all 11 stock robots, game modes, settings, builder persistence, import compatibility and replay features.
 - Keep robot names and weapon names readable, distinct, and clear of panel borders.
-- Do not add words to damage bubbles. Display integer damage with a minimum positive label of 1.
+- Do not add words to damage bubbles. Suppress floating labels that round to 1 HP in live play and replays. Keep exact fractional damage internally and integer result totals.
 - Do not invent measured battery coordinates or weapon specifications. Label game estimates.
 - Fix a proven defect before broad refactoring. Add a regression check when it protects meaningful behavior.
 - Run relevant checks. Do not report old JSON reports as tests run in the current session.
@@ -41,3 +41,4 @@ Treat older `docs/` updates and reports as history. Do not restore old settings 
 `node scripts/verify.mjs --physics` also checks core, battery and gyro behavior.
 Use `runtime/windows-x64/node.exe` if Node is not installed. A Linux runtime is included only in the optional combined package.
 Read `WINDOWS_SETUP.md` before installing anything. Keep `tjh87/combat-robot-arena` private.
+

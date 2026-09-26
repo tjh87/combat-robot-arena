@@ -1,0 +1,77 @@
+{
+  "checks": [
+    {
+      "name": "All four horizontal weapons use wider and stronger exposure at higher actual RPM",
+      "detail": [
+        {
+          "robot": "Tombstone",
+          "meshes": 1,
+          "triangles": 288,
+          "exposureDegrees": [
+            169.39999999999998
+          ]
+        },
+        {
+          "robot": "ICEwave",
+          "meshes": 1,
+          "triangles": 288,
+          "exposureDegrees": [
+            101.6
+          ]
+        },
+        {
+          "robot": "Gigabyte",
+          "meshes": 2,
+          "triangles": 864,
+          "exposureDegrees": [
+            112.6,
+            112.6
+          ]
+        },
+        {
+          "robot": "Son of Whyachi",
+          "meshes": 1,
+          "triangles": 432,
+          "exposureDegrees": [
+            86.33333333333333
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Horizontal exposure trails follow the real spin direction and inverted rotor pose",
+      "detail": {
+        "robots": 4,
+        "directions": 2,
+        "inverted": true,
+        "physicalPoseChanged": false
+      }
+    },
+    {
+      "name": "Replay interpolates blur RPM and restores live buffers without disposing shared geometry",
+      "detail": {
+        "interpolatedRPM": 600,
+        "liveRPM": 300,
+        "sharedBuffersRestored": true,
+        "disposals": 1
+      }
+    },
+    {
+      "name": "All nine spinners stop cleanly and keep reduced motion; horizontal buffers are reused",
+      "detail": {
+        "spinners": 9,
+        "steadyFrames": 180,
+        "newSteadyStateBuffers": 0
+      }
+    },
+    {
+      "name": "Suppressing tiny visual labels does not round or drop contact damage or crusher summaries",
+      "detail": {
+        "tinyContactHP": 0.20000000000000015,
+        "crusherHP": 73.28,
+        "duplicateDamage": 0
+      }
+    }
+  ],
+  "limits": "Geometry and DOM checks; GPU appearance still requires a WebGL-capable browser."
+}

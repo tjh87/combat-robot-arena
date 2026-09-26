@@ -8,7 +8,7 @@ import {ArenaRenderer} from '../src/render';
 import {GameAudio} from '../src/audio';
 
 const results:any[]=[];
-async function check(name:string,run:()=>unknown){try{const detail=await run();results.push({name,status:'passed',detail});console.log('PASS',name,JSON.stringify(detail));}catch(e){results.push({name,status:'failed',error:String(e)});console.log('FAIL',name,String(e));}writeFileSync('docs/gameplay-results.json',JSON.stringify(results,null,2));}
+async function check(name:string,run:()=>unknown){if(process.env.CASE&&!name.includes(process.env.CASE))return;try{const detail=await run();results.push({name,status:'passed',detail});console.log('PASS',name,JSON.stringify(detail));}catch(e){results.push({name,status:'failed',error:String(e)});console.log('FAIL',name,String(e));}writeFileSync('docs/gameplay-results.json',JSON.stringify(results,null,2));}
 await initializePhysics();
 await check('Healthy waiting robots do not lose without combat or a blocked drive request',()=>{
  const s=new Simulation([preset(9),preset(1)],{hazards:false,ai:[false,false]});
@@ -45,7 +45,7 @@ await check('Mirror matches use distinct liveries without changing physics or th
  return{templates:10};
 });
 await check('Rotor exposure trails appear at speed, animate, and vanish when stopped',()=>{
- for(const i of[0,1,3,4,5,6,7,8,9]){const rotor=new THREE.Group(),effect=rotorMotion(preset(i));rotor.add(effect);updateRotorMotion(rotor,0,0);assert(!effect.visible);updateRotorMotion(rotor,1500,1);assert(effect.visible);const mesh=effect.children[0].children[0] as THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>,angle=mesh.rotation.z;assert(mesh.material.opacity>0);updateRotorMotion(rotor,1500,1.016);assert.notEqual(mesh.rotation.z,angle);updateRotorMotion(rotor,1500,2,true);assert(!effect.visible);effect.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();(o.material as THREE.Material).dispose();}});}return{spinnerTemplates:9};
+ for(const i of[0,1,3,4,5,6,7,8,9]){const rotor=new THREE.Group(),effect=rotorMotion(preset(i));rotor.add(effect);updateRotorMotion(rotor,0,0);assert(!effect.visible);updateRotorMotion(rotor,1500,1);assert(effect.visible);const mesh=effect.children[0].children[0] as THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>,angle=mesh.rotation.z;assert(mesh.material.opacity>0);updateRotorMotion(rotor,1500,1.016);if(effect.userData.horizontal){assert.equal(mesh.rotation.z,angle);assert(mesh.geometry.userData.exposureAngle>0);}else assert.notEqual(mesh.rotation.z,angle);updateRotorMotion(rotor,1500,2,true);assert(!effect.visible);effect.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();(o.material as THREE.Material).dispose();}});}return{spinnerTemplates:9};
 });
 await check('Opponent direction remains on screen for targets in front, behind and on either side',()=>{
  const r=Object.create(ArenaRenderer.prototype) as ArenaRenderer;r.camera=new THREE.PerspectiveCamera(76,16/9,.05,100);r.camera.position.set(0,.7,0);r.camera.lookAt(0,.7,-1);r.bodyGroups=new Map();const other=new THREE.Group();r.bodyGroups.set('b1:chassis',other);const fake={bots:[{chassis:{translation:()=>v()}},{chassis:{translation:()=>v()}}]} as any;

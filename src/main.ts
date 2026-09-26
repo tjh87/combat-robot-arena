@@ -86,7 +86,7 @@ function updateHUD(){if(!sim||!$('#timer'))return;hud.dataset.camera=prefs.camer
 function updateHitReadouts(){
  const container=$('#hit-readouts');if(!container||!sim)return;
  const active=['fighting','practice','finishing','replay','paused'].includes(state);container.classList.toggle('hidden',!active);if(!active)return;
- const replayFrame=state==='replay'?replayFrames[Math.min(replayFrames.length-1,Math.floor(replayProgress))]:undefined,presentationTick=replayFrame?.tick??sim.tick,hits=replayFrame?(replayFrame.hits??[]):hitReadouts.update(sim.events,sim.tick),keys=new Set(hits.map(h=>h.key));
+ const replayFrame=state==='replay'?replayFrames[Math.min(replayFrames.length-1,Math.floor(replayProgress))]:undefined,presentationTick=replayFrame?.tick??sim.tick,hits=(replayFrame?(replayFrame.hits??[]):hitReadouts.update(sim.events,sim.tick)).filter(h=>roundedDamage(h.hp)>1),keys=new Set(hits.map(h=>h.key));
  for(const el of Array.from(container.children))if(!keys.has((el as HTMLElement).dataset.key!))el.remove();
  for(const hit of hits){
   let el=container.querySelector<HTMLElement>('[data-key="'+hit.key+'"]');if(!el){el=document.createElement('span');el.dataset.key=hit.key;el.className='hit-number p'+(hit.bot+1);el.innerHTML=HIT_BUBBLE_MARKUP;container.appendChild(el);}

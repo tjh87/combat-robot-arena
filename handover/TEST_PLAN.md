@@ -39,7 +39,7 @@ Some tests overwrite JSON reports under `docs/`. Review those changes before com
 8. Put Minotaur on each side and upside down. Check stopped and spinning drum recovery.
 9. Check Gigabyte handling at shell speed and HUGE's axle-based control and clearance.
 10. Check saw emergence, hammer head shape and screw lift/reverse behavior.
-11. Cause a small hit and a large hit. Check integer numbers, sharp borders and the 500/800/1000 tiers.
+11. Cause a main hit followed by tiny contact damage on either robot. Confirm no trailing 1 HP bubbles in live play or replay; retain exact damage and the 500/800/1000 tiers. Check all four horizontal spinners for RPM-based blur, correct direction, slowdown, replay and reduced motion.
 12. Check a landing and ring-out. Confirm height and distance values.
 13. Finish a match. Check winner-only confetti, result values, R rematch and M menu.
 14. Save, edit, export and import a build. Refresh and confirm preferences remain.
@@ -62,3 +62,4 @@ The source update passed 594 battery hit/weak-hit/miss cases, 12 gyro recovery s
 The recorded gyro range was approximately 4.67–22.93 seconds across those scenarios.
 Battery coordinates remain game estimates. Seven regions still lack sufficient team confirmation.
 The earlier hosted browser could not create WebGL. Real graphics and audible quality need the manual checks above.
+

@@ -12,7 +12,7 @@
 | Crusher | Use contact, pressure work and two-length retreat. | Damage nearby batteries through an arbitrary radius or retreat to arena centre. |
 | Data | Distinguish team evidence, derived values and estimates. | Invent exact pack coordinates or transfer opponent data to the wrong robot. |
 | Visuals | Preserve silhouettes, sharp weapons and readable text. | Restore generic blocks, smooth weak damage borders or obstructive gauges. |
-| Damage | Display integer labels, minimum 1; retain precise HP internally. | Round each physics step or add words to the damage bubbles. |
+| Damage | Suppress floating labels rounded to 1 HP; retain precise HP internally and integer result totals. | Round each physics step or add words to the damage bubbles. |
 | State | Keep build imports, settings, save compatibility and mode transitions. | Reset user data to hide a failure. |
 | Testing | Run checks that cover changed behavior and report results. | Count old JSON files as newly passed tests. |
 | Publication | Publish only when asked; use the correct repository and audience. | Upload to an unrelated repository or expose credentials. |
@@ -23,3 +23,4 @@
 State the outcome first. List the numerical settings that changed, with old and new values.
 Name the checks that ran and any remaining limitations.
 Report subagents only if they were used. Keep the final reply short.
+

@@ -9,7 +9,7 @@ import {rotorMotion,updateRotorMotion} from '../src/combat-visuals';
 import {ArenaRenderer} from '../src/render';
 import {GameAudio,METAL_IMPACTS} from '../src/audio';
 const results:any[]=[];
-async function test(name:string,fn:()=>unknown){try{const detail=await fn();results.push({name,status:'passed',detail});console.log('PASS',name,JSON.stringify(detail));}catch(e){results.push({name,status:'failed',error:String(e)});process.exitCode=1;console.log('FAIL',name,String(e));}writeFileSync('docs/blades-update-results.json',JSON.stringify(results,null,2));}
+async function test(name:string,fn:()=>unknown){if(process.env.CASE&&!name.includes(process.env.CASE))return;try{const detail=await fn();results.push({name,status:'passed',detail});console.log('PASS',name,JSON.stringify(detail));}catch(e){results.push({name,status:'failed',error:String(e)});process.exitCode=1;console.log('FAIL',name,String(e));}writeFileSync('docs/blades-update-results.json',JSON.stringify(results,null,2));}
 await initializePhysics();
 await test('Tombstone reverses during faster spin-up without turning around, and still responds to steering',()=>{
  const rows=[];for(const direction of[-1,1]){const c=preset(0),s=new Simulation([c,preset(0)],{practice:true,hazards:false,ai:[false,false],autoUnstick:false}),b=s.bots[0],q=axisQ(v(0,1,0),0),p=v(-3,c.chassis.height/2+c.chassis.clearance+.008);try{
@@ -25,10 +25,11 @@ await test('A knockout does not display losing judge totals as the winning score
   r.reason='Judges’ decision';r.winner=1;dom.window.document.body.innerHTML=scorecard(r);assert.equal(dom.window.document.querySelector('.score-card.won .score-total')?.firstChild?.textContent,'6');assert(!dom.window.document.querySelector('.unused-scores'));return{knockoutWinner:0,judgeTotals:[5,6],judgedWinner:1,unusedScoresCollapsed:true};
  }finally{dom.window.close();}
 });
-await test('Fast rotor trails leave the blade faces visible for every spinner',()=>{
- const rows=[];for(let i=0;i<10;i++){const c=preset(i),w=c.weapon;if(!isSpinner(w))continue;const rotor=new THREE.Group(),motion=rotorMotion(c);rotor.add(motion);updateRotorMotion(rotor,w.rpm,2);assert(motion.visible);let area=0;
-  motion.traverse(o=>{if(o instanceof THREE.Mesh){const p=(o.geometry as THREE.RingGeometry).parameters;area+=(p.outerRadius**2-p.innerRadius**2)*p.thetaLength/2;assert.equal(o.material.blending,THREE.AdditiveBlending);assert.equal(o.material.depthWrite,false);}});
-  const coverage=area/(Math.PI*w.radius*w.radius);assert(coverage<.04,'A trail obscures too much rotor area');const angle=motion.children[0].children[0].rotation.z;updateRotorMotion(rotor,w.rpm,2.1);assert.notEqual(motion.children[0].children[0].rotation.z,angle);updateRotorMotion(rotor,0,2.2);assert(!motion.visible);rows.push({name:c.identity.name,coveragePercent:coverage*100});
+await test('Rotor blur scales with speed while retaining real blade faces',()=>{
+ const rows=[];for(let i=0;i<10;i++){const c=preset(i),w=c.weapon;if(!isSpinner(w))continue;const rotor=new THREE.Group(),motion=rotorMotion(c);rotor.add(motion);updateRotorMotion(rotor,w.rpm,2);assert(motion.visible);let area=0,meshes=0;
+  motion.traverse(o=>{if(o instanceof THREE.Mesh){meshes++;assert.equal(o.material.depthWrite,false);if(motion.userData.horizontal){assert.equal(o.material.blending,THREE.NormalBlending);assert.equal(o.material.forceSinglePass,true);assert.equal(o.geometry.attributes.color.itemSize,4);assert(o.geometry.userData.exposureAngle>0);assert(o.material.opacity<.6);}else{const p=(o.geometry as THREE.RingGeometry).parameters;area+=(p.outerRadius**2-p.innerRadius**2)*p.thetaLength/2;assert.equal(o.material.blending,THREE.AdditiveBlending);}}});
+  const coverage=area/(Math.PI*w.radius*w.radius);if(!motion.userData.horizontal)assert(coverage<.04);else assert(meshes<=2);
+  const mesh=motion.children[0].children[0] as THREE.Mesh,angle=mesh.rotation.z;updateRotorMotion(rotor,w.rpm,2.1);if(!motion.userData.horizontal)assert.notEqual(mesh.rotation.z,angle);else assert.equal(mesh.rotation.z,angle,'Exposure stays attached to the real rotor');updateRotorMotion(rotor,0,2.2);assert(!motion.visible);rows.push({name:c.identity.name,meshes,horizontal:motion.userData.horizontal,verticalStreakCoveragePercent:coverage*100});
   motion.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();o.material.dispose();}});
  }return rows;
 });

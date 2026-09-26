@@ -323,17 +323,24 @@ await test('Both robots show numeric HP and speed, and hit numbers reflect actua
  sim.events.push({id:1,tick:0,point:{x:0,y:1,z:0},allocations:[{bot:1,module:'armour_front',hp:37.2,energy:1000}]});f.api.updateHitReadouts();assert.equal(f.$('.hit-hp').textContent,'−37 HP');f.api.updateHitReadouts();assert.equal(f.w.document.querySelectorAll('.hit-number').length,1);sim.tick=400;f.api.updateHitReadouts();assert.equal(f.$('.hit-number'),null);
 });
 
-await test('Damage bubbles use whole HP, a minimum of one, and matching rounded tiers',async f=>{
+await test('Damage bubbles suppress one-HP labels in live play and replay while retaining precise damage',async f=>{
  await f.api.startMatch(true);const sim=f.api.refs.sim;
  const amounts=[.001,.49,.99,1.49,1.5,499.9,799.9,999.9],expected=[1,1,1,1,2,500,800,1000],tiers=[0,0,0,0,0,4,5,6];
  for(let i=0;i<amounts.length;i++){
   sim.tick=i*400;const allocation={bot:i%2,module:'chassis',hp:amounts[i],energy:1};
   sim.events.push({id:i+1,tick:sim.tick,point:{x:0,y:1,z:0},allocations:[allocation]});f.api.updateHitReadouts();
-  assert.equal(f.$('.hit-hp').textContent,'−'+expected[i].toLocaleString()+' HP');assert.equal(f.$('.hit-number').dataset.tier,String(tiers[i]));assert.equal(allocation.hp,amounts[i]);
+  if(expected[i]===1)assert.equal(f.$('.hit-number'),null);else{assert.equal(f.$('.hit-hp').textContent,'−'+expected[i].toLocaleString()+' HP');assert.equal(f.$('.hit-number').dataset.tier,String(tiers[i]));}assert.equal(allocation.hp,amounts[i]);
  }
  const frame=sim.capture();frame.hits=[{key:'tiny:1',bot:1,hp:.001,point:{x:0,y:1,z:0},tick:frame.tick}];const next=JSON.parse(JSON.stringify(frame));next.tick+=4;
- f.api.beginReplay([frame,next]);f.api.updateHitReadouts();assert.equal(f.$('.hit-hp').textContent,'−1 HP');
- return{liveCases:amounts.length,replayCases:1,minimumDisplayedHP:1,decimalPlaces:0,physicsPrecisionPreserved:true};
+ f.api.beginReplay([frame,next]);f.api.updateHitReadouts();assert.equal(f.$('.hit-number'),null);
+ return{liveCases:amounts.length,replayCases:1,minimumDisplayedHP:2,decimalPlaces:0,physicsPrecisionPreserved:true};
+});
+
+await test('A main impact is not followed by a stream of one-HP bubbles on either robot',async f=>{
+ await f.api.startMatch(true);const sim=f.api.refs.sim,events=[0,1].map(bot=>({id:100+bot,tick:0,point:{x:0,y:1,z:0},allocations:[{bot,module:'chassis',hp:84,energy:1000}]}));sim.events.push(...events);f.api.updateHitReadouts();assert.equal(f.w.document.querySelectorAll('.hit-number').length,2);
+ for(let tick=1;tick<=600;tick++){sim.tick=tick;for(const event of events)event.allocations[0].hp+=.002;f.api.updateHitReadouts();for(const label of f.w.document.querySelectorAll('.hit-hp'))assert.notEqual(label.textContent,'−1 HP');}
+ assert.equal(f.$('.hit-number'),null);for(const event of events)assert(Math.abs(event.allocations[0].hp-85.2)<1e-8);
+ return{robots:2,trailingUpdates:600,oneHPBubbles:0,preciseHPPerRobot:85.2};
 });
 
 await test('All eleven robot weapon panels show clear labels and current control keys',async f=>{
@@ -401,7 +408,7 @@ await test('Landing details show mass, descent, impact speed and one energy budg
 await test('Repair update: result shortcuts, ring-out metrics, fast speed, tracks and visible hit bubbles',async f=>{
  await f.api.startMatch(true);const sim=f.api.refs.sim;sim.bots[0].chassis.setLinvel({x:5,y:0,z:0},true);f.api.updateHUD();assert.equal(f.$('#speed-0').dataset.fast,'true');assert(f.$('#speed-0').textContent.includes('18.0 km/h'));assert(f.$('#player-panel-0').contains(f.$('#speed-0')));
  const before=sim.tick;f.w.document.dispatchEvent(new f.w.KeyboardEvent('keydown',{key:'r',code:'KeyR',bubbles:true}));assert.equal(sim.tick,before);
- sim.events.push({id:901,tick:sim.tick,cause:'weapon',source:'Test hit',module:'chassis',energy:1,impulse:1,closing:1,attacker:0,target:1,rotorBefore:[1,0],rotorAfter:[0,0],point:{x:1000,y:1000,z:1000},allocations:[{bot:1,module:'chassis',energy:1,hp:.005}]});f.api.refs.renderer.projectCombatPoint=()=>({x:140,y:-50,visible:false});f.api.updateHitReadouts();const bubble=f.$('.hit-number');assert(bubble&&!bubble.classList.contains('hidden'));assert.equal(bubble.textContent,'−1 HP');assert(Number.parseFloat(bubble.style.left)<=58);
+ sim.events.push({id:901,tick:sim.tick,cause:'weapon',source:'Test hit',module:'chassis',energy:1,impulse:1,closing:1,attacker:0,target:1,rotorBefore:[1,0],rotorAfter:[0,0],point:{x:1000,y:1000,z:1000},allocations:[{bot:1,module:'chassis',energy:1,hp:2.005}]});f.api.refs.renderer.projectCombatPoint=()=>({x:140,y:-50,visible:false});f.api.updateHitReadouts();const bubble=f.$('.hit-number');assert(bubble&&!bubble.classList.contains('hidden'));assert.equal(bubble.textContent,'−2 HP');assert(Number.parseFloat(bubble.style.left)<=58);
  sim.finish('Out of arena',1);sim.result.ringOut={bot:0,origin:{x:0,y:0,z:0},height:3.5,distance:7.4};f.api.showResult();assert(f.$('.ringout-result').textContent.includes('3.50 m'));assert(f.$('.ringout-result').textContent.includes('7.40 m'));
  f.w.document.dispatchEvent(new f.w.KeyboardEvent('keydown',{key:'r',code:'KeyR',bubbles:true}));await Promise.resolve();assert.notEqual(f.api.refs.sim,sim);const next=f.api.refs.sim;next.finish('Fixture',0);f.api.showResult();f.w.document.dispatchEvent(new f.w.KeyboardEvent('keydown',{key:'m',code:'KeyM',bubbles:true}));assert.equal(f.api.refs.state,'menu');
  f.$('[data-preset="10"]').click();f.api.openBuilder();change(f,'[data-path="drive.traction"]','tracks');assert.equal(f.api.refs.build.drive.traction,'tracks');assert.equal(f.$('#test-build').disabled,false);return{shortcuts:2,ringOutMetrics:2,speedKmh:18,offscreenBubbleVisible:true,legalTreadBuild:true};

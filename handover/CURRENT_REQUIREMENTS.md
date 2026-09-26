@@ -1,6 +1,6 @@
 # Current requirements
 
-This file consolidates the latest user requests as of 25 September 2026.
+This file consolidates the latest user requests as of 26 September 2026.
 It replaces conflicting old statements in `docs/BUILD_CONTRACT.md` and older update notes.
 Exact executable settings are in the source and `ROBOT_SPECIFICATIONS.json`.
 Do not silently change those settings while documenting or moving the project.
@@ -57,6 +57,7 @@ Use the specification JSON for all exact preset dimensions, drive settings and b
 Use the saved source links and evidence labels for real-world claims.
 Keep the real robot photographs in selection and results.
 Use smoother edges, coherent metal materials, clear weapon outlines and each robot's known silhouette.
+Horizontal weapons use soft angular motion blur based on actual RPM and direction, including both Gigabyte cutting levels. Keep the real rotor pose, fade blur as RPM falls, support replays and reduced motion, and avoid full-screen post-processing.
 Do not replace working models with generic blocks or hide geometry mistakes with visual effects.
 
 ## 5. Robot-specific mechanisms
@@ -212,14 +213,14 @@ Do not repeatedly reset a fire forever with each contact or silently remove the 
 ## 8. Damage bubbles and HUD
 
 Show numbers only in damage bubbles. Do not add POW, BAM, damage names, HP text or labels above them.
-Minimum displayed positive damage is 1. Display no decimal places.
+Suppress floating damage bubbles that round to 1 HP in live play and replays. The minimum visible bubble is 2 HP; retain the existing integer rounding in results. Display no decimal places.
 Keep fractional HP in physics and accumulated contacts. Quantize only the visible label.
 Use seven tiers: below 40, 40+, 100+, 250+, 500+, 800+, and 1,000+.
 Use sharper borders, distinct shapes and stronger colours as damage rises.
 The 100–249 tier must have sharp spikes, not a smooth cloud edge.
 Animate a short impact pop, drift, rise, sway and supporting rays without hiding the robot.
 Use simulation/replay time. Respect reduced motion. Preserve the 1.3-second lifetime.
-Capture every positive new HP delta, including small hits and continued contact episodes.
+Capture every positive new HP delta, including small hits and continued contact episodes. Filtering the floating labels must not change recorded damage or HP loss.
 Use unique display IDs, avoid double-counting, and provide a visible fallback for offscreen contact positions.
 A crush summary is separate from ordinary hit aggregation.
 
@@ -276,3 +277,4 @@ Build the app and verify every local asset after packaging.
 Report exact tests run. Identify old reused reports as historical evidence.
 Keep manual WebGL, audible playback and Windows execution gaps explicit until someone performs those checks.
 Do not change the project license, publish public assets, install telemetry or add remote dependencies without authorization.
+
