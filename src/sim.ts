@@ -187,7 +187,7 @@ export class Simulation{
   if(kind==='gyro'&&this.options.autoUnstick&&this.automaticSelfRightReady(b))this.requestSelfRight(b);
  }
  requestSelfRight(b:Bot){if(selfRightKind(b.compiled.config)==='arm'&&b.rollStart>=0&&this.tick-b.lastSelfRight<(verticalSelfRight(b.compiled.config)?10:b.compiled.config.chassis.profile==='gigabyte'?9:4)*RULES.hz)return false;if(selfRightKind(b.compiled.config)==='gyro'){
-  if(!this.canSelfRight(b)||b.rollStart>=0||this.axis(b,v(0,1,0)).y>.90&&b.grounded||this.tick-b.lastSelfRight<3*RULES.hz)return false;
+  if(!this.canSelfRight(b)||b.rollStart>=0||Math.abs(this.axis(b,v(0,1,0)).y)>.90&&b.grounded||this.tick-b.lastSelfRight<3*RULES.hz)return false;
   b.weaponOn=true;b.spinDirection=(Math.abs(this.omega(b))>50?Math.sign(this.omega(b)):b.compiled.config.weapon.type==='drum'?-b.compiled.config.weapon.direction:b.spinDirection) as 1|-1;b.lastSelfRight=this.tick;b.rollStart=this.tick;b.rollWork=0;b.gyroDance={ticks:0,settled:0,braking:isSpinner(b.compiled.config.weapon)&&Math.abs(this.omega(b))*30/Math.PI>b.compiled.config.weapon.rpm*.55};return true;
  }if(b.compiled.config.weapon.type==='hammer_saw'){
   if(this.axis(b,v(0,1,0)).y>.2)return this.requestStrike(b);
@@ -212,10 +212,11 @@ export class Simulation{
  // precession through the hinge; no recovery impulse or pose reset is added.
  if(selfRightKind(c)==='gyro'&&b.rollStart>=0){
   const elapsed=(this.tick-b.rollStart)/RULES.hz,dance=b.gyroDance??={ticks:0,settled:0};
-  const onWheels=up.y>.90&&b.grounded;
-  dance.settled=onWheels?dance.settled+1:0;
+  // Minotaur drives on either face. Do not rock it off stable inverted wheels.
+  const onWheels=Math.abs(up.y)>.90&&b.grounded;
+  dance.settled=onWheels&&length(b.chassis.angvel())<.75?dance.settled+1:0;
   cmd.left=0;cmd.right=0;
-  if(!this.canSelfRight(b)||elapsed>26||dance.settled>=.12*RULES.hz){b.rollStart=-1;b.gyroDance=undefined;}
+  if(!this.canSelfRight(b)||elapsed>26||dance.settled>=.3*RULES.hz){b.rollStart=-1;b.gyroDance=undefined;}
   else{
    b.weaponOn=true;
    // Build angular momentum before rocking. Pulsed wheel torque changes the

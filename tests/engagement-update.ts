@@ -47,7 +47,7 @@ await test('Walls stop low crossings at high speed and only permit clearance ove
 });
 
 await test('A robot can leave only by clearing the top of a wall',()=>{
- const s=make(0,1,false);try{pose(s,0,v(6.3,3.5,3));for(const body of s.bots[0].bodies.values())body.setLinvel(v(11,0,0),true);for(let i=0;i<180&&!s.result;i++)s.step();assert.equal(s.fault,undefined);assert.equal(s.result?.reason,'Out of arena');assert.equal(s.result?.winner,1);return{reason:s.result?.reason,wallHeightM:RULES.wallHeight};}finally{s.dispose();}
+ const s=make(0,1,false);try{pose(s,0,v(6.3,RULES.wallHeight+.55,3));for(const body of s.bots[0].bodies.values())body.setLinvel(v(11,0,0),true);for(let i=0;i<180&&!s.result;i++)s.step();assert.equal(s.fault,undefined);assert.equal(s.result?.reason,'Out of arena');assert.equal(s.result?.winner,1);return{reason:s.result?.reason,wallHeightM:RULES.wallHeight};}finally{s.dispose();}
 });
 
 await test('An unpowered impact does not add launch energy or cancel physical recoil',()=>{

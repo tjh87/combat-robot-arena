@@ -5,47 +5,47 @@
     "detail": [
       {
         "robot": "Tombstone",
-        "peakCentreM": 3.325959635739504
+        "peakCentreM": 7.841583063493923
       },
       {
         "robot": "Minotaur",
-        "peakCentreM": 3.3242624140222743
+        "peakCentreM": 7.832634559042521
       },
       {
         "robot": "Hydra",
-        "peakCentreM": 3.3181070945933597
+        "peakCentreM": 7.803993631204049
       },
       {
         "robot": "ICEwave",
-        "peakCentreM": 3.3241165402308006
+        "peakCentreM": 7.827951868656553
       },
       {
         "robot": "HyperShock",
-        "peakCentreM": 3.3277581091574273
+        "peakCentreM": 7.847105351040147
       },
       {
         "robot": "Gigabyte",
-        "peakCentreM": 3.332533153487759
+        "peakCentreM": 7.869825205324475
       },
       {
         "robot": "Son of Whyachi",
-        "peakCentreM": 3.33248295793518
+        "peakCentreM": 7.86899066292562
       },
       {
         "robot": "HUGE",
-        "peakCentreM": 3.3286353515821485
+        "peakCentreM": 7.8535396872522325
       },
       {
         "robot": "SawBlaze",
-        "peakCentreM": 3.323641215057299
+        "peakCentreM": 7.824950432449429
       },
       {
         "robot": "Deep Six",
-        "peakCentreM": 3.328069068034307
+        "peakCentreM": 7.84241572085489
       },
       {
         "robot": "Quantum",
-        "peakCentreM": 3.325999838624348
+        "peakCentreM": 7.836463566102768
       }
     ]
   },
@@ -54,7 +54,7 @@
     "status": "passed",
     "detail": {
       "bodies": 8,
-      "commonUpwardSpeedRemoved": 23.396991729736328
+      "commonUpwardSpeedRemoved": 18.44849967956543
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "A solver overshoot moves the complete assembly together without changing its pose",
     "status": "passed",
     "detail": {
-      "limitM": 3.35
+      "limitM": 7.95
     }
   },
   {
@@ -94,8 +94,28 @@
     "name": "Post-match motion and recorded frames retain the same flight limit",
     "status": "passed",
     "detail": {
-      "peakCentreM": 3.328624118117338,
+      "peakCentreM": 7.507841048116759,
       "frames": 56
     }
+  },
+  {
+    "name": "Vertical contact impulse determines flight through mass and gravity without a launch boost",
+    "status": "passed",
+    "detail": [
+      {
+        "massKg": 113.20000457763672,
+        "impulseNs": 679.2000274658203,
+        "verticalEnergyJ": 2037.600082397461,
+        "idealApexM": 2.6121074367509722,
+        "actualApexM": 2.597322344322288
+      },
+      {
+        "massKg": 113.20000457763672,
+        "impulseNs": 1358.4000549316406,
+        "verticalEnergyJ": 8150.400329589844,
+        "idealApexM": 8.116694592714275,
+        "actualApexM": 7.841583063493923
+      }
+    ]
   }
 ]

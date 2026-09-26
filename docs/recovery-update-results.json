@@ -5,27 +5,18 @@
     "detail": [
       {
         "side": -1,
-        "recoveredSeconds": 0.23333333333333334,
-        "gyroTorqueNm": 118.62078978376184,
-        "driveDistanceM": 3.425030715553941,
+        "recoveredSeconds": 3.2958333333333334,
+        "gyroTorqueNm": 105.48508594159654,
+        "driveDistanceM": 2.763420573592061,
         "inverted": true
       },
       {
         "side": 1,
-        "recoveredSeconds": 0.2,
-        "gyroTorqueNm": 120.83081312737288,
-        "driveDistanceM": 3.367787294396211,
+        "recoveredSeconds": 3.308333333333333,
+        "gyroTorqueNm": 105.5457589731103,
+        "driveDistanceM": 2.76368344241229,
         "inverted": true
       }
     ]
-  },
-  {
-    "name": "The gyro inertial step changes precession without increasing rotational energy",
-    "status": "passed",
-    "detail": {
-      "initialEnergyJ": 170.31666104495525,
-      "finalEnergyJ": 137.55541661359396,
-      "maximumEnergyRatio": 1
-    }
   }
 ]

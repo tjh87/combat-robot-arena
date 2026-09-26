@@ -29,10 +29,10 @@ Keep each stock robot below the existing 60,000-triangle target.
 
 ## 3. Arena
 
-The floor is 14.63 metres square. The containment rim is 2.70 metres high.
+The floor is 14.63 metres square. The containment rim is 7.30 metres high.
 Walls use 0.60-metre overlapping collision geometry and the existing swept assembly guard.
 Robots must not cross walls below the rim. They can leave the arena above the rim.
-Do not add an invisible roof that blocks valid ring-outs.
+The centre-of-mass flight ceiling is 7.95 metres. Limit excess upward speed using v = sqrt(2 g remainingHeight), without boosting weaker impacts. Keep horizontal motion and spin. Require the complete robot to clear the rim for ring-outs.
 Keep the raised upper deck, floor cut-outs, screws, corner hammers, warning states and visible hazard motion.
 
 Floor hazards are paired rotating saw discs. They emerge from the slots and retract.
@@ -78,7 +78,7 @@ Do not substitute a hidden self-righting arm, pose reset or artificial vertical 
 For an over-speed drum, brake below 15% of requested RPM and wait for low chassis angular speed.
 Then rebuild the recovery speed. Retain spin direction during preparation.
 Use the current 35–55% rocking band, 0.55-second steering pulse and 0.15-second pause.
-Stop after stable upright wheel contact, power loss, broken required drives, or the 26-second controller limit.
+Stop after 0.30 seconds of stable upright or inverted wheel contact below 0.75 rad/s chassis angular speed, power loss, broken required drives, or the 26-second controller limit.
 Automatic recovery requires sustained arena support. Do not start it during a normal jump.
 Keep the separate manual Unstick feature. Do not confuse it with physical gyro self-righting.
 

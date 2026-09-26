@@ -1,0 +1,42 @@
+{
+  "date": "2026-09-26T04:42:17.432Z",
+  "results": [
+    {
+      "name": "A robot can leave only by clearing the top of a wall",
+      "status": "passed",
+      "detail": {
+        "reason": "Out of arena",
+        "wallHeightM": 7.3
+      }
+    },
+    {
+      "name": "A coasting weapon loses energy against both a wall and the floor",
+      "status": "passed",
+      "detail": [
+        {
+          "surface": "wall",
+          "energyBeforeJ": 48423.04330453871,
+          "energyAfterJ": 1285.484462131342
+        },
+        {
+          "surface": "floor",
+          "energyBeforeJ": 48139.63549264124,
+          "energyAfterJ": 39781.56303540692
+        }
+      ]
+    },
+    {
+      "name": "Walls stop low crossings at high speed and only permit clearance over the rim",
+      "status": "passed",
+      "detail": {
+        "cases": 48,
+        "contained": 48,
+        "clearedRim": 0,
+        "maxSpeedMps": 150,
+        "maxChassisCoordinateM": 7.106549263000488,
+        "wallInnerCoordinateM": 7.315,
+        "ccdSubsteps": 1
+      }
+    }
+  ]
+}
