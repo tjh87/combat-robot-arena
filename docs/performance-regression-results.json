@@ -1,0 +1,101 @@
+{
+  "checks": [
+    {
+      "name": "Presentation rate is bounded on 60, 120 and 144 Hz displays; static screens redraw only on changes",
+      "detail": [
+        {
+          "refresh": 60,
+          "target": 30,
+          "draws": 300
+        },
+        {
+          "refresh": 60,
+          "target": 60,
+          "draws": 600
+        },
+        {
+          "refresh": 120,
+          "target": 30,
+          "draws": 300
+        },
+        {
+          "refresh": 120,
+          "target": 60,
+          "draws": 600
+        },
+        {
+          "refresh": 144,
+          "target": 30,
+          "draws": 300
+        },
+        {
+          "refresh": 144,
+          "target": 60,
+          "draws": 600
+        }
+      ]
+    },
+    {
+      "name": "Adaptive resolution responds to sustained load, recovers slowly, and keeps manual quality available",
+      "detail": {
+        "minimumScale": 0.65,
+        "recovered": 0.7,
+        "mediumPixelBudget": 1440000
+      }
+    },
+    {
+      "name": "All 11 robot shapes keep every triangle, UV seam and normal after vertex indexing",
+      "detail": {
+        "robots": 11,
+        "parts": 825,
+        "oldBytes": 15141856,
+        "newBytes": 12232240
+      }
+    },
+    {
+      "name": "Inactive battery flames issue no buffer uploads and active flames still move and light the robot",
+      "detail": {
+        "idleUpdates": 120,
+        "idleUploads": 0
+      }
+    },
+    {
+      "name": "Instanced graphics buffers are released when a scene is replaced",
+      "detail": {
+        "instanceDisposals": 1
+      }
+    },
+    {
+      "name": "Static menus reuse shadows; moving robots and replays refresh medium shadows at 30 Hz",
+      "detail": {
+        "menuFrames": 60,
+        "menuShadowUpdates": 1,
+        "matchShadowUpdates": 30,
+        "replayShadowUpdates": 30
+      }
+    },
+    {
+      "name": "Idle audio suspends once and resumes through the existing start flow",
+      "detail": {
+        "suspends": 2,
+        "resumes": 1
+      }
+    },
+    {
+      "name": "Skipping unseen tournament recordings preserves exact seeded physical state and damage",
+      "detail": {
+        "ticks": 960,
+        "physicsHz": 240,
+        "recordedFrames": 180,
+        "unseenFrames": 0
+      }
+    },
+    {
+      "name": "Tournament work yields after its time budget and continues the same match",
+      "detail": {
+        "ticksPerZeroBudgetCall": 1
+      }
+    }
+  ],
+  "graphics": "Geometry and DOM checks do not measure GPU frame rate."
+}

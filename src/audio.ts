@@ -37,6 +37,7 @@ export function readyImpactSounds(events:ImpactEvent[],tick:number,lastID:number
 export const exhaustSamples=(sampleRate:number)=>combustionSamples(sampleRate,'mid');
 type LoopVoice={source:AudioBufferSourceNode,filter:BiquadFilterNode,gain:GainNode};
 export class GameAudio{
+ private quiet=false;
  sparkBuffers=new Map<number,AudioBuffer>();
  fireLoops:LoopVoice[]=[];
  weaponLoops:(LoopVoice&{profile:string})[]=[];weaponBuffers=new Map<string,AudioBuffer>();combustionLoops:LoopVoice[][]=[];
@@ -85,7 +86,7 @@ export class GameAudio{
  }
  impactLibrary:Record<keyof typeof METAL_IMPACTS|keyof typeof LANDING_IMPACTS,AudioBuffer[]>={tap:[],strike:[],crash:[],landLight:[],landHeavy:[]};impactLoad?:Promise<void>;impactSerial=0;
  context?:AudioContext;master?:GainNode;sfx?:GainNode;voices=0;tones:{osc:OscillatorNode,gain:GainNode}[]=[];air:{source:AudioBufferSourceNode,filter:BiquadFilterNode,gain:GainNode}[]=[];available=true;
- start(master:number,sfx:number){try{if(!this.context){
+ start(master:number,sfx:number){this.quiet=false;try{if(!this.context){
  const ctx=this.context=new AudioContext();this.master=ctx.createGain();this.sfx=ctx.createGain();this.sfx.connect(this.master);
  if(ctx.createDynamicsCompressor){const limiter=ctx.createDynamicsCompressor();limiter.threshold.value=-5;limiter.knee.value=3;limiter.ratio.value=16;limiter.attack.value=.002;limiter.release.value=.12;this.master.connect(limiter);limiter.connect(ctx.destination);}else this.master.connect(ctx.destination);
  // Per robot: traction, blade-pass pulse, motor harmonics, low mechanical rumble.
@@ -148,7 +149,7 @@ export class GameAudio{
  }
  }
 
- mute(){if(!this.context)return;for(const tone of [...this.tones,...this.air,...this.weaponLoops,...this.fireLoops.filter(Boolean),...this.combustionLoops.flat().filter(Boolean)])tone.gain.gain.setTargetAtTime(0,this.context.currentTime,.025);}
+ mute(){if(!this.context||this.quiet)return;this.quiet=true;for(const tone of [...this.tones,...this.air,...this.weaponLoops,...this.fireLoops.filter(Boolean),...this.combustionLoops.flat().filter(Boolean)])tone.gain.gain.setTargetAtTime(0,this.context.currentTime,.025);void this.context.suspend?.().catch(()=>{});}
  dispose(){this.resetEngines();this.pauseCountdown();this.tones.forEach(t=>{t.osc.stop();t.osc.disconnect();t.gain.disconnect();});this.tones=[];[...this.air,...this.weaponLoops,...this.fireLoops.filter(Boolean),...this.combustionLoops.flat().filter(Boolean)].forEach(a=>{a.source.stop();a.source.disconnect();a.filter.disconnect();a.gain.disconnect();});this.air=[];this.weaponLoops=[];this.fireLoops=[];this.weaponBuffers.clear();this.sparkBuffers.clear();this.combustionLoops=[];void this.context?.close();this.context=undefined;this.impactLibrary={tap:[],strike:[],crash:[],landLight:[],landHeavy:[]};this.impactLoad=undefined;}
 }
 

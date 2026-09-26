@@ -1,4 +1,5 @@
 import {ARENA_HAZARDS} from './arena-hazards';
+import {compactGeometry} from './geometry-memory';
 import * as THREE from 'three';
 import {deckShape} from './finish-geometry';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
@@ -21,7 +22,7 @@ class Batch{
  box(s:number[],p:number[],m:THREE.Material,r?:THREE.Euler){this.put(new THREE.BoxGeometry(...s as [number,number,number]),m,p,r);}
  cylinder(radius:number,length:number,p:number[],m:THREE.Material,r?:THREE.Euler,segments=12){this.put(new THREE.CylinderGeometry(radius,radius,length,segments),m,p,r);}
  finish(parent:THREE.Object3D){
-  for(const [material,parts]of this.groups){const geometry=mergeGeometries(parts)!;parts.forEach(p=>p.dispose());const mesh=new THREE.Mesh(geometry,material);mesh.castShadow=!(material instanceof THREE.MeshBasicMaterial);mesh.receiveShadow=true;parent.add(mesh);}
+  for(const [material,parts]of this.groups){const geometry=compactGeometry(mergeGeometries(parts)!);parts.forEach(p=>p.dispose());const mesh=new THREE.Mesh(geometry,material);mesh.castShadow=!(material instanceof THREE.MeshBasicMaterial);mesh.receiveShadow=true;parent.add(mesh);}
   this.groups.clear();
  }
 }

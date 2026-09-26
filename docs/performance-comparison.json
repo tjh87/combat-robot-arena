@@ -1,0 +1,56 @@
+{
+  "baseCommit": "1d46ee01c81423cd01bd62944c7207081785254f",
+  "repetitions": 3,
+  "seed": 73145,
+  "ticksPerScenario": 1440,
+  "scenarios": [
+    {
+      "robots": [
+        "Tombstone",
+        "Minotaur"
+      ],
+      "beforeMeanMs": 2.177109791111116,
+      "afterMeanMs": 1.7621059550000073,
+      "reductionPercent": 19.06214550159668,
+      "identical": true
+    },
+    {
+      "robots": [
+        "HyperShock",
+        "HUGE"
+      ],
+      "beforeMeanMs": 3.827571996666658,
+      "afterMeanMs": 2.882875584444441,
+      "reductionPercent": 24.681349248163865,
+      "identical": true
+    },
+    {
+      "robots": [
+        "Quantum",
+        "Hydra"
+      ],
+      "beforeMeanMs": 2.369370469722229,
+      "afterMeanMs": 2.300351330277753,
+      "reductionPercent": 2.912973734013291,
+      "identical": true
+    },
+    {
+      "robots": [
+        "SawBlaze",
+        "Deep Six"
+      ],
+      "beforeMeanMs": 2.7257998475000047,
+      "afterMeanMs": 2.277415058888904,
+      "reductionPercent": 16.449659318248965,
+      "identical": true
+    }
+  ],
+  "overallCpuReductionPercent": 16.911073756949847,
+  "geometry": {
+    "beforeBytes": 25573856,
+    "afterBytes": 20521780,
+    "reductionPercent": 19.75484651200038,
+    "trianglesPreserved": true
+  },
+  "limitations": "Node Rapier CPU timings and geometry buffers; no GPU FPS or Windows hardware measurement. First two post-change runs used slower general vertex indexing; final run uses exact numeric indexing, with comparable memory reduction and lower setup cost."
+}

@@ -20,7 +20,7 @@ export class ExhaustPlume{
  }
  reset(){this.ages.fill(-1);this.clocks.fill(0);for(let i=0;i<this.count;i++)this.positions[i*3+1]=-20;this.points.geometry.getAttribute('position').needsUpdate=true;}
  update(sim:Simulation,dt:number,reduced=false){
-  this.points.visible=!reduced;if(reduced||dt<=0)return;
+  this.points.visible=!reduced&&this.ages.some(age=>age>=0);if(reduced||dt<=0)return;
   for(const bot of sim.bots){const c=bot.compiled.config,w=c.weapon;if(c.chassis.profile!=='icewave'||w.type!=='horizontal_bar'||!sim.powered(bot)||!bot.modules.weapon_actuator.functional)continue;
    this.clocks[bot.id]+=dt*(bot.weaponOn?28:12);
    while(this.clocks[bot.id]>=1){this.clocks[bot.id]--;const i=this.ages.findIndex(a=>a<0);if(i<0)break;
@@ -29,6 +29,6 @@ export class ExhaustPlume{
    }
   }
   for(let i=0;i<this.count;i++){if(this.ages[i]<0){this.positions[i*3+1]=-20;continue;}this.ages[i]-=dt;this.velocities[i*3+1]+=.22*dt;for(let k=0;k<3;k++)this.positions[i*3+k]+=this.velocities[i*3+k]*dt;}
-  this.points.geometry.getAttribute('position').needsUpdate=true;
+  this.points.visible=this.ages.some(age=>age>=0);if(this.points.visible)this.points.geometry.getAttribute('position').needsUpdate=true;
  }
 }

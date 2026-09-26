@@ -55,7 +55,7 @@ export class TireEffects{
  reset(){
   this.ages.fill(-1);this.clocks.clear();this.markClocks.clear();this.previous.clear();this.markIndex=this.puffIndex=0;this.marks.count=0;
   for(let i=0;i<SMOKE_COUNT;i++)this.positions[i*3+1]=-20;
-  this.smoke.geometry.getAttribute('position').needsUpdate=true;
+  this.smoke.visible=false;this.smoke.geometry.getAttribute('position').needsUpdate=true;
  }
  private puff(point:Vec,velocity:Vec,intensity:number){
   const i=this.puffIndex++%SMOKE_COUNT,j=i*3,spread=(i*97%23)/22-.5;
@@ -72,11 +72,11 @@ export class TireEffects{
   this.stamp.scale.set(width*(.30+.35*strength),1,distance+.008);
   this.stamp.updateMatrix();this.marks.setMatrixAt(slot,this.stamp.matrix);
   this.marks.setColorAt(slot,this.streakColor.copy(this.floorColor).lerp(this.rubberColor,strength));
-  this.marks.count=Math.max(this.marks.count,slot+1);
+  this.marks.count=Math.max(this.marks.count,slot+1);this.marks.visible=true;
   this.marks.instanceMatrix.needsUpdate=true;if(this.marks.instanceColor)this.marks.instanceColor.needsUpdate=true;
  }
  update(sim:Simulation,dt:number,reduced=false){
-  this.smoke.visible=this.marks.visible=!reduced;
+  this.smoke.visible=!reduced&&this.ages.some(age=>age>=0);this.marks.visible=!reduced&&this.marks.count>0;
   if(reduced||dt<=0)return;
   const live=new Set<string>();
   for(const bot of sim.bots)for(const [id,wheel]of bot.bodies){
@@ -122,6 +122,6 @@ export class TireEffects{
    this.positions[j+1]+=(this.velocities[j+1]+.18*(1-fade))*dt;
    this.positions[j+2]+=this.velocities[j+2]*dt;
   }
-  this.smoke.geometry.getAttribute('position').needsUpdate=true;
+  this.smoke.visible=this.ages.some(age=>age>=0);if(this.smoke.visible)this.smoke.geometry.getAttribute('position').needsUpdate=true;
  }
 }

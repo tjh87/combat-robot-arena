@@ -1,0 +1,959 @@
+{
+  "date": "2026-09-26T02:27:13.925Z",
+  "checks": {
+    "ui": [
+      {
+        "name": "Repeated Settings clicks return to the paused match with unchanged physics",
+        "status": "passed"
+      },
+      {
+        "name": "Clearing purchases clears the orders that Commit actually applies",
+        "status": "passed"
+      },
+      {
+        "name": "Settings preserve staged repairs, name, colour, and the repair window",
+        "status": "passed"
+      },
+      {
+        "name": "Commit reads the visible repair input even before its change event fires",
+        "status": "passed"
+      },
+      {
+        "name": "An invalid builder value remains editable after Settings closes",
+        "status": "passed"
+      },
+      {
+        "name": "A blank robot name cannot be bypassed by changing another field",
+        "status": "passed"
+      },
+      {
+        "name": "Match exit works in one click from live play, pause and replay",
+        "status": "passed"
+      },
+      {
+        "name": "Context loss during replay ends replay and requires Resume after restoration",
+        "status": "passed"
+      },
+      {
+        "name": "Graphics retry keeps the current match and does not reset its condition",
+        "status": "passed"
+      },
+      {
+        "name": "Keyboard menus and matches work when gamepad access is denied",
+        "status": "passed"
+      },
+      {
+        "name": "Denied audio never delays match startup",
+        "status": "passed"
+      },
+      {
+        "name": "Practice reset, share/import, result, and tournament menu flows remain usable",
+        "status": "passed",
+        "detail": {
+          "flows": 6
+        }
+      },
+      {
+        "name": "Agent menu actions cannot replace a competitive match through Settings",
+        "status": "passed"
+      },
+      {
+        "name": "Agent status can read an invalid builder draft without throwing",
+        "status": "passed"
+      },
+      {
+        "name": "Tournament repair windows cannot launch an unrelated practice match",
+        "status": "passed"
+      },
+      {
+        "name": "Modal keyboard focus cannot reach background setup controls",
+        "status": "passed"
+      },
+      {
+        "name": "Duplicate Start clicks create one match and one countdown",
+        "status": "passed"
+      },
+      {
+        "name": "Fresh initialization loads a shared build and rejects a malformed fragment safely",
+        "status": "passed"
+      },
+      {
+        "name": "A failed graphics retry can recover without discarding the paused match",
+        "status": "passed"
+      },
+      {
+        "name": "Arrow keys drive P1 and move focus between menu choices",
+        "status": "passed"
+      },
+      {
+        "name": "POV switches with the HUD button and camera key, and saves its mode",
+        "status": "passed"
+      },
+      {
+        "name": "Start lights count 3, 2, 1 before physics starts; pause freezes the match clock",
+        "status": "passed"
+      },
+      {
+        "name": "The complete roster is selectable with no custom-preset collision",
+        "status": "passed"
+      },
+      {
+        "name": "Every roster template can enter Practice and the hammer-saw exposes its strike control",
+        "status": "passed"
+      },
+      {
+        "name": "Builder can edit and share the new articulated assembly",
+        "status": "passed"
+      },
+      {
+        "name": "Workshop exposes real weapon mass, references, estimates, and Quantum pressure ratings",
+        "status": "passed"
+      },
+      {
+        "name": "Workshop identifies battery targets and marks estimated positions for all eleven robots",
+        "status": "passed",
+        "detail": {
+          "robots": 11,
+          "estimatedPositionsDisclosed": true
+        }
+      },
+      {
+        "name": "Roster selections include all eleven supplied robot photographs",
+        "status": "passed"
+      },
+      {
+        "name": "Skipping or finishing a replay resumes the live match without a pause dialog",
+        "status": "passed"
+      },
+      {
+        "name": "A slow visible frame does not force a pause or skip simulation seconds",
+        "status": "passed"
+      },
+      {
+        "name": "The weapon panel reports measured RPM and power, while both count-out timers identify the robot",
+        "status": "passed"
+      },
+      {
+        "name": "Automatic recovery preference persists and updates the current simulation",
+        "status": "passed"
+      },
+      {
+        "name": "Builder saves a validated build across reloads and Reset restores the selected template",
+        "status": "passed"
+      },
+      {
+        "name": "Results show shared 5/3/3 scores and distinguish a knockout from a judges decision",
+        "status": "passed"
+      },
+      {
+        "name": "Both central KO clocks identify the robot, freeze on pause, and clear on recovery",
+        "status": "passed"
+      },
+      {
+        "name": "Hydra shows flip assist in setup, builder and HUD even with zero stored charges",
+        "status": "passed"
+      },
+      {
+        "name": "Recovery controls appear only for robots with a working recovery system",
+        "status": "passed"
+      },
+      {
+        "name": "Computer opponent selection starts the chosen robot and Main menu exits in one click",
+        "status": "passed"
+      },
+      {
+        "name": "Results give winner and runner-up separate large named panels",
+        "status": "passed"
+      },
+      {
+        "name": "Reinstalling a folding recovery arm keeps a valid template mount",
+        "status": "passed"
+      },
+      {
+        "name": "Automatic slow motion ignores light hits and heavy arena contacts",
+        "status": "passed"
+      },
+      {
+        "name": "R recovers a stuck robot once, supports remapping, and ignores text fields",
+        "status": "passed",
+        "detail": {
+          "defaultKey": "R",
+          "remap": "Z",
+          "repeatIgnored": true,
+          "textEntryIgnored": true
+        }
+      },
+      {
+        "name": "Quantum appears as a selectable opponent, editable crusher, and force gauge",
+        "status": "passed",
+        "detail": {
+          "templates": 11,
+          "crusherGauge": "4.3 kN"
+        }
+      },
+      {
+        "name": "Animated start tones pause, resume, and restart for rematches and tournament fights",
+        "status": "passed",
+        "detail": {
+          "matches": 3,
+          "tones": 12,
+          "lamps": 6,
+          "noMediaDependency": true,
+          "pauseSynchronized": true
+        }
+      },
+      {
+        "name": "Unavailable audio does not block the animated countdown",
+        "status": "passed",
+        "detail": {
+          "matchStarted": true
+        }
+      },
+      {
+        "name": "Knockout results hide unused point totals and explain the actual result first",
+        "status": "passed"
+      },
+      {
+        "name": "The flipper assist shows contact readiness and the current weapon key only for Hydra",
+        "status": "passed"
+      },
+      {
+        "name": "Unstick works for a robot without self-righting and preserves damage and match time",
+        "status": "passed"
+      },
+      {
+        "name": "Unstick labels both robots and cannot change physics during countdown or pause",
+        "status": "passed"
+      },
+      {
+        "name": "Weapon gauges and robot warnings report damage and reduced output",
+        "status": "passed",
+        "detail": {
+          "protectedFailures": 3
+        }
+      },
+      {
+        "name": "Nearby damaged robots keep separate warnings and hide them outside play",
+        "status": "passed",
+        "detail": {
+          "alerts": 2,
+          "minimumSeparationPixels": 218,
+          "hiddenDuringPause": true
+        }
+      },
+      {
+        "name": "Results display matching robot portraits, winner confetti, and reduced-motion support",
+        "status": "passed",
+        "detail": {
+          "portraits": 2,
+          "confetti": 24,
+          "reducedMotion": true
+        }
+      },
+      {
+        "name": "Both robots show numeric HP and speed, and hit numbers reflect actual losses",
+        "status": "passed"
+      },
+      {
+        "name": "Damage bubbles use whole HP, a minimum of one, and matching rounded tiers",
+        "status": "passed",
+        "detail": {
+          "liveCases": 8,
+          "replayCases": 1,
+          "minimumDisplayedHP": 1,
+          "decimalPlaces": 0,
+          "physicsPrecisionPreserved": true
+        }
+      },
+      {
+        "name": "All eleven robot weapon panels show clear labels and current control keys",
+        "status": "passed",
+        "detail": {
+          "robots": 11,
+          "remappedKeys": 2,
+          "emptyControlLabels": 0
+        }
+      },
+      {
+        "name": "Damage borders increase through seven tiers and respect reduced motion",
+        "status": "passed",
+        "detail": {
+          "tiers": 7,
+          "thresholdsHP": [
+            40,
+            100,
+            250,
+            500,
+            800,
+            1000
+          ],
+          "boundaryCases": 14,
+          "maxPopPercent": 34,
+          "wordsAbove": 0,
+          "reducedMotion": true
+        }
+      },
+      {
+        "name": "Hydra assist, gauge and captions share a non-overlapping layout container",
+        "status": "passed"
+      },
+      {
+        "name": "Results retain HP totals for the correct winner and runner-up, including zero HP",
+        "status": "passed"
+      },
+      {
+        "name": "Random buttons select real player and computer robots and keep the manual opponent picker",
+        "status": "passed"
+      },
+      {
+        "name": "Knockouts show the final motion and a replay before the result modal",
+        "status": "passed"
+      },
+      {
+        "name": "Replay damage borders use recorded hit time without extra words",
+        "status": "passed"
+      },
+      {
+        "name": "Ring-out results label the loss correctly and never call it disqualification",
+        "status": "passed"
+      },
+      {
+        "name": "Landing details show mass, descent, impact speed and one energy budget",
+        "status": "passed"
+      },
+      {
+        "name": "Repair update: result shortcuts, ring-out metrics, fast speed, tracks and visible hit bubbles",
+        "status": "passed",
+        "detail": {
+          "shortcuts": 2,
+          "ringOutMetrics": 2,
+          "speedKmh": 18,
+          "offscreenBubbleVisible": true,
+          "legalTreadBuild": true
+        }
+      },
+      {
+        "name": "Battery hints cover both robots and POV switches the compact gauge layout",
+        "status": "passed"
+      },
+      {
+        "name": "Performance: hidden tabs pause physics, stop drawing, and stay paused when visible again",
+        "status": "passed",
+        "detail": {
+          "hiddenFrames": 20,
+          "extraHiddenDraws": 0,
+          "explicitResume": true
+        }
+      },
+      {
+        "name": "Performance: high refresh displays retain 240 Hz physics with at most 60 rendered frames per second",
+        "status": "passed",
+        "detail": {
+          "physicsTicks": 240,
+          "draws": 60
+        }
+      },
+      {
+        "name": "Performance: adaptive display preference saves without changing camera, controls, or quality",
+        "status": "passed",
+        "detail": {
+          "saved": true,
+          "quality": "medium"
+        }
+      },
+      {
+        "name": "Performance: countdown and replay audio are not suspended by the HUD timer",
+        "status": "passed",
+        "detail": {
+          "countdownMuted": false,
+          "replayMuted": false
+        }
+      }
+    ],
+    "performance": [
+      {
+        "name": "Presentation rate is bounded on 60, 120 and 144 Hz displays; static screens redraw only on changes",
+        "detail": [
+          {
+            "refresh": 60,
+            "target": 30,
+            "draws": 300
+          },
+          {
+            "refresh": 60,
+            "target": 60,
+            "draws": 600
+          },
+          {
+            "refresh": 120,
+            "target": 30,
+            "draws": 300
+          },
+          {
+            "refresh": 120,
+            "target": 60,
+            "draws": 600
+          },
+          {
+            "refresh": 144,
+            "target": 30,
+            "draws": 300
+          },
+          {
+            "refresh": 144,
+            "target": 60,
+            "draws": 600
+          }
+        ]
+      },
+      {
+        "name": "Adaptive resolution responds to sustained load, recovers slowly, and keeps manual quality available",
+        "detail": {
+          "minimumScale": 0.65,
+          "recovered": 0.7,
+          "mediumPixelBudget": 1440000
+        }
+      },
+      {
+        "name": "All 11 robot shapes keep every triangle, UV seam and normal after vertex indexing",
+        "detail": {
+          "robots": 11,
+          "parts": 825,
+          "oldBytes": 15141856,
+          "newBytes": 12232240
+        }
+      },
+      {
+        "name": "Inactive battery flames issue no buffer uploads and active flames still move and light the robot",
+        "detail": {
+          "idleUpdates": 120,
+          "idleUploads": 0
+        }
+      },
+      {
+        "name": "Instanced graphics buffers are released when a scene is replaced",
+        "detail": {
+          "instanceDisposals": 1
+        }
+      },
+      {
+        "name": "Static menus reuse shadows; moving robots and replays refresh medium shadows at 30 Hz",
+        "detail": {
+          "menuFrames": 60,
+          "menuShadowUpdates": 1,
+          "matchShadowUpdates": 30,
+          "replayShadowUpdates": 30
+        }
+      },
+      {
+        "name": "Idle audio suspends once and resumes through the existing start flow",
+        "detail": {
+          "suspends": 2,
+          "resumes": 1
+        }
+      },
+      {
+        "name": "Skipping unseen tournament recordings preserves exact seeded physical state and damage",
+        "detail": {
+          "ticks": 960,
+          "physicsHz": 240,
+          "recordedFrames": 180,
+          "unseenFrames": 0
+        }
+      },
+      {
+        "name": "Tournament work yields after its time budget and continues the same match",
+        "detail": {
+          "ticksPerZeroBudgetCall": 1
+        }
+      }
+    ],
+    "combat": [
+      {
+        "name": "Bite follows tooth spacing, feed, insertion and strike angle",
+        "status": "passed",
+        "detail": {
+          "shallowBiteMm": 8.726646259971648,
+          "deepBiteMm": 40,
+          "shallowDamagePercent": 28.486635129047087,
+          "deepDamagePercent": 76.81818181818181
+        }
+      },
+      {
+        "name": "Every spinning weapon loses speed when it strikes a robot",
+        "status": "passed",
+        "detail": [
+          {
+            "name": "Tombstone",
+            "energyBeforeJ": 48489.98178435649,
+            "energyAfterJ": 4204.214010479034,
+            "rpmLossPercent": 70.55467195383687,
+            "maxBiteMm": 33.04077393271306,
+            "maxEngagement": 0.1406801183415887
+          },
+          {
+            "name": "Minotaur",
+            "energyBeforeJ": 88930.07027390522,
+            "energyAfterJ": 4201.53304542073,
+            "rpmLossPercent": 78.26400256914685,
+            "maxBiteMm": 4.857529245909923,
+            "maxEngagement": 0.06778471623358695
+          },
+          {
+            "name": "ICEwave",
+            "energyBeforeJ": 25319.441733900498,
+            "energyAfterJ": 21985.813575254568,
+            "rpmLossPercent": 6.815386615611885,
+            "maxBiteMm": 35,
+            "maxEngagement": 0.07527913029233003
+          },
+          {
+            "name": "HyperShock",
+            "energyBeforeJ": 41881.09221813246,
+            "energyAfterJ": 537.6713697883529,
+            "rpmLossPercent": 88.66949005782546,
+            "maxBiteMm": 0,
+            "maxEngagement": 0
+          },
+          {
+            "name": "Gigabyte",
+            "energyBeforeJ": 102776.60861091242,
+            "energyAfterJ": 59403.280623106395,
+            "rpmLossPercent": 23.97471206981362,
+            "maxBiteMm": 14.770819352854824,
+            "maxEngagement": 0.08354688594139174
+          },
+          {
+            "name": "Son of Whyachi",
+            "energyBeforeJ": 48664.62096587849,
+            "energyAfterJ": 1977.2535898214999,
+            "rpmLossPercent": 79.84306414417432,
+            "maxBiteMm": 32.252022210395594,
+            "maxEngagement": 0.9196272991079896
+          },
+          {
+            "name": "HUGE",
+            "energyBeforeJ": 21273.06290781326,
+            "energyAfterJ": 31.812461185531525,
+            "rpmLossPercent": 96.13291584968417,
+            "maxBiteMm": 15.56068069960795,
+            "maxEngagement": 0.16224890819605267
+          },
+          {
+            "name": "SawBlaze",
+            "energyBeforeJ": 29175.757628379342,
+            "energyAfterJ": 1081.74653709552,
+            "rpmLossPercent": 80.7446380978321,
+            "maxBiteMm": 13.503095153848566,
+            "maxEngagement": 0.29605164519846344
+          },
+          {
+            "name": "Deep Six",
+            "energyBeforeJ": 72024.57439685213,
+            "energyAfterJ": 2230.900748249977,
+            "rpmLossPercent": 82.40052251039765,
+            "maxBiteMm": 19.425715523930045,
+            "maxEngagement": 0.294499868738151
+          }
+        ]
+      },
+      {
+        "name": "Walls stop low crossings at high speed and only permit clearance over the rim",
+        "status": "passed",
+        "detail": {
+          "cases": 48,
+          "contained": 46,
+          "clearedRim": 2,
+          "maxSpeedMps": 150,
+          "maxChassisCoordinateM": 7.430155277252197,
+          "wallInnerCoordinateM": 7.315,
+          "ccdSubsteps": 1
+        }
+      },
+      {
+        "name": "A robot can leave only by clearing the top of a wall",
+        "status": "passed",
+        "detail": {
+          "reason": "Out of arena",
+          "wallHeightM": 2.7
+        }
+      },
+      {
+        "name": "An unpowered impact does not add launch energy or cancel physical recoil",
+        "status": "passed",
+        "detail": {
+          "initialEnergyJ": 49179.733976478594,
+          "finalEnergyJ": 42745.15747561121,
+          "maximumEnergyJ": 49179.733976478594,
+          "momentumErrorPercent": 0.7281750969452446,
+          "hitTick": 87
+        }
+      },
+      {
+        "name": "A coasting weapon loses energy against both a wall and the floor",
+        "status": "passed",
+        "detail": [
+          {
+            "surface": "wall",
+            "energyBeforeJ": 48419.50548439578,
+            "energyAfterJ": 1394.3683795702877
+          },
+          {
+            "surface": "floor",
+            "energyBeforeJ": 48139.63549264124,
+            "energyAfterJ": 39781.56303540692
+          }
+        ]
+      },
+      {
+        "name": "A hammer has one finite 3500 J charge per cycle and Quantum survives the strike",
+        "status": "passed",
+        "detail": {
+          "headMassKg": 25.67961883544922,
+          "maximumKineticEnergyJ": 3329.7430483134203,
+          "assignedImpactEnergyJ": 2203.6405707222098,
+          "chassisHp": 1200
+        }
+      },
+      {
+        "name": "Static pushing pressure makes no smoke, and slipping tires respond to load",
+        "status": "passed",
+        "detail": {
+          "stationary": 0,
+          "sliding": 0.15,
+          "pushed": 0.43000000000000005,
+          "powered": 0.78
+        }
+      },
+      {
+        "name": "Fast tooth sweeps keep all 200 hits and reject all 200 near misses",
+        "status": "passed",
+        "detail": {
+          "hits": 200,
+          "nearMisses": 200,
+          "hz": 240
+        }
+      },
+      {
+        "name": "Six seeded matches cover all eleven templates and all three difficulties",
+        "status": "passed",
+        "detail": [
+          {
+            "a": "Tombstone",
+            "b": "Quantum",
+            "difficulty": "easy",
+            "seconds": 137.5,
+            "reason": "Count-out",
+            "impacts": 51
+          },
+          {
+            "a": "Minotaur",
+            "b": "Gigabyte",
+            "difficulty": "medium",
+            "seconds": 92.96666666666667,
+            "reason": "Out of arena",
+            "impacts": 89
+          },
+          {
+            "a": "Hydra",
+            "b": "Deep Six",
+            "difficulty": "hard",
+            "seconds": 31.566666666666666,
+            "reason": "Structural KO",
+            "impacts": 67
+          },
+          {
+            "a": "ICEwave",
+            "b": "HyperShock",
+            "difficulty": "easy",
+            "seconds": 44.6,
+            "reason": "Count-out",
+            "impacts": 44
+          },
+          {
+            "a": "Son of Whyachi",
+            "b": "SawBlaze",
+            "difficulty": "medium",
+            "seconds": 72.6,
+            "reason": "Count-out",
+            "impacts": 75
+          },
+          {
+            "a": "HUGE",
+            "b": "Tombstone",
+            "difficulty": "hard",
+            "seconds": 68.18333333333334,
+            "reason": "Structural KO",
+            "impacts": 52
+          }
+        ]
+      }
+    ],
+    "roster": [
+      {
+        "name": "All eleven templates meet the limits and survive build-link round trips",
+        "status": "passed",
+        "detail": [
+          {
+            "name": "Tombstone",
+            "reference": "Tombstone",
+            "mass": 113.20000000000003,
+            "parts": 44
+          },
+          {
+            "name": "Minotaur",
+            "reference": "Minotaur",
+            "mass": 113.20000000000002,
+            "parts": 66
+          },
+          {
+            "name": "Hydra",
+            "reference": "Hydra",
+            "mass": 113.20000000000002,
+            "parts": 46
+          },
+          {
+            "name": "ICEwave",
+            "reference": "ICEwave",
+            "mass": 113.19999999999999,
+            "parts": 40
+          },
+          {
+            "name": "HyperShock",
+            "reference": "HyperShock",
+            "mass": 113.20000000000006,
+            "parts": 253
+          },
+          {
+            "name": "Gigabyte",
+            "reference": "Gigabyte",
+            "mass": 113.19999999999995,
+            "parts": 90
+          },
+          {
+            "name": "Son of Whyachi",
+            "reference": "Son of Whyachi",
+            "mass": 113.19999999999999,
+            "parts": 47
+          },
+          {
+            "name": "HUGE",
+            "reference": "HUGE",
+            "mass": 113.19999999999999,
+            "parts": 128
+          },
+          {
+            "name": "SawBlaze",
+            "reference": "SawBlaze",
+            "mass": 113.20000000000002,
+            "parts": 94
+          },
+          {
+            "name": "Deep Six",
+            "reference": "Deep Six",
+            "mass": 113.19999999999997,
+            "parts": 58
+          },
+          {
+            "name": "Quantum",
+            "reference": "Quantum",
+            "mass": 113.2,
+            "parts": 72
+          }
+        ]
+      },
+      {
+        "name": "Every new convex part has mass moments consistent with Rapier",
+        "status": "passed",
+        "detail": {
+          "moments": 2346,
+          "maxAbsoluteError": 0.000008049194177732477
+        }
+      },
+      {
+        "name": "Every template can drive and each spinner gains rotor speed with the correct axis",
+        "status": "passed",
+        "detail": [
+          {
+            "name": "Tombstone",
+            "rpm": 1534.1998772661625,
+            "freeRPM": 1157.5260315305625,
+            "travel": 2.613862058195873
+          },
+          {
+            "name": "Minotaur",
+            "rpm": 3263.2126589175305,
+            "freeRPM": 2499.664755977344,
+            "travel": 2.915962372042591
+          },
+          {
+            "name": "Hydra",
+            "rpm": 0.05768097840872622,
+            "freeRPM": 0.012008131558204045,
+            "travel": 2.895917099444678
+          },
+          {
+            "name": "ICEwave",
+            "rpm": 1064.2143444119647,
+            "freeRPM": 800.7627178428052,
+            "travel": 2.544760664348808
+          },
+          {
+            "name": "HyperShock",
+            "rpm": 3109.5325035336723,
+            "freeRPM": 2436.792327074473,
+            "travel": 3.4465457976603524
+          },
+          {
+            "name": "Gigabyte",
+            "rpm": 410.0209054153106,
+            "freeRPM": 303.173320942533,
+            "travel": 1.7386627121102127
+          },
+          {
+            "name": "Son of Whyachi",
+            "rpm": 505.5085463826166,
+            "freeRPM": 379.24606772980354,
+            "travel": 2.3588838692485274
+          },
+          {
+            "name": "HUGE",
+            "rpm": 1576.8409309606589,
+            "freeRPM": 1192.9059639917102,
+            "travel": 1.5246366303574457
+          },
+          {
+            "name": "SawBlaze",
+            "rpm": 5226.60910634779,
+            "freeRPM": 5214.91073029438,
+            "travel": 2.411527028585413
+          },
+          {
+            "name": "Deep Six",
+            "rpm": 795.6613629089842,
+            "freeRPM": 597.8893861951899,
+            "travel": 1.5768257449773824
+          },
+          {
+            "name": "Quantum",
+            "rpm": 0.06050620500464521,
+            "freeRPM": 0.08749929917085829,
+            "travel": 3.5951984135036037
+          }
+        ]
+      },
+      {
+        "name": "Hammer-saw swings twice, returns, conserves its hinge anchors, and respects its work budget",
+        "status": "passed",
+        "detail": {
+          "strokes": 2,
+          "timeToStrike": 0.1375,
+          "minimumAngle": -1.1225295466770429,
+          "returnAngle": 0.0002466429159180631,
+          "maximumWork": 138.5667952802944,
+          "anchorError": 9.932540440288108e-7
+        }
+      },
+      {
+        "name": "New templates retain their distinct physical features and reject overlapping custom rotors",
+        "status": "passed",
+        "detail": {
+          "splitChassis": true,
+          "hollowWheels": true,
+          "spinningShell": true,
+          "threeArmCage": true,
+          "largeVertical": true
+        }
+      },
+      {
+        "name": "All eleven POV mounts follow actual body pose and face forward in live and replay views",
+        "status": "passed",
+        "detail": {
+          "templates": 11
+        }
+      },
+      {
+        "name": "Tournament entrants can draw from the full roster without illegal builds",
+        "status": "passed",
+        "detail": {
+          "seeds": 8,
+          "templates": 11
+        }
+      },
+      {
+        "name": "All templates create finite, bounded builder geometry and complete cleanup",
+        "status": "passed",
+        "detail": {
+          "counts": [
+            {
+              "name": "Tombstone",
+              "triangles": 17499,
+              "meshes": 53
+            },
+            {
+              "name": "Minotaur",
+              "triangles": 23283,
+              "meshes": 78
+            },
+            {
+              "name": "Hydra",
+              "triangles": 21023,
+              "meshes": 58
+            },
+            {
+              "name": "ICEwave",
+              "triangles": 23487,
+              "meshes": 54
+            },
+            {
+              "name": "HyperShock",
+              "triangles": 50739,
+              "meshes": 118
+            },
+            {
+              "name": "Gigabyte",
+              "triangles": 28003,
+              "meshes": 120
+            },
+            {
+              "name": "Son of Whyachi",
+              "triangles": 24895,
+              "meshes": 59
+            },
+            {
+              "name": "HUGE",
+              "triangles": 35821,
+              "meshes": 71
+            },
+            {
+              "name": "SawBlaze",
+              "triangles": 35687,
+              "meshes": 103
+            },
+            {
+              "name": "Deep Six",
+              "triangles": 23925,
+              "meshes": 70
+            },
+            {
+              "name": "Quantum",
+              "triangles": 59795,
+              "meshes": 67
+            }
+          ],
+          "actualWebGL": "unverified: cloud renderer is disabled"
+        }
+      }
+    ],
+    "battery": {
+      "status": "passed",
+      "attackerTargetPairs": 121,
+      "rotatedZoneHitWeakHitMissChecks": 594,
+      "hintChecks": "Both robots, multiple zones, POV own markers hidden"
+    }
+  },
+  "limitations": [
+    "GPU rendering unavailable in cloud browser",
+    "No Windows hardware FPS claim"
+  ]
+}

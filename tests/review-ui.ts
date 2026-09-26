@@ -27,15 +27,15 @@ const bundled=await bundle({entryPoints:['src/main.ts'],bundle:true,format:'iife
   b.onLoad({filter:/render-fixture/,namespace:'fixture'},()=>({contents:`
    export class ArenaRenderer {
     constructor(container,onLost,onRestore){if(globalThis.__failRenderer>0){globalThis.__failRenderer--;throw Error('Injected graphics initialization failure');}this.container=container;this.onLost=onLost;this.onRestore=onRestore;this.triangleCount=0;this.drawCalls=0;this.renderMs=0;}
-    attach(sim){this.sim=sim;this.endReplay();} setQuality(){} showBuilder(config){globalThis.__compile(config,true);}
-    batteryHintPositions(){return[{bot:0,index:0,x:40,y:50,visible:this.cameraMode!=="pov"},{bot:1,index:0,x:60,y:50,visible:true}];} startReplay(){this.replay=true;} projectCombatPoint(){return{x:45,y:50,visible:true};} robotWarningPosition(_sim,id){return{x:40+id*20,y:50,visible:true};} endReplay(){this.replay=false;} replayFrame(){} update(){} draw(){} dispose(){this.disposed=true;}
+    attach(sim){this.sim=sim;this.endReplay();} setQuality(){} setAdaptive(value){this.adaptive=value;this.needsRender=true;} showBuilder(config){globalThis.__compile(config,true);}
+    batteryHintPositions(){return[{bot:0,index:0,x:40,y:50,visible:this.cameraMode!=="pov"},{bot:1,index:0,x:60,y:50,visible:true}];} startReplay(){this.replay=true;} projectCombatPoint(){return{x:45,y:50,visible:true};} robotWarningPosition(_sim,id){return{x:40+id*20,y:50,visible:true};} endReplay(){this.replay=false;} replayFrame(){} update(){} draw(){this.draws=(this.draws??0)+1;this.needsRender=false;} dispose(){this.disposed=true;}
    }`}));
  }}]});
 const source=bundled.outputFiles[0].text,results:any[]=[];
 async function fixture(hash='',savedBuild?:string){
  const errors:any[]=[],vc=new VirtualConsole();vc.on('jsdomError',error=>errors.push(error));
  const agentTools=new Map<string,any>();
- const dom=new JSDOM('<div id="app"></div>',{url:'https://offline-test.invalid/'+hash,runScripts:'outside-only',virtualConsole:vc});
+ const dom=new JSDOM('<div id="app"></div>',{url:'https://offline-test.invalid/'+hash,runScripts:'outside-only',pretendToBeVisual:true,virtualConsole:vc});
  const w=dom.window as any;w.TextDecoder=TextDecoder;w.TextEncoder=TextEncoder;w.eval('globalThis.structuredClone=value=>JSON.parse(JSON.stringify(value));');
  w.HTMLMediaElement.prototype.play=function(){return Promise.reject(new Error('Offline media fixture'));};w.HTMLMediaElement.prototype.pause=function(){};
  w.matchMedia=()=>({matches:false});w.requestAnimationFrame=()=>1;w.cancelAnimationFrame=()=>{};
@@ -414,3 +414,31 @@ await test('Battery hints cover both robots and POV switches the compact gauge l
  f.$('#camera-button').click();f.api.updateBatteryHints();assert.equal(f.$('#weapon-gauge').closest('[data-camera]').dataset.camera,'pov');assert.equal(f.w.document.querySelectorAll('.battery-target-hint').length,1);assert(f.$('[data-player="1"]'));assert(f.$('#gauge-name').textContent);assert(f.$('#gauge-label').textContent);
  f.$('#pause-button').click();f.api.updateBatteryHints();assert.equal(f.w.document.querySelectorAll('.battery-target-hint').length,0);
 });
+
+await test('Performance: hidden tabs pause physics, stop drawing, and stay paused when visible again',async f=>{
+ await f.api.startMatch(true);let now=f.w.performance.now()+20;f.api.loop(now);const renderer=f.api.refs.renderer;
+ Object.defineProperty(f.w.document,'hidden',{configurable:true,value:true});f.w.document.dispatchEvent(new f.w.Event('visibilitychange'));
+ assert.equal(f.api.refs.state,'paused');const tick=f.api.refs.sim.tick,draws=renderer.draws;
+ for(let i=0;i<20;i++)f.api.loop(now+=20);assert.equal(f.api.refs.sim.tick,tick);assert.equal(renderer.draws,draws);
+ Object.defineProperty(f.w.document,'hidden',{configurable:true,value:false});f.w.document.dispatchEvent(new f.w.Event('visibilitychange'));f.api.loop(now+=20);const pausedDraws=renderer.draws;
+ for(let i=0;i<20;i++)f.api.loop(now+=20);assert.equal(renderer.draws,pausedDraws);assert.equal(f.api.refs.sim.tick,tick);
+ f.$('#resume').click();f.api.loop(now+=20);assert(f.api.refs.sim.tick>tick);return{hiddenFrames:20,extraHiddenDraws:0,explicitResume:true};
+});
+await test('Performance: high refresh displays retain 240 Hz physics with at most 60 rendered frames per second',async f=>{
+ await f.api.startMatch(true);let now=f.w.performance.now();const renderer=f.api.refs.renderer,before=renderer.draws??0;
+ for(let i=0;i<120;i++)f.api.loop(now+=1000/120);
+ assert(f.api.refs.sim.tick>=239&&f.api.refs.sim.tick<=242);assert(renderer.draws-before>=59&&renderer.draws-before<=61);return{physicsTicks:f.api.refs.sim.tick,draws:renderer.draws-before};
+});
+await test('Performance: adaptive display preference saves without changing camera, controls, or quality',f=>{
+ const before=JSON.stringify(f.api.refs.prefs.controls);f.$('#open-settings').click();const toggle=f.$('#pref-adaptive');assert(toggle.checked);toggle.checked=false;toggle.dispatchEvent(new f.w.Event('change',{bubbles:true}));
+ assert.equal(JSON.parse(f.w.localStorage.getItem('cra.preferences')).adaptive,false);assert.equal(f.api.refs.renderer.adaptive,false);assert.equal(f.api.refs.prefs.quality,'medium');assert.equal(JSON.stringify(f.api.refs.prefs.controls),before);return{saved:true,quality:'medium'};
+});
+if(results.some(r=>r.status==='failed'))process.exitCode=1;
+
+await test('Performance: countdown and replay audio are not suspended by the HUD timer',async f=>{
+ let mutes=0;f.api.refs.audio.mute=()=>{mutes++;};f.api.refs.audio.countdownCue=()=>true;await f.api.startMatch();let now=f.w.performance.now();
+ for(let i=0;i<20;i++)f.api.loop(now+=50);assert.equal(f.api.refs.state,'countdown');assert.equal(mutes,0);
+ const frame={tick:0,transforms:[],health:[[],[]],effects:[]};f.api.beginReplay(Array.from({length:120},(_,i)=>({...frame,tick:i*4})),'fighting');const replayMutes=mutes;
+ for(let i=0;i<10;i++)f.api.loop(now+=50);assert.equal(f.api.refs.state,'replay');assert.equal(mutes,replayMutes);return{countdownMuted:false,replayMuted:false};
+});
+if(results.some(r=>r.status==='failed'))process.exitCode=1;

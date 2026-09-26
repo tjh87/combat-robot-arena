@@ -19,6 +19,8 @@ export class BatteryFireVisual extends THREE.Group{
   this.flames.frustumCulled=this.smoke.frustumCulled=false;this.add(this.flames,this.smoke,...this.lights);this.update([],0);
  }
  update(emitters:{position:Vec,active:boolean}[],seconds:number,reduced=false){
+  const active=emitters.some(e=>e.active);this.flames.visible=this.smoke.visible=active;
+  if(!active){for(const light of this.lights)light.intensity=0;return;}
   const t=reduced?0:seconds;
   for(let bot=0;bot<2;bot++){
    const emitter=emitters[bot],p=emitter?.position??{x:0,y:-20,z:0},active=!!emitter?.active;

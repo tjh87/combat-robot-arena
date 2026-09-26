@@ -14,7 +14,8 @@
     "test:roster": "node --import tsx tests/roster.ts",
     "start": "node scripts/serve.mjs --open",
     "verify": "node scripts/verify.mjs",
-    "verify:physics": "node scripts/verify.mjs --physics"
+    "verify:physics": "node scripts/verify.mjs --physics",
+    "test:performance": "node --import tsx tests/performance.ts"
   },
   "dependencies": {
     "@dimforge/rapier3d-compat": "0.19.0",
