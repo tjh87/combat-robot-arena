@@ -86,8 +86,9 @@ export function buildFoundry(parent:THREE.Group){
  for(const axis of[0,1])for(const side of[-1,1]){
   const wall=new THREE.Group();wall.position.set(axis===0?side*(edge+.08):0,0,axis===1?side*(edge+.08):0);wall.rotation.y=axis===0?Math.PI/2:0;
   const b=new Batch();b.box([RULES.floor+.22,.3,.18],[0,.15,0],black);b.box([RULES.floor,.07,.08],[0,.32,-.04],edgeMetal);b.box([RULES.floor,.11,.12],[0,RULES.wallHeight-.055,0],steel);
-  // Side-wall posts include the four corners; front and rear spans stay clear.
-  if(axis===0)for(let i=0;i<=8;i++){
+  // Side walls own the corners. Restore rear posts behind the upper deck.
+  for(let i=0;i<=8;i++){
+   if(axis!==0&&!(side<0&&i>0&&i<8))continue;
    const x=-edge+i*RULES.floor/8;
    b.box([.11,RULES.wallHeight,.11],[x,RULES.wallHeight/2,0],steel);
    for(const y of[.39,RULES.wallHeight-.13])b.box([.2,.12,.15],[x,y,0],edgeMetal);
