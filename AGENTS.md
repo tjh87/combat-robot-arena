@@ -26,6 +26,7 @@ Treat older `docs/` updates and reports as history. Do not restore old settings 
 - Fix a proven defect before broad refactoring. Add a regression check when it protects meaningful behavior.
 - Run relevant checks. Do not report old JSON reports as tests run in the current session.
 - Report changed files, numerical setting changes, checks passed, and remaining limitations.
+- Treat BattleBots requests from this chat and other relevant chats as work on this same project. Read the current private `tjh87/combat-robot-arena` `main` branch before editing, reconcile any new work with it, and deploy completed changes to `https://bbots-tjh87.vercel.app` through the connected Vercel project. Use the repository as the shared source of truth across chats.
 - For every change, push the finished source to the private GitHub repository, wait for the linked Vercel production deployment to be Ready, verify the deployed commit, and give the user the same production URL, `https://bbots-tjh87.vercel.app`. Fix deployment failures and retry before reporting completion.
 - Keep `main` connected to the existing `combat-robot-arena-live` Vercel project. Keep both `bbots-tjh87.vercel.app` and `combat-robot-arena-live.vercel.app` assigned to the newest Ready deployment. Do not claim the site is access restricted unless Vercel protection is enabled.
 - Do not publish, create releases, change visibility or send messages unless the current request authorizes it.
