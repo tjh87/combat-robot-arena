@@ -195,8 +195,6 @@
 .hud-bottom .telemetry{position:absolute;left:25px;bottom:150px;max-width:280px}
 
 /* The match cues stay legible when the 3D outline is distant or behind a weapon. */
-#battery-hints{position:absolute;inset:0;pointer-events:none}
-.battery-target-hint{position:absolute;width:22px;height:15px;transform:translate(-50%,-50%);border:2px dotted #ff354b;border-radius:2px;background:#ff354b19;filter:drop-shadow(0 1px 2px #080b0e);opacity:.95}
 /* Keep the first-person sightline open without shrinking essential text. */
 [data-camera="pov"] .weapon-instruments{right:12px;bottom:12px;max-width:300px}
 [data-camera="pov"] .weapon-gauge{width:300px;background:rgba(10,22,31,.72);box-shadow:none}

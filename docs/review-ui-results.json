@@ -340,7 +340,7 @@
     }
   },
   {
-    "name": "Battery hints cover both robots and POV switches the compact gauge layout",
+    "name": "Battery boxes use no duplicate screen overlays and POV retains its compact gauge",
     "status": "passed"
   },
   {

@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import {Simulation,initializePhysics,type ImpactEvent} from '../src/sim';
 import {preset,ROSTER,v,rotate,add,axisQ,identity,type Slot} from '../src/model';
 import {batteryZones} from '../src/battery-layout';
-import {ArenaRenderer} from '../src/render';
+import {batteryOutlines} from '../src/battery-outline';
 await initializePhysics();let checks=0;
 for(let attacker=0;attacker<ROSTER.length;attacker++)for(let target=0;target<ROSTER.length;target++){
  const sim=new Simulation([preset(attacker),preset(target)],{practice:true,hazards:false,ai:[false,false]});
@@ -21,9 +21,10 @@ for(let attacker=0;attacker<ROSTER.length;attacker++)for(let target=0;target<ROS
  }
  }finally{sim.dispose();}
 }
-const sim=new Simulation([preset(1),preset(10)],{practice:true,hazards:false,ai:[false,false]});
-try{
- const renderer=Object.create(ArenaRenderer.prototype) as ArenaRenderer;renderer.bodyGroups=new Map();renderer.camera=new THREE.PerspectiveCamera(42,16/9,.05,100);renderer.camera.position.set(0,12,12);renderer.camera.lookAt(0,0,0);renderer.cameraMode='tactical';
- const hints=renderer.batteryHintPositions(sim);assert.equal(hints.length,5);assert(hints.every(h=>h.visible&&Number.isFinite(h.x)&&Number.isFinite(h.y)));assert.deepEqual([...new Set(hints.map(h=>h.bot))],[0,1]);renderer.cameraMode='pov';assert(renderer.batteryHintPositions(sim).filter(h=>h.bot===0).every(h=>!h.visible));
-}finally{sim.dispose();}
-writeFileSync('docs/battery-targets-results.json',JSON.stringify({status:'passed',attackerTargetPairs:121,rotatedZoneHitWeakHitMissChecks:checks,hintChecks:'Both robots, multiple zones, POV own markers hidden'},null,2));console.log('PASS',checks,'battery target cases and projected hints');
+for(let i=0;i<ROSTER.length;i++){
+ const c=preset(i),root=batteryOutlines(c);assert.equal(root.children.length,1,'One box per robot');
+ const line=root.children[0] as THREE.LineSegments;assert(line.material instanceof THREE.LineBasicMaterial);assert.equal(line.material.color.getHex(),0xff354b);assert.equal(line.material.depthTest,false);
+ const bounds=new THREE.Box3().setFromObject(root);for(const zone of batteryZones(c)){assert(bounds.min.x<=zone.position.x-zone.size.x/2+1e-6);assert(bounds.max.x>=zone.position.x+zone.size.x/2-1e-6);assert(bounds.min.z<=zone.position.z-zone.size.z/2+1e-6);assert(bounds.max.z>=zone.position.z+zone.size.z/2-1e-6);}
+ const replay=root.clone(true);assert.equal(replay.children.length,1,'Replay keeps one box');const positions=line.geometry.getAttribute('position');assert(positions.count>8&&positions.count%2===0,'Dotted segments retained');line.geometry.dispose();line.material.dispose();
+}
+writeFileSync('docs/battery-targets-results.json',JSON.stringify({status:'passed',attackerTargetPairs:121,rotatedZoneHitWeakHitMissChecks:checks,hintChecks:'One dotted box per robot across all 11 models; replay preserves one box; physical zones unchanged'},null,2));console.log('PASS',checks,'battery target cases and 11 single-box markers');

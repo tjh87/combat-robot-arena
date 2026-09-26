@@ -2,5 +2,5 @@
   "status": "passed",
   "attackerTargetPairs": 121,
   "rotatedZoneHitWeakHitMissChecks": 594,
-  "hintChecks": "Both robots, multiple zones, POV own markers hidden"
+  "hintChecks": "One dotted box per robot across all 11 models; replay preserves one box; physical zones unchanged"
 }

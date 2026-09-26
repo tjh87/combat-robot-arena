@@ -1,6 +1,5 @@
 import {AdaptiveResolution,graphicsPixelRatio} from './performance';
 import {compactGeometry} from './geometry-memory';
-import {batteryZones} from './battery-layout';
 import {batteryOutlines} from './battery-outline';
 import {trackMesh,animateTrack} from './track-visual';
 import {BatteryFireVisual} from './battery-fire-visual';
@@ -172,16 +171,6 @@ export class ArenaRenderer{
  projectCombatPoint(point:Vec){
   this.camera.updateMatrixWorld();const position=vec(point),local=position.clone().applyMatrix4(this.camera.matrixWorldInverse),p=position.project(this.camera);
   return{x:50+p.x*50,y:50-p.y*50,visible:local.z<0&&Math.abs(p.x)<.96&&Math.abs(p.y)<.94};
- }
- batteryHintPositions(sim:Simulation){
-  return sim.bots.flatMap(bot=>{
-   const body=this.bodyGroups.get(`b${bot.id}:chassis`),q=body?.quaternion??bot.chassis.rotation(),origin=body?.position??bot.chassis.translation();
-   return batteryZones(bot.compiled.config).map((zone,index)=>{
-    const position=add(origin,rotate(zone.position,q)),projected=this.projectCombatPoint(position);
-    // Keep the driver's own internal markers out of the first-person sightline.
-    return {...projected,bot:bot.id,index,visible:projected.visible&&!(this.cameraMode==='pov'&&bot.id===0)};
-   });
-  });
  }
  robotWarningPosition(sim:Simulation,id:number){
  const bot=sim.bots[id],position=this.bodyGroups.get('b'+id+':chassis')?.position.clone()??vec(bot.chassis.translation());

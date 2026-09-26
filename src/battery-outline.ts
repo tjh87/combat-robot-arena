@@ -2,12 +2,15 @@ import * as THREE from 'three';
 import {batteryZones} from './battery-layout';
 import type {BotConfig} from './model';
 
-// Show the game damage zones above the armour, even when a weapon covers them.
+// One visual marker encloses the battery bays. Physical damage zones stay separate.
 export function batteryOutlines(config:BotConfig){
  const root=new THREE.Group();root.name='battery-outlines';
  const material=new THREE.LineBasicMaterial({color:0xff354b,transparent:true,opacity:.98,depthTest:false,depthWrite:false,toneMapped:false});
- for(const [index,zone] of batteryZones(config).entries()){
-  const x=zone.position.x,z=zone.position.z,w=zone.size.x/2,l=zone.size.z/2;
+ const zones=batteryZones(config);
+ if(!zones.length){material.dispose();return root;}
+ const minX=Math.min(...zones.map(zone=>zone.position.x-zone.size.x/2)),maxX=Math.max(...zones.map(zone=>zone.position.x+zone.size.x/2));
+ const minZ=Math.min(...zones.map(zone=>zone.position.z-zone.size.z/2)),maxZ=Math.max(...zones.map(zone=>zone.position.z+zone.size.z/2));
+  const x=(minX+maxX)/2,z=(minZ+maxZ)/2,w=(maxX-minX)/2,l=(maxZ-minZ)/2;
   const y=config.chassis.height/2+.023;
   const corners=[new THREE.Vector3(x-w,y,z-l),new THREE.Vector3(x+w,y,z-l),new THREE.Vector3(x+w,y,z+l),new THREE.Vector3(x-w,y,z+l)];
   const points:THREE.Vector3[]=[];
@@ -19,9 +22,8 @@ export function batteryOutlines(config:BotConfig){
    }
   }
   const line=new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(points),material);
-  line.name=`battery-outline-${index}`;line.renderOrder=30;line.frustumCulled=false;
-  line.userData.zone=zone;
+  line.name='battery-outline';line.renderOrder=30;line.frustumCulled=false;
+  line.userData.zones=zones;
   root.add(line);
- }
  return root;
 }

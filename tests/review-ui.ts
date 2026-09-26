@@ -8,7 +8,7 @@ import {JSDOM,VirtualConsole} from 'jsdom';
 const exposed=`
 globalThis.__compile=compile;globalThis.__review={
  get refs(){return {state,settingsFrom,pausedFrom,sim,ready,build,tournament,renderer,clock,audio,prefs,input,seed};},
- checkReplay,updateHUD,updateBatteryHints,updateDamageWarnings,updateHitReadouts,startMatch,showRepair,openSettings,showBracket,beginReplay,beginFinish,showResult,showMenu,openBuilder,loop,
+ checkReplay,updateHUD,updateDamageWarnings,updateHitReadouts,startMatch,showRepair,openSettings,showBracket,beginReplay,beginFinish,showResult,showMenu,openBuilder,loop,
  repairFixture(){
   tournament?.dispose();tournament=new Tournament(preset(2),false,73145);
   for(const match of tournament.matches[0]){match.winner=match.a;match.reason='Test fixture';}
@@ -28,7 +28,7 @@ const bundled=await bundle({entryPoints:['src/main.ts'],bundle:true,format:'iife
    export class ArenaRenderer {
     constructor(container,onLost,onRestore){if(globalThis.__failRenderer>0){globalThis.__failRenderer--;throw Error('Injected graphics initialization failure');}this.container=container;this.onLost=onLost;this.onRestore=onRestore;this.triangleCount=0;this.drawCalls=0;this.renderMs=0;}
     attach(sim){this.sim=sim;this.endReplay();} setQuality(){} setAdaptive(value){this.adaptive=value;this.needsRender=true;} showBuilder(config){globalThis.__compile(config,true);}
-    batteryHintPositions(){return[{bot:0,index:0,x:40,y:50,visible:this.cameraMode!=="pov"},{bot:1,index:0,x:60,y:50,visible:true}];} startReplay(){this.replay=true;} projectCombatPoint(){return{x:45,y:50,visible:true};} robotWarningPosition(_sim,id){return{x:40+id*20,y:50,visible:true};} endReplay(){this.replay=false;} replayFrame(){} update(){} draw(){this.draws=(this.draws??0)+1;this.needsRender=false;} dispose(){this.disposed=true;}
+    startReplay(){this.replay=true;} projectCombatPoint(){return{x:45,y:50,visible:true};} robotWarningPosition(_sim,id){return{x:40+id*20,y:50,visible:true};} endReplay(){this.replay=false;} replayFrame(){} update(){} draw(){this.draws=(this.draws??0)+1;this.needsRender=false;} dispose(){this.disposed=true;}
    }`}));
  }}]});
 const source=bundled.outputFiles[0].text,results:any[]=[];
@@ -416,10 +416,10 @@ await test('Repair update: result shortcuts, ring-out metrics, fast speed, track
 
 if(results.some(r=>r.status==='failed'))process.exitCode=1;
 
-await test('Battery hints cover both robots and POV switches the compact gauge layout',async f=>{
- await f.api.startMatch(true);f.api.updateBatteryHints();assert.equal(f.w.document.querySelectorAll('.battery-target-hint').length,2);assert(f.$('[data-player="0"]'));assert(f.$('[data-player="1"]'));
- f.$('#camera-button').click();f.api.updateBatteryHints();assert.equal(f.$('#weapon-gauge').closest('[data-camera]').dataset.camera,'pov');assert.equal(f.w.document.querySelectorAll('.battery-target-hint').length,1);assert(f.$('[data-player="1"]'));assert(f.$('#gauge-name').textContent);assert(f.$('#gauge-label').textContent);
- f.$('#pause-button').click();f.api.updateBatteryHints();assert.equal(f.w.document.querySelectorAll('.battery-target-hint').length,0);
+await test('Battery boxes use no duplicate screen overlays and POV retains its compact gauge',async f=>{
+ await f.api.startMatch(true);assert.equal(f.w.document.querySelectorAll('#battery-hints,.battery-target-hint').length,0);
+ f.$('#camera-button').click();assert.equal(f.$('#weapon-gauge').closest('[data-camera]').dataset.camera,'pov');assert.equal(f.w.document.querySelectorAll('.battery-target-hint').length,0);assert(f.$('#gauge-name').textContent);assert(f.$('#gauge-label').textContent);
+ f.$('#pause-button').click();assert.equal(f.w.document.querySelectorAll('.battery-target-hint').length,0);
 });
 
 await test('Performance: hidden tabs pause physics, stop drawing, and stay paused when visible again',async f=>{
