@@ -1,0 +1,83 @@
+[
+  {
+    "name": "Strong airborne contacts crack all four walls while slow contacts do not",
+    "status": "passed",
+    "detail": [
+      {
+        "wall": "east",
+        "speed": 0.3,
+        "cracks": 0
+      },
+      {
+        "wall": "east",
+        "speed": 12,
+        "cracks": 1
+      },
+      {
+        "wall": "west",
+        "speed": 0.3,
+        "cracks": 0
+      },
+      {
+        "wall": "west",
+        "speed": 12,
+        "cracks": 1
+      },
+      {
+        "wall": "north",
+        "speed": 0.3,
+        "cracks": 0
+      },
+      {
+        "wall": "north",
+        "speed": 12,
+        "cracks": 1
+      },
+      {
+        "wall": "south",
+        "speed": 0.3,
+        "cracks": 0
+      },
+      {
+        "wall": "south",
+        "speed": 12,
+        "cracks": 1
+      }
+    ]
+  },
+  {
+    "name": "Cracks use bounded immutable snapshots and cannot remove wall colliders",
+    "status": "passed",
+    "detail": {
+      "maxCracks": 48,
+      "colliders": 116,
+      "minEnergyJ": 200,
+      "minImpulseNs": 20
+    }
+  },
+  {
+    "name": "Cracks use one fixed buffer, stay on panels and rewind with replay snapshots",
+    "status": "passed",
+    "detail": {
+      "drawCalls": 1,
+      "bufferBytes": 27648,
+      "segments": 1152
+    }
+  },
+  {
+    "name": "All eleven airborne robots remain inside all four walls at 150 metres per second",
+    "status": "passed",
+    "detail": {
+      "cases": 44,
+      "speedMps": 150,
+      "startHeightM": 6.4
+    }
+  },
+  {
+    "name": "Swept wall guard blocks an assembly whose centre has entered the wall thickness",
+    "status": "passed",
+    "detail": {
+      "contained": true
+    }
+  }
+]

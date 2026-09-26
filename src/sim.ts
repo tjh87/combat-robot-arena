@@ -1,3 +1,4 @@
+import {WallDamage,isArenaWall,type WallCrack} from './wall-damage';
 import {batteryAlongRay,batteryZones,BATTERY_CRUSH_RESISTANCE} from './battery-layout';
 import {createHazards,stepHazard,hazardContactCentre,type Hazard} from './arena-hazards';
 export type {Hazard} from './arena-hazards';
@@ -19,7 +20,7 @@ export type Command={left:number,right:number,weapon:boolean,selfRight:boolean};
 export const neutral=():Command=>({left:0,right:0,weapon:false,selfRight:false});
 export type Difficulty='easy'|'medium'|'hard';
 export type Transform={id:string,p:Vec,q:Quat};
-export type VisualFrame={tick:number,transforms:Transform[],health:number[][],effects:{id:number,tick:number,p:Vec,energy:number,direction?:Vec}[],hits?:HitReadout[],speeds?:number[],tracks?:number[][],rpm?:number[],directions?:number[],firePoints?:Vec[],fires?:number[]};
+export type VisualFrame={wallCracks?:readonly WallCrack[],tick:number,transforms:Transform[],health:number[][],effects:{id:number,tick:number,p:Vec,energy:number,direction?:Vec}[],hits?:HitReadout[],speeds?:number[],tracks?:number[][],rpm?:number[],directions?:number[],firePoints?:Vec[],fires?:number[]};
 export type ImpactEvent={id:number,tick:number,episode:string,source:string,attacker:number|null,target:number|null,module:Slot|'arena',energy:number,impulse:number,closing:number,point:Vec,rotorBefore:number[],rotorAfter:number[],allocations:{bot:number,module:Slot,energy:number,hp:number}[],cause:string;penetrationDirection?:Vec;breaches?:{target:number,slot:string,point:Vec,work:number}[];releasedTick?:number;fallHeight?:number;fallMassKg?:number;fallSpeed?:number;fallKineticJ?:number;fallGravityJ?:number;fallAbsorbedJ?:number;damageScale?:number;biteDepth?:number;engagement?:number;sparkDirection?:Vec};
 export type ContactSample={key:string,a:number,b:number,impulse:number,frictionImpulse:number,closing:number,point:Vec,normal:Vec};
 export type Travel={impactId:number,bot:number,role:'Post-impact travel'|'Recoil travel',origin:Vec,final:Vec,comOrigin:Vec,comFinal:Vec,maxHorizontal:number,horizontal:number,displacement3d:number,path:number,height:number,airtime:number,powered:boolean,compound:boolean,reason:string,ticks:number,still:number,points:Vec[],airborne:boolean,landed:number,endedTick?:number};
@@ -54,6 +55,7 @@ export function workLimitedTorque(torque:number,omega:number,inverseInertia:numb
 export function assignPoints(metrics:[number[],number[]],seed:number):{scores:[number[],number[]],ties:string[]}{const scores:[number[],number[]]=[[],[]],ties:string[]=[];for(let c=0;c<3;c++){const a=metrics[0][c],b=metrics[1][c],total=a+b,share=total?Math.max(a,b)/total:.5;let lead=a===b?((seed+c)%2):a>b?0:1;if(a===b)ties.push(['Damage','Aggression','Control'][c]);const points=c===0?(share<.65?3:share<.85?4:5):(share<.75?2:3);scores[lead][c]=points;scores[1-lead][c]=(c===0?5:3)-points;}return{scores,ties};}
 
 export class Simulation{
+ wallDamage=new WallDamage();
  private substepContacts?:ContactSample[];private floorSupport=new Set<number>();private falls=new Map<number,FallState>();
  world:RAPIER.World;queue:RAPIER.EventQueue;startedContacts=new Set<string>();robotsInContact=false;pushImpulse=[0,0];hammerFloorWork=new Map<string,number>();driveWork=[0,0];bots:Bot[]=[];tick=0;seed:number;random:()=>number;options:Required<Pick<SimOptions,'practice'|'hazards'|'ai'|'difficulty'|'autoUnstick'>>;
  private recordVisuals=true;
@@ -371,7 +373,7 @@ export class Simulation{
     const oldPose=previousColliderPose(col,oldBody),old=colliderBounds(col,oldPose.p,quatMul(oldBody.q,oldPose.localRotation)),now=colliderBounds(col);
     for(const axis of['x','z']as const)for(const side of[-1,1]){
      // A robot that already cleared the wall can complete a real ring-out.
-     if(before.p[axis]*side>edge)continue;
+     if((side>0?old.min[axis]:-old.max[axis])>edge+RULES.wallThickness+.03)continue;
      const a=side>0?old.max[axis]:-old.min[axis],z=side>0?now.max[axis]:-now.min[axis];if(z<=edge+.03)continue;
      const at=a<edge&&z>a?clamp((edge-a)/(z-a),0,1):0,low=old.min.y+(now.min.y-old.min.y)*at;
      if(low>=RULES.wallHeight+.005)continue;
@@ -380,6 +382,9 @@ export class Simulation{
     }
    }
    if(!blocked.size)continue;
+   for(const axis of blocked){const side=-Math.sign(correction[axis]);let energy=0,impulse=0;for(const body of b.bodies.values()){const speed=Math.max(0,body.linvel()[axis]*side);energy+=.5*body.mass()*speed*speed;impulse+=body.mass()*speed;}
+    this.wallDamage.impact(axis==='x'?(side>0?'east':'west'):(side>0?'south':'north'),{...p},energy,impulse,this.tick);
+   }
    // Last-resort motion clamp after a missed wall contact. Move the complete
    // assembly together, preserve its joints, and remove outward velocity.
    for(const body of b.bodies.values()){body.setTranslation(add(body.translation(),correction),true);const velocity={...body.linvel()};for(const axis of blocked)if(velocity[axis]*correction[axis]<0)velocity[axis]=0;body.setLinvel(velocity,true);}
@@ -571,6 +576,7 @@ export class Simulation{
  const debit=(hit:ReturnType<Simulation['spinnerContact']>)=>{if(!hit)return 0;const used=Math.min(spinBudget[hit.bot.id],hit.work);spinBudget[hit.bot.id]-=used;this.limitRotorEnergy(hit.bot,spinBudget[hit.bot.id]);return used;};
  const samples=this.substepContacts??this.contactSamples(),updatedEvents=new Set<ImpactEvent>();this.substepContacts=undefined;this.pushImpulse[0]=this.pushImpulse[1]=0;
  samples.sort((a,b)=>a.a-b.a||a.b-b.b);const aggregate=new Map<string,ContactSample>();for(const s of samples){const old=aggregate.get(s.key);if(old){old.closing=(old.closing*old.impulse+s.closing*s.impulse)/(old.impulse+s.impulse);old.impulse+=s.impulse;old.frictionImpulse+=s.frictionImpulse;}else aggregate.set(s.key,{...s});}
+ const wallHits=new Map<string,{wall:import('./wall-damage').WallName,point:Vec,energy:number,impulse:number}>();
  const contactMetadata=new Map(this.meta),landingKeys=this.landingContacts([...aggregate.values()],contactMetadata,rotorBefore,updatedEvents);for(const s of aggregate.values()){const ma=contactMetadata.get(s.a)!,mb=contactMetadata.get(s.b)!;
  const ca=this.world.getCollider(s.a),cb=this.world.getCollider(s.b),spinA=cb?.isValid()?this.spinnerContact(ma,cb,s,1):undefined,spinB=ca?.isValid()?this.spinnerContact(mb,ca,s,-1):undefined,spentA=debit(spinA),spentB=debit(spinB);
  if(landingKeys.has(s.key))continue;
@@ -589,6 +595,9 @@ export class Simulation{
  // actually solved at contact, within the same finite cycle budget.
  const relative=hazardInfo?.kind==='blade'?sub(this.preVelocity(ca?.parent()??null,s.point),this.preVelocity(cb?.parent()??null,s.point)):v(),shear=.5*s.frictionImpulse*length(sub(relative,mul(s.normal,dot(relative,s.normal))));
  const rawEnergy=.5*s.impulse*(policy?.cause==='ram'?Math.min(s.closing,ramA+ramB):s.closing)+shear,spinShare=clamp(((spinA?.speed??0)+(spinB?.speed??0))/Math.max(.001,s.closing),0,1),energy=rawEnergy*(1-spinShare)+Math.min(rawEnergy*spinShare,spentA+spentB);
+ const wallHandle=ma.bot===null?s.a:mb.bot===null?s.b:undefined;
+ const wallName=wallHandle===undefined?undefined:this.bodyIds.get(this.world.getCollider(wallHandle)?.parent()?.handle??-1);
+ if(isArenaWall(wallName)&&Math.abs(s.normal.y)<.4){const key=wallName+'/'+(ma.bot??mb.bot),hit=wallHits.get(key);if(hit){if(energy>hit.energy)hit.point={...s.point};hit.energy+=energy;hit.impulse+=s.impulse;}else wallHits.set(key,{wall:wallName,point:{...s.point},energy,impulse:s.impulse});}
  episode.impulse+=s.impulse;if(energy<.1)continue;episode.energy+=energy;
  if(episode.energy<(hazardInfo?.kind==='blade'?25:200))continue;
  const hazard=ma.hazard!==undefined?this.hazards[ma.hazard]:mb.hazard!==undefined?this.hazards[mb.hazard]:undefined;const maxEnergy=hazard?hazard.budget:Infinity;
@@ -613,6 +622,7 @@ export class Simulation{
  }
  else{const target=ma.bot!==null?ma:mb;if(target.bot!==null)this.damage(target.bot,target.module,deltaEnergy,event,target.part);}
  }
+ for(const hit of wallHits.values())this.wallDamage.impact(hit.wall,hit.point,hit.energy,hit.impulse,this.tick);
  for(const [key,e]of this.episodes)if(this.tick-e.last>2*RULES.hz)this.episodes.delete(key);
  const after=this.bots.map(b=>.5*b.compiled.rotorInertia*this.omega(b)**2);for(const e of updatedEvents)e.rotorAfter=[...after];
  }
@@ -728,7 +738,7 @@ const batteryBefore=b.modules.battery.hp,crusher=event?.cause==='crush'&&event.a
  }
  normalizedDamage(b:Bot){const cats:{slots:Slot[],weight:number}[]=[{slots:['chassis'],weight:.2},{slots:['weapon'],weight:.2},{slots:['weapon_actuator'],weight:.15},{slots:['drive_left','drive_right'],weight:.2},{slots:['battery'],weight:.1},{slots:['armour_front','armour_left','armour_right','armour_rear','armour_top'],weight:.1},{slots:['self_right'],weight:.05}];let weight=0,value=0;for(const c of cats){const slots=c.slots.filter(s=>b.modules[s].present);if(!slots.length)continue;weight+=c.weight;value+=c.weight*slots.reduce((s,k)=>s+Math.max(0,b.startHP[k]-b.modules[k].hp)/b.modules[k].max,0)/slots.length;}return weight?value/weight:0;}
  finish(reason:string,winner?:0|1){if(this.result||this.fault)return;for(const b of this.bots)if(b.crushEvent&&b.crushEvent.releasedTick===undefined){this.releaseCrusher(b);b.weaponOn=false;}const damage=this.bots.map(b=>this.normalizedDamage(b));const share=(x:number,y:number)=>x+y?x/(x+y):.5;const metrics:[number[],number[]]=[[],[]];for(const b of this.bots){const o=this.bots[1-b.id];metrics[b.id]=[damage[1-b.id],.6*share(b.engage,o.engage)+.4*share(b.closing,o.closing),.4*share(b.pin,o.pin)+.4*share(b.forced,o.forced)+.2*share(b.stable,o.stable)];}const {scores,ties}=assignPoints(metrics,this.tiePreference);const total=(x:number[])=>x.reduce((s,n)=>s+n,0);this.result={winner:winner??(total(scores[0])>total(scores[1])?0:1),reason,tick:this.tick,scores,metrics,ties,damage,raw:{engage:this.bots.map(b=>b.engage),closing:this.bots.map(b=>b.closing),pin:this.bots.map(b=>b.pin),forced:this.bots.map(b=>b.forced),stable:this.bots.map(b=>b.stable)}};if(reason==='Out of arena'){const id=1-this.result.winner,b=this.bots[id],flight=this.tracking.get(id)??[...this.travels].reverse().find(t=>t.bot===id&&this.tick-(t.endedTick??0)<2*RULES.hz),origin=flight?.origin??b.history.find(h=>h.ground)?.p??b.chassis.translation();this.result.ringOut={bot:id,origin:{...origin},height:flight?.height??0,distance:flight?.maxHorizontal??0};this.updateRingOut();}if(this.frames.at(-1)?.tick!==this.tick)this.capture();}
- capture(){if(!this.recordVisuals)return;const transforms:Transform[]=[];for(const b of this.bots)for(const [key,body]of b.bodies)transforms.push({id:`b${b.id}:${key}`,p:{...body.translation()},q:{...body.rotation()}});for(const h of this.hazards)transforms.push({id:'hazard_'+h.id,p:{...h.body.translation()},q:{...h.body.rotation()}});for(const d of this.debris)transforms.push({id:d.id,p:{...d.body.translation()},q:{...d.body.rotation()}});const frame:VisualFrame={tick:this.tick,transforms,tracks:this.bots.map(b=>[...(b.trackPhase??[0,0])]),speeds:this.bots.map(b=>length(b.chassis.linvel())),rpm:this.bots.map(b=>b.rpm),firePoints:this.bots.map(b=>({...b.batteryFire?.localPoint??batteryPosition(b.compiled.config)})),fires:this.bots.map(b=>this.batteryFireSeconds(b)),directions:this.bots.map(b=>Math.sign(this.omega(b))||b.spinDirection),hits:copy(this.hitReadouts.update(this.events,this.tick)),health:this.bots.map(b=>SLOTS.map(s=>b.modules[s].max?b.modules[s].hp/b.modules[s].max:0)),effects:this.events.filter(e=>this.tick-e.tick<RULES.hz&&e.cause!=='crush'&&e.cause!=='battery fire').map(e=>({id:e.id,tick:e.tick,p:e.point,energy:e.energy,direction:e.sparkDirection}))};this.frames.push(frame);if(this.frames.length>180)this.frames.shift();
+ capture(){if(!this.recordVisuals)return;const transforms:Transform[]=[];for(const b of this.bots)for(const [key,body]of b.bodies)transforms.push({id:`b${b.id}:${key}`,p:{...body.translation()},q:{...body.rotation()}});for(const h of this.hazards)transforms.push({id:'hazard_'+h.id,p:{...h.body.translation()},q:{...h.body.rotation()}});for(const d of this.debris)transforms.push({id:d.id,p:{...d.body.translation()},q:{...d.body.rotation()}});const frame:VisualFrame={wallCracks:this.wallDamage.cracks,tick:this.tick,transforms,tracks:this.bots.map(b=>[...(b.trackPhase??[0,0])]),speeds:this.bots.map(b=>length(b.chassis.linvel())),rpm:this.bots.map(b=>b.rpm),firePoints:this.bots.map(b=>({...b.batteryFire?.localPoint??batteryPosition(b.compiled.config)})),fires:this.bots.map(b=>this.batteryFireSeconds(b)),directions:this.bots.map(b=>Math.sign(this.omega(b))||b.spinDirection),hits:copy(this.hitReadouts.update(this.events,this.tick)),health:this.bots.map(b=>SLOTS.map(s=>b.modules[s].max?b.modules[s].hp/b.modules[s].max:0)),effects:this.events.filter(e=>this.tick-e.tick<RULES.hz&&e.cause!=='crush'&&e.cause!=='battery fire').map(e=>({id:e.id,tick:e.tick,p:e.point,energy:e.energy,direction:e.sparkDirection}))};this.frames.push(frame);if(this.frames.length>180)this.frames.shift();
  for(const id of[0,1]){let event:ImpactEvent|undefined;for(let i=this.events.length-1;i>=0;i--){const e=this.events[i];if(e.target===id&&e.attacker!==null&&['weapon','ram','crush'].includes(e.cause)&&e.allocations.some(a=>a.bot===id&&a.hp>0)){event=e;break;}}if(!event)continue;let clip=this.lastHitClips.get(id);if(clip?.event!==event.id){clip={event:event.id,tick:event.tick,frames:this.frames.filter(f=>f.tick>=event.tick-.35*RULES.hz&&f.tick<=event.tick+.6*RULES.hz)};this.lastHitClips.set(id,clip);}else if(this.tick<=clip.tick+.6*RULES.hz&&clip.frames.at(-1)?.tick!==frame.tick)clip.frames.push(frame);}
  return frame;}
  lastHitReplay(){return this.result&&['Structural KO','Count-out','Out of arena'].includes(this.result.reason)?this.lastHitClips.get(1-this.result.winner)?.frames??[]:[];}
