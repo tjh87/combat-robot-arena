@@ -84,7 +84,7 @@ export function buildFoundry(parent:THREE.Group){
  const floor=new THREE.Mesh(new THREE.PlaneGeometry(RULES.floor,RULES.floor),new THREE.MeshStandardMaterial({map:foundryFloorTexture(),roughness:.78,metalness:.38}));floor.name='scuffed-steel-floor';floor.rotation.x=-Math.PI/2;floor.position.y=.0005;floor.receiveShadow=true;parent.add(floor);
  const glass=new THREE.MeshPhysicalMaterial({color:0x9dc0d1,metalness:0,roughness:.2,transparent:true,opacity:.055,depthWrite:false,side:THREE.DoubleSide});
  for(const axis of[0,1])for(const side of[-1,1]){
-  const wall=new THREE.Group();wall.position.set(axis===0?side*(edge+.08):0,0,axis===1?side*(edge+.08):0);wall.rotation.y=axis===0?Math.PI/2:0;
+  const wall=new THREE.Group();if(axis===1&&side===1)wall.name='camera-side-wall';wall.position.set(axis===0?side*(edge+.08):0,0,axis===1?side*(edge+.08):0);wall.rotation.y=axis===0?Math.PI/2:0;
   const b=new Batch();b.box([RULES.floor+.22,.3,.18],[0,.15,0],black);b.box([RULES.floor,.07,.08],[0,.32,-.04],edgeMetal);b.box([RULES.floor,.11,.12],[0,RULES.wallHeight-.055,0],steel);
   // Side walls own the corners. Restore rear posts behind the upper deck.
   for(let i=0;i<=8;i++){
