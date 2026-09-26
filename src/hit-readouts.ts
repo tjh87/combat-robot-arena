@@ -26,7 +26,9 @@ export class HitReadouts{
    this.seen.set(key,total);
    const recent=event.cause==='crush'?undefined:[...this.hits].reverse().find(h=>!h.summary&&h.bot===bot&&tick-h.tick<RULES.hz*.12);
    if(recent){recent.hp+=delta;recent.point={...event.point};}
-   else this.hits.push({key:key+':'+this.serial++,bot,hp:delta,point:{...event.point},tick,summary:event.cause==='crush'});
+   // Keep exact damage in the contact ledger. Tiny continuation deltas can
+   // update an existing bubble, but must never start a new trailing bubble.
+   else if(roundedDamage(delta)>1)this.hits.push({key:key+':'+this.serial++,bot,hp:delta,point:{...event.point},tick,summary:event.cause==='crush'});
   }
   for(const key of this.seen.keys())if(!live.has(key))this.seen.delete(key);
   this.hits=this.hits.slice(-12);return this.hits;

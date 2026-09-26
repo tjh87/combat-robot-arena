@@ -222,7 +222,7 @@ Use sharper borders, distinct shapes and stronger colours as damage rises.
 The 100–249 tier must have sharp spikes, not a smooth cloud edge.
 Animate a short impact pop, drift, rise, sway and supporting rays without hiding the robot.
 Use simulation/replay time. Respect reduced motion. Preserve the 1.3-second lifetime.
-Capture every positive new HP delta, including small hits and continued contact episodes. Filtering the floating labels must not change recorded damage or HP loss.
+Capture every positive new HP delta, including small hits and continued contact episodes. Filtering the floating labels must not change recorded damage or HP loss. Tiny increments that round to 1 HP may update an existing bubble but must not start another bubble, in live play or recorded replay readouts.
 Use unique display IDs, avoid double-counting, and provide a visible fallback for offscreen contact positions.
 A crush summary is separate from ordinary hit aggregation.
 

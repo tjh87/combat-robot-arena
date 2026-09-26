@@ -1,0 +1,101 @@
+[
+  {
+    "name": "Match exit works in one click from live play, pause and replay",
+    "status": "passed"
+  },
+  {
+    "name": "Context loss during replay ends replay and requires Resume after restoration",
+    "status": "passed"
+  },
+  {
+    "name": "Skipping or finishing a replay resumes the live match without a pause dialog",
+    "status": "passed"
+  },
+  {
+    "name": "Automatic slow motion ignores light hits and heavy arena contacts",
+    "status": "passed"
+  },
+  {
+    "name": "Unstick works for a robot without self-righting and preserves damage and match time",
+    "status": "passed"
+  },
+  {
+    "name": "Weapon gauges and robot warnings report damage and reduced output",
+    "status": "passed",
+    "detail": {
+      "protectedFailures": 3
+    }
+  },
+  {
+    "name": "Nearby damaged robots keep separate warnings and hide them outside play",
+    "status": "passed",
+    "detail": {
+      "alerts": 2,
+      "minimumSeparationPixels": 218,
+      "hiddenDuringPause": true
+    }
+  },
+  {
+    "name": "Both robots show numeric HP and speed, and hit numbers reflect actual losses",
+    "status": "passed"
+  },
+  {
+    "name": "Damage bubbles suppress one-HP labels in live play and replay while retaining precise damage",
+    "status": "passed",
+    "detail": {
+      "liveCases": 8,
+      "replayCases": 1,
+      "minimumDisplayedHP": 2,
+      "decimalPlaces": 0,
+      "physicsPrecisionPreserved": true
+    }
+  },
+  {
+    "name": "A main impact is not followed by a stream of one-HP bubbles on either robot",
+    "status": "passed",
+    "detail": {
+      "robots": 2,
+      "trailingUpdates": 600,
+      "oneHPBubbles": 0,
+      "preciseHPPerRobot": 85.2
+    }
+  },
+  {
+    "name": "Damage borders increase through seven tiers and respect reduced motion",
+    "status": "passed",
+    "detail": {
+      "tiers": 7,
+      "thresholdsHP": [
+        40,
+        100,
+        250,
+        500,
+        800,
+        1000
+      ],
+      "boundaryCases": 14,
+      "maxPopPercent": 34,
+      "wordsAbove": 0,
+      "reducedMotion": true
+    }
+  },
+  {
+    "name": "Knockouts show the final motion and a replay before the result modal",
+    "status": "passed"
+  },
+  {
+    "name": "Replay damage borders use recorded hit time without extra words",
+    "status": "passed"
+  },
+  {
+    "name": "Repair update: result shortcuts, ring-out metrics, fast speed, tracks and visible hit bubbles",
+    "status": "passed",
+    "detail": {
+      "shortcuts": 2,
+      "ringOutMetrics": 2,
+      "speedKmh": 18,
+      "offscreenBubbleVisible": true,
+      "legalTreadBuild": true
+    }
+  }
+]

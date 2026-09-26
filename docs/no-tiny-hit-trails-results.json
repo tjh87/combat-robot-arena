@@ -1,0 +1,26 @@
+{
+  "rows": [
+    {
+      "intervalTicks": 1,
+      "robots": 2,
+      "tinyReadouts": 0,
+      "trailingBubbles": 0,
+      "exactDamage": 825
+    },
+    {
+      "intervalTicks": 4,
+      "robots": 2,
+      "tinyReadouts": 0,
+      "trailingBubbles": 0,
+      "exactDamage": 285
+    },
+    {
+      "intervalTicks": 12,
+      "robots": 2,
+      "tinyReadouts": 0,
+      "trailingBubbles": 0,
+      "exactDamage": 165
+    }
+  ],
+  "crushSummaryPreserved": true
+}
