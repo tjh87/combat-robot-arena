@@ -26,8 +26,8 @@ Treat older `docs/` updates and reports as history. Do not restore old settings 
 - Fix a proven defect before broad refactoring. Add a regression check when it protects meaningful behavior.
 - Run relevant checks. Do not report old JSON reports as tests run in the current session.
 - Report changed files, numerical setting changes, checks passed, and remaining limitations.
-- For every change, push the finished source to the private GitHub repository, wait for the linked Vercel production deployment to be Ready, verify the deployed commit, and give the user its unique Vercel deployment URL. Fix deployment failures and retry before reporting completion.
-- Keep `main` connected to the existing `combat-robot-arena-live` Vercel project. Do not claim a deployment URL is access restricted unless Vercel protection is enabled.
+- For every change, push the finished source to the private GitHub repository, wait for the linked Vercel production deployment to be Ready, verify the deployed commit, and give the user the same production URL, `https://combat-robot-arena-live.vercel.app`. Fix deployment failures and retry before reporting completion.
+- Keep `main` connected to the existing `combat-robot-arena-live` Vercel project. Keep the production domain assigned to the newest Ready deployment. Do not claim the site is access restricted unless Vercel protection is enabled.
 - Do not publish, create releases, change visibility or send messages unless the current request authorizes it.
 - Never commit secrets, local credentials, runtime caches or browser profiles.
 
