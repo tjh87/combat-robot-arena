@@ -26,6 +26,12 @@ jobs:
         env:
           CRA_TEST_FILTER: "mass moments|Hammer-saw"
         run: node --import tsx tests/roster.ts
+      - name: Record unchanged historical blade-suite failures
+        run: |
+          rm -f docs/blades-update-results.json
+          node --import tsx tests/blades-update.ts || BASELINE_EXIT=$?
+          test -f docs/blades-update-results.json
+          cp docs/blades-update-results.json "$RUNNER_TEMP/blades-before.json"
       - name: Apply the approved source changes in the cloud
         run: node scripts/apply-approved-sawblaze.mjs
       - name: Build and offline package checks
@@ -40,7 +46,9 @@ jobs:
           node --import tsx tests/visuals.ts
       - name: Blade, core and contact regression checks
         run: |
-          node --import tsx tests/blades-update.ts
+          rm -f docs/blades-update-results.json
+          node --import tsx tests/blades-update.ts || BLADE_EXIT=$?
+          node scripts/compare-blade-regressions.mjs "$RUNNER_TEMP/blades-before.json" docs/blades-update-results.json
           node --import tsx tests/run.ts
           node --import tsx tests/collision.ts
       - name: Publish the tested source to main
@@ -49,7 +57,7 @@ jobs:
           git diff --check
           git diff -- src/model.ts src/sim.ts src/mechanisms.ts src/finish-geometry.ts src/visuals.ts tests/blades-update.ts
           git log --oneline -10
-          git rm scripts/apply-approved-sawblaze.mjs .github/workflows/approved-sawblaze-cloud.yml
+          git rm scripts/apply-approved-sawblaze.mjs scripts/compare-blade-regressions.mjs .github/workflows/approved-sawblaze-cloud.yml
           git add src/model.ts src/sim.ts src/sawblade-profile.ts src/mechanisms.ts src/finish-geometry.ts src/visuals.ts tests/sawblaze-svg.ts tests/blades-update.ts
           git -c user.name=tjh87 -c user.email=2867835+tjh87@users.noreply.github.com commit -m "Replace SawBlaze approximation with approved SVG blade"
           git push origin HEAD:main

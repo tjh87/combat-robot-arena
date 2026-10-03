@@ -63,6 +63,7 @@ edit('src/visuals.ts',source=>{
   mesh.name='sawblaze-svg-blade';mesh.userData.svgBlade=true;
  }
 `+source.slice(end);
+ source=replace(source," b.finish(mesh);\n // Dispose unused factory materials;", " b.finish(mesh);\n if(c.chassis.profile==='sawblaze'&&isSawbladePart(p)&&p.tooth!==undefined)for(const child of mesh.children)if(child instanceof THREE.Mesh&&child.material instanceof THREE.MeshBasicMaterial)child.name='cutting-edge';\n // Dispose unused factory materials;");
  // The edge skins share actual boundaries. Internal triangle seams get no trim.
  return source;
 });
