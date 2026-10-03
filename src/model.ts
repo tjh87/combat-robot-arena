@@ -1,5 +1,6 @@
+import {sawblazeSweepClearance} from './sawblaze-geometry';
 import {batteryZones} from './battery-layout';
-import {templateParts,extendedRotor,largeWheelParts,racerWheelParts,crusherParts} from './mechanisms';
+import {templateParts,sawblazeFrontParts,extendedRotor,largeWheelParts,racerWheelParts,crusherParts} from './mechanisms';
 import {WEAPON_REFERENCES,LB_TO_KG,referenceRPM} from './weapon-specs';
 // Shared authored geometry and game catalogue. All physics quantities are SI.
 // Keep one CCD pass so every solved contact remains available to the hit ledger.
@@ -151,7 +152,7 @@ export function preset(index=0):BotConfig{
  if(index===5){c.drive.motor='drive48sport';Object.assign(c.chassis,{length:.46,width:.42,height:.11,clearance:.022});Object.assign(c.drive,{radius:.075,width:.045,ratio:16,magnet:180});c.weapon=spin('shell_spinner',{radius:.48,innerRadius:0,width:.235,thickness:.007,teeth:3,toothWidth:.095,toothHeight:.027,mount:v(0,-.053,0),rpm:1950,ratio:3});c.selfRight={type:'roll_arm',mount:v(-.27,.215,0),length:.55,actuator:'R600'};}
  if(index===6){Object.assign(c.chassis,{length:.57,width:.49,height:.14});Object.assign(c.drive,{radius:.085,width:.055});c.weapon=spin('horizontal_cage',{radius:.56,width:.11,thickness:.026,teeth:3,toothWidth:.07,toothHeight:.05,mount:v(0,.119,0),rpm:1880,ratio:3});}
  if(index===7){Object.assign(c.chassis,{length:.23,width:.82,height:.14,clearance:.41});Object.assign(c.drive,{layout:2,radius:.48,width:.05,ratio:35});c.armour.forEach(a=>{a.material='uhmw';a.thickness=.004;});c.weapon=spin('vertical_bar',{radius:.460,width:.095,thickness:.026,toothWidth:.026,toothHeight:.095,mount:v(0,0,0),rpm:2300,ratio:3});}
- if(index===8){Object.assign(c.chassis,{length:.52,width:.47,height:.14});Object.assign(c.drive,{layout:2,radius:.105,width:.075});c.weapon=spin('hammer_saw',{radius:.20,innerRadius:.072,width:.025,thickness:.025,teeth:4,toothWidth:.025,toothHeight:.075,mount:v(0,.115,.115),armLength:.50,armTravel:1.12,rpm:5200,ratio:1.8});}
+ if(index===8){Object.assign(c.chassis,{length:.52,width:.47,height:.14});Object.assign(c.drive,{layout:2,radius:.105,width:.075});c.weapon=spin('hammer_saw',{radius:.20,innerRadius:.072,width:.025,thickness:.025,teeth:4,toothWidth:.025,toothHeight:.075,mount:v(0,.088,-.045),armLength:.50,armTravel:1.12,rpm:5200,ratio:1.8});}
  if(index===9){Object.assign(c.chassis,{length:.32,width:.82,height:.10,clearance:.018});Object.assign(c.drive,{layout:2,radius:.082,width:.07,ratio:18});c.weapon=spin('vertical_bar',{radius:.57,width:.145,thickness:.08,toothDepth:.065,toothWidth:.030,toothHeight:.13,mount:v(0,.555,-.04),rpm:1860,ratio:3.4});}
  if(index===10){Object.assign(c.chassis,{length:.62,width:.52,height:.12,clearance:.022,thickness:.005});Object.assign(c.drive,{layout:4,radius:.105,width:.065,ratio:14,motor:'drive48sport',magnet:80});c.armour.forEach(a=>{a.material='hardox';a.thickness=a.mount==='front'?.009:a.mount==='top'?.004:.006;});c.weapon={type:'crusher',length:.66,width:.36,thickness:.014,material:'hardox',mount:v(0,.13,.11),travel:.48,torque:4500};c.selfRight={type:'roll_arm',mount:v(0,.12,.245),length:.54,actuator:'R600'};c.battery.capacityWh=350;}
  if(index===1)c.battery.capacityWh=500;if(index===4)c.battery.capacityWh=400;if(index===8)c.battery.capacityWh=450;
@@ -162,7 +163,7 @@ export function preset(index=0):BotConfig{
   if(index===5)c.weapon.thickness=.008;
   if(index===7)c.weapon.thickness=.041;
   if(index===9){c.weapon.thickness=.076;c.chassis.thickness=.005;c.armour.forEach(a=>a.material='uhmw');}
-  if(index===8)c.weapon.radius=.2032;
+  if(index===8)c.weapon.radius=.18;
   const ref=WEAPON_REFERENCES[c.chassis.profile!];
   if(ref.massLb!==undefined)c.weapon.massKg=ref.massLb*LB_TO_KG;
   c.weapon.rpm=referenceRPM(ref,c.weapon.radius,RULES.tip);
@@ -211,6 +212,11 @@ export function parseConfig(input:unknown):BotConfig{
  if(parsed.chassis.profile==='hypershock'&&parsed.weapon.type==='vertical_disc'&&Math.abs(parsed.weapon.radius-.22)<1e-6&&Math.abs(parsed.weapon.width-.035)<1e-6&&Math.abs(parsed.weapon.mount.y-.158)<1e-6&&Math.abs(parsed.weapon.mount.z+.51)<1e-6&&Math.abs(parsed.drive.radius-.135)<1e-6){
   const stock=preset(4);parsed.weapon={...parsed.weapon,...Object.fromEntries(['radius','innerRadius','width','thickness','toothDepth','toothWidth','toothHeight','mount'].map(k=>[k,(stock.weapon as Spinner)[k as keyof Spinner]]))};
   if(parsed.weapon.rpm===4800)parsed.weapon.rpm=6800;if(parsed.weapon.ratio===1.9)parsed.weapon.ratio=1.4;parsed.drive.radius=.17;if(parsed.drive.ratio===12)parsed.drive.ratio=14;
+ }
+ if(parsed.chassis.profile==='sawblaze'&&parsed.weapon.type==='hammer_saw'&&Math.abs(parsed.chassis.length-.52)<1e-6&&Math.abs(parsed.chassis.width-.47)<1e-6&&Math.abs(parsed.weapon.radius-.2032)<1e-6&&Math.abs(parsed.weapon.armLength!-.50)<1e-6&&Math.abs(parsed.weapon.mount.y-.115)<1e-6&&Math.abs(parsed.weapon.mount.z-.115)<1e-6){
+  parsed.weapon.mount=v(parsed.weapon.mount.x,.088,-.045);parsed.weapon.radius=.18;
+  if(Math.abs(parsed.weapon.rpm-5252)<1e-6&&Math.abs(parsed.weapon.ratio-1.7952344685017951)<1e-6){parsed.weapon.rpm=referenceRPM(WEAPON_REFERENCES.sawblaze,.18,RULES.tip);parsed.weapon.ratio=Math.min(parsed.weapon.ratio,48*MOTORS[parsed.weapon.motor].kv/(parsed.weapon.rpm*1.12));}
+  if(Math.abs((parsed.chassis.equipmentMassKg??-1)-36.915694118748334)<1e-6)parsed.chassis.equipmentMassKg=28.646617186645074;
  }
  // Keep saved stock builds compatible with the vertical recovery mechanisms.
  if(parsed.selfRight.type==='roll_arm'){
@@ -292,7 +298,7 @@ export function compile(raw:BotConfig,practice=false):Compiled{
  plate('floor','chassis',T,-H/2+T/2,ch.material);plate('lid','chassis',T,H/2-T/2,ch.material);
  for(const side of[-1,1]){
   box('side'+side,'chassis','chassis',v(T,H-2*T,L-2*bevel),v(side*(W-T)/2,0,0),ch.material);
-  if(split){for(const half of[-1,1])box('end'+side+'_'+half,'chassis','chassis',v(W/2-.055,H-2*T,T),v(half*(W/4+.0275),0,side*(L-T)/2),ch.material);box('inner'+side,'chassis','chassis',v(T,H-2*T,L),v(side*(.055+T/2),0,0),ch.material);}else if(recessedDrum&&side===-1){for(const half of[-1,1])box('end'+side+'_'+half,'chassis','chassis',v(wing,H-2*T,T),v(half*(notchWidth+wing)/2,0,side*(L-T)/2),ch.material);}else box('end'+side,'chassis','chassis',v(W-2*bevel,H-2*T,T),v(0,0,side*(L-T)/2),ch.material);
+  if(split){for(const half of[-1,1])box('end'+side+'_'+half,'chassis','chassis',v(W/2-.055,H-2*T,T),v(half*(W/4+.0275),0,side*(L-T)/2),ch.material);box('inner'+side,'chassis','chassis',v(T,H-2*T,L),v(side*(.055+T/2),0,0),ch.material);}else if(recessedDrum&&side===-1){for(const half of[-1,1])box('end'+side+'_'+half,'chassis','chassis',v(wing,H-2*T,T),v(half*(notchWidth+wing)/2,0,side*(L-T)/2),ch.material);}else if(ch.profile!=='sawblaze'||side!==-1)box('end'+side,'chassis','chassis',v(W-2*bevel,H-2*T,T),v(0,0,side*(L-T)/2),ch.material);
   for(const front of[-1,1])box('corner_'+side+'_'+front,'chassis','chassis',v(T,H-2*T,Math.SQRT2*bevel-T),v(side*(W/2-bevel/2-T/3),0,front*(L/2-bevel/2-T/3)),ch.material,undefined,true,axisQ(v(0,1,0),-side*front*Math.PI/4));
  }
  if(w.type==='horizontal_bar'&&c.drive.layout===2&&w.mount.z< -L/2){
@@ -317,7 +323,7 @@ export function compile(raw:BotConfig,practice=false):Compiled{
  else if(a.mount==='top'){size=v(W,t,L);pos=v(0,(H+t)/2,0);area=W*L-2*bevel*bevel;}
  else{size=v(t,H,L-2*bevel);pos=v(side*(W+t)/2,0,0);area=H*(L-2*bevel);}
  module(('armour_'+a.mount) as Slot,t?400*(area/.25)*(t/.008):0,a.material);
- if(t){if(a.mount==='top')plate('armour_top','armour_top',t,pos.y,a.material);else if(recessedDrum&&a.mount==='front'){for(const side of[-1,1])box('armour_front_'+side,'armour_front','chassis',v(wing,H,t),v(side*(notchWidth+wing)/2,0,pos.z),a.material);}else if(split&&(a.mount==='front'||a.mount==='rear')){for(const side of[-1,1])box('armour_'+a.mount+'_'+side,('armour_'+a.mount) as Slot,'chassis',v(W/2-.055,H,t),v(side*(W/4+.0275),pos.y,pos.z),a.material);}else box('armour_'+a.mount,('armour_'+a.mount) as Slot,'chassis',size,pos,a.material);}
+ if(t){if(a.mount==='top')plate('armour_top','armour_top',t,pos.y,a.material);else if(recessedDrum&&a.mount==='front'){for(const side of[-1,1])box('armour_front_'+side,'armour_front','chassis',v(wing,H,t),v(side*(notchWidth+wing)/2,0,pos.z),a.material);}else if(split&&(a.mount==='front'||a.mount==='rear')){for(const side of[-1,1])box('armour_'+a.mount+'_'+side,('armour_'+a.mount) as Slot,'chassis',v(W/2-.055,H,t),v(side*(W/4+.0275),pos.y,pos.z),a.material);}else if(ch.profile==='sawblaze'&&a.mount==='front')sawblazeFrontParts(c,parts,'armour_front',t,a.material);else box('armour_'+a.mount,('armour_'+a.mount) as Slot,'chassis',size,pos,a.material);}
  }
  const wheelY=c.drive.radius-(ch.clearance+H/2),armourAt=(side:number)=>c.armour.find(a=>a.mount===(side<0?'left':'right'))!.thickness,sideArm=Math.max(armourAt(-1),armourAt(1));
  for(const side of [-1,1]){const slot:Slot=side===-1?'drive_left':'drive_right',sideArm=armourAt(side);module(slot,ch.profile==='quantum'?550:400,'aluminium7075');
@@ -397,6 +403,7 @@ export function compile(raw:BotConfig,practice=false):Compiled{
   if(y>=w.width-.004||inner<Math.hypot(W/2+sideArm+c.drive.width+.008,L/2+.004))err('weapon.radius','The shell must enclose the chassis and wheels with clearance.');
   if(w.mount.y+H/2+ch.clearance-Math.max(0,w.toothHeight/2-.009)<.003)err('weapon.mount','The shell must clear the floor by 3 mm.');
  }
+ if(w.type==='hammer_saw'&&ch.profile==='sawblaze'&&sawblazeSweepClearance(c,parts)<.002)err('weapon.mount','The complete blade sweep must clear the chassis and front forks.');
  if(w.type==='hammer_saw'&&H/2+ch.clearance+w.mount.y+(w.armLength??.59)*Math.sin(1.2-(w.armTravel??1.12))-w.radius<.003)err('weapon.armTravel','The lowered disc must clear the floor by 3 mm.');
 
  }

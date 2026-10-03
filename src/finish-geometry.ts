@@ -1,3 +1,4 @@
+import {sawblazeNoseProfile} from './sawblaze-geometry';
 import * as THREE from 'three';
 import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
 import {ConvexGeometry} from 'three/addons/geometries/ConvexGeometry.js';
@@ -85,6 +86,11 @@ function sawbladeSector(p:Part){
 
 export function finishedGeometry(p:Part,c:BotConfig):THREE.BufferGeometry{
  const s=p.shape,w=c.weapon;
+ if(c.chassis.profile==='sawblaze'&&p.id.startsWith('saw_nose_')&&s.kind==='hull'){
+  const g=sawbladeSector(p),position=g.getAttribute('position'),normal=g.getAttribute('normal'),index=Number(p.id.split('_').at(-1)),profile=sawblazeNoseProfile(c),tangents=profile.map((_,i)=>{const a=profile[Math.max(0,i-1)],b=profile[Math.min(profile.length-1,i+1)],dy=b[0]-a[0],dz=b[1]-a[1],length=Math.hypot(dy,dz);return new THREE.Vector3(0,-dz/length,dy/length);});
+  for(let i=0;i<position.count;i++)if(normal.getY(i)>.05){const z=position.getZ(i),t=Math.abs(z-profile[index][1])<Math.abs(z-profile[index+1][1])?tangents[index]:tangents[index+1];normal.setXYZ(i,t.x,t.y,t.z);}
+  return g;
+ }
  if(c.chassis.profile==='icewave'&&p.id==='engine_cowl')return engineHood(c);
  if(s.kind==='box'){
   const d=s.size,axis=(['x','y','z'] as const).reduce((a,b)=>d[a]<d[b]?a:b),panel=p.module.startsWith('armour_')||/^(lid|floor|side|end|inner)/.test(p.id);

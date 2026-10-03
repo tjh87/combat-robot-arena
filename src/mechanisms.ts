@@ -1,3 +1,4 @@
+import {sawblazeNoseProfile} from './sawblaze-geometry';
 import {sawbladeCells} from './sawblade-profile';
 import {MATERIALS,partProperties,chiselShape,WEDGE_TIP,HYDRA_TIP,groundForkMount,v,add,sub,mul,length,axisQ,identity,armOffset,type BotConfig,type Spinner,type Part,type Slot,type Material,type Vec,type Quat} from './model';
 
@@ -36,8 +37,13 @@ export function racerWheelParts(c:BotConfig,id:string,slot:Slot,position:Vec,par
  for(let j=0;j<5;j++)b.box(id+'_spoke_'+j,slot,id,v(.016,r*.13,r*.70),add(position,v(0,Math.sin(j*Math.PI*2/5)*r*.36,Math.cos(j*Math.PI*2/5)*r*.36)),'aluminium7075',axisQ(v(1,0,0),-j*Math.PI*2/5));
  b.put(id+'_hub',slot,id,{kind:'cylinder',radius:r*.23,width:.055},position,'aluminium7075',axisQ(v(0,0,1),Math.PI/2));
 }
+export function sawblazeFrontParts(c:BotConfig,parts:Part[],slot:Slot,thickness:number,material:Material){
+ const b=writer(parts),offset=slot==='armour_front'?c.chassis.thickness/2+thickness/2:0,profile=sawblazeNoseProfile(c,offset),width=c.chassis.width*.88;
+ for(let i=0;i<profile.length-1;i++){const a=profile[i],z=profile[i+1];b.prism('saw_nose_'+slot+'_'+i,slot,'chassis',width,[[a[0]-thickness/2,a[1]],[z[0]-thickness/2,z[1]],[z[0]+thickness/2,z[1]],[a[0]+thickness/2,a[1]]],v(),material);}
+}
 export function templateParts(c:BotConfig,parts:Part[]){
  const b=writer(parts),p=c.chassis.profile,w=c.weapon,L=c.chassis.length,W=c.chassis.width,H=c.chassis.height,floor=-H/2-c.chassis.clearance,top=H/2;
+ if(p==='sawblaze')sawblazeFrontParts(c,parts,'chassis',c.chassis.thickness,c.chassis.material);
  const fork=(id:string,x:number,front:number,rear:number,width=.065,height=.07,mat:Material='hardox')=>{const tip=p==='hydra'?HYDRA_TIP:WEDGE_TIP;return b.prism(id,'chassis','chassis',width,[[floor+tip.clearance,front],[floor+height-.009,rear],[floor+height,rear],[floor+tip.clearance+tip.thickness,front]],v(x,0,0),mat);};
  // A thin triangular plate presents a floor-level edge to a sideways sweep.
  // Its inner rear corner rises into the existing scoop; the side is a ramp,
@@ -109,20 +115,27 @@ export function templateParts(c:BotConfig,parts:Part[]){
   }
  }
  if(w.type==='hammer_saw'){
-  for(const side of[-1,0,1]){fork('saw_fork_'+side,side*.21,-.57,-L/2+.08,.052,.11,'titanium');const part=parts.at(-1)!;part.body='ground_fork_'+side+'_0';part.position=sub(part.position,groundForkMount(c,side,0));}
+  const joint=-.435,front=-.57,rear=-L/2+.08,joinY=floor+.030;
+  for(const side of[-1,0,1]){
+   const body='ground_fork_'+side+'_0',mount=groundForkMount(c,side,0),pos=sub(v(side*.21,0,0),mount);
+   b.prism('saw_fork_'+side,'chassis',body,.110,[[floor+.002,front],[floor+.002,joint],[joinY,joint]],pos,'titanium');
+   b.prism('saw_fork_support_'+side,'chassis',body,.040,[[floor+.014,rear],[floor+.010,joint],[joinY,joint],[floor+.095,rear]],pos,'titanium');
+   b.prism('saw_fork_collar_'+side,'chassis',body,.110,[[floor+.010,joint+.019],[floor+.010,joint],[joinY,joint],[floor+.035,joint+.019]],pos,'titanium');
+   for(const flank of[-1,1])b.prism('saw_fork_web_'+side+'_'+flank,'chassis',body,.006,[[floor+.032,joint+.08],[floor+.080,rear-.035],[floor+.045,rear]],add(pos,v(flank*.023,0,0)),'titanium');
+  }
   for(const side of[-1,1]){
-   b.prism('saw_cheek_'+side,'weapon_actuator','chassis',.011,[[floor+.006,-L*.63],[floor+.006,L*.35],[top+.10,L*.35],[top+.12,-.05],[top*.6,-L*.50]],v(side*W*.43,0,0),'aluminium7075');
-   b.tube('saw_pivot_support_'+side,'weapon_actuator','chassis',v(side*.075,top-.03,.08),add(w.mount,v(side*.075,0,0)),.013,'aluminium7075');
+   b.prism('saw_cheek_'+side,'weapon_actuator','chassis',.011,[[floor+.006,-L*.63],[floor+.006,L*.35],[top+.09,L*.35],[top+.13,-.05],[top*.6,-L*.50]],v(side*W*.43,0,0),'aluminium7075');
+   b.tube('saw_pivot_support_'+side,'weapon_actuator','chassis',v(side*.075,top-.02,w.mount.z+.03),add(w.mount,v(side*.075,0,0)),.013,'aluminium7075');
    b.tube('saw_rear_skid_'+side,'chassis','chassis',v(side*W*.36,floor+.028,L*.36),v(side*W*.36,floor+.012,L/2+.035),.010,'titanium');
   }
-  const end=armOffset(w);b.box('saw_arm_cover','weapon_actuator','weapon_arm',v(.075,.012,(w.armLength??.59)*.87),mul(end,.5),'aluminium7075',axisQ(v(1,0,0),1.2));
-  for(const side of[-1,1])b.tube('saw_arm_'+side,'weapon_actuator','weapon_arm',v(side*.035,0,0),add(end,v(side*.035,0,0)),.017,'aluminium7075');
-  b.put('arm_hinge','weapon_actuator','weapon_arm',{kind:'cylinder',radius:.045,width:.10},v(),'aluminium7075',axisQ(v(0,0,1),Math.PI/2));
-  b.put('arm_bearing','weapon_actuator','weapon_arm',{kind:'cylinder',radius:.035,width:.09},end,'aluminium7075',axisQ(v(0,0,1),Math.PI/2));
-  // A stationary rear half guard rolls with the arm, not with the blade.
-  for(const side of[-1,1])for(let i=0;i<12;i++){const r=w.radius+.016,a=-Math.PI/2+i*Math.PI/12,z=a+Math.PI/12;
-   b.tube('saw_guard_'+side+'_'+i,'weapon_actuator','weapon_arm',add(end,v(side*(w.width/2+.016),r*Math.sin(a),r*Math.cos(a))),add(end,v(side*(w.width/2+.016),r*Math.sin(z),r*Math.cos(z))),.009,'titanium');
-  }
+  const end=armOffset(w);
+  b.box('saw_arm_cover','weapon_actuator','weapon_arm',v(.065,.026,(w.armLength??.50)*.94),mul(end,.5),'aluminium7075',axisQ(v(1,0,0),1.2));
+  for(const side of[-1,1])b.tube('saw_arm_'+side,'weapon_actuator','weapon_arm',v(side*.026,0,0),add(end,v(side*.026,0,0)),.010,'aluminium7075');
+  b.put('arm_hinge','weapon_actuator','weapon_arm',{kind:'cylinder',radius:.038,width:.10},v(),'aluminium7075',axisQ(v(0,0,1),Math.PI/2));
+  b.put('arm_bearing','weapon_actuator','weapon_arm',{kind:'cylinder',radius:.032,width:.082},end,'aluminium7075',axisQ(v(0,0,1),Math.PI/2));
+  const upper=v(0,w.radius*.76,w.radius*.32),middle=v(0,w.radius*.24,w.radius*.82),lower=v(0,-w.radius*.45,w.radius*.61);
+  for(const side of[-1,1]){const shift=v(side*(w.width/2+.024),0,0),points=[upper,middle,lower];for(let i=0;i<3;i++)b.tube('saw_guard_'+side+'_'+i,'weapon_actuator','weapon_arm',add(end,add(shift,points[i])),add(end,add(shift,points[(i+1)%3])),.006,'aluminium7075');}
+  for(const [i,point]of[upper,lower].entries())b.put('saw_guard_roller_'+i,'weapon_actuator','weapon_arm',{kind:'cylinder',radius:.011,width:w.width+.075},add(end,point),'aluminium7075',axisQ(v(0,0,1),Math.PI/2));
  }
  if(p==='deep_six'&&w.type==='vertical_bar'){
   for(const side of[-1,1]){

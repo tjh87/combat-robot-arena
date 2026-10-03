@@ -172,6 +172,9 @@ export function detailPart(mesh:THREE.Mesh,p:Part,c:BotConfig){
   const sidewall=new THREE.MeshStandardMaterial({map:tireSidewallTexture(),roughness:.88,metalness:0});
   for(const edge of[-1,1]){const g=new THREE.RingGeometry(r*.785,r*.985,64),uv=g.getAttribute('uv'),position=g.getAttribute('position');for(let j=0;j<position.count;j++)uv.setXY(j,position.getX(j)/(2*r)+.5,position.getY(j)/(2*r)+.5);b.put(g,sidewall,[0,edge*(width/2+.0005),0],rotation(-edge*Math.PI/2));}
  }
+ if(c.chassis.profile==='sawblaze'&&/^wheel_-?1_\d+$/.test(p.id)&&p.shape.kind==='cylinder'){
+  const green=metal(c.identity.secondary,.36,.20);for(const side of[-1,1])b.cylinder(p.shape.radius*.63,.006,[0,side*(p.shape.width/2+.005),0],green,undefined,40);
+ }
  if(/^wheel_-?1_(?:\d+|upper)$/.test(p.id)&&p.shape.kind==='cylinder'){
   const {radius:r,width:w}=p.shape;
   for(const side of[-1,1]){
@@ -204,7 +207,7 @@ export function detailPart(mesh:THREE.Mesh,p:Part,c:BotConfig){
   mesh.geometry.computeBoundingBox();const bounds=mesh.geometry.boundingBox!,size=bounds.getSize(new THREE.Vector3()),side=p.id.endsWith('left')?-1:1;
   const graphic=new THREE.Mesh(new THREE.PlaneGeometry(size.z*.83,size.y*.82),new THREE.MeshPhysicalMaterial({map:robotSideTexture(c),transparent:true,depthWrite:false,roughness:.3,metalness:.35,clearcoat:.6}));graphic.rotation.y=side*Math.PI/2;graphic.position.set(side*(size.x/2+.0008),0,0);graphic.userData.paint=true;graphic.name='team-side-graphic';mesh.add(graphic);
  }
- if((p.id.startsWith('armour_top')||p.id.startsWith('lid')&&!hasTop)&&!p.id.includes('_wing_')||c.chassis.profile==='hydra'&&p.id==='wedge'||c.chassis.profile==='sawblaze'&&p.id.startsWith('saw_fork')){
+ if((p.id.startsWith('armour_top')||p.id.startsWith('lid')&&!hasTop)&&!p.id.includes('_wing_')||c.chassis.profile==='hydra'&&p.id==='wedge'||c.chassis.profile==='sawblaze'&&/^saw_fork_-?[01]$/.test(p.id)){
   // Map paint directly to the authored plate. Separate flat overlays used to
   // hide the curved edges and float across clipped corners.
   mesh.geometry.computeBoundingBox();const bounds=mesh.geometry.boundingBox!,s=bounds.getSize(new THREE.Vector3()),y=bounds.max.y+.0008,pos=mesh.geometry.getAttribute('position'),uv=new THREE.Float32BufferAttribute(new Float32Array(pos.count*2),2);
@@ -351,7 +354,8 @@ export function templateColor(p:Part,c:BotConfig):string|undefined{
  if(profile==='huge'){if(p.module==='weapon'&&!id.startsWith('tooth'))return c.identity.secondary;if(p.material==='uhmw')return c.identity.primary;}
  if(profile==='sawblaze'){
   if(id.startsWith('saw_arm')||id==='arm_bearing'||id==='disc_hub')return c.identity.secondary;
-  if(id.startsWith('saw_fork'))return c.identity.primary;
+  if(/^saw_fork_-?[01]$/.test(id))return c.identity.secondary;
+  if(id.startsWith('saw_fork_')||id.startsWith('saw_nose_')||id.startsWith('saw_guard_')&&!id.startsWith('saw_guard_roller'))return '#202729';
   if(id.startsWith('saw_cheek')||id.startsWith('disc'))return c.identity.primary;
  }
  if(profile==='deep_six'){if(p.module==='weapon')return c.identity.secondary;if(id.startsWith('vertical_')||id.startsWith('tower_'))return c.identity.primary;}

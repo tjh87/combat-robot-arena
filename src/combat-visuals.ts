@@ -1,3 +1,4 @@
+import {sawbladeExposure,updateSawbladeExposure} from './sawblaze-blur';
 import * as THREE from 'three';
 import {isSpinner,isHorizontal,clamp,weaponAxis,type BotConfig} from './model';
 
@@ -43,6 +44,7 @@ function updateHorizontalSweep(mesh:THREE.Mesh<THREE.BufferGeometry,THREE.MeshBa
 
 /** Exposure trails supplement, but never replace, the physical rotor pose. */
 export function rotorMotion(config:BotConfig){
+ if(config.chassis.profile==='sawblaze'&&config.weapon.type==='hammer_saw')return sawbladeExposure(config);
  const w=config.weapon,root=new THREE.Group();root.name='rotor-motion';
  if(!isSpinner(w))return root;
  root.userData.rotorMotion=true;
@@ -72,6 +74,7 @@ export function rotorMotion(config:BotConfig){
 
 export function updateRotorMotion(rotor:THREE.Object3D|undefined,rpm:number,time:number,reduced=false,direction?:number){
  const root=rotor?.getObjectByName('rotor-motion');if(!root)return;
+ if(root.userData.sawbladeExposure){updateSawbladeExposure(rotor!,root,rpm,reduced,Math.sign(direction??root.userData.direction??1)||1);return;}
  const speed=Number.isFinite(rpm)?Math.abs(rpm):0,strength=clamp((speed-90)/(root.userData.horizontal?1000:650),0,1);root.visible=strength>.01&&!reduced;
  if(!root.visible)return;
  if(root.userData.horizontal){const spin=Math.sign(direction??root.userData.direction??1)||1;for(const disk of root.children)for(const mesh of disk.children)updateHorizontalSweep(mesh as THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>,speed,spin,strength);return;}

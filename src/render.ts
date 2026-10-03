@@ -1,3 +1,4 @@
+import {disposeSawbladeExposure} from './sawblaze-blur';
 import {WallCrackVisual} from './wall-cracks';
 import {AdaptiveResolution,graphicsPixelRatio} from './performance';
 import {compactGeometry} from './geometry-memory';
@@ -160,7 +161,7 @@ export class ArenaRenderer{
  for(const attribute of[p,c,sizes,tail,colors])attribute.needsUpdate=true;this.replayParticles.visible=this.replaySparkTrails.visible=!this.reduced;
  }}
 
- endReplay(){this.shadowDirty=true;this.needsRender=true;this.replayFireFrame=undefined;this.replay=false;this.bots.visible=true;this.replayRoot.traverse(o=>{if(o instanceof THREE.Mesh){if(o instanceof THREE.InstancedMesh)o.dispose();for(const m of Array.isArray(o.material)?o.material:[o.material])m.dispose();}else if(o instanceof THREE.Sprite)o.material.dispose();else if(o instanceof THREE.Line){for(const m of Array.isArray(o.material)?o.material:[o.material])m.dispose();}});if(this.replayParticles){this.replayParticles.geometry.dispose();(this.replayParticles.material as THREE.Material).dispose();this.replayParticles=undefined;}if(this.replaySparkTrails){this.replaySparkTrails.geometry.dispose();this.replaySparkTrails=undefined;}this.replayRoot.clear();this.replayGroups.clear();}
+ endReplay(){this.shadowDirty=true;this.needsRender=true;this.replayFireFrame=undefined;this.replay=false;this.bots.visible=true;this.replayRoot.traverse(o=>{if(o instanceof THREE.Mesh){if(o instanceof THREE.InstancedMesh)o.dispose();for(const m of Array.isArray(o.material)?o.material:[o.material]){disposeSawbladeExposure(m);m.dispose();}}else if(o instanceof THREE.Sprite)o.material.dispose();else if(o instanceof THREE.Line){for(const m of Array.isArray(o.material)?o.material:[o.material])m.dispose();}});if(this.replayParticles){this.replayParticles.geometry.dispose();(this.replayParticles.material as THREE.Material).dispose();this.replayParticles=undefined;}if(this.replaySparkTrails){this.replaySparkTrails.geometry.dispose();this.replaySparkTrails=undefined;}this.replayRoot.clear();this.replayGroups.clear();}
  positionPOVCamera(camera:THREE.PerspectiveCamera,sim:Simulation){
  const config=sim.bots[0].compiled.config,body=(this.replay?this.replayGroups:this.bodyGroups).get('b0:chassis');
  const p=body?.position??vec(sim.bots[0].chassis.translation()),raw=sim.bots[0].chassis.rotation(),q=(body?.quaternion??new THREE.Quaternion(raw.x,raw.y,raw.z,raw.w)).clone();
@@ -217,6 +218,6 @@ export class ArenaRenderer{
  this.triangleCount=triangles;this.drawCalls=calls;this.renderMs=performance.now()-start;this.needsRender=false;
  }
  clear(group:THREE.Group){for(const child of [...group.children])this.disposeObject(child);}
- disposeObject(o:THREE.Object3D){o.traverse(x=>{if(x instanceof THREE.Mesh||x instanceof THREE.Points||x instanceof THREE.Line){if(x instanceof THREE.InstancedMesh)x.dispose();x.geometry.dispose();const mats=Array.isArray(x.material)?x.material:[x.material];for(const m of mats){if('map'in m)(m.map as THREE.Texture|undefined)?.dispose();m.dispose();}}else if(x instanceof THREE.Sprite){x.material.map?.dispose();x.material.dispose();}});o.removeFromParent();}
+ disposeObject(o:THREE.Object3D){o.traverse(x=>{if(x instanceof THREE.Mesh||x instanceof THREE.Points||x instanceof THREE.Line){if(x instanceof THREE.InstancedMesh)x.dispose();x.geometry.dispose();const mats=Array.isArray(x.material)?x.material:[x.material];for(const m of mats){disposeSawbladeExposure(m);if('map'in m)(m.map as THREE.Texture|undefined)?.dispose();m.dispose();}}else if(x instanceof THREE.Sprite){x.material.map?.dispose();x.material.dispose();}});o.removeFromParent();}
  dispose(){if(this.disposed)return;this.disposed=true;this.resize.disconnect();this.flightLabel?.dispose();this.endReplay();this.clear(this.arena);this.clear(this.bots);this.clear(this.preview);this.clear(this.effects);this.clear(this.batteryFireVisual);this.environment.dispose();this.insetTarget?.dispose();this.insetQuad.geometry.dispose();this.insetQuad.material.dispose();this.renderer.dispose();this.renderer.domElement.remove();}
 }

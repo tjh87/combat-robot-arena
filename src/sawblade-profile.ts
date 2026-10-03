@@ -11,7 +11,7 @@ export const SAWBLADE_PIXELS:number[][][]=[
 ];
 const centre=[569.7902235243056,417.8142426215278];
 const pixelRadius=Math.max(...SAWBLADE_PIXELS[0].map(([x,y])=>Math.hypot(x-centre[0],y-centre[1])));
-export function sawbladeContours(radius:number){return SAWBLADE_PIXELS.map(list=>list.map(([x,y])=>new Vector2((centre[1]-y)*radius/pixelRadius,(centre[0]-x)*radius/pixelRadius)));}
+export function sawbladeContours(radius:number){return SAWBLADE_PIXELS.map(list=>list.map(([x,y])=>new Vector2((centre[1]-y)*radius/pixelRadius,(x-centre[0])*radius/pixelRadius)));}
 export function isSawbladePart(p:Part){return p.body==='rotor'&&/^(disc(?:_\d+)?|tooth_\d+)$/.test(p.id);}
 // Merge only adjacent cells whose union remains convex. The union preserves
 // every boundary point and never spans an opening or a concave notch.
