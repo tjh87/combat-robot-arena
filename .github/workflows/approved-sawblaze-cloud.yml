@@ -47,10 +47,10 @@ jobs:
         run: |
           git status --short
           git diff --check
-          git diff -- src/mechanisms.ts src/finish-geometry.ts src/visuals.ts tests/blades-update.ts
+          git diff -- src/model.ts src/sim.ts src/mechanisms.ts src/finish-geometry.ts src/visuals.ts tests/blades-update.ts
           git log --oneline -10
           git rm scripts/apply-approved-sawblaze.mjs .github/workflows/approved-sawblaze-cloud.yml
-          git add src/sawblade-profile.ts src/mechanisms.ts src/finish-geometry.ts src/visuals.ts tests/sawblaze-svg.ts tests/blades-update.ts
+          git add src/model.ts src/sim.ts src/sawblade-profile.ts src/mechanisms.ts src/finish-geometry.ts src/visuals.ts tests/sawblaze-svg.ts tests/blades-update.ts
           git -c user.name=tjh87 -c user.email=2867835+tjh87@users.noreply.github.com commit -m "Replace SawBlaze approximation with approved SVG blade"
           git push origin HEAD:main
       - name: Preserve cloud evidence
