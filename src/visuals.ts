@@ -29,4 +29,3 @@ class Batch{
 }
 
 function canvas(width:number,height:number){const element=document.createElement('canvas');element.width=width;element.height=height;return{element,ctx:element.getContext('2d')!} ;}
-function texture(element:HTMLCanvasElement){const map=new THREE.CanvasTexture(element);map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=4;return map;}
