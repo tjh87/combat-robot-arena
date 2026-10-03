@@ -90,3 +90,5 @@ edit('tests/blades-update.ts',s=>{
  return replace(s,'if(!motion.userData.horizontal)assert.notEqual(mesh.rotation.z,angle);','if(!motion.userData.horizontal&&!motion.userData.sawbladeExposure)assert.notEqual(mesh.rotation.z,angle);');
 });
 console.log('Approved assembly source is ready. Hardware allowance:',{before:oldEquipment,after:newEquipment});
+
+edit('tests/blades-update.ts',s=>replace(s,'const mesh=motion.children[0].children[0] as THREE.Mesh','const mesh=(motion.userData.sawbladeExposure?motion.children[0]:motion.children[0].children[0]) as THREE.Mesh'));
