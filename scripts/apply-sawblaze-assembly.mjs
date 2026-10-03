@@ -44,6 +44,8 @@ edit('src/model.ts',s=>{
  s=replace(s,'templateParts,extendedRotor','templateParts,sawblazeFrontParts,extendedRotor');
  s=replace(s,"mount:v(0,.115,.115),armLength:.50","mount:v(0,.088,-.045),armLength:.50");
  s=replace(s,"if(index===8)c.weapon.radius=.2032;","if(index===8)c.weapon.radius=.18;");
+ s=replace(s,"const vertices:number[]=[];for(const dy of[-t/2,t/2])for(const [x,z]of outline)","const perimeter=ch.profile==='sawblaze'&&y>0?outline.map(([x,z])=>[x,Math.max(z,-L*.26)]):outline,area=perimeter===outline?W*L-2*bevel*bevel:Math.abs(perimeter.reduce((sum,p,i)=>{const q=perimeter[(i+1)%perimeter.length];return sum+p[0]*q[1]-q[0]*p[1];},0))/2;const vertices:number[]=[];for(const dy of[-t/2,t/2])for(const [x,z]of perimeter)");
+ s=replace(s,"volume:(W*L-2*bevel*bevel)*t","volume:area*t");
  s=replace(s,"else box('end'+side,'chassis'","else if(ch.profile!=='sawblaze'||side!==-1)box('end'+side,'chassis'");
  s=replace(s,"else box('armour_'+a.mount,('armour_'+a.mount)","else if(ch.profile==='sawblaze'&&a.mount==='front')sawblazeFrontParts(c,parts,'armour_front',t,a.material);else box('armour_'+a.mount,('armour_'+a.mount)");
  s=replace(s," if(w.type==='hammer_saw'&&H/2+ch.clearance", " if(w.type==='hammer_saw'&&ch.profile==='sawblaze'&&sawblazeSweepClearance(c,parts)<.002)err('weapon.mount','The complete blade sweep must clear the chassis and front forks.');\n if(w.type==='hammer_saw'&&H/2+ch.clearance");

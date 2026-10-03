@@ -58,7 +58,7 @@ jobs:
           SERVER_PID=$!
           trap 'kill $SERVER_PID' EXIT
           node tests/sawblaze-browser.mjs
-      - name: Publish the tested source
+      - name: Save the tested source for visual review
         run: |
           git status --short
           git diff --check
@@ -67,7 +67,7 @@ jobs:
           git rm scripts/apply-sawblaze-assembly.mjs scripts/compare-blade-regressions.mjs .github/workflows/sawblaze-assembly.yml
           git add src tests/sawblaze-assembly.ts tests/sawblaze-browser.mjs tests/blades-update.ts
           git -c user.name=tjh87 -c user.email=2867835+tjh87@users.noreply.github.com commit -m "Align SawBlaze assembly and add speed-dependent blade exposure"
-          git push origin HEAD:main
+          git push origin HEAD:sawblaze-approved-assembly
       - name: Preserve evidence
         if: always()
         uses: actions/upload-artifact@v4
