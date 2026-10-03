@@ -65,7 +65,7 @@ export function chiselShape(size:Vec):Shape{
  const area=Math.abs(section.reduce((sum,p,i)=>{const n=section[(i+1)%section.length];return sum+p[0]*n[1]-p[1]*n[0];},0))/2;
  return{kind:'hull',vertices,volume:area*size.x};
 }
-export interface Part {id:string;module:Slot;body:string;shape:Shape;position:Vec;rotation:Quat;material:Material|'rubber';mass:number;collides:boolean;tooth?:number;}
+export interface Part {id:string;module:Slot;body:string;shape:Shape;position:Vec;rotation:Quat;material:Material|'rubber';mass:number;collides:boolean;tooth?:number;analyticPrism?:boolean;}
 export interface Module {id:Slot;present:boolean;max:number;hp:number;material:Material;functional:boolean;}
 export interface Compiled {config:BotConfig;parts:Part[];mass:number;com:Vec;inertia:Vec;rotorInertia:number;modules:Record<Slot,Module>;errors:{field:string,message:string}[];tip:number;availableRPM:number;spinup:number;endurance:number;envelope:Vec;}
 export const copy=<T>(x:T):T=>structuredClone(x);

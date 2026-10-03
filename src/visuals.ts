@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import {robotDeckTexture,robotSideTexture,tireSidewallTexture} from './robot-livery';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {RULES,rng,HYDRA_TIP,unlimitedFlips,type BotConfig,type Part} from './model';
-import {sawbladeOuter,sawbladeHex} from './mechanisms';
+import {isSawbladePart,sawbladeBoundary} from './sawblade-profile';
 
 const metal=(color:string,roughness=.46,metalness=.72)=>new THREE.MeshStandardMaterial({color,roughness,metalness});
 const glow=(color:string)=>new THREE.MeshBasicMaterial({color,toneMapped:false});
@@ -183,20 +183,21 @@ export function detailPart(mesh:THREE.Mesh,p:Part,c:BotConfig){
   // Rubber shoulders are continuous; avoid the former rows of raised blocks.
   for(const edge of[-1,1])b.put(new THREE.TorusGeometry(r*.86,.0015,3,32),black,[0,edge*(w/2+.0005),0],rotation(Math.PI/2));
  }
- if(p.tooth!==undefined||p.module==='weapon'&&/^(bar|cage_arm|vertical_bar)/.test(p.id)){const edges=new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry,35),new THREE.LineBasicMaterial({color:0xe4eef5,transparent:true,opacity:p.tooth!==undefined?.38:.18}));edges.name='cutting-edge';mesh.add(edges);}
- if(c.chassis.profile==='sawblaze'&&(p.id==='disc'||/^disc_\d+$/.test(p.id))){
-  // Neon rim light traces the hammer-saw silhouette: black blade, green edge.
-  const rim=new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry,18),new THREE.LineBasicMaterial({color:new THREE.Color(c.identity.secondary),transparent:true,opacity:.9,toneMapped:false}));
-  rim.name='sawblaze-edge';mesh.add(rim);
- }
- if(c.chassis.profile==='sawblaze'&&p.id==='disc_5'&&c.weapon.type==='hammer_saw'){
-  // Green diamond lightening slot near the crown, turning with the blade.
-  const w=c.weapon;mesh.geometry.computeBoundingBox();const bb=mesh.geometry.boundingBox!,hw=(bb.max.x-bb.min.x)/2;
-  const a=99*Math.PI/180,rm=(sawbladeOuter(w.radius,w.toothDepth,a)+sawbladeHex(w.innerRadius,a))/2;
-  const dy=Math.cos(a),dz=Math.sin(a),ty=-Math.sin(a),tz=Math.cos(a),cy=rm*dy,cz=rm*dz,dr=.016,dt=.011;
-  const corners=[[cy+dy*dr,cz+dz*dr],[cy+ty*dt,cz+tz*dt],[cy-dy*dr,cz-dz*dr],[cy-ty*dt,cz-tz*dt]];
-  const mat=new THREE.LineBasicMaterial({color:new THREE.Color(c.identity.secondary),transparent:true,opacity:.9,toneMapped:false});
-  for(const x of[-hw-.0008,hw+.0008]){const g=new THREE.BufferGeometry().setFromPoints(corners.map(([y,z])=>new THREE.Vector3(x,y,z)));const loop=new THREE.LineLoop(g,mat);loop.name='sawblade-diamond';mesh.add(loop);}
+ if(!(c.chassis.profile==='sawblaze'&&isSawbladePart(p))&&(p.tooth!==undefined||p.module==='weapon'&&/^(bar|cage_arm|vertical_bar)/.test(p.id))){const edges=new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry,35),new THREE.LineBasicMaterial({color:0xe4eef5,transparent:true,opacity:p.tooth!==undefined?.38:.18}));edges.name='cutting-edge';mesh.add(edges);}
+ if(c.chassis.profile==='sawblaze'&&c.weapon.type==='hammer_saw'&&isSawbladePart(p)){
+  const face=mesh.material as THREE.MeshPhysicalMaterial;
+  face.color.set('#16191a');face.metalness=.78;face.roughness=.36;face.clearcoat=.18;
+  mesh.userData.baseColor=face.color.getHex();mesh.userData.baseRoughness=face.roughness;
+  const edge=new THREE.MeshPhysicalMaterial({color:'#3ca916',metalness:.08,roughness:.55,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),rim=glow('#7ce254');
+  const half=c.weapon.width/2,boundary=sawbladeBoundary(p,c.weapon.radius);
+  for(const [a,z]of boundary){
+   const vertices=[-half,a.x,a.y,half,a.x,a.y,half,z.x,z.y,-half,a.x,a.y,half,z.x,z.y,-half,z.x,z.y];
+   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(new Float32Array(12),2));g.computeVertexNormals();
+   edge.side=THREE.DoubleSide;b.put(g,edge,[0,0,0]);
+   for(const x of[-half-.00015,half+.00015])b.put(new THREE.TubeGeometry(new THREE.LineCurve3(new THREE.Vector3(x,a.x,a.y),new THREE.Vector3(x,z.x,z.y)),1,.00065,4,false),rim,[0,0,0]);
+  }
+  if(!boundary.length){edge.dispose();rim.dispose();}
+  mesh.name='sawblaze-svg-blade';mesh.userData.svgBlade=true;
  }
  const hasTop=c.armour.some(a=>a.mount==='top'&&a.thickness>0);
  if(['hypershock','sawblaze','quantum','deep_six','tombstone'].includes(c.chassis.profile??'')&&/^armour_(left|right)$/.test(p.id)){
@@ -292,6 +293,7 @@ export function detailPart(mesh:THREE.Mesh,p:Part,c:BotConfig){
   }
  }
  b.finish(mesh);
+ if(c.chassis.profile==='sawblaze'&&isSawbladePart(p)&&p.tooth!==undefined)for(const child of mesh.children)if(child instanceof THREE.Mesh&&child.material instanceof THREE.MeshBasicMaterial)child.name='cutting-edge';
  // Dispose unused factory materials; only the merged meshes own used ones.
  const used=new Set(mesh.children.filter(o=>o instanceof THREE.Mesh).flatMap(o=>Array.isArray((o as THREE.Mesh).material)?(o as THREE.Mesh).material:[(o as THREE.Mesh).material]));
  for(const m of[bright,black,accent,gold])if(!used.has(m))m.dispose();

@@ -1,4 +1,5 @@
-import {MATERIALS,chiselShape,WEDGE_TIP,HYDRA_TIP,groundForkMount,v,add,sub,mul,length,axisQ,identity,armOffset,type BotConfig,type Spinner,type Part,type Slot,type Material,type Vec,type Quat} from './model';
+import {sawbladeCells} from './sawblade-profile';
+import {MATERIALS,partProperties,chiselShape,WEDGE_TIP,HYDRA_TIP,groundForkMount,v,add,sub,mul,length,axisQ,identity,armOffset,type BotConfig,type Spinner,type Part,type Slot,type Material,type Vec,type Quat} from './model';
 
 // These plates, tubes and rotor sectors are the actual collision geometry.
 // All hulls are convex prisms; mass and moments use the shared analytic model.
@@ -34,21 +35,6 @@ export function racerWheelParts(c:BotConfig,id:string,slot:Slot,position:Vec,par
  b.ring(id+'_rim',slot,id,r*.79,r*.67,.015,position,'aluminium7075',16);
  for(let j=0;j<5;j++)b.box(id+'_spoke_'+j,slot,id,v(.016,r*.13,r*.70),add(position,v(0,Math.sin(j*Math.PI*2/5)*r*.36,Math.cos(j*Math.PI*2/5)*r*.36)),'aluminium7075',axisQ(v(1,0,0),-j*Math.PI*2/5));
  b.put(id+'_hub',slot,id,{kind:'cylinder',radius:r*.23,width:.055},position,'aluminium7075',axisQ(v(0,0,1),Math.PI/2));
-}
-// SawBlaze hammer-saw blade outline (reference silhouette). The outer radius
-// carries three saw teeth on one flank, a broad hammer head opposite, a
-// shallow crown notch and a lower spike; the bore is hexagonal. Physics,
-// finish geometry and cosmetic detail share these helpers, so all three agree.
-export function sawbladeOuter(radius:number,toothDepth:number,a:number){
- const ro=radius-toothDepth;
- const norm=(x:number)=>{while(x>Math.PI)x-=2*Math.PI;while(x<-Math.PI)x+=2*Math.PI;return x;};
- const bump=(centre:number,halfWidth:number)=>Math.max(0,1-Math.abs(norm(a-centre))/halfWidth);
- const r=ro+0.030*Math.min(1,bump(Math.PI,.62)*1.15)+0.030*bump(0,.20)+0.026*bump(.44,.17)+0.026*bump(-.44,.17)+0.020*bump(-Math.PI/2,.13)-0.012*bump(Math.PI/2,.10);
- return Math.min(ro+0.030,Math.max(ro-0.012,r));
-}
-export function sawbladeHex(innerRadius:number,a:number){
- const s=Math.PI/3,t=((a%s)+s)%s;
- return innerRadius*0.8660254/Math.cos(t-s/2);
 }
 export function templateParts(c:BotConfig,parts:Part[]){
  const b=writer(parts),p=c.chassis.profile,w=c.weapon,L=c.chassis.length,W=c.chassis.width,H=c.chassis.height,floor=-H/2-c.chassis.clearance,top=H/2;
@@ -182,14 +168,24 @@ export function extendedRotor(c:BotConfig,w:Spinner,parts:Part[]){
   return;
  }
  if(w.type==='hammer_saw'&&c.chassis.profile==='sawblaze'){
-  // Reference hammer-saw blade. Same part ids and counts as the generic disc,
-  // so damage teeth, mass budgets and test hooks behave identically.
-  const teeth=[-.45,0,.45,Math.PI],segments=20;
-  for(let j=0;j<segments;j++){const a=j*2*Math.PI/segments,t=(j+1)*2*Math.PI/segments,oa=sawbladeOuter(R,w.toothDepth,a),ob=sawbladeOuter(R,w.toothDepth,t),ha=sawbladeHex(w.innerRadius,a),hb=sawbladeHex(w.innerRadius,t);
-   b.prism(j===0?'disc':'disc_'+j,'weapon','rotor',w.width,[[oa*Math.cos(a),oa*Math.sin(a)],[ob*Math.cos(t),ob*Math.sin(t)],[hb*Math.cos(t),hb*Math.sin(t)],[ha*Math.cos(a),ha*Math.sin(a)]],v(),w.material);}
-  b.put('disc_hub','weapon','rotor',{kind:'cylinder',radius:.041,width:w.width+.016},v(),w.material,axisQ(v(0,0,1),Math.PI/2));
-  for(let j=0;j<4;j++)b.box('disc_spoke_'+j,'weapon','rotor',v(w.width,.024,ro*1.75),v(),w.material,axisQ(v(1,0,0),j*Math.PI/4));
-  teeth.forEach((a,i)=>{const r=sawbladeOuter(R,w.toothDepth,a)-0.018;b.put('tooth_'+i,'weapon','rotor',chiselShape(v(w.toothWidth,w.toothDepth,w.toothHeight)),v(0,r*Math.cos(a),r*Math.sin(a)),w.material,axisQ(v(1,0,0),a),i);});
+  // Convex prisms share the approved SVG surface and both holes.
+  const first=parts.length;let sector=0;
+  for(const {section,tooth}of sawbladeCells(R)){
+   const id=tooth===undefined?(sector++===0?'disc':'disc_'+(sector-1)):'tooth_'+tooth;
+   // Center each hull locally to preserve Rapier precision at small SVG edges.
+   const cy=section.reduce((sum,p)=>sum+p[0],0)/section.length,cz=section.reduce((sum,p)=>sum+p[1],0)/section.length;
+   b.prism(id,'weapon','rotor',w.width,section.map(([y,z])=>[y-cy,z-cz]),v(0,cy,cz),w.material,identity,tooth);
+   parts.at(-1)!.analyticPrism=true;
+  }
+  if(w.massKg!==undefined){
+   // Game balance estimate: cell masses place the center of mass on the bore axis.
+   // The model retains the configured rotor mass and the original SVG geometry.
+   const cells=parts.slice(first).map(p=>({p,c:partProperties(p).centre}));
+   let my=0,mz=0,yy=0,yz=0,zz=0;
+   for(const {p,c}of cells){my+=p.mass*c.y;mz+=p.mass*c.z;yy+=p.mass*c.y*c.y;yz+=p.mass*c.y*c.z;zz+=p.mass*c.z*c.z;}
+   const det=yy*zz-yz*yz,a=(-my*zz+mz*yz)/det,d=(-mz*yy+my*yz)/det;
+   for(const {p,c}of cells){const factor=1+a*c.y+d*c.z;if(!Number.isFinite(factor)||factor<=0)throw Error('SVG blade balance requires positive cell masses.');p.mass*=factor;}
+  }
   return;
  }
  if(w.type==='vertical_disc'||w.type==='hammer_saw'){

@@ -35,7 +35,15 @@ export type Bot={id:0|1;batteryFire?:{localPoint?:Vec,started:number,until:numbe
 export type SimOptions={recordVisuals?:boolean,seed?:number,practice?:boolean,hazards?:boolean,ai?:[boolean,boolean],difficulty?:Difficulty,condition?:Record<Slot,number>,allowDamaged?:boolean,autoUnstick?:boolean};
 export const AI_SETTINGS={easy:{delay:60,aim:15,ready:.4},medium:{delay:29,aim:7,ready:.6},hard:{delay:15,aim:2,ready:.75}};
 const groups=(membership:number,filter:number)=>(membership<<16)|filter;
-export function colliderDesc(p:Part){let d:RAPIER.ColliderDesc;if(p.shape.kind==='box'){const s=p.shape.size;d=RAPIER.ColliderDesc.cuboid(s.x/2,s.y/2,s.z/2);}else if(p.shape.kind==='cylinder')d=RAPIER.ColliderDesc.cylinder(p.shape.width/2,p.shape.radius);else{const hull=RAPIER.ColliderDesc.convexHull(new Float32Array(p.shape.vertices));if(!hull)throw Error('Invalid convex part: '+p.id);d=hull;}return d.setMass(p.mass).setContactSkin(.001).setTranslation(p.position.x,p.position.y,p.position.z).setRotation(p.rotation);}
+export function colliderDesc(p:Part){let d:RAPIER.ColliderDesc;if(p.shape.kind==='box'){const s=p.shape.size;d=RAPIER.ColliderDesc.cuboid(s.x/2,s.y/2,s.z/2);}else if(p.shape.kind==='cylinder')d=RAPIER.ColliderDesc.cylinder(p.shape.width/2,p.shape.radius);else{const hull=RAPIER.ColliderDesc.convexHull(new Float32Array(p.shape.vertices));if(!hull)throw Error('Invalid convex part: '+p.id);d=hull;}d.setMass(p.mass);
+ if(p.analyticPrism){
+  // Exact prism moments avoid float32 hull integration errors at narrow SVG edges.
+  const props=partProperties({...p,position:v(),rotation:identity}),centre=props.centre;
+  const ix=props.about(v(1,0,0),centre),iy=props.about(v(0,1,0),centre),iz=props.about(v(0,0,1),centre);
+  const yz=props.about(v(0,Math.SQRT1_2,Math.SQRT1_2),centre)-(iy+iz)/2,mean=(iy+iz)/2,split=Math.hypot((iy-iz)/2,yz);
+  d.setMassProperties(p.mass,centre,v(ix,mean+split,mean-split),axisQ(v(1,0,0),Math.atan2(2*yz,iy-iz)/2));
+ }
+ return d.setContactSkin(.001).setTranslation(p.position.x,p.position.y,p.position.z).setRotation(p.rotation);}
 export const protectedWeaponModule=(slot:Slot)=>slot==='weapon'||slot==='weapon_actuator';
 export function panelLoss(energy:number,resistance:number,hp:number){return Math.min(hp,Math.max(0,energy)/resistance);}
 // Rapier 0.19 keeps free angular velocity constant. Supply the missing Euler
