@@ -39,3 +39,5 @@ try{for(let t=0;t<1600;t++){if(t===300||t===1000)assert(sim.requestStrike(sim.bo
 const context=new Proxy({}, {get:()=>()=>{}});Object.assign(globalThis,{document:{createElement:()=>({getContext:()=>context})}});const renderer=Object.create(ArenaRenderer.prototype) as ArenaRenderer;
 for(const p of built.parts.filter(p=>p.id.startsWith('saw_'))){const mesh=renderer.part(p,c);assert([...mesh.geometry.getAttribute('position').array].every(Number.isFinite));renderer.disposeObject(mesh);}
 console.log('PASS Finite assembly geometry and disposal');
+
+const displayed=renderer.displayParts(c,built.parts),nose=displayed.filter(({p})=>p.id.startsWith('saw_nose_'));assert.equal(nose.length,2);assert(nose.every(({mesh})=>mesh.geometry.userData.continuousNose));for(const {mesh}of displayed){assert([...mesh.geometry.getAttribute('normal').array].every(Number.isFinite));renderer.disposeObject(mesh);}console.log('PASS Continuous nose skins follow both physical layers without internal render seams');

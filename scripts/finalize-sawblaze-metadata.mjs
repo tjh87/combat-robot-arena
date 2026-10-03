@@ -1,0 +1,11 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+const current=JSON.parse(execFileSync('node',['--import','tsx','--input-type=module','-e',"import {preset,compile} from './src/model.ts';const c=preset(8),b=compile(c);console.log(JSON.stringify({c,mass:b.mass,inertia:b.rotorInertia}))"],{encoding:'utf8'}));
+const path='src/model.ts',source=readFileSync(path,'utf8'),pattern=/parsed\.chassis\.equipmentMassKg=([\d.]+);/;
+if(!pattern.test(source))throw Error('The saved-stock migration allowance is absent.');
+writeFileSync(path,source.replace(pattern,'parsed.chassis.equipmentMassKg='+current.c.chassis.equipmentMassKg+';'));
+const specification=JSON.parse(readFileSync('handover/ROBOT_SPECIFICATIONS.json','utf8')),row=specification.robots.find(r=>r.profile==='sawblaze');
+Object.assign(row,{chassis:current.c.chassis,weapon:current.c.weapon,totalMassKg:current.mass,rotorInertiaKgM2:current.inertia,sourceCommit:process.env.GITHUB_SHA,geometryBasis:'Approved SVG proportions. Blade dimensions and internal mass balance are game estimates.'});
+row.weaponReference.note='Jamison Go specifies a 16-inch disc and 250 mph tips. The game uses an SVG-based radius estimate. Game RPM follows that radius and the referenced tip speed. The 30 lb disc mass excludes the separate arm.';
+writeFileSync('handover/ROBOT_SPECIFICATIONS.json',JSON.stringify(specification,null,2)+'\n');
+console.log('Final SawBlaze settings',JSON.stringify(current));

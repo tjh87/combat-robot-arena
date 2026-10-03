@@ -133,6 +133,21 @@ export function finishedGeometry(p:Part,c:BotConfig):THREE.BufferGeometry{
  const points=[];for(let i=0;i<s.vertices.length;i+=3)points.push(new THREE.Vector3(s.vertices[i],s.vertices[i+1],s.vertices[i+2]));return new ConvexGeometry(points);
 }
 
+
+// One continuous skin follows the exact union of the physical nose strips.
+export function sawblazeNoseGeometry(c:BotConfig,armour:boolean){
+ const thickness=armour?c.armour.find(a=>a.mount==='front')!.thickness:c.chassis.thickness,offset=armour?c.chassis.thickness/2+thickness/2:0,profile=sawblazeNoseProfile(c,offset),half=c.chassis.width*.44,pos:number[]=[],normals:number[]=[],uv:number[]=[];
+ const outer=profile.map((_,i)=>{const a=profile[Math.max(0,i-1)],b=profile[Math.min(profile.length-1,i+1)];return new THREE.Vector3(0,a[1]-b[1],b[0]-a[0]).normalize();}),left=new THREE.Vector3(-1,0,0),right=new THREE.Vector3(1,0,0);
+ const point=(i:number,side:number,skin:number)=>new THREE.Vector3(side*half,profile[i][0]+skin*thickness/2,profile[i][1]);
+ const quad=(p:THREE.Vector3[],n:THREE.Vector3[])=>{for(const ids of[[0,1,2],[0,2,3]]){const cross=p[ids[1]].clone().sub(p[ids[0]]).cross(p[ids[2]].clone().sub(p[ids[0]]));if(cross.dot(n[ids[0]])<0)ids.reverse();for(const id of ids){pos.push(p[id].x,p[id].y,p[id].z);normals.push(n[id].x,n[id].y,n[id].z);uv.push(0,0);}}};
+ for(let i=0;i<profile.length-1;i++){
+  const a=point(i,-1,1),b=point(i,1,1),d=point(i+1,-1,1),e=point(i+1,1,1),ai=point(i,-1,-1),bi=point(i,1,-1),di=point(i+1,-1,-1),ei=point(i+1,1,-1);
+  quad([a,b,e,d],[outer[i],outer[i],outer[i+1],outer[i+1]]);quad([ai,di,ei,bi],[outer[i].clone().negate(),outer[i+1].clone().negate(),outer[i+1].clone().negate(),outer[i].clone().negate()]);quad([a,d,di,ai],[left,left,left,left]);quad([b,bi,ei,e],[right,right,right,right]);
+ }
+ for(const i of[0,profile.length-1]){const n=new THREE.Vector3(0,0,i===0?1:-1);quad([point(i,-1,1),point(i,-1,-1),point(i,1,-1),point(i,1,1)],[n,n,n,n]);}
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(normals,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.userData.continuousNose=true;return g;
+}
+
 export function frontMarker(c:BotConfig,color:string){
  const g=new THREE.Group();g.name='front-direction';g.userData.frontMarker=true;
  const m=new THREE.MeshBasicMaterial({color,depthTest:false,depthWrite:false,side:THREE.DoubleSide,transparent:true,opacity:.94});

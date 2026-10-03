@@ -11,7 +11,7 @@ import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {buildFoundry,detailPart,hazardVisual,templateColor} from './visuals';
 import {rotorMotion,updateRotorMotion} from './combat-visuals';
 import {FlightLabel} from './flight-label';
-import {finishedGeometry,frontMarker,hugeWheelGeometry} from './finish-geometry';
+import {finishedGeometry,frontMarker,hugeWheelGeometry,sawblazeNoseGeometry} from './finish-geometry';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import {RULES,batteryPosition,clamp,SLOTS,MATERIALS,compile,bodyOrigin,povMount,povDirection,identity,rotate,add,v,type BotConfig,type Part,type Vec} from './model';
 import {Simulation,type VisualFrame} from './sim';
@@ -57,6 +57,9 @@ export class ArenaRenderer{
  displayParts(config:BotConfig,parts:Part[]){
   const out:{p:Part,mesh:THREE.Mesh}[]=[],wheels=new Map<string,Part[]>(),composite=config.drive.traction!=='tracks'&&['huge','hypershock'].includes(config.chassis.profile??'');
   for(const p of parts){if(p.id.startsWith('track_belt_')){out.push({p,mesh:trackMesh(p,config)});continue;}if(!p.collides&&p.module!=='battery')continue;
+  if(config.chassis.profile==='sawblaze'&&p.id.startsWith('saw_nose_')){
+   if(!p.id.endsWith('_0'))continue;const mesh=this.part(p,config);mesh.geometry.dispose();mesh.geometry=compactGeometry(sawblazeNoseGeometry(config,p.module==='armour_front'));out.push({p,mesh});continue;
+  }
   if(config.chassis.profile==='quantum'&&(p.id==='crusher_scoop'||p.id.startsWith('crusher_scoop_curve_')||p.id.startsWith('crusher_shoulder_'))){
    if(p.id.startsWith('crusher_scoop_curve_'))continue;
    const mesh=p.id==='crusher_scoop'?quantumScoop(config):quantumShoulder(config,p.position.x<0?-1:1),material=mesh.material;

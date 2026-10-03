@@ -298,6 +298,10 @@ export function detailPart(mesh:THREE.Mesh,p:Part,c:BotConfig){
  b.finish(mesh);
  if(c.chassis.profile==='sawblaze'&&isSawbladePart(p)&&p.tooth!==undefined)for(const child of mesh.children)if(child instanceof THREE.Mesh&&child.material instanceof THREE.MeshBasicMaterial)child.name='cutting-edge';
  if(c.chassis.profile==='sawblaze'){
+  if(/^saw_fork_-?[01]$/.test(p.id)){
+   const {element,ctx}=canvas(512,512);ctx.fillStyle=c.identity.secondary;ctx.fillRect(0,0,512,512);ctx.fillStyle='#17201a';ctx.beginPath();ctx.moveTo(132,496);ctx.bezierCurveTo(208,414,210,363,174,302);ctx.bezierCurveTo(250,336,268,372,250,428);ctx.bezierCurveTo(330,360,342,252,307,158);ctx.bezierCurveTo(421,242,427,352,356,434);ctx.bezierCurveTo(436,391,451,321,438,266);ctx.bezierCurveTo(505,366,421,448,449,496);ctx.closePath();ctx.fill();
+   const material=mesh.material as THREE.MeshPhysicalMaterial;material.map?.dispose();material.map=texture(element);material.color.set(0xffffff);material.roughness=.52;material.metalness=.08;material.clearcoat=.12;material.needsUpdate=true;mesh.userData.baseColor=0xffffff;mesh.userData.baseRoughness=material.roughness;
+  }
   if(p.id.startsWith('lid')||p.id.startsWith('armour_top')||p.id.startsWith('saw_nose_')){
    const material=mesh.material as THREE.MeshPhysicalMaterial;if(material.map){material.map.dispose();material.map=null;material.needsUpdate=true;}material.color.set('#202729');material.roughness=.40;material.metalness=.55;material.clearcoat=.18;mesh.userData.baseColor=material.color.getHex();mesh.userData.baseRoughness=material.roughness;
   }
