@@ -1,0 +1,36 @@
+name: SawBlaze browser evidence
+on:
+  push:
+    branches: [sawblaze-svg-browser-check]
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: node scripts/apply-approved-sawblaze.mjs
+      - run: node scripts/build.mjs
+      - name: Prepare cloud Chromium
+        run: |
+          npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2 --no-audit --no-fund
+          "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Exercise the built game through WebGL
+        run: |
+          node scripts/serve.mjs --port=4173 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID' EXIT
+          node tests/sawblaze-browser.mjs
+      - name: Preserve screenshots and browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sawblaze-browser-evidence
+          path: browser-evidence/
+          retention-days: 7
