@@ -181,8 +181,19 @@ export function extendedRotor(c:BotConfig,w:Spinner,parts:Part[]){
   b.put('hyper_disc_axle','weapon','rotor',{kind:'cylinder',radius:.028,width:w.width+.030},v(),'titanium',axisQ(v(0,0,1),Math.PI/2));
   return;
  }
+ if(w.type==='hammer_saw'&&c.chassis.profile==='sawblaze'){
+  // Reference hammer-saw blade. Same part ids and counts as the generic disc,
+  // so damage teeth, mass budgets and test hooks behave identically.
+  const teeth=[-.45,0,.45,Math.PI],segments=20;
+  for(let j=0;j<segments;j++){const a=j*2*Math.PI/segments,t=(j+1)*2*Math.PI/segments,oa=sawbladeOuter(R,w.toothDepth,a),ob=sawbladeOuter(R,w.toothDepth,t),ha=sawbladeHex(w.innerRadius,a),hb=sawbladeHex(w.innerRadius,t);
+   b.prism(j===0?'disc':'disc_'+j,'weapon','rotor',w.width,[[oa*Math.cos(a),oa*Math.sin(a)],[ob*Math.cos(t),ob*Math.sin(t)],[hb*Math.cos(t),hb*Math.sin(t)],[ha*Math.cos(a),ha*Math.sin(a)]],v(),w.material);}
+  b.put('disc_hub','weapon','rotor',{kind:'cylinder',radius:.041,width:w.width+.016},v(),w.material,axisQ(v(0,0,1),Math.PI/2));
+  for(let j=0;j<4;j++)b.box('disc_spoke_'+j,'weapon','rotor',v(w.width,.024,ro*1.75),v(),w.material,axisQ(v(1,0,0),j*Math.PI/4));
+  teeth.forEach((a,i)=>{const r=sawbladeOuter(R,w.toothDepth,a)-0.018;b.put('tooth_'+i,'weapon','rotor',chiselShape(v(w.toothWidth,w.toothDepth,w.toothHeight)),v(0,r*Math.cos(a),r*Math.sin(a)),w.material,axisQ(v(1,0,0),a),i);});
+  return;
+ }
  if(w.type==='vertical_disc'||w.type==='hammer_saw'){
-  b.ring('disc',  if(w.type==='vertical_disc'…'weapon','rotor',ro,w.innerRadius,w.width,v(),w.material,20);
+  b.ring('disc', 'weapon','rotor',ro,w.innerRadius,w.width,v(),w.material,20);
   b.put('disc_hub','weapon','rotor',{kind:'cylinder',radius:.041,width:w.width+.016},v(),w.material,axisQ(v(0,0,1),Math.PI/2));
   for(let j=0;j<4;j++)b.box('disc_spoke_'+j,'weapon','rotor',v(w.width,.024,ro*1.75),v(),w.material,axisQ(v(1,0,0),j*Math.PI/4));
  }else if(w.type==='vertical_bar'){
