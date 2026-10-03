@@ -21,7 +21,7 @@ export function sawblazeSweepClearance(c:BotConfig,parts:Part[],diagnostic?:Reco
    polygons.push(hull(points.map(p=>[p.y,p.z])));ids.push(p.id+'@'+angle);
   }
  }
- let clearance=Infinity;const travel=w.armTravel??1.12,step=travel/240;
- for(let i=0;i<=240;i++){const center=add(w.mount,rotate(armOffset(w),axisQ(v(1,0,0),-i*step)));for(let j=0;j<polygons.length;j++){const value=polygonDistance([center.y,center.z],polygons[j])-w.radius;if(value<clearance){clearance=value;if(diagnostic)Object.assign(diagnostic,{part:ids[j],angle:-i*step,center,value,polygon:polygons[j]});}}}
+ let clearance=Infinity;const travel=w.armTravel??1.12,step=Math.PI/720;
+ for(let i=0;i<=720;i++){const angle=-travel+i*step,center=add(w.mount,rotate(armOffset(w),axisQ(v(1,0,0),angle)));for(let j=0;j<polygons.length;j++){const value=polygonDistance([center.y,center.z],polygons[j])-w.radius;if(value<clearance){clearance=value;if(diagnostic)Object.assign(diagnostic,{part:ids[j],angle,center,value,polygon:polygons[j]});}}}
  return clearance-(w.armLength??.55)*step;
 }

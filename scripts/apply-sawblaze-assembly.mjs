@@ -43,6 +43,7 @@ edit('src/model.ts',s=>{
  s="import {sawblazeSweepClearance} from './sawblaze-geometry';\n"+s;
  s=replace(s,'templateParts,extendedRotor','templateParts,sawblazeFrontParts,extendedRotor');
  s=replace(s,"mount:v(0,.115,.115),armLength:.50","mount:v(0,.088,-.045),armLength:.50");
+ s=replace(s,"if(index===8)c.weapon.radius=.2032;","if(index===8)c.weapon.radius=.18;");
  s=replace(s,"else box('end'+side,'chassis'","else if(ch.profile!=='sawblaze'||side!==-1)box('end'+side,'chassis'");
  s=replace(s,"else box('armour_'+a.mount,('armour_'+a.mount)","else if(ch.profile==='sawblaze'&&a.mount==='front')sawblazeFrontParts(c,parts,'armour_front',t,a.material);else box('armour_'+a.mount,('armour_'+a.mount)");
  s=replace(s," if(w.type==='hammer_saw'&&H/2+ch.clearance", " if(w.type==='hammer_saw'&&ch.profile==='sawblaze'&&sawblazeSweepClearance(c,parts)<.002)err('weapon.mount','The complete blade sweep must clear the chassis and front forks.');\n if(w.type==='hammer_saw'&&H/2+ch.clearance");
@@ -51,7 +52,8 @@ edit('src/model.ts',s=>{
 // Migrate only the saved default geometry and its unchanged hardware allowance.
 const newEquipment=Number(execFileSync('node',['--import','tsx','--input-type=module','-e',"import {preset} from './src/model.ts';console.log(preset(8).chassis.equipmentMassKg)"],{encoding:'utf8'}).trim());
 edit('src/model.ts',s=>replace(s,' // Keep saved stock builds compatible',` if(parsed.chassis.profile==='sawblaze'&&parsed.weapon.type==='hammer_saw'&&Math.abs(parsed.chassis.length-.52)<1e-6&&Math.abs(parsed.chassis.width-.47)<1e-6&&Math.abs(parsed.weapon.radius-.2032)<1e-6&&Math.abs(parsed.weapon.armLength!-.50)<1e-6&&Math.abs(parsed.weapon.mount.y-.115)<1e-6&&Math.abs(parsed.weapon.mount.z-.115)<1e-6){
-  parsed.weapon.mount=v(parsed.weapon.mount.x,.088,-.045);
+  parsed.weapon.mount=v(parsed.weapon.mount.x,.088,-.045);parsed.weapon.radius=.18;
+  if(Math.abs(parsed.weapon.rpm-5252)<1e-6&&Math.abs(parsed.weapon.ratio-1.7952344685017951)<1e-6){parsed.weapon.rpm=referenceRPM(WEAPON_REFERENCES.sawblaze,.18,RULES.tip);parsed.weapon.ratio=Math.min(parsed.weapon.ratio,48*MOTORS[parsed.weapon.motor].kv/(parsed.weapon.rpm*1.12));}
   if(Math.abs((parsed.chassis.equipmentMassKg??-1)-${oldEquipment})<1e-6)parsed.chassis.equipmentMassKg=${newEquipment};
  }
  // Keep saved stock builds compatible`));

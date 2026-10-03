@@ -33,7 +33,7 @@ assert.notEqual(replay.getObjectByName('rotor-motion')!.userData.exposureAngle,m
 for(const group of[root,replay])group.traverse(o=>{if(o instanceof THREE.Mesh){disposeSawbladeExposure(o.material as THREE.Material);(o.material as THREE.Material).dispose();}});motion.children.forEach(o=>(o as THREE.Mesh).geometry.dispose());
 console.log('PASS RPM-based exposure, full high-speed blur, reverse direction, reduced motion, stop and replay state');
 
-const old=structuredClone(c);assert(old.weapon.type==='hammer_saw');old.weapon.mount=v(0,.115,.115);assert.deepEqual(compile(old).errors,[],'The saved default pivot migrates to the approved assembly.');
+const old=structuredClone(c);assert(old.weapon.type==='hammer_saw');old.weapon.mount=v(0,.115,.115);old.weapon.radius=.2032;old.weapon.rpm=5252;old.weapon.ratio=1.7952344685017951;assert.deepEqual(compile(old).errors,[],'The saved default pivot migrates to the approved assembly.');
 await initializePhysics();const sim=new Simulation([c,preset(0)],{practice:true,hazards:false,ai:[false,false],autoUnstick:false});
 try{for(let t=0;t<1600;t++){if(t===300||t===1000)assert(sim.requestStrike(sim.bots[0]));sim.step([{...neutral(),weapon:t===0},neutral()]);assert.equal(sim.fault,undefined);assert(sim.bots[0].flipWork<=1300.001);}assert(sim.bots[0].rpm>200);assert(Math.abs(sim.bots[0].flipAngle)<.075);console.log('PASS Real Rapier spins, strikes twice, returns and respects the arm work budget',JSON.stringify({rpm:sim.bots[0].rpm,angle:sim.bots[0].flipAngle}));}finally{sim.dispose();}
 const context=new Proxy({}, {get:()=>()=>{}});Object.assign(globalThis,{document:{createElement:()=>({getContext:()=>context})}});const renderer=Object.create(ArenaRenderer.prototype) as ArenaRenderer;
