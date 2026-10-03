@@ -38,7 +38,7 @@ edit('src/visuals.ts',source=>{
   const face=mesh.material as THREE.MeshPhysicalMaterial;
   face.color.set('#16191a');face.metalness=.78;face.roughness=.36;face.clearcoat=.18;
   mesh.userData.baseColor=face.color.getHex();mesh.userData.baseRoughness=face.roughness;
-  const edge=new THREE.MeshPhysicalMaterial({color:'#3ca916',metalness:.08,roughness:.55}),rim=glow('#7ce254');
+  const edge=new THREE.MeshPhysicalMaterial({color:'#3ca916',metalness:.08,roughness:.55,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),rim=glow('#7ce254');
   const half=c.weapon.width/2,boundary=sawbladeBoundary(p,c.weapon.radius);
   for(const [a,z]of boundary){
    const vertices=[-half,a.x,a.y,half,a.x,a.y,half,z.x,z.y,-half,a.x,a.y,half,z.x,z.y,-half,z.x,z.y];
