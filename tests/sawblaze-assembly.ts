@@ -9,6 +9,7 @@ import {ArenaRenderer} from '../src/render';
 import {disposeSawbladeExposure} from '../src/sawblaze-blur';
 
 const c=preset(8),w=c.weapon;assert(w.type==='hammer_saw');const built=compile(c);
+const diagnostic={};console.log('Sweep diagnostics',JSON.stringify({config:w,clearance:sawblazeSweepClearance(c,built.parts,diagnostic),diagnostic}));
 assert.deepEqual(built.errors,[]);assert.equal(canonical(decodeBuild(encodeBuild(c))),canonical(c));assert(Math.abs(built.mass-113.2)<1e-8);
 assert(sawbladeContours(w.radius)[0][27].y<0,'The broad hammer flank faces forward.');
 const clearance=sawblazeSweepClearance(c,built.parts);assert(clearance>.002,'The full rotating envelope clears this robot throughout its normal stroke.');
