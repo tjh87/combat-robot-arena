@@ -31,7 +31,7 @@ export function sawbladeBoundary(p:Part,radius:number){
  const vertices=p.shape.vertices,n=vertices.length/6,contours=sawbladeContours(radius),edges:[Vector2,Vector2][]=[];
  for(let i=0;i<n;i++){
   const j=(i+1)%n,a=new Vector2(vertices[i*3+1],vertices[i*3+2]),b=new Vector2(vertices[j*3+1],vertices[j*3+2]);
-  if(contours.some(list=>list.some((q,k)=>{const r=list[(k+1)%list.length];return a.distanceTo(q)<1e-9&&b.distanceTo(r)<1e-9||a.distanceTo(r)<1e-9&&b.distanceTo(q)<1e-9;})))edges.push([a,b]);
+  if(contours.some(list=>list.some((q,k)=>{const r=list[(k+1)%list.length];const aa=a.clone().add(new Vector2(p.position.y,p.position.z)),bb=b.clone().add(new Vector2(p.position.y,p.position.z));return aa.distanceTo(q)<1e-9&&bb.distanceTo(r)<1e-9||aa.distanceTo(r)<1e-9&&bb.distanceTo(q)<1e-9;})))edges.push([a,b]);
  }
  return edges;
 }

@@ -21,6 +21,11 @@ jobs:
           git fetch origin main
           test "$(git rev-parse origin/main)" = 1e844f44827b975bb9a5268c4587c4abd588bb20
       - run: npm ci --no-audit --no-fund
+      - name: Compare the original arm and mass-moment behavior
+        continue-on-error: true
+        env:
+          CRA_TEST_FILTER: "mass moments|Hammer-saw"
+        run: node --import tsx tests/roster.ts
       - name: Apply the approved source changes in the cloud
         run: node scripts/apply-approved-sawblaze.mjs
       - name: Build and offline package checks
@@ -40,6 +45,10 @@ jobs:
           node --import tsx tests/collision.ts
       - name: Publish the tested source to main
         run: |
+          git status --short
+          git diff --check
+          git diff -- src/mechanisms.ts src/finish-geometry.ts src/visuals.ts tests/blades-update.ts
+          git log --oneline -10
           git rm scripts/apply-approved-sawblaze.mjs .github/workflows/approved-sawblaze-cloud.yml
           git add src/sawblade-profile.ts src/mechanisms.ts src/finish-geometry.ts src/visuals.ts tests/sawblaze-svg.ts tests/blades-update.ts
           git -c user.name=tjh87 -c user.email=2867835+tjh87@users.noreply.github.com commit -m "Replace SawBlaze approximation with approved SVG blade"

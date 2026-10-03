@@ -13,7 +13,9 @@ edit('src/mechanisms.ts',source=>{
   let sector=0;
   for(const {section,tooth}of sawbladeTriangles(R)){
    const id=tooth===undefined?(sector++===0?'disc':'disc_'+(sector-1)):'tooth_'+tooth;
-   b.prism(id,'weapon','rotor',w.width,section,v(),w.material,identity,tooth);
+   // Center each hull locally to preserve Rapier precision at small SVG edges.
+   const cy=section.reduce((sum,p)=>sum+p[0],0)/3,cz=section.reduce((sum,p)=>sum+p[1],0)/3;
+   b.prism(id,'weapon','rotor',w.width,section.map(([y,z])=>[y-cy,z-cz]),v(0,cy,cz),w.material,identity,tooth);
   }
   return;
  }
