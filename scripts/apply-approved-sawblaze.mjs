@@ -3,6 +3,7 @@ import {readFileSync,writeFileSync} from 'node:fs';
 function edit(path,fn){const before=readFileSync(path,'utf8'),after=fn(before);if(before===after)throw Error('No source change: '+path);writeFileSync(path,after);}
 function replace(source,before,after){if(!source.includes(before))throw Error('Source differs from the reviewed revision: '+before.slice(0,100));return source.replace(before,after);}
 edit('src/mechanisms.ts',source=>{
+ source=replace(source,'MATERIALS,chiselShape','MATERIALS,partProperties,chiselShape');
  source="import {sawbladeCells} from './sawblade-profile';\n"+source;
  const start=source.indexOf('// SawBlaze hammer-saw blade outline'),end=source.indexOf('export function templateParts',start);
  if(start<0||end<start)throw Error('Missing old radial profile');source=source.slice(0,start)+source.slice(end);
@@ -10,13 +11,22 @@ edit('src/mechanisms.ts',source=>{
  if(startBranch<0||endBranch<startBranch)throw Error('Missing old SawBlaze assembly');
  return source.slice(0,startBranch)+` if(w.type==='hammer_saw'&&c.chassis.profile==='sawblaze'){
   // Convex prisms share the approved SVG surface and both holes.
-  let sector=0;
+  const first=parts.length;let sector=0;
   for(const {section,tooth}of sawbladeCells(R)){
    const id=tooth===undefined?(sector++===0?'disc':'disc_'+(sector-1)):'tooth_'+tooth;
    // Center each hull locally to preserve Rapier precision at small SVG edges.
    const cy=section.reduce((sum,p)=>sum+p[0],0)/section.length,cz=section.reduce((sum,p)=>sum+p[1],0)/section.length;
    b.prism(id,'weapon','rotor',w.width,section.map(([y,z])=>[y-cy,z-cz]),v(0,cy,cz),w.material,identity,tooth);
    parts.at(-1)!.analyticPrism=true;
+  }
+  if(w.massKg!==undefined){
+   // Game balance estimate: cell masses place the center of mass on the bore axis.
+   // The model retains the configured rotor mass and the original SVG geometry.
+   const cells=parts.slice(first).map(p=>({p,c:partProperties(p).centre}));
+   let my=0,mz=0,yy=0,yz=0,zz=0;
+   for(const {p,c}of cells){my+=p.mass*c.y;mz+=p.mass*c.z;yy+=p.mass*c.y*c.y;yz+=p.mass*c.y*c.z;zz+=p.mass*c.z*c.z;}
+   const det=yy*zz-yz*yz,a=(-my*zz+mz*yz)/det,d=(-mz*yy+my*yz)/det;
+   for(const {p,c}of cells){const factor=1+a*c.y+d*c.z;if(!Number.isFinite(factor)||factor<=0)throw Error('SVG blade balance requires positive cell masses.');p.mass*=factor;}
   }
   return;
  }
