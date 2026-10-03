@@ -14,16 +14,19 @@ assert(!compiled.parts.some(p=>p.id==='disc_hub'||p.id.startsWith('disc_spoke_')
 assert.equal(contours[0].length,103);
 assert.equal(contours.length,3);
 assert(Math.abs(Math.max(...contours[0].map(p=>p.length()))-w.radius)<1e-12);
-function integrals(points:THREE.Vector2[]){let area=0,polar=0;for(let i=0;i<points.length;i++){const a=points[i],b=points[(i+1)%points.length],d=a.x*b.y-b.x*a.y;area+=d/2;polar+=d*(a.x*a.x+a.x*b.x+b.x*b.x+a.y*a.y+a.y*b.y+b.y*b.y)/12;}return{area:Math.abs(area),polar:Math.abs(polar)};}
+function integrals(points:THREE.Vector2[]){let area=0,polar=0,my=0,mz=0;for(let i=0;i<points.length;i++){const a=points[i],b=points[(i+1)%points.length],d=a.x*b.y-b.x*a.y;area+=d/2;my+=d*(a.x+b.x)/6;mz+=d*(a.y+b.y)/6;polar+=d*(a.x*a.x+a.x*b.x+b.x*b.x+a.y*a.y+a.y*b.y+b.y*b.y)/12;}return{area:Math.abs(area),polar:Math.abs(polar),cy:my/area,cz:mz/area};}
 const [outer,...holes]=contours.map(integrals),area=outer.area-holes.reduce((s,h)=>s+h.area,0),polar=outer.polar-holes.reduce((s,h)=>s+h.polar,0),density=MATERIALS[w.material].density;
 const bladeMass=blade.reduce((s,p)=>s+p.mass,0),inertia=blade.reduce((s,p)=>s+partProperties(p).about(v(1,0,0)),0);
 const expectedMass=w.massKg??area*w.width*density,effectiveDensity=expectedMass/(area*w.width);
 assert(Math.abs(bladeMass-expectedMass)<1e-8);
-assert(Math.abs(inertia-polar*w.width*effectiveDensity)<1e-10);
+let expectedInertia=0,firstY=0,firstZ=0;
+for(const p of blade){assert(p.shape.kind==='hull');const n=p.shape.vertices.length/6,polygon=Array.from({length:n},(_,i)=>new THREE.Vector2(p.position.y+p.shape.vertices[i*3+1],p.position.z+p.shape.vertices[i*3+2])),value=integrals(polygon);expectedInertia+=value.polar*p.mass/value.area;firstY+=p.mass*value.cy;firstZ+=p.mass*value.cz;}
+assert(Math.abs(inertia-expectedInertia)<1e-10);
+assert(Math.hypot(firstY,firstZ)/bladeMass<1e-10,'The blade center of mass must coincide with its bore axis.');
 const unweighted=structuredClone(config);assert(unweighted.weapon.type==='hammer_saw');delete unweighted.weapon.massKg;
 assert(Math.abs(compile(unweighted).parts.filter(isSawbladePart).reduce((s,p)=>s+p.mass,0)-area*w.width*density)<1e-8);
 assert(Math.abs(compiled.rotorInertia-inertia)<1e-10);
-console.log('PASS SVG polygon area, mass, inertia, radius, tooth identities and build import',JSON.stringify({parts:blade.length,massKg:bladeMass,inertiaKgM2:inertia,energyKJ:inertia*(w.rpm*Math.PI/30)**2/2000}));
+console.log('PASS SVG polygon area, mass, inertia, radius, tooth identities and build import',JSON.stringify({parts:blade.length,massKg:bladeMass,inertiaKgM2:inertia,balanceOffsetM:Math.hypot(firstY,firstZ)/bladeMass,energyKJ:inertia*(w.rpm*Math.PI/30)**2/2000}));
 
 await initializePhysics();
 const world=new RAPIER.World(v());
