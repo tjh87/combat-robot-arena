@@ -35,6 +35,21 @@ export function racerWheelParts(c:BotConfig,id:string,slot:Slot,position:Vec,par
  for(let j=0;j<5;j++)b.box(id+'_spoke_'+j,slot,id,v(.016,r*.13,r*.70),add(position,v(0,Math.sin(j*Math.PI*2/5)*r*.36,Math.cos(j*Math.PI*2/5)*r*.36)),'aluminium7075',axisQ(v(1,0,0),-j*Math.PI*2/5));
  b.put(id+'_hub',slot,id,{kind:'cylinder',radius:r*.23,width:.055},position,'aluminium7075',axisQ(v(0,0,1),Math.PI/2));
 }
+// SawBlaze hammer-saw blade outline (reference silhouette). The outer radius
+// carries three saw teeth on one flank, a broad hammer head opposite, a
+// shallow crown notch and a lower spike; the bore is hexagonal. Physics,
+// finish geometry and cosmetic detail share these helpers, so all three agree.
+export function sawbladeOuter(radius:number,toothDepth:number,a:number){
+ const ro=radius-toothDepth;
+ const norm=(x:number)=>{while(x>Math.PI)x-=2*Math.PI;while(x<-Math.PI)x+=2*Math.PI;return x;};
+ const bump=(centre:number,halfWidth:number)=>Math.max(0,1-Math.abs(norm(a-centre))/halfWidth);
+ const r=ro+0.030*Math.min(1,bump(Math.PI,.62)*1.15)+0.030*bump(0,.20)+0.026*bump(.44,.17)+0.026*bump(-.44,.17)+0.020*bump(-Math.PI/2,.13)-0.012*bump(Math.PI/2,.10);
+ return Math.min(ro+0.030,Math.max(ro-0.012,r));
+}
+export function sawbladeHex(innerRadius:number,a:number){
+ const s=Math.PI/3,t=((a%s)+s)%s;
+ return innerRadius*0.8660254/Math.cos(t-s/2);
+}
 export function templateParts(c:BotConfig,parts:Part[]){
  const b=writer(parts),p=c.chassis.profile,w=c.weapon,L=c.chassis.length,W=c.chassis.width,H=c.chassis.height,floor=-H/2-c.chassis.clearance,top=H/2;
  const fork=(id:string,x:number,front:number,rear:number,width=.065,height=.07,mat:Material='hardox')=>{const tip=p==='hydra'?HYDRA_TIP:WEDGE_TIP;return b.prism(id,'chassis','chassis',width,[[floor+tip.clearance,front],[floor+height-.009,rear],[floor+height,rear],[floor+tip.clearance+tip.thickness,front]],v(x,0,0),mat);};
@@ -167,7 +182,7 @@ export function extendedRotor(c:BotConfig,w:Spinner,parts:Part[]){
   return;
  }
  if(w.type==='vertical_disc'||w.type==='hammer_saw'){
-  b.ring('disc', 'weapon','rotor',ro,w.innerRadius,w.width,v(),w.material,20);
+  b.ring('disc',  if(w.type==='vertical_disc'…'weapon','rotor',ro,w.innerRadius,w.width,v(),w.material,20);
   b.put('disc_hub','weapon','rotor',{kind:'cylinder',radius:.041,width:w.width+.016},v(),w.material,axisQ(v(0,0,1),Math.PI/2));
   for(let j=0;j<4;j++)b.box('disc_spoke_'+j,'weapon','rotor',v(w.width,.024,ro*1.75),v(),w.material,axisQ(v(1,0,0),j*Math.PI/4));
  }else if(w.type==='vertical_bar'){
