@@ -13,8 +13,28 @@ const centre=[569.7902235243056,417.8142426215278];
 const pixelRadius=Math.max(...SAWBLADE_PIXELS[0].map(([x,y])=>Math.hypot(x-centre[0],y-centre[1])));
 export function sawbladeContours(radius:number){return SAWBLADE_PIXELS.map(list=>list.map(([x,y])=>new Vector2((centre[1]-y)*radius/pixelRadius,(centre[0]-x)*radius/pixelRadius)));}
 export function isSawbladePart(p:Part){return p.body==='rotor'&&/^(disc(?:_\d+)?|tooth_\d+)$/.test(p.id);}
-export function sawbladeTriangles(radius:number){
- const contours=sawbladeContours(radius),points=contours.flat(),faces=ShapeUtils.triangulateShape(contours[0],contours.slice(1));
+// Merge only adjacent cells whose union remains convex. The union preserves
+// every boundary point and never spans an opening or a concave notch.
+function convexCells(triangles:number[][],points:Vector2[]){
+ const cells=triangles.map(face=>[...face]),tips=[88,74,64,27];let changed=true;
+ while(changed){changed=false;
+  search:for(let i=0;i<cells.length;i++)for(let j=i+1;j<cells.length;j++){
+   const a=cells[i],b=cells[j];if(a.length+b.length-2>16)continue;
+   for(let ai=0;ai<a.length;ai++)for(let bj=0;bj<b.length;bj++){
+    if(a[ai]!==b[(bj+1)%b.length]||a[(ai+1)%a.length]!==b[bj])continue;
+    const merged=Array.from({length:a.length},(_,k)=>a[(ai+1+k)%a.length]);
+    for(let k=2;k<b.length;k++)merged.push(b[(bj+k)%b.length]);
+    if(tips.filter(t=>merged.includes(t)).length>1)continue;
+    const turns=merged.map((index,k)=>{const p=points[index],q=points[merged[(k+1)%merged.length]],r=points[merged[(k+2)%merged.length]];return(q.x-p.x)*(r.y-q.y)-(q.y-p.y)*(r.x-q.x);});
+    if(!turns.every(t=>t>=-1e-14)&&!turns.every(t=>t<=1e-14))continue;
+    cells[i]=merged;cells.splice(j,1);changed=true;break search;
+   }
+  }
+ }
+ return cells;
+}
+export function sawbladeCells(radius:number){
+ const contours=sawbladeContours(radius),points=contours.flat(),faces=convexCells(ShapeUtils.triangulateShape(contours[0],contours.slice(1)),points);
  // The four authored protrusions carry the existing contact tooth identities.
  // No extra cutters, solid hub, or spokes cover either SVG opening.
  const teeth=new Map<number,number>();
@@ -31,7 +51,7 @@ export function sawbladeBoundary(p:Part,radius:number){
  const vertices=p.shape.vertices,n=vertices.length/6,contours=sawbladeContours(radius),edges:[Vector2,Vector2][]=[];
  for(let i=0;i<n;i++){
   const j=(i+1)%n,a=new Vector2(vertices[i*3+1],vertices[i*3+2]),b=new Vector2(vertices[j*3+1],vertices[j*3+2]);
-  if(contours.some(list=>list.some((q,k)=>{const r=list[(k+1)%list.length];return a.distanceTo(q)<1e-9&&b.distanceTo(r)<1e-9||a.distanceTo(r)<1e-9&&b.distanceTo(q)<1e-9;})))edges.push([a,b]);
+  if(contours.some(list=>list.some((q,k)=>{const r=list[(k+1)%list.length];const aa=a.clone().add(new Vector2(p.position.y,p.position.z)),bb=b.clone().add(new Vector2(p.position.y,p.position.z));return aa.distanceTo(q)<1e-9&&bb.distanceTo(r)<1e-9||aa.distanceTo(r)<1e-9&&bb.distanceTo(q)<1e-9;})))edges.push([a,b]);
  }
  return edges;
 }

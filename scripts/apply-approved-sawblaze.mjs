@@ -3,17 +3,19 @@ import {readFileSync,writeFileSync} from 'node:fs';
 function edit(path,fn){const before=readFileSync(path,'utf8'),after=fn(before);if(before===after)throw Error('No source change: '+path);writeFileSync(path,after);}
 function replace(source,before,after){if(!source.includes(before))throw Error('Source differs from the reviewed revision: '+before.slice(0,100));return source.replace(before,after);}
 edit('src/mechanisms.ts',source=>{
- source="import {sawbladeTriangles} from './sawblade-profile';\n"+source;
+ source="import {sawbladeCells} from './sawblade-profile';\n"+source;
  const start=source.indexOf('// SawBlaze hammer-saw blade outline'),end=source.indexOf('export function templateParts',start);
  if(start<0||end<start)throw Error('Missing old radial profile');source=source.slice(0,start)+source.slice(end);
  const startBranch=source.indexOf(" if(w.type==='hammer_saw'&&c.chassis.profile==='sawblaze'){"),endBranch=source.indexOf(" if(w.type==='vertical_disc'||w.type==='hammer_saw'){",startBranch);
  if(startBranch<0||endBranch<startBranch)throw Error('Missing old SawBlaze assembly');
  return source.slice(0,startBranch)+` if(w.type==='hammer_saw'&&c.chassis.profile==='sawblaze'){
-  // Convex triangular prisms share the approved SVG surface and both holes.
+  // Convex prisms share the approved SVG surface and both holes.
   let sector=0;
-  for(const {section,tooth}of sawbladeTriangles(R)){
+  for(const {section,tooth}of sawbladeCells(R)){
    const id=tooth===undefined?(sector++===0?'disc':'disc_'+(sector-1)):'tooth_'+tooth;
-   b.prism(id,'weapon','rotor',w.width,section,v(),w.material,identity,tooth);
+   // Center each hull locally to preserve Rapier precision at small SVG edges.
+   const cy=section.reduce((sum,p)=>sum+p[0],0)/section.length,cz=section.reduce((sum,p)=>sum+p[1],0)/section.length;
+   b.prism(id,'weapon','rotor',w.width,section.map(([y,z])=>[y-cy,z-cz]),v(0,cy,cz),w.material,identity,tooth);
   }
   return;
  }
