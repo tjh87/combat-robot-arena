@@ -297,6 +297,15 @@ export function detailPart(mesh:THREE.Mesh,p:Part,c:BotConfig){
  }
  b.finish(mesh);
  if(c.chassis.profile==='sawblaze'&&isSawbladePart(p)&&p.tooth!==undefined)for(const child of mesh.children)if(child instanceof THREE.Mesh&&child.material instanceof THREE.MeshBasicMaterial)child.name='cutting-edge';
+ if(c.chassis.profile==='sawblaze'){
+  if(p.id.startsWith('lid')||p.id.startsWith('armour_top')||p.id.startsWith('saw_nose_')){
+   const material=mesh.material as THREE.MeshPhysicalMaterial;if(material.map){material.map.dispose();material.map=null;material.needsUpdate=true;}material.color.set('#202729');material.roughness=.40;material.metalness=.55;material.clearcoat=.18;mesh.userData.baseColor=material.color.getHex();mesh.userData.baseRoughness=material.roughness;
+  }
+  if(p.id.startsWith('saw_cheek_')){
+   const {element,ctx}=canvas(512,128);ctx.clearRect(0,0,512,128);ctx.textAlign='center';ctx.fillStyle='#e2cc62';ctx.font='900 88px Arial';ctx.fillText('VEX',256,82);ctx.font='700 20px Arial';ctx.fillText('ROBOTICS',256,113);
+   const side=p.position.x<0?-1:1,graphic=new THREE.Mesh(new THREE.PlaneGeometry(.14,.044),new THREE.MeshPhysicalMaterial({map:texture(element),transparent:true,depthWrite:false,roughness:.4,metalness:.2}));graphic.rotation.y=side*Math.PI/2;graphic.position.set(side*.0062,c.chassis.height*.12,c.chassis.length*.09);graphic.userData.paint=true;graphic.name='sawblaze-cheek-nameplate';mesh.add(graphic);
+  }
+ }
  // Dispose unused factory materials; only the merged meshes own used ones.
  const used=new Set(mesh.children.filter(o=>o instanceof THREE.Mesh).flatMap(o=>Array.isArray((o as THREE.Mesh).material)?(o as THREE.Mesh).material:[(o as THREE.Mesh).material]));
  for(const m of[bright,black,accent,gold])if(!used.has(m))m.dispose();
