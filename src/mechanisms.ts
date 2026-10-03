@@ -52,3 +52,103 @@ export function sawbladeHex(innerRadius:number,a:number){
 }
 export function templateParts(c:BotConfig,parts:Part[]){
  const b=writer(parts),p=c.chassis.profile,w=c.weapon,L=c.chassis.length,W=c.chassis.width,H=c.chassis.height,floor=-H/2-c.chassis.clearance,top=H/2;
+ const fork=(id:string,x:number,front:number,rear:number,width=.065,height=.07,mat:Material='hardox')=>{const tip=p==='hydra'?HYDRA_TIP:WEDGE_TIP;return b.prism(id,'chassis','chassis',width,[[floor+tip.clearance,front],[floor+height-.009,rear],[floor+height,rear],[floor+tip.clearance+tip.thickness,front]],v(x,0,0),mat);};
+ // A thin triangular plate presents a floor-level edge to a sideways sweep.
+ // Its inner rear corner rises into the existing scoop; the side is a ramp,
+ // not the vertical end face of an extruded front wedge.
+ const sideRamps=(id:string,inner:number,width:number,front:number,rear:number,height:number,mat:Material)=>{
+  const tip=p==='hydra'?HYDRA_TIP:WEDGE_TIP;
+  for(const side of[-1,1]){
+   const vertices:number[]=[];
+   for(const lift of[0,tip.thickness])for(const[x,y,z]of[[side*inner,floor+tip.clearance,front],[side*inner,floor+height,rear],[side*(inner+width),floor+tip.clearance,rear]])vertices.push(x,y+lift,z);
+   b.put(id+'_'+side,'chassis','chassis',{kind:'hull',vertices,volume:width*(rear-front)*tip.thickness/2},v(),mat);
+  }
+ };
+ if(p==='minotaur'){
+  for(const side of[-1,1]){const x=side*(W/2+c.drive.width+.024);b.prism('drum_guard_'+side,'chassis','chassis',.012,[[floor+.008,-L*.61],[floor+.008,L*.43],[top-.01,L*.43],[top+.015,-L*.3]],v(x,0,0),'aluminium7075');}
+ }
+ if(p==='quantum'){
+  const section=quantumScoopSection(c);
+  for(let i=0;i<section.length-1;i++){
+   const [a,d]=[section[i],section[i+1]];
+   b.prism(i?'crusher_scoop_curve_'+i:'crusher_scoop','chassis','chassis',W+.08,[[a[1],a[0]],[d[1],d[0]],[d[1]+.004,d[0]],[a[1]+.004,a[0]]],v(),'hardox');
+  }
+  sideRamps('crusher_scoop_side',(W+.08)/2,.10,-.68,-.50,.058,'hardox');
+  for(const side of[-1,1]){
+   b.prism('crusher_shoulder_'+side,'chassis','chassis',.010,[[floor+.012,-.56],[top+.20,-.17],[top+.18,.12],[floor+.018,.23]],v(side*W*.40,0,0),'aluminium7075');
+   b.tube('crusher_ram_'+side,'weapon_actuator','chassis',v(side*.14,top,.23),v(side*.14,top+.20,.02),.026,'aluminium7075');
+  }
+ }
+ if(p==='hydra'){
+  sideRamps('flipper_fang_side',W*.30+3*.043+.019,.10,-.66,-.50,.030,'titanium');
+  for(const side of[-1,1])for(let j=0;j<4;j++){const mount=groundForkMount(c,side,j),rear=-L/2+.035;
+   b.prism('flipper_fang_'+side+'_'+j,'chassis','ground_fork_'+side+'_'+j,.038,[[floor+HYDRA_TIP.clearance,-.66],[floor+.071,rear],[floor+.08,rear],[floor+HYDRA_TIP.clearance+HYDRA_TIP.thickness,-.66]],v(0,-mount.y,-mount.z),'titanium');
+  }
+ }
+ if(p==='icewave'&&w.type==='horizontal_bar'){
+  // Stationary engine cowl above the rotating bar, with a central bearing.
+  const r=.17,bevel=.043,outline=[[-r+bevel,-r],[r-bevel,-r],[r,-r+bevel],[r,r-bevel],[r-bevel,r],[-r+bevel,r],[-r,r-bevel],[-r,-r+bevel]],vertices:number[]=[];
+  for(const y of[0,.18])for(const [x,z]of outline)vertices.push(x,y,z);
+  b.put('engine_cowl','weapon_actuator','chassis',{kind:'hull',vertices,volume:(4*r*r-2*bevel*bevel)*.18},v(0,w.mount.y+.03,0),'uhmw');
+  b.put('engine_bearing','weapon_actuator','chassis',{kind:'cylinder',radius:.046,width:.12},v(0,w.mount.y-.03,0),'aluminium7075');
+  b.tube('engine_exhaust','weapon_actuator','chassis',v(0,w.mount.y+.19,.03),v(.01,w.mount.y+.29,.08),.019,'titanium');
+  fork('engine_plow',0,-L/2-.14,-L/2+.015,W+.10,.09,'aluminium7075');
+ }
+ if(p==='hypershock'&&w.type==='vertical_disc'){
+  for(const side of[-1,1]){
+   fork('disc_scoop_'+side,side*.13,w.mount.z-.155,-L/2+.035,.105,.10,'aluminium7075');
+   b.prism('disc_bearing_'+side,'weapon_actuator','chassis',.014,[[floor+.012,w.mount.z-.06],[floor+.018,-L/2+.04],[w.mount.y+.035,-L/2+.04],[w.mount.y+.055,w.mount.z+.025],[w.mount.y+.030,w.mount.z-.055]],v(side*(w.width/2+.017),0,0),'aluminium7075');
+  }
+  b.box('racer_spoiler','chassis','chassis',v(W*.78,.008,.065),v(0,top+.082,L*.38),'aluminium7075',axisQ(v(1,0,0),-.16));
+  for(const side of[-1,1])b.box('spoiler_mount_'+side,'chassis','chassis',v(.008,.065,.014),v(side*W*.27,top+.035,L*.39),'aluminium7075');
+ }
+ if(p==='gigabyte'&&w.type==='shell_spinner'&&c.selfRight.type==='none'){
+  b.tube('shell_mast','chassis','chassis',v(0,top,0),v(0,w.mount.y+w.width+.29,0),.009,'titanium');
+  b.tube('shell_pointer','chassis','chassis',v(0,w.mount.y+w.width+.29,0),v(0,w.mount.y+w.width+.34,.33),.008,'titanium');
+ }
+ if(p==='whyachi'&&w.type==='horizontal_cage'){
+  for(const side of[-1,1])fork('cage_skirt_'+side,side*(W/2+.06),-.27,.26,.09,.11,'aluminium7075');
+  fork('cage_plow',0,-L/2-.10,-L/2+.025,W+.12,.10,'aluminium7075');
+  b.put('cage_bearing','weapon_actuator','chassis',{kind:'cylinder',radius:.047,width:.14},v(0,w.mount.y-.06,0),'aluminium7075');
+ }
+ if(p==='huge'){
+  for(const side of[-1,1]){
+   const wheelX=W/2+c.armour.find(a=>a.mount===(side<0?'left':'right'))!.thickness+c.drive.width/2+.008;
+   const axleY=c.drive.radius-H/2-c.chassis.clearance;
+   b.tube('large_side_outrigger_'+side,'chassis','chassis',v(side*wheelX,axleY,0),v(side*(wheelX+.36),axleY,0),.014,'titanium');
+   b.tube('large_tail_'+side,'chassis','chassis',v(side*W*.30,0,L*.3),v(side*W*.30,floor+.014,.48),.010,'titanium');
+   b.tube('large_front_stabilizer_'+side,'chassis','chassis',v(side*W*.30,0,-L*.3),v(side*W*.30,floor+.014,-.26),.010,'titanium');
+   b.tube('large_front_brace_'+side,'chassis','chassis',v(side*W*.42,-.02,0),v(side*W*.30,floor+.014,-.26),.007,'titanium');
+   b.tube('large_tail_brace_'+side,'chassis','chassis',v(side*W*.42,-.02,0),v(side*W*.30,floor+.014,.48),.007,'titanium');
+  }
+ }
+ if(w.type==='hammer_saw'){
+  for(const side of[-1,0,1]){fork('saw_fork_'+side,side*.21,-.57,-L/2+.08,.052,.11,'titanium');const part=parts.at(-1)!;part.body='ground_fork_'+side+'_0';part.position=sub(part.position,groundForkMount(c,side,0));}
+  for(const side of[-1,1]){
+   b.prism('saw_cheek_'+side,'weapon_actuator','chassis',.011,[[floor+.006,-L*.63],[floor+.006,L*.35],[top+.10,L*.35],[top+.12,-.05],[top*.6,-L*.50]],v(side*W*.43,0,0),'aluminium7075');
+   b.tube('saw_pivot_support_'+side,'weapon_actuator','chassis',v(side*.075,top-.03,.08),add(w.mount,v(side*.075,0,0)),.013,'aluminium7075');
+   b.tube('saw_rear_skid_'+side,'chassis','chassis',v(side*W*.36,floor+.028,L*.36),v(side*W*.36,floor+.012,L/2+.035),.010,'titanium');
+  }
+  const end=armOffset(w);b.box('saw_arm_cover','weapon_actuator','weapon_arm',v(.075,.012,(w.armLength??.59)*.87),mul(end,.5),'aluminium7075',axisQ(v(1,0,0),1.2));
+  for(const side of[-1,1])b.tube('saw_arm_'+side,'weapon_actuator','weapon_arm',v(side*.035,0,0),add(end,v(side*.035,0,0)),.017,'aluminium7075');
+  b.put('arm_hinge','weapon_actuator','weapon_arm',{kind:'cylinder',radius:.045,width:.10},v(),'aluminium7075',axisQ(v(0,0,1),Math.PI/2));
+  b.put('arm_bearing','weapon_actuator','weapon_arm',{kind:'cylinder',radius:.035,width:.09},end,'aluminium7075',axisQ(v(0,0,1),Math.PI/2));
+  // A stationary rear half guard rolls with the arm, not with the blade.
+  for(const side of[-1,1])for(let i=0;i<12;i++){const r=w.radius+.016,a=-Math.PI/2+i*Math.PI/12,z=a+Math.PI/12;
+   b.tube('saw_guard_'+side+'_'+i,'weapon_actuator','weapon_arm',add(end,v(side*(w.width/2+.016),r*Math.sin(a),r*Math.cos(a))),add(end,v(side*(w.width/2+.016),r*Math.sin(z),r*Math.cos(z))),.009,'titanium');
+  }
+ }
+ if(p==='deep_six'&&w.type==='vertical_bar'){
+  for(const side of[-1,1]){
+   for(const z of[-.13,.15])b.tube('vertical_tower_'+side+'_'+z,'weapon_actuator','chassis',v(side*.068,floor+.013,z),v(side*.068,w.mount.y+.01,w.mount.z),.014,'aluminium7075');
+   fork('vertical_outrigger_'+side,side*(W/2-.038),-.68,.34,.035,.075,'aluminium7075');
+   b.tube('vertical_tail_'+side,'chassis','chassis',v(side*(W/2-.038),floor+.06,.10),v(side*(W/2-.038),floor+.012,.70),.006,'titanium');
+   b.tube('tower_brace_'+side,'weapon_actuator','chassis',v(side*.28,top,.10),v(side*.074,w.mount.y-.03,w.mount.z),.01,'aluminium7075');
+  }
+ }
+}
+export function quantumScoopSection(c:BotConfig){
+ const floor=-c.chassis.height/2-c.chassis.clearance;
+ return Array.from({length:9},(_,i)=>{const t=i/8;return[-.68+(.68-c.chassis.length/2+.035)*t,floor+WEDGE_TIP.clearance+.126*t*t];});
+}
+PART2_FOLLOWS
