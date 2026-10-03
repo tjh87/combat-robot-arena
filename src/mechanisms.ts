@@ -21,32 +21,3 @@ function writer(parts:Part[]){
  };
  return{put,box,prism,tube,ring};
 }
-export function largeWheelParts(c:BotConfig,id:string,slot:Slot,position:Vec,parts:Part[]){
- const b=writer(parts),r=c.drive.radius,w=c.drive.width;
- b.ring(id,slot,id,r-.009,r*.84,w,position,'uhmw',16);
- b.ring(id+'_tread',slot,id,r,r-.009,w,position,'rubber',16);
- for(let j=0;j<5;j++)b.box(id+'_spoke_'+j,slot,id,v(w,.07,r*.77),add(position,v(0,Math.sin(j*Math.PI*2/5)*r*.40,Math.cos(j*Math.PI*2/5)*r*.40)),'uhmw',axisQ(v(1,0,0),-j*Math.PI*2/5));
- b.put(id+'_hub',slot,id,{kind:'cylinder',radius:r*.13,width:w+.018},position,'aluminium7075',axisQ(v(0,0,1),Math.PI/2));
-}
-export function racerWheelParts(c:BotConfig,id:string,slot:Slot,position:Vec,parts:Part[]){
- const b=writer(parts),r=c.drive.radius,w=c.drive.width;
- b.ring(id,slot,id,r,r*.78,w,position,'rubber',16);
- b.ring(id+'_rim',slot,id,r*.79,r*.67,.015,position,'aluminium7075',16);
- for(let j=0;j<5;j++)b.box(id+'_spoke_'+j,slot,id,v(.016,r*.13,r*.70),add(position,v(0,Math.sin(j*Math.PI*2/5)*r*.36,Math.cos(j*Math.PI*2/5)*r*.36)),'aluminium7075',axisQ(v(1,0,0),-j*Math.PI*2/5));
- b.put(id+'_hub',slot,id,{kind:'cylinder',radius:r*.23,width:.055},position,'aluminium7075',axisQ(v(0,0,1),Math.PI/2));
-}
-// SawBlaze hammer-saw blade outline (reference silhouette). The outer radius
-// carries three saw teeth on one flank, a broad hammer head opposite, a
-// shallow crown notch and a lower spike; the bore is hexagonal. Physics,
-// finish geometry and cosmetic detail share these helpers, so all three agree.
-export function sawbladeOuter(radius:number,toothDepth:number,a:number){
- const ro=radius-toothDepth;
- const norm=(x:number)=>{while(x>Math.PI)x-=2*Math.PI;while(x<-Math.PI)x+=2*Math.PI;return x;};
- const bump=(centre:number,halfWidth:number)=>Math.max(0,1-Math.abs(norm(a-centre))/halfWidth);
- const r=ro+0.030*Math.min(1,bump(Math.PI,.62)*1.15)+0.030*bump(0,.20)+0.026*bump(.44,.17)+0.026*bump(-.44,.17)+0.020*bump(-Math.PI/2,.13)-0.012*bump(Math.PI/2,.10);
- return Math.min(ro+0.030,Math.max(ro-0.012,r));
-}
-export function sawbladeHex(innerRadius:number,a:number){
- const s=Math.PI/3,t=((a%s)+s)%s;
- return innerRadius*0.8660254/Math.cos(t-s/2);
-}
