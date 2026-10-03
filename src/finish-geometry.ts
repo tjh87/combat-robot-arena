@@ -56,6 +56,33 @@ function engineHood(c:BotConfig){
  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geometry.setIndex(indices);geometry.computeVertexNormals();const smooth=toCreasedNormals(geometry,Math.PI/4);if(smooth!==geometry)geometry.dispose();smooth.userData.profileHood=true;return smooth;
 }
 
+function sawbladeSector(p:Part){
+ // Exact authored silhouette with flat facets: two caps plus four edge walls.
+ // Fewer vertices than the lathed ring it replaces, so geometry budgets hold.
+ const s=p.shape;if(s.kind!=='hull')throw Error('SawBlaze blade sector must be a hull: '+p.id);
+ const L=[0,1,2,3].map(i=>new THREE.Vector3(s.vertices[i*3],s.vertices[i*3+1],s.vertices[i*3+2]));
+ const R=[0,1,2,3].map(i=>new THREE.Vector3(s.vertices[12+i*3],s.vertices[12+i*3+1],s.vertices[12+i*3+2]));
+ const pos:number[]=[];
+ const tri=(a:THREE.Vector3,b:THREE.Vector3,c:THREE.Vector3,out:THREE.Vector3)=>{
+  const n=new THREE.Vector3().subVectors(b,a).cross(new THREE.Vector3().subVectors(c,a));
+  if(n.dot(out)<0)pos.push(a.x,a.y,a.z,c.x,c.y,c.z,b.x,b.y,b.z);
+  else pos.push(a.x,a.y,a.z,b.x,b.y,b.z,c.x,c.y,c.z);
+ };
+ tri(L[0],L[1],L[2],new THREE.Vector3(-1,0,0));tri(L[0],L[2],L[3],new THREE.Vector3(-1,0,0));
+ tri(R[0],R[2],R[1],new THREE.Vector3(1,0,0));tri(R[0],R[3],R[2],new THREE.Vector3(1,0,0));
+ const centre=new THREE.Vector3();[...L,...R].forEach(q=>centre.add(q));centre.multiplyScalar(1/8);
+ for(let i=0;i<4;i++){const j=(i+1)%4;
+  const ey=L[j].y-L[i].y,ez=L[j].z-L[i].z,my=(L[i].y+L[j].y+R[i].y+R[j].y)/4-centre.y,mz=(L[i].z+L[j].z+R[i].z+R[j].z)/4-centre.z;
+  let oy=ez,oz=-ey;if(oy*my+oz*mz<0){oy=-oy;oz=-oz;}
+  const out=new THREE.Vector3(0,oy,oz);
+  tri(L[i],L[j],R[j],out);tri(L[i],R[j],R[i],out);
+ }
+ const g=new THREE.BufferGeometry();
+ g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+ g.setAttribute('uv',new THREE.Float32BufferAttribute(new Float32Array(pos.length/3*2),2));
+ g.computeVertexNormals();return g;
+}
+
 export function finishedGeometry(p:Part,c:BotConfig):THREE.BufferGeometry{
  const s=p.shape,w=c.weapon;
  if(c.chassis.profile==='icewave'&&p.id==='engine_cowl')return engineHood(c);
@@ -79,6 +106,7 @@ export function finishedGeometry(p:Part,c:BotConfig):THREE.BufferGeometry{
   return ring(type==='tread'?r:type==='rim'?r*.79:large?r-.009:r,type==='tread'?r-.009:type==='rim'?r*.67:r*(large?.84:.78),type==='rim'?.015:c.drive.width,i,16);
  }
  if(w.type==='drum'&&/^drum_\d+$/.test(p.id))return ring(w.radius-w.toothDepth,w.innerRadius,w.width,Number(p.id.split('_')[1]),20);
+ if(w.type==='hammer_saw'&&c.chassis.profile==='sawblaze'&&/^disc(?:_\d+)?$/.test(p.id))return sawbladeSector(p);
  if((w.type==='vertical_disc'||w.type==='hammer_saw')&&/^disc(?:_\d+)?$/.test(p.id))return ring(w.radius-w.toothDepth,w.innerRadius,w.width,Number(p.id.split('_')[1]??0),20);
  const twin=p.id.match(/^hyper_disc_(left|right)(?:_(\d+))?$/);
  if(w.type==='vertical_disc'&&twin)return ring(w.radius-w.toothDepth,w.innerRadius,Math.min(w.thickness,w.width*.28),Number(twin[2]??0),24);
