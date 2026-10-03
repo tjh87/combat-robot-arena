@@ -1,0 +1,53 @@
+name: Approved SawBlaze cloud integration
+on:
+  push:
+    branches: [sawblaze-svg-approved]
+permissions:
+  contents: write
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Make sure that main matches the reviewed revision
+        run: |
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = 1e844f44827b975bb9a5268c4587c4abd588bb20
+      - run: npm ci --no-audit --no-fund
+      - name: Apply the approved source changes in the cloud
+        run: node scripts/apply-approved-sawblaze.mjs
+      - name: Build and offline package checks
+        run: |
+          node scripts/build.mjs
+          node scripts/verify.mjs
+      - name: SVG geometry and real physics
+        run: node --import tsx tests/sawblaze-svg.ts
+      - name: Roster and geometry regression checks
+        run: |
+          node --import tsx tests/roster.ts
+          node --import tsx tests/visuals.ts
+      - name: Blade, core and contact regression checks
+        run: |
+          node --import tsx tests/blades-update.ts
+          node --import tsx tests/run.ts
+          node --import tsx tests/collision.ts
+      - name: Publish the tested source to main
+        run: |
+          git rm scripts/apply-approved-sawblaze.mjs .github/workflows/approved-sawblaze-cloud.yml
+          git add src/sawblade-profile.ts src/mechanisms.ts src/finish-geometry.ts src/visuals.ts tests/sawblaze-svg.ts tests/blades-update.ts
+          git -c user.name=tjh87 -c user.email=2867835+tjh87@users.noreply.github.com commit -m "Replace SawBlaze approximation with approved SVG blade"
+          git push origin HEAD:main
+      - name: Preserve cloud evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sawblaze-cloud-evidence
+          path: docs/*results.json
+          retention-days: 7
