@@ -51,3 +51,4 @@ export function sawbladeHex(innerRadius:number,a:number){
  return innerRadius*0.8660254/Math.cos(t-s/2);
 }
 export function templateParts(c:BotConfig,parts:Part[]){
+ const b=writer(parts),p=c.chassis.profile,w=c.weapon,L=c.chassis.length,W=c.chassis.width,H=c.chassis.height,floor=-H/2-c.chassis.clearance,top=H/2;
