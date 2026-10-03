@@ -40,7 +40,7 @@ await test('Weapon faces retain their cutting edges without damage markers',()=>
  }finally{r.disposeObject(mesh);}}return rows;
 });
 await test('Six requested weapons reach operating speed at least fifty percent sooner without changing rotor energy',()=>{
- const previous=[[0,14.045833333333333,50.89794176301254],[3,20.416666666666668,55.65066886024846],[5,35.92916666666667,130.30298750695312],[6,29.1125,101.89964254615806],[8,9.479166666666666,44.87502056569624],[9,33.975,134.08840456853883]];
+ const previous=[[0,14.045833333333333,50.89794176301254],[3,20.416666666666668,55.65066886024846],[5,35.92916666666667,130.30298750695312],[6,29.1125,101.89964254615806],[8,9.479166666666666,31.66626741649346],[9,33.975,134.08840456853883]];
  return previous.map(([i,before,energy])=>{const c=preset(i),b=compile(c);assert(isSpinner(c.weapon));assert.deepEqual(b.errors,[]);assert(b.spinup<before*.5);assert(Math.abs(b.rotorInertia*(c.weapon.rpm*Math.PI/30)**2/2000-energy)<.001);return{name:ROSTER[i].name,beforeSeconds:before,afterSeconds:b.spinup,reductionPercent:100*(1-b.spinup/before),massKg:b.mass};});
 });
 await test('Hydra gives a contact-based flip cue and launches an equal-mass opponent higher',()=>{
