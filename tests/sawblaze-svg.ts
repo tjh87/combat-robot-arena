@@ -34,7 +34,7 @@ try{
   const centre=hole.reduce((a,b)=>a.add(b),new THREE.Vector2()).multiplyScalar(1/hole.length);
   assert.equal(world.castRay(new RAPIER.Ray(v(-1,centre.x,centre.y),v(1,0,0)),2,true),null,'An SVG opening must remain physically empty.');
  }
- const p=blade.find(p=>p.tooth===0)!;assert(p.shape.kind==='hull');const vs=p.shape.vertices,y=(vs[1]+vs[4]+vs[7])/3,z=(vs[2]+vs[5]+vs[8])/3;
+ const p=blade.find(p=>p.tooth===0)!;assert(p.shape.kind==='hull');const vs=p.shape.vertices,y=p.position.y+(vs[1]+vs[4]+vs[7])/3,z=p.position.z+(vs[2]+vs[5]+vs[8])/3;
  assert(world.castRay(new RAPIER.Ray(v(-1,y,z),v(1,0,0)),2,true));
  console.log('PASS Real Rapier rays cross both holes and contact a cutter');
 }finally{world.free();}
