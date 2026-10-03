@@ -216,7 +216,7 @@ export function parseConfig(input:unknown):BotConfig{
  if(parsed.chassis.profile==='sawblaze'&&parsed.weapon.type==='hammer_saw'&&Math.abs(parsed.chassis.length-.52)<1e-6&&Math.abs(parsed.chassis.width-.47)<1e-6&&Math.abs(parsed.weapon.radius-.2032)<1e-6&&Math.abs(parsed.weapon.armLength!-.50)<1e-6&&Math.abs(parsed.weapon.mount.y-.115)<1e-6&&Math.abs(parsed.weapon.mount.z-.115)<1e-6){
   parsed.weapon.mount=v(parsed.weapon.mount.x,.088,-.045);parsed.weapon.radius=.18;
   if(Math.abs(parsed.weapon.rpm-5252)<1e-6&&Math.abs(parsed.weapon.ratio-1.7952344685017951)<1e-6){parsed.weapon.rpm=referenceRPM(WEAPON_REFERENCES.sawblaze,.18,RULES.tip);parsed.weapon.ratio=Math.min(parsed.weapon.ratio,48*MOTORS[parsed.weapon.motor].kv/(parsed.weapon.rpm*1.12));}
-  if(Math.abs((parsed.chassis.equipmentMassKg??-1)-36.915694118748334)<1e-6)parsed.chassis.equipmentMassKg=28.646617186645074;
+  if(Math.abs((parsed.chassis.equipmentMassKg??-1)-36.915694118748334)<1e-6)parsed.chassis.equipmentMassKg=30.859559305045067;
  }
  // Keep saved stock builds compatible with the vertical recovery mechanisms.
  if(parsed.selfRight.type==='roll_arm'){

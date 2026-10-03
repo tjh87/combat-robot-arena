@@ -1020,7 +1020,7 @@
     {
       "name": "SawBlaze",
       "profile": "sawblaze",
-      "totalMassKg": 113.20000000000002,
+      "totalMassKg": 113.19999999999996,
       "chassis": {
         "profile": "sawblaze",
         "form": "box",
@@ -1031,11 +1031,11 @@
         "thickness": 0.006,
         "wedgeAngle": 25,
         "clearance": 0.018,
-        "equipmentMassKg": 36.91569411874849
+        "equipmentMassKg": 30.859559305045067
       },
       "weapon": {
         "type": "hammer_saw",
-        "radius": 0.2032,
+        "radius": 0.18,
         "innerRadius": 0.072,
         "width": 0.025,
         "thickness": 0.025,
@@ -1046,12 +1046,12 @@
         "material": "hardox",
         "mount": {
           "x": 0,
-          "y": 0.115,
-          "z": 0.115
+          "y": 0.088,
+          "z": -0.045
         },
         "motor": "spin48dual",
-        "ratio": 1.7952344685017951,
-        "rpm": 5252,
+        "ratio": 1.5902464882056717,
+        "rpm": 5929,
         "direction": 1,
         "armLength": 0.5,
         "armTravel": 1.12,
@@ -1063,7 +1063,7 @@
         "tipMph": 250,
         "speedBasis": "derived",
         "configuration": "2023 builder specification; estimated disc mass",
-        "note": "Jamison Go specifies a 16-inch hammer-saw disc and 250 mph tips. RPM follows from that diameter. Disc mass is a 30 lb game estimate, excluding the separate swinging arm.",
+        "note": "Jamison Go specifies a 16-inch disc and 250 mph tips. The game uses an SVG-based radius estimate. Game RPM follows that radius and the referenced tip speed. The 30 lb disc mass excludes the separate arm.",
         "sources": [
           {
             "label": "Jamison Go: SawBlaze",
@@ -1071,7 +1071,7 @@
           }
         ]
       },
-      "rotorInertiaKgM2": 0.19321683341620371,
+      "rotorInertiaKgM2": 0.12769520482475744,
       "drive": {
         "layout": 2,
         "radius": 0.105,
@@ -1124,7 +1124,9 @@
       "selfRight": {
         "type": "none"
       },
-      "flipperEnergyJ": null
+      "flipperEnergyJ": null,
+      "sourceCommit": "29c077e4efe97633a2c3788d62c0b48482ec8023",
+      "geometryBasis": "Approved SVG proportions. Blade dimensions and internal mass balance are game estimates."
     },
     {
       "name": "Deep Six",
