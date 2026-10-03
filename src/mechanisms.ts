@@ -50,4 +50,3 @@ export function sawbladeHex(innerRadius:number,a:number){
  const s=Math.PI/3,t=((a%s)+s)%s;
  return innerRadius*0.8660254/Math.cos(t-s/2);
 }
-export function templateParts(c:BotConfig,parts:Part[]){
