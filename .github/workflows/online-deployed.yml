@@ -8,7 +8,7 @@ permissions:
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     env:
       ONLINE_BASE_URL: https://combat-robot-arena-live-iq8l051xv-tjh87s-projects.vercel.app/
       ONLINE_DEPLOYED_SHA: 4c57cb10e805ef8055842bccd16aaec12ee1c7e4
@@ -31,14 +31,14 @@ jobs:
           if(url.protocol!=='https:'||!url.hostname.startsWith('combat-robot-arena-live-')||!url.hostname.endsWith('-tjh87s-projects.vercel.app'))throw Error('The preview target is invalid.');
           if(!process.env.ONLINE_PREVIEW_OIDC)throw Error('The preview credential is unavailable.');
           let source=readFileSync('tests/online-browser.mjs','utf8');
-          source="import ServerWebSocket from './node_modules/ws/wrapper.mjs';\n"+source;
+          source="import ServerWebSocket from './node_modules/ws/wrapper.mjs';\nlet proxyOpened=0;const activePipes=new Map();\n"+source;
           source=source.replace("browser.newContext({viewport:","browser.newContext({extraHTTPHeaders:{'x-vercel-trusted-oidc-idp-token':process.env.ONLINE_PREVIEW_OIDC},viewport:");
           source=source.replace('const p=await context.newPage();',`await context.routeWebSocket('**/api/online',route=>{
             const endpoint=new URL(route.url());
             if(endpoint.hostname!==new URL(process.env.ONLINE_BASE_URL).hostname)throw Error('The WebSocket target is invalid.');
             const upstream=new ServerWebSocket(route.url(),route.protocols(),{headers:{Origin:new URL(process.env.ONLINE_BASE_URL).origin,'x-vercel-trusted-oidc-idp-token':process.env.ONLINE_PREVIEW_OIDC},handshakeTimeout:10000}),pending=[];
             route.onMessage(data=>{if(upstream.readyState===ServerWebSocket.OPEN)upstream.send(data);else pending.push(data);});
-            upstream.on('open',()=>{for(const data of pending.splice(0))upstream.send(data);});
+            upstream.on('open',()=>{proxyOpened++;activePipes.set(context,upstream);for(const data of pending.splice(0))upstream.send(data);});
             upstream.on('message',(data,binary)=>route.send(binary?Buffer.from(data):data.toString()));
             upstream.on('close',(code,reason)=>void route.close({code:code===4002?4002:1001,reason:reason.toString()}));
             upstream.on('error',()=>void route.close({code:1012,reason:'The authenticated preview proxy lost its connection.'}));
@@ -46,13 +46,15 @@ jobs:
           });const p=await context.newPage();`);
           source=source.replace("'http://127.0.0.1:4173/'","process.env.ONLINE_BASE_URL");
           source=source.replaceAll('source:process.env.GITHUB_SHA','source:process.env.ONLINE_DEPLOYED_SHA');
-          source=source.replace("ownedMovement:true,","ownedMovement:true,authenticatedWebSocketProxy:true,");
+          source=source.replace("stage='start fight';console.log('Start fight');",`stage='connection renewal';console.log('Wait across the connection renewal deadline');const beforeRenew=proxyOpened;await a.waitForTimeout(245000);assert(proxyOpened>=beforeRenew+2,'Both lobby connections must renew');assert.equal((await status(a)).online.room,code);assert.equal((await status(b)).online.room,code);assert.equal((await status(a)).online.state,'connected');assert.equal((await status(b)).online.state,'connected');assert.equal(await a.locator('.online-players li').count(),2);console.log('PASS lobby connection renewal');stage='start fight';console.log('Start fight');`);
+          source=source.replace("stage='refresh';const before=",`stage='abrupt transport interruption';const beforeDrop=(await status(b)).online.tick,openedBeforeDrop=proxyOpened;activePipes.get(b.context()).terminate();await b.waitForTimeout(500);await connected(b,code);assert(proxyOpened>openedBeforeDrop,'The lost transport must reconnect');assert.equal((await status(b)).online.side,1);assert((await status(b)).online.tick>=beforeDrop-480);console.log('PASS abrupt transport recovery');stage='refresh';const before=`);
+          source=source.replace("ownedMovement:true,","ownedMovement:true,authenticatedWebSocketProxy:true,liveConnectionRenewal:true,abruptTransportRecovery:true,");
           source=source.replace("name+'.png',timeout:30000","name+'.png',timeout:90000");
-          source=source.replace('},240000);','},360000);');
+          source=source.replace('},240000);','},600000);');
           writeFileSync(process.env.RUNNER_TEMP+'/browser/deployed-check.mjs',source);
           NODE
-      - name: Real Vercel rooms, player controls, POV, and refresh
-        run: timeout 420s node "$RUNNER_TEMP/browser/deployed-check.mjs"
+      - name: Live renewal, transport interruption, controls, POV, and refresh
+        run: timeout 660s node "$RUNNER_TEMP/browser/deployed-check.mjs"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
