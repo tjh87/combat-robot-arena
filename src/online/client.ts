@@ -5,7 +5,7 @@ export class RoomConnection{
  socket?:WebSocket;guest='';room?:OnlineRoom;state:ConnectionState='closed';ping=0;offset=0;
  private samples:number[]=[];private reconnectTimer?:ReturnType<typeof setTimeout>;private heartbeat?:ReturnType<typeof setInterval>;private handshake?:ReturnType<typeof setTimeout>;private attempts=0;private stopped=false;private connecting=false;private candidate?:WebSocket;private abort?:AbortController;private opened=0;private lastMessage=0;private pending:unknown[]=[];
  onRoom:(room:OnlineRoom)=>void=()=>{};onFrame:(frame:OnlineFrame)=>void=()=>{};onState:(state:ConnectionState)=>void=()=>{};onError:(message:string)=>void=()=>{};
- constructor(readonly config:()=>BotConfig,readonly name:()=>string,readonly endpoint='/api/online'){}
+ constructor(public config:()=>BotConfig,public name:()=>string,readonly endpoint='/api/online'){}
  private change(state:ConnectionState){if(this.state!==state){this.state=state;this.onState(state);}}
  async connect(){
   if(this.stopped||this.connecting)return;
@@ -46,7 +46,7 @@ export class RoomConnection{
    };
    socket.onclose=event=>{
     if(socket!==this.socket&&socket!==this.candidate)return;
-    if(event.code===4002&&socket===this.socket){this.stop();this.onError('This player resumed in another window.');return;}
+    if(event.code===4002&&socket===this.socket&&!this.candidate){this.stop();this.onError('This player resumed in another window.');return;}
     this.lost(socket);
    };
    socket.onerror=()=>{};
