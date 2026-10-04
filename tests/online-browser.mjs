@@ -7,7 +7,7 @@ const browser=await chromium.launch({headless:true,args:['--use-angle=swiftshade
 const contexts=[],pages=[],errors=[],failed=[];
 let stage='startup';
 async function page(){
- const context=await browser.newContext({viewport:{width:1400,height:900}});contexts.push(context);
+ const context=await browser.newContext({viewport:{width:1280,height:720}});contexts.push(context);
  const p=await context.newPage();pages.push(p);
  p.on('pageerror',e=>errors.push(String(e)));p.on('requestfailed',r=>failed.push(r.url()));
  await p.addInitScript(()=>{window.__arenaTools=new Map();Object.defineProperty(document,'modelContext',{value:{registerTool(tool){window.__arenaTools.set(tool.name,tool);}},configurable:true});});
@@ -19,7 +19,11 @@ async function page(){
  return p;
 }
 const status=p=>p.evaluate(()=>window.__arenaTools.get('read_arena_status').execute());
-async function screenshot(p,name){await p.screenshot({path:'browser-evidence/'+name+'.png',timeout:30000,animations:'disabled'});}
+async function screenshot(p,name){
+ const cdp=await p.context().newCDPSession(p);
+ try{const {data}=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:false});await writeFile('browser-evidence/'+name+'.png',Buffer.from(data,'base64'));}
+ finally{await cdp.detach();}
+}
 try{
  const a=await page(),b=await page();stage='create and join';
  await a.locator('#online-name').fill('Alice');await a.locator('#online-robot').selectOption('2');await a.locator('#online-create-duel').click();
