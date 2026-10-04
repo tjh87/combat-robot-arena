@@ -1,0 +1,60 @@
+name: Final Hydra fit and recovery
+on:
+  push:
+    branches: [hydra-approved-redesign]
+    paths: ['.github/workflows/hydra-final.yml','scripts/hydra-final-fit.mjs']
+permissions:
+  contents: write
+concurrency:
+  group: hydra-approved-redesign
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Fit wheels under the flat roof
+        run: |
+          mkdir -p browser-evidence
+          node scripts/hydra-final-fit.mjs
+      - name: Build, offline assets, and real Hydra physics
+        run: |
+          node scripts/build.mjs
+          node scripts/verify.mjs
+          node --import tsx tests/hydra-approved.ts
+          node --import tsx tests/roster.ts > browser-evidence/roster.log 2>&1
+      - name: Browser dependencies outside game
+        run: |
+          mkdir -p "$RUNNER_TEMP/browser"
+          npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
+          "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Chromium WebGL
+        run: |
+          node scripts/serve.mjs > browser-evidence/server.log 2>&1 &
+          node tests/hydra-browser.mjs
+      - name: Update only the Hydra specification
+        run: |
+          node --import tsx --input-type=module -e "import fs from 'node:fs';import{preset,compile,wheelBase,wheelCentreZ}from'./src/model.ts';const path='handover/ROBOT_SPECIFICATIONS.json',data=JSON.parse(fs.readFileSync(path,'utf8')),c=preset(2),b=compile(c),row=data.robots.find(r=>r.profile==='hydra');Object.assign(row,{totalMassKg:b.mass,chassis:c.chassis,weapon:c.weapon,drive:c.drive,rotorInertiaKgM2:b.rotorInertia,wheelBaseM:wheelBase(c),wheelCenterZM:wheelCentreZ(c)});fs.writeFileSync(path,JSON.stringify(data,null,2)+'\n');"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hydra-final-evidence
+          path: browser-evidence
+      - name: Commit tested source to feature branch
+        run: |
+          rm scripts/hydra-final-fit.mjs .github/workflows/hydra-final.yml
+          git status --short
+          git diff --check
+          git diff src/model.ts tests/hydra-approved.ts handover/ROBOT_SPECIFICATIONS.json
+          git log --oneline -10
+          git add src/model.ts tests/hydra-approved.ts handover/ROBOT_SPECIFICATIONS.json scripts/hydra-final-fit.mjs .github/workflows/hydra-final.yml
+          git -c user.name='tjh87' -c user.email='tjh87@users.noreply.github.com' commit -m 'Finish Hydra concealed wheels and physical recovery checks'
+          git push origin HEAD:hydra-approved-redesign
