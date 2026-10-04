@@ -28,7 +28,11 @@ const status=p=>p.evaluate(()=>window.__arenaTools.get('read_arena_status').exec
 const freeze=()=>Promise.all(pages.map(p=>p.evaluate(()=>window.__freezeFrame=true)));
 const resume=()=>Promise.all(pages.map(p=>p.evaluate(()=>window.__resumeFrames())));
 async function screenshot(p,name){console.log('Capture '+name);await freeze();await p.waitForTimeout(500);try{await p.screenshot({path:'browser-evidence/'+name+'.png',timeout:30000});}finally{await resume();}}
-async function connected(p){await p.waitForFunction(async()=>{const s=await window.__arenaTools.get('read_arena_status').execute();return s.online?.state==='connected'&&s.online.framePhase==='fight'&&!s.online.result;},undefined,{timeout:30000,polling:100});}
+async function connected(p,code){
+ const until=Date.now()+30000;
+ while(Date.now()<until){const s=(await status(p)).online;if(s?.state==='connected'&&s.room===code&&s.framePhase==='fight'&&!s.result)return s;await p.waitForTimeout(100);}
+ throw Error('The player did not recover the active room: '+JSON.stringify((await status(p)).online));
+}
 try{
  const a=await page(),b=await page();stage='create and join';
  await a.locator('#online-name').fill('Alice');await a.locator('#online-robot').selectOption('2');await a.locator('#online-create-duel').click();
@@ -41,7 +45,7 @@ try{
  stage='lobby screenshot';await screenshot(a,'online-lobby');stage='start fight';console.log('Start fight');await a.locator('#online-start').click();
  await a.waitForFunction(()=>document.querySelector('#online-clock')?.textContent.includes('LIVE'),undefined,{timeout:30000,polling:100});
  await b.waitForFunction(()=>document.querySelector('#online-clock')?.textContent.includes('LIVE'),undefined,{timeout:30000,polling:100});
- stage='owned controls without render frames';await freeze();await connected(a);await connected(b);
+ stage='owned controls without render frames';await freeze();await connected(a,code);await connected(b,code);
  const sa=await status(a),sb=await status(b);assert.equal(sa.online.side,0);assert.equal(sb.online.side,1);assert.equal(sa.online.viewer,0);assert.equal(sb.online.viewer,1);
  await a.keyboard.down('ArrowUp');await a.waitForTimeout(350);await a.keyboard.up('ArrowUp');await a.waitForTimeout(500);
  const movedA=(await status(a)).online;assert(movedA.ack[0]>sa.online.ack[0]);assert(Math.hypot(movedA.positions[0].x-sa.online.positions[0].x,movedA.positions[0].z-sa.online.positions[0].z)>.02);
@@ -52,7 +56,7 @@ try{
  stage='refresh';const before=(await status(b)).online.tick;console.log('Before reload',JSON.stringify((await status(b)).online));
  await b.reload({waitUntil:'domcontentloaded',timeout:60000});
  await b.waitForFunction(()=>window.__arenaTools.has('read_arena_status'),undefined,{timeout:60000,polling:100});
- console.log('After startup',JSON.stringify((await status(b)).online));await connected(b);
+ console.log('After startup',JSON.stringify((await status(b)).online));const recovered=await connected(b,code);console.log('Recovered',JSON.stringify(recovered));
  const resumed=await status(b);assert.equal(resumed.online.room,code);assert.equal(resumed.online.side,1);assert(resumed.online.tick>=before-2);
  await b.locator('#online-camera').selectOption('pov');await resume();await b.waitForTimeout(1000);
  stage='POV screenshots';await screenshot(a,'online-alice-pov');await screenshot(b,'online-bob-pov');
