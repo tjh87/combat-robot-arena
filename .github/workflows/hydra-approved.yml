@@ -35,6 +35,7 @@ jobs:
           node scripts/hydra-finish-migrate.mjs
           node scripts/hydra-import-migrate.mjs
           node scripts/hydra-wheel-migrate.mjs
+          node scripts/hydra-validation-migrate.mjs
       - name: Build and offline validation
         run: |
           node scripts/build.mjs
@@ -68,8 +69,8 @@ jobs:
           path: browser-evidence
       - name: Commit tested source to feature branch
         run: |
-          rm scripts/hydra-wheel-migrate.mjs scripts/hydra-migrate.mjs scripts/hydra-finish-migrate.mjs scripts/hydra-import-migrate.mjs .github/workflows/hydra-approved.yml
-          git add scripts/hydra-wheel-migrate.mjs src/hydra-geometry.ts src/hydra-finish.ts src/model.ts src/mechanisms.ts src/visuals.ts src/render.ts tests/hydra-approved.ts tests/hydra-browser.mjs tests/systems.ts handover/ROBOT_SPECIFICATIONS.json scripts/hydra-migrate.mjs scripts/hydra-finish-migrate.mjs scripts/hydra-import-migrate.mjs .github/workflows/hydra-approved.yml
+          rm scripts/hydra-validation-migrate.mjs scripts/hydra-wheel-migrate.mjs scripts/hydra-migrate.mjs scripts/hydra-finish-migrate.mjs scripts/hydra-import-migrate.mjs .github/workflows/hydra-approved.yml
+          git add scripts/hydra-validation-migrate.mjs scripts/hydra-wheel-migrate.mjs src/hydra-geometry.ts src/hydra-finish.ts src/model.ts src/mechanisms.ts src/visuals.ts src/render.ts tests/hydra-approved.ts tests/hydra-browser.mjs tests/systems.ts handover/ROBOT_SPECIFICATIONS.json scripts/hydra-migrate.mjs scripts/hydra-finish-migrate.mjs scripts/hydra-import-migrate.mjs .github/workflows/hydra-approved.yml
           git status --short
           git diff --check
           git diff
