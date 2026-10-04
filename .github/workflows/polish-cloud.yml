@@ -1,0 +1,70 @@
+name: Polished menus and damage acceptance
+on:
+  push:
+    branches: [polished-menus-speed-damage]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      REDIS_URL: ${{ secrets.ONLINE_REDIS_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Apply source integration in cloud
+        run: |
+          node --input-type=module -e "import{readFileSync,writeFileSync}from'node:fs';const p='scripts/polish-fit.mjs';let s=readFileSync(p,'utf8');s=s.replace('cfg=this.latest!.configs[own]','cfg=this.sim!.bots[own].compiled.config').replace(\"crushPhase?:\\'closing\\'|\\'pressure\\'|\\'opening\\'\",'crushPhase?:string');writeFileSync(p,s);"
+          node scripts/polish-fit.mjs
+      - name: Build and offline asset audit
+        run: |
+          node scripts/build.mjs
+          node scripts/verify.mjs
+          npm run online:build
+          npx tsc -p tsconfig.server.json --noEmit
+      - name: Motion damage and wall fracture checks
+        run: node --import tsx tests/polish-physics.ts
+      - name: Rotor and energy conservation checks
+        run: |
+          CASE='Bite follows' node --import tsx tests/engagement-update.ts
+          CASE='An unpowered impact' node --import tsx tests/engagement-update.ts
+          CASE='A coasting weapon' node --import tsx tests/engagement-update.ts
+          CASE='Every spinning weapon' node --import tsx tests/engagement-update.ts
+      - name: Online core checks
+        run: node --import tsx tests/online-core.ts
+      - name: Install cloud browser
+        run: |
+          mkdir -p "$RUNNER_TEMP/browser"
+          npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
+          "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Native online browser checks
+        run: |
+          node --import tsx server/test-site.ts > /tmp/polish-server.log 2>&1 &
+          for i in $(seq 1 60); do if curl -fsS http://127.0.0.1:4173/api/online > /dev/null; then break; fi; sleep 1; done
+          node tests/online-browser.mjs
+          node tests/polish-browser.mjs
+      - name: Capture evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: polished-menus-damage-evidence
+          path: |
+            browser-evidence
+            /tmp/polish-server.log
+      - name: Publish tested source
+        run: |
+          git status --short
+          git diff --stat
+          git log --oneline -10
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/main.ts src/weapon-gauge.ts src/online/ui.ts src/online/online.css src/sim.ts src/online/protocol.ts server/frames.ts src/online/replica.ts tests/online-browser.mjs README.md
+          git rm scripts/polish-fit.mjs .github/workflows/polish-cloud.yml
+          git commit -m 'Polish arena interfaces and account for robot speed in contact damage'
+          git push origin HEAD:polished-menus-speed-damage
