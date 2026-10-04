@@ -32,11 +32,12 @@ jobs:
           node scripts/online-recovery-fit.mjs
           node scripts/online-post-fit.mjs
           node scripts/online-mailbox-fit.mjs
+          node scripts/online-shutdown-fit.mjs
       - name: Types and actual cross-gateway connections
         run: |
           node node_modules/typescript/bin/tsc --project tsconfig.server.json --noEmit
           node --import tsx tests/online-core.ts
-          node --import tsx tests/online-transport.ts
+          timeout 90s node --import tsx tests/online-transport.ts
           node scripts/build.mjs
           node scripts/verify.mjs
           node scripts/online-build.mjs
@@ -56,11 +57,11 @@ jobs:
           path: browser-evidence
       - name: Commit tested online integration
         run: |
-          rm scripts/online-ui-fit.mjs scripts/online-efficiency-fit.mjs scripts/online-recovery-fit.mjs scripts/online-post-fit.mjs scripts/online-mailbox-fit.mjs .github/workflows/online-integration.yml
+          rm scripts/online-ui-fit.mjs scripts/online-efficiency-fit.mjs scripts/online-recovery-fit.mjs scripts/online-post-fit.mjs scripts/online-mailbox-fit.mjs scripts/online-shutdown-fit.mjs .github/workflows/online-integration.yml
           git status --short
           git diff --check
           git diff src/main.ts src/sim.ts src/online/protocol.ts server/engine.ts server/gateway.ts
           git log --oneline -10
-          git add tests/bundle-audit.mjs src/main.ts src/sim.ts src/online/protocol.ts src/online/ui.ts src/online/predictor.ts src/online/client.ts server/gateway.ts server/engine.ts server/checkpoint.ts scripts/online-ui-fit.mjs scripts/online-efficiency-fit.mjs scripts/online-recovery-fit.mjs scripts/online-post-fit.mjs scripts/online-mailbox-fit.mjs .github/workflows/online-integration.yml
+          git add tests/bundle-audit.mjs src/main.ts src/sim.ts src/online/protocol.ts src/online/ui.ts src/online/predictor.ts src/online/client.ts server/gateway.ts server/engine.ts server/checkpoint.ts scripts/online-ui-fit.mjs scripts/online-efficiency-fit.mjs scripts/online-recovery-fit.mjs scripts/online-post-fit.mjs scripts/online-mailbox-fit.mjs scripts/online-shutdown-fit.mjs .github/workflows/online-integration.yml
           git -c user.name='tjh87' -c user.email='tjh87@users.noreply.github.com' commit -m 'Connect online rooms to player-specific game views and controls'
           git push origin HEAD:online-four-digit-rooms
