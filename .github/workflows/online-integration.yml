@@ -1,0 +1,55 @@
+name: Online game integration
+on:
+  push:
+    branches: [online-four-digit-rooms]
+    paths: ['.github/workflows/online-integration.yml','scripts/online-ui-fit.mjs','scripts/online-efficiency-fit.mjs','scripts/online-recovery-fit.mjs','src/online/**','tests/online-transport.ts']
+permissions:
+  contents: write
+concurrency:
+  group: online-four-digit-rooms
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ONLINE_REDIS_URL: ${{ secrets.ONLINE_REDIS_URL }}
+      ONLINE_NAMESPACE: ci-${{ github.run_id }}
+      ONLINE_LOCAL_TEST: 1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Connect the online client and prediction renderer
+        run: |
+          node scripts/online-ui-fit.mjs
+          node scripts/online-efficiency-fit.mjs
+          node scripts/online-recovery-fit.mjs
+      - name: Types and actual cross-gateway connections
+        run: |
+          node node_modules/typescript/bin/tsc --project tsconfig.server.json --noEmit
+          node --import tsx tests/online-core.ts
+          node --import tsx tests/online-transport.ts
+          node scripts/build.mjs
+          node scripts/verify.mjs
+          node scripts/online-build.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: online-integration-evidence
+          path: browser-evidence
+      - name: Commit tested online integration
+        run: |
+          rm scripts/online-ui-fit.mjs scripts/online-efficiency-fit.mjs scripts/online-recovery-fit.mjs .github/workflows/online-integration.yml
+          git status --short
+          git diff --check
+          git diff src/main.ts src/sim.ts src/online/protocol.ts server/engine.ts server/gateway.ts
+          git log --oneline -10
+          git add src/main.ts src/sim.ts src/online/protocol.ts src/online/ui.ts src/online/predictor.ts server/gateway.ts server/engine.ts server/checkpoint.ts scripts/online-ui-fit.mjs scripts/online-efficiency-fit.mjs scripts/online-recovery-fit.mjs .github/workflows/online-integration.yml
+          git -c user.name='tjh87' -c user.email='tjh87@users.noreply.github.com' commit -m 'Connect online rooms to player-specific game views and controls'
+          git push origin HEAD:online-four-digit-rooms
