@@ -3,9 +3,9 @@ function edit(path,fn){writeFileSync(path,fn(readFileSync(path,'utf8')));}
 function replace(s,a,b){if(!s.includes(a))throw Error('Missing release anchor: '+a.slice(0,100));return s.replace(a,b);}
 edit('server/gateway.ts',s=>{
  s=replace(s,'currentMatch,leaveRoom,transferHost}','currentMatch,leaveRoom,transferHost,retryRoom}');
- s=replace(s,"if(value.type==='start'){const room=", "if(value.type==='start'){if(this.engines.size+this.claiming.size>=4)throw Error('This game server is full. Try again after a fight ends.');const room=");
+ s=replace(s,"if(value.type==='start'){const room=", "if(value.type==='start'){if(this.engines.size+this.claiming.size>=2)throw Error('This game server is full. Try again after a fight ends.');const room=");
  s=replace(s,"if(value.type==='repair'){", "if(value.type==='retry'){const room=await retryRoom(peer.room,peer.guest);this.send(peer,{type:'room',room,you:peer.guest});await this.claim(room);return;}if(value.type==='repair'){");
- s=replace(s,'if(this.engines.size>=1)return;','if(this.engines.size+this.claiming.size>=4)return;');return s;
+ s=replace(s,'if(this.engines.size>=1)return;','if(this.engines.size+this.claiming.size>=2)return;');return s;
 });
 edit('server/rooms.ts',s=>s+`\nexport async function retryRoom(id:string,guest:string){return(await mutate(id,room=>{if(room.host!==guest)throw Error('Only the room host can resume the saved fight.');if(room.phase!=='recovering')throw Error('This fight does not need a restart.');room.phase='countdown';delete room.error;})).room;}\n`);
 edit('server/engine.ts',s=>{
