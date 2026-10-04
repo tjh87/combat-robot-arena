@@ -47,7 +47,7 @@ jobs:
           node tests/hydra-browser.mjs
       - name: Update Hydra game estimates
         run: |
-          node --import tsx --input-type=module -e "import fs from 'node:fs';import{preset,compile,wheelBase,wheelCentreZ}from'./src/model.ts';const path='handover/ROBOT_SPECIFICATIONS.json',data=JSON.parse(fs.readFileSync(path,'utf8')),c=preset(2),b=compile(c),r=data.robots.find(r=>r.profile==='hydra');Object.assign(r,{drive:c.drive,chassis:c.chassis,totalMassKg:b.mass,wheelBaseM:wheelBase(c),wheelCenterZM:wheelCentreZ(c),geometryNote:'Compact 120 mm wheels with counted steel cores and 8.4:1 gearing. Dimensions and materials are game estimates.'});fs.writeFileSync(path,JSON.stringify(data,null,2)+'\n');"
+          node --import tsx --input-type=module -e "import fs from 'node:fs';import{preset,compile,wheelBase,wheelCentreZ}from'./src/model.ts';const path='handover/ROBOT_SPECIFICATIONS.json',data=JSON.parse(fs.readFileSync(path,'utf8')),c=preset(2),b=compile(c),r=data.robots.find(r=>r.profile==='hydra');Object.assign(r,{drive:c.drive,chassis:c.chassis,totalMassKg:b.mass,wheelBaseM:wheelBase(c),wheelCenterZM:wheelCentreZ(c),geometryNote:'Compact 120 mm wheels with counted steel cores and 8.3:1 gearing. Dimensions and materials are game estimates.'});fs.writeFileSync(path,JSON.stringify(data,null,2)+'\n');"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

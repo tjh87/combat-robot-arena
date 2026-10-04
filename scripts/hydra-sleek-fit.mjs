@@ -7,11 +7,11 @@ edit('src/model.ts',s=>{
  s=replace(s,'hydraTuning?:1|2,','hydraTuning?:1|2|3,');
  s=replace(s,"return c.chassis.profile==='hypershock'?Math.max(c.chassis.length*.72","return c.chassis.profile==='hydra'?c.chassis.length*.425/.64:c.chassis.profile==='hypershock'?Math.max(c.chassis.length*.72");
  s=replace(s,'c.chassis.width/2+a+c.drive.width/2+.008','c.chassis.width/2+a+(hydraSleekWheels(c)?Math.max(.075,c.drive.width):c.drive.width)/2+.008');
- s=replace(s,'radius:.10,width:.075,ratio:14,hydraTuning:2','radius:.060,width:.040,ratio:8.4,hydraTuning:3');
+ s=replace(s,'radius:.10,width:.075,ratio:14,hydraTuning:2','radius:.060,width:.040,ratio:8.3,hydraTuning:3');
  s=replace(s,"en(d.hydraTuning,[1,2] as const,'drive.hydraTuning')","en(d.hydraTuning,[1,2,3] as const,'drive.hydraTuning')");
  s=replace(s,'parsed.drive.hydraTuning!==2&&(parsed.drive.ratio===6.5||parsed.drive.ratio===14)','(parsed.drive.hydraTuning===undefined||parsed.drive.hydraTuning===1)&&(parsed.drive.ratio===6.5||parsed.drive.ratio===14)');
  const anchor=" if(parsed.chassis.profile==='hydra')parsed.drive.hydraTuning=2;";
- s=replace(s,anchor," if(parsed.chassis.profile==='hydra'&&parsed.chassis.length===.64&&parsed.chassis.width===.58&&parsed.chassis.height===.08&&parsed.weapon.type==='flipper'&&parsed.weapon.length===.663&&parsed.drive.traction!=='tracks'&&parsed.drive.layout===4&&parsed.drive.radius===.10&&parsed.drive.width===.075&&parsed.drive.motor==='drive48'&&parsed.drive.ratio===14&&parsed.drive.hydraTuning!==3){\n  parsed.drive.radius=.060;parsed.drive.width=.040;parsed.drive.ratio=8.4;\n  if(Math.abs((parsed.chassis.equipmentMassKg??-1)-41.35266615371938)<1e-6)parsed.chassis.equipmentMassKg=preset(2).chassis.equipmentMassKg;\n }\n if(parsed.chassis.profile==='hydra')parsed.drive.hydraTuning=3;");
+ s=replace(s,anchor," if(parsed.chassis.profile==='hydra'&&parsed.chassis.length===.64&&parsed.chassis.width===.58&&parsed.chassis.height===.08&&parsed.weapon.type==='flipper'&&parsed.weapon.length===.663&&parsed.drive.traction!=='tracks'&&parsed.drive.layout===4&&parsed.drive.radius===.10&&parsed.drive.width===.075&&parsed.drive.motor==='drive48'&&parsed.drive.ratio===14&&parsed.drive.hydraTuning!==3){\n  parsed.drive.radius=.060;parsed.drive.width=.040;parsed.drive.ratio=8.3;\n  if(Math.abs((parsed.chassis.equipmentMassKg??-1)-41.35266615371938)<1e-6)parsed.chassis.equipmentMassKg=preset(2).chassis.equipmentMassKg;\n }\n if(parsed.chassis.profile==='hydra')parsed.drive.hydraTuning=3;");
  s=replace(s,"else if(ch.profile==='hypershock'&&c.drive.traction!=='tracks')racerWheelParts(c,id,slot,v(x,wheelY,z),parts);else part","else if(ch.profile==='hypershock'&&c.drive.traction!=='tracks')racerWheelParts(c,id,slot,v(x,wheelY,z),parts);else if(hydraSleekWheels(c))hydraWheelParts(c,id,slot,v(x,wheelY,z),parts);else part");
  return s;
 });
@@ -39,7 +39,7 @@ edit('src/render.ts',s=>{
 });
 edit('src/visuals.ts',s=>"import {hydraHubDetail} from './hydra-wheel-finish';\n"+replace(s,' if(hydraDetail(mesh,p,c))return;',' if(hydraHubDetail(mesh,p,c)||hydraDetail(mesh,p,c))return;'));
 edit('src/main.ts',s=>replace(s,"c.chassis.profile==='hydra'?.5:1,':1'","c.chassis.profile==='hydra'?.1:1,':1'"));
-edit('tests/hydra-browser.mjs',s=>s.replaceAll("['drive.radius','100']","['drive.radius','60']").replaceAll("['drive.width','75']","['drive.width','40']").replaceAll("['drive.ratio','14']","['drive.ratio','8.4']"));
+edit('tests/hydra-browser.mjs',s=>s.replaceAll("['drive.radius','100']","['drive.radius','60']").replaceAll("['drive.width','75']","['drive.width','40']").replaceAll("['drive.ratio','14']","['drive.ratio','8.3']"));
 edit('tests/hydra-mobility-benchmark.ts',s=>s.replace('/^wheel_-?1_\\d$/','/^wheel_-?1_\\d(?:_contact)?$/'));
 
 edit("src/model.ts",s=>replace(s,"export function driveMotorStep(ratio:number,omega:number,throttle:number,inertia:number,id:BotConfig['drive']['motor']='drive48'){","export function driveMotorStep(ratio:number,omega:number,throttle:number,inertia:number,id:BotConfig['drive']['motor']='drive48',bearingDrag=.012){"));
@@ -48,3 +48,5 @@ edit("src/model.ts",s=>replace(s,"I+dt*.012","I+dt*bearingDrag"));
 edit("src/sim.ts",s=>replace(s,"import {hydraSleekWheels}","import {hydraSleekWheels,hydraBearingDrag}"));
 edit("src/sim.ts",s=>replace(s,"const omega=-dot(sub(body.angvel(),b.chassis.angvel()),axis),inversion=gyro?1:b.driveSign;let torque=-omega*.012;","const omega=-dot(sub(body.angvel(),b.chassis.angvel()),axis),inversion=gyro?1:b.driveSign,bearingDrag=hydraSleekWheels(c)?hydraBearingDrag(c):.012;let torque=-omega*bearingDrag;"));
 edit("src/sim.ts",s=>replace(s,"b.driveInertia.get(id)!,c.drive.motor)","b.driveInertia.get(id)!,c.drive.motor,bearingDrag)"));
+
+edit("tests/hydra-mobility-benchmark.ts",s=>replace(s,"if(/^wheel_-?1_\\d(?:_contact)?$/.test(id))","if(/^wheel_-?1_\\d(?:_contact)?$/.test(id)&&col.collisionGroups()!==0)"));
