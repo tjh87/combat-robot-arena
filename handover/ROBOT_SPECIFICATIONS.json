@@ -357,7 +357,8 @@
         "material": "rubber",
         "motor": "drive48",
         "ratio": 6.5,
-        "magnet": 0
+        "magnet": 0,
+        "hydraTuning": 1
       },
       "battery": {
         "pack": "P48",
