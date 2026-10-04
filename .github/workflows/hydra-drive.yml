@@ -2,7 +2,7 @@ name: Hydra drive fix validation
 on:
   push:
     branches: [hydra-drive-fix]
-    paths: ['.github/workflows/hydra-drive.yml','scripts/hydra-drive-fit.mjs','tests/hydra-drive.ts']
+    paths: ['.github/workflows/hydra-drive.yml','scripts/hydra-drive-fit.mjs','tests/hydra-drive.ts','tests/hydra-browser.mjs']
 permissions:
   contents: write
 concurrency:
