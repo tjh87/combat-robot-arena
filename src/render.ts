@@ -1,3 +1,4 @@
+import {hydraSleekWheels} from './hydra-wheels';
 import {hydraTineGeometry} from './hydra-finish';
 import {disposeSawbladeExposure} from './sawblaze-blur';
 import {WallCrackVisual} from './wall-cracks';
@@ -56,7 +57,7 @@ export class ArenaRenderer{
  if(config.chassis.profile==='quantum'&&p.module==='weapon'){material.roughness=.12;material.metalness=.97;}detailPart(mesh,p,config);
  return mesh;}
  displayParts(config:BotConfig,parts:Part[]){
-  const out:{p:Part,mesh:THREE.Mesh}[]=[],wheels=new Map<string,Part[]>(),composite=config.drive.traction!=='tracks'&&['huge','hypershock'].includes(config.chassis.profile??'');
+  const out:{p:Part,mesh:THREE.Mesh}[]=[],wheels=new Map<string,Part[]>(),composite=config.drive.traction!=='tracks'&&(['huge','hypershock'].includes(config.chassis.profile??'')||hydraSleekWheels(config));
   for(const p of parts){if(p.id.startsWith('track_belt_')){out.push({p,mesh:trackMesh(p,config)});continue;}if(!p.collides&&p.module!=='battery')continue;
   if(config.chassis.profile==='hydra'&&p.id.startsWith('flipper_tine_')){
    if(!p.id.endsWith('_0'))continue;const mesh=this.part(p,config);mesh.geometry.dispose();mesh.geometry=compactGeometry(hydraTineGeometry(config,Number(p.id.split('_')[2])));mesh.name='hydra-bronze-flipper-tine';out.push({p,mesh});continue;
@@ -87,7 +88,7 @@ export class ArenaRenderer{
     root.traverse(o=>{if(!(o instanceof THREE.Mesh))return;const m=o.material as THREE.MeshStandardMaterial,key=[m.color.getHex(),m.roughness,m.metalness,m.map?.uuid??'',m.side,m.transparent,m.opacity].join('/');let group=groups.get(key);if(!group){const material=m.clone();if(m.map)material.map=m.map.clone();group={geometries:[],material,kind:p.material};groups.set(key,group);}const geo=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone();if(!geo.getAttribute('uv'))geo.setAttribute('uv',new THREE.Float32BufferAttribute(new Float32Array(geo.getAttribute('position').count*2),2));geo.applyMatrix4(o.matrixWorld);group.geometries.push(geo);});
     this.disposeObject(root);
    }
-   let i=0;for(const group of groups.values()){const p=list[i++],geo=compactGeometry(mergeGeometries(group.geometries)!);group.geometries.forEach(g=>g.dispose());const mesh=new THREE.Mesh(geo,group.material);mesh.position.copy(origin);mesh.castShadow=mesh.receiveShadow=true;mesh.userData={module:p.module,part:p.id,material:group.kind,baseColor:group.material.color.getHex(),baseRoughness:group.material.roughness};if(moulded&&group.kind==='uhmw')mesh.name='huge-moulded-five-spoke-wheel';out.push({p,mesh});}
+   let i=0;for(const group of groups.values()){const p=list[i++],geo=compactGeometry(mergeGeometries(group.geometries)!);group.geometries.forEach(g=>g.dispose());const mesh=new THREE.Mesh(geo,group.material);mesh.position.copy(origin);mesh.castShadow=mesh.receiveShadow=true;mesh.userData={module:p.module,part:p.id,material:group.kind,baseColor:group.material.color.getHex(),baseRoughness:group.material.roughness};if(moulded&&group.kind==='uhmw')mesh.name='huge-moulded-five-spoke-wheel';if(hydraSleekWheels(config))mesh.name=group.kind==='rubber'?'hydra-sleek-wheel-tire':'hydra-sleek-wheel-hub';out.push({p,mesh});}
   }return out;
  }
  attach(sim:Simulation){this.wallCracks.update(sim.wallDamage.cracks);this.shadowDirty=true;this.needsRender=true;this.lastVisualTick=-1;this.clear(this.bots);this.bodyGroups.clear();this.partMeshes.clear();this.hazardMeshes.clear();this.lastImpact=0;this.endReplay();this.particleAges.fill(-1);this.smokeAges.fill(-1);this.smokeClock=0;this.exhaust?.reset();this.tireEffects.reset();

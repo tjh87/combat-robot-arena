@@ -308,7 +308,7 @@
     {
       "name": "Hydra",
       "profile": "hydra",
-      "totalMassKg": 113.20000000000027,
+      "totalMassKg": 113.2000000000005,
       "chassis": {
         "profile": "hydra",
         "form": "box",
@@ -319,7 +319,7 @@
         "thickness": 0.009,
         "wedgeAngle": 25,
         "clearance": 0.018,
-        "equipmentMassKg": 41.35266615371938
+        "equipmentMassKg": 39.76626871130934
       },
       "weapon": {
         "type": "flipper",
@@ -352,13 +352,13 @@
       "rotorInertiaKgM2": 0.9549331739393009,
       "drive": {
         "layout": 4,
-        "radius": 0.1,
-        "width": 0.075,
+        "radius": 0.06,
+        "width": 0.04,
         "material": "rubber",
         "motor": "drive48",
-        "ratio": 14,
+        "ratio": 8.3,
         "magnet": 0,
-        "hydraTuning": 2
+        "hydraTuning": 3
       },
       "battery": {
         "pack": "P48",
@@ -426,7 +426,7 @@
         "type": "none"
       },
       "flipperEnergyJ": 18900,
-      "geometryNote": "Approved preview 12 body and flipper with the original wheels and drive. Dimensions are game estimates.",
+      "geometryNote": "Compact 120 mm wheels with counted steel cores and 8.3:1 gearing. Dimensions and materials are game estimates.",
       "wheelBaseM": 0.425,
       "wheelCenterZM": 0
     },

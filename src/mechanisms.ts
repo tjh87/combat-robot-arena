@@ -1,3 +1,4 @@
+import {hydraCoreRadius,hydraCoreWidth} from './hydra-wheels';
 import {sawblazeNoseProfile} from './sawblaze-geometry';
 import {sawbladeCells} from './sawblade-profile';
 import {MATERIALS,partProperties,chiselShape,WEDGE_TIP,HYDRA_TIP,groundForkMount,v,add,sub,mul,length,axisQ,identity,armOffset,type BotConfig,type Spinner,type Part,type Slot,type Material,type Vec,type Quat} from './model';
@@ -255,4 +256,11 @@ export function extendedRotor(c:BotConfig,w:Spinner,parts:Part[]){
   }
   else b.put('tooth_'+i,'weapon','rotor',chiselShape(size),pos,w.material,axisQ(horizontal?v(0,1,0):v(1,0,0),a),i);
  }
+}
+
+export function hydraWheelParts(c:BotConfig,id:string,slot:Slot,position:Vec,parts:Part[]){
+ const b=writer(parts),first=parts.length;
+ b.ring(id,slot,id,c.drive.radius,hydraCoreRadius(c),c.drive.width,position,'rubber',32);
+ for(const p of parts.slice(first))p.analyticPrism=true;
+ b.put(id+'_hub',slot,id,{kind:'cylinder',radius:hydraCoreRadius(c),width:hydraCoreWidth(c)},position,'hardox',axisQ(v(0,0,1),Math.PI/2));
 }

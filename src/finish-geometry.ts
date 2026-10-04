@@ -1,3 +1,4 @@
+import {hydraSleekWheels,hydraCoreRadius} from './hydra-wheels';
 import {sawblazeNoseProfile} from './sawblaze-geometry';
 import * as THREE from 'three';
 import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
@@ -104,9 +105,10 @@ export function finishedGeometry(p:Part,c:BotConfig):THREE.BufferGeometry{
   const edge=Math.min(.004,(ro-ri)*.12,width*.12),profile=[new THREE.Vector2(ri,-width/2),new THREE.Vector2(ro-edge,-width/2)];
   for(let i=1;i<=3;i++){const a=-Math.PI/2+i*Math.PI/6;profile.push(new THREE.Vector2(ro-edge+edge*Math.cos(a),-width/2+edge+edge*Math.sin(a)));}
   profile.push(new THREE.Vector2(ro,width/2-edge));for(let i=1;i<=3;i++){const a=i*Math.PI/6;profile.push(new THREE.Vector2(ro-edge+edge*Math.cos(a),width/2-edge+edge*Math.sin(a)));}
-  profile.push(new THREE.Vector2(ri,width/2),new THREE.Vector2(ri,-width/2));const g=new THREE.LatheGeometry(profile,p.body.startsWith('wheel_')?5:6,index*Math.PI*2/count,Math.PI*2/count);g.rotateZ(Math.PI/2);return g;
+  profile.push(new THREE.Vector2(ri,width/2),new THREE.Vector2(ri,-width/2));const g=new THREE.LatheGeometry(profile,p.body.startsWith('wheel_')?(hydraSleekWheels(c)?2:5):6,index*Math.PI*2/count,Math.PI*2/count);g.rotateZ(Math.PI/2);return g;
  };
  const wheel=p.id.match(/^wheel_(-?1)_\d+(?:_(tread|rim))?(?:_(\d+))?$/);
+ if(wheel&&hydraSleekWheels(c))return ring(c.drive.radius,hydraCoreRadius(c),c.drive.width,Number(wheel[3]??0),32);
  if(wheel&&['huge','hypershock'].includes(c.chassis.profile??'')){
   const r=c.drive.radius,large=c.chassis.profile==='huge',type=wheel[2],i=Number(wheel[3]??0);
   return ring(type==='tread'?r:type==='rim'?r*.79:large?r-.009:r,type==='tread'?r-.009:type==='rim'?r*.67:r*(large?.84:.78),type==='rim'?.015:c.drive.width,i,16);

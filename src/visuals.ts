@@ -1,3 +1,4 @@
+import {hydraHubDetail} from './hydra-wheel-finish';
 import {hydraDetail} from './hydra-finish';
 import {ARENA_HAZARDS} from './arena-hazards';
 import {compactGeometry} from './geometry-memory';
@@ -163,7 +164,7 @@ export function buildFoundry(parent:THREE.Group){
 // Cosmetic detail is parented to the real part, so damage, wheel rotation,
 // detached panels and replay transforms all move it with the correct body.
 export function detailPart(mesh:THREE.Mesh,p:Part,c:BotConfig){
- if(hydraDetail(mesh,p,c))return;
+ if(hydraHubDetail(mesh,p,c)||hydraDetail(mesh,p,c))return;
  const b=new Batch(),bright=metal('#9ba6aa',.3,.85),black=metal('#11151b',.82,.15),accent=metal(c.identity.secondary,.4,.65),gold=metal('#d5aa43',.4,.7);
  if(c.chassis.profile==='hypershock'&&/^wheel_-?1_\d+_hub$/.test(p.id)){
   const r=c.drive.radius,width=c.drive.width,side=p.position.x<0?1:-1;

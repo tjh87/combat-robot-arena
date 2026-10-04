@@ -1,3 +1,4 @@
+import {hydraSleekWheels,hydraBearingDrag} from './hydra-wheels';
 import {WallDamage,isArenaWall,type WallCrack} from './wall-damage';
 import {batteryAlongRay,batteryZones,BATTERY_CRUSH_RESISTANCE} from './battery-layout';
 import {createHazards,stepHazard,hazardContactCentre,type Hazard} from './arena-hazards';
@@ -101,7 +102,7 @@ export class Simulation{
  // Sliding steel tips must not inherit the floor's high tyre-grip coefficient.
  if(skid)desc.setFrictionCombineRule(RAPIER.CoefficientCombineRule.Min);
  if(p.material==='rubber'&&(c.chassis.profile==='quantum'||c.chassis.profile==='gigabyte'||c.drive.traction==='tracks'))desc.setFrictionCombineRule(RAPIER.CoefficientCombineRule.Max);
- if(c.chassis.profile==='huge'&&c.drive.traction!=='tracks'&&p.body.startsWith('wheel_'))desc.setCollisionGroups(0);
+ if((c.chassis.profile==='huge'&&c.drive.traction!=='tracks'||hydraSleekWheels(c))&&p.body.startsWith('wheel_'))desc.setCollisionGroups(0);
  const collider=this.world.createCollider(desc,body);colliders.set(p.id,collider);this.meta.set(collider.handle,{bot:id,module:p.module,part:p});}
  // Continuous rounded wheel contacts prevent gaps between visual spokes and
  // tread sectors from catching the floor, rails or an opponent's wedge.
@@ -109,6 +110,10 @@ export class Simulation{
   const part=compiled.parts.find(p=>p.body===key)!,edge=Math.min(.008,c.drive.width*.2),desc=RAPIER.ColliderDesc.roundCylinder(c.drive.width/2-edge,c.drive.radius-edge,edge).setRotation(axisQ(v(0,0,1),Math.PI/2)).setDensity(0).setFriction(HUGE_HANDLING.friction).setFrictionCombineRule(RAPIER.CoefficientCombineRule.Max).setRestitution(.03).setContactSkin(.001).setCollisionGroups(groups(id===0?2:4,id===0?21:19)).setActiveEvents(RAPIER.ActiveEvents.COLLISION_EVENTS);
   const collider=this.world.createCollider(desc,body);colliders.set(key+'_contact',collider);this.meta.set(collider.handle,{bot:id,module:part.module,part:{...part,id:key+'_contact'}});
  }
+  if(hydraSleekWheels(c))for(const[key,body]of bodies)if(key.startsWith('wheel_')){
+   const part=compiled.parts.find(p=>p.body===key)!,edge=Math.min(.0012,c.drive.width*.08),desc=RAPIER.ColliderDesc.roundCylinder(c.drive.width/2-edge,c.drive.radius-edge,edge).setRotation(axisQ(v(0,0,1),Math.PI/2)).setMass(0).setFriction(1.35).setRestitution(.06).setContactSkin(.001).setCollisionGroups(groups(id===0?2:4,id===0?21:19)).setActiveEvents(RAPIER.ActiveEvents.COLLISION_EVENTS);
+   const collider=this.world.createCollider(desc,body);colliders.set(key+'_contact',collider);this.meta.set(collider.handle,{bot:id,module:part.module,part:{...part,id:key+'_contact'}});
+  }
  const startHP={} as Record<Slot,number>;SLOTS.forEach(s=>startHP[s]=modules[s].hp);
  const driveInertia=new Map<string,number>();for(const[id,body]of bodies)if(id.startsWith('wheel_')){const q=body.principalInertiaLocalFrame(),a=rotate(v(1,0,0),{x:-q.x,y:-q.y,z:-q.z,w:q.w}),I=body.principalInertia(),wheel=I.x*a.x*a.x+I.y*a.y*a.y+I.z*a.z*a.z;driveInertia.set(id,1/(1/Math.max(.00001,wheel)+1/compiled.inertia.x));}
  return{id,compiled,driveInertia,chassis,rotor:bodies.get('rotor'),arm:bodies.get('weapon_arm'),roll:bodies.get('self_right'),bodies,colliders,joints,modules,startHP,energy:c.battery.capacityWh*3600,charges:c.weapon.type==='flipper'?c.weapon.charges:0,weaponOn:false,driveSign:1,spinDirection:isSpinner(c.weapon)?c.weapon.direction:1,rpm:0,rotorEnergy:0,flipStart:-1,flipWork:0,flipAngle:0,rollStart:-1,autoRightTicks:0,rollWork:0,rollSettling:false,rollStowAt:0,rollStowAngle:0,resumeWeapon:false,lastSelfRight:-10000,lastManualRecovery:-10000,flipDepth:0,crushAngle:0,crushForce:0,crushContactTicks:0,crushPhase:'opening',crushWork:0,crushStart:-1,driveRamp:[0,0],lastFire:-10000,command:neutral(),grounded:false,groundTicks:0,powerWork:0,weaponWatts:0,actuatorTorque:0,unstick:{active:false,since:0,attempt:0},count:0,pending:0,recovery:0,history:[],fouls:0,wall:false,pinVictim:false,ai:{state:'spin up',reason:'Prepare weapon',since:0,command:neutral(),history:[],lastProgress:origin,progressTick:0,lastWeaponRequest:-10000,lastFireRequest:-10000,lastRightRequest:-10000},lastAction:-10000,lastHazard:-10000,lastAttacker:null,engage:0,closing:0,pin:0,forced:0,stable:0,faults:[]};
@@ -255,6 +260,8 @@ export class Simulation{
  // A two-wheel spinner's reaction can steer it off a straight
  // command. Counter that yaw through the drive motors, within their limits.
  if(c.chassis.profile==='gigabyte'||c.chassis.profile==='huge'){const rate=2.4*RULES.dt;b.driveRamp[0]+=clamp(cmd.left-b.driveRamp[0],-rate,rate);b.driveRamp[1]+=clamp(cmd.right-b.driveRamp[1],-rate,rate);cmd.left=b.driveRamp[0];cmd.right=b.driveRamp[1];}
+ // The compact wheel stance uses the full-size steering response.
+ if(hydraSleekWheels(c)){const forward=(cmd.left+cmd.right)/2,turn=(cmd.left-cmd.right)/2;cmd.left=forward+turn*0.92;cmd.right=forward-turn*0.92;}
  const straightAssist=isHorizontal(c.weapon)&&c.chassis.profile!=='gigabyte'&&c.drive.traction!=='tracks'&&c.drive.layout===2&&b.weaponOn&&b.grounded&&up.y>.65&&Math.abs(cmd.left-cmd.right)<.05&&Math.abs(cmd.left)>.03?clamp(dot(b.chassis.angvel(),up)*.35,-.35,.35):0;
  // Inverted traction control limits acceleration using the support margin
  // and higher centre of mass. It retains full speed and physical gyroscopic motion.
@@ -269,8 +276,8 @@ export class Simulation{
 
  for(const [id,body]of b.bodies){if(!id.startsWith('wheel_'))continue;const p=body.translation();const grounded=p.y<=c.drive.radius+.035&&Math.abs(axis.y)<.6;this.world.contactPairsWith(b.colliders.get(id+'_contact')??b.colliders.get(id)!,other=>{const info=this.meta.get(other.handle);if(info?.bot===null&&other.translation().y<.5)b.grounded=true;});b.grounded ||=grounded;
  const side=id.includes('_-1_')?'drive_left':'drive_right',gyro=selfRightKind(c)==='gyro'&&b.rollStart>=0,input=clamp(((side==='drive_left')===(gyro||b.driveSign>0)?cmd.left:cmd.right)+(side==='drive_left'?straightAssist:-straightAssist),-1,1);
- const omega=-dot(sub(body.angvel(),b.chassis.angvel()),axis),inversion=gyro?1:b.driveSign;let torque=-omega*.012;if(tracks){b.trackPhase??=[0,0];b.trackPhase[side==='drive_left'?0:1]+=omega*c.drive.radius*RULES.dt/(c.drive.layout/2);}
- if(powered&&b.modules[side].functional){const duty=hugeDuty?hugeDuty[side==='drive_left'?0:1]:input;const m=driveMotorStep(c.drive.ratio,omega,duty*inversion,b.driveInertia.get(id)!,c.drive.motor);torque=0;const scale=Math.min(output.driveOutput,b.energy/Math.max(.001,m.watts*RULES.dt),driveTorqueLimit/Math.max(.001,Math.abs(m.torque)));torque+=m.torque*scale;this.spend(b,m.watts*RULES.dt*scale);if(Math.abs(duty)>.03){const work=Math.max(0,m.torque*omega)*RULES.dt*scale;b.powerWork+=work;this.driveWork[b.id]+=work;}}
+ const omega=-dot(sub(body.angvel(),b.chassis.angvel()),axis),inversion=gyro?1:b.driveSign,bearingDrag=hydraSleekWheels(c)?hydraBearingDrag(c):.012;let torque=-omega*bearingDrag;if(tracks){b.trackPhase??=[0,0];b.trackPhase[side==='drive_left'?0:1]+=omega*c.drive.radius*RULES.dt/(c.drive.layout/2);}
+ if(powered&&b.modules[side].functional){const duty=hugeDuty?hugeDuty[side==='drive_left'?0:1]:input;const m=driveMotorStep(c.drive.ratio,omega,duty*inversion,b.driveInertia.get(id)!,c.drive.motor,bearingDrag);torque=0;const scale=Math.min(output.driveOutput,b.energy/Math.max(.001,m.watts*RULES.dt),driveTorqueLimit/Math.max(.001,Math.abs(m.torque)));torque+=m.torque*scale;this.spend(b,m.watts*RULES.dt*scale);if(Math.abs(duty)>.03){const work=Math.max(0,m.torque*omega)*RULES.dt*scale;b.powerWork+=work;this.driveWork[b.id]+=work;}}
  this.torquePair(b,body,axis,-torque);}
  for(const [id,body]of b.bodies)if(id.startsWith('ground_fork_'))this.torquePair(b,body,axis,-dot(sub(body.angvel(),b.chassis.angvel()),axis)*.04);
  if(b.grounded)b.groundTicks++;else b.groundTicks=0;
