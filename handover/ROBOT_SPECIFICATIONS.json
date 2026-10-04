@@ -308,7 +308,7 @@
     {
       "name": "Hydra",
       "profile": "hydra",
-      "totalMassKg": 113.2000000000004,
+      "totalMassKg": 113.20000000000027,
       "chassis": {
         "profile": "hydra",
         "form": "box",
@@ -319,7 +319,7 @@
         "thickness": 0.009,
         "wedgeAngle": 25,
         "clearance": 0.018,
-        "equipmentMassKg": 50.608441509370486
+        "equipmentMassKg": 41.35266615371938
       },
       "weapon": {
         "type": "flipper",
@@ -352,13 +352,13 @@
       "rotorInertiaKgM2": 0.9549331739393009,
       "drive": {
         "layout": 4,
-        "radius": 0.046,
-        "width": 0.038,
+        "radius": 0.1,
+        "width": 0.075,
         "material": "rubber",
         "motor": "drive48",
-        "ratio": 6.5,
+        "ratio": 14,
         "magnet": 0,
-        "hydraTuning": 1
+        "hydraTuning": 2
       },
       "battery": {
         "pack": "P48",
@@ -426,9 +426,9 @@
         "type": "none"
       },
       "flipperEnergyJ": 18900,
-      "geometryNote": "Approved preview 12. Dimensions and equipment allowance are game estimates.",
-      "wheelBaseM": 0.305,
-      "wheelCenterZM": 0.0425
+      "geometryNote": "Approved preview 12 body and flipper with the original wheels and drive. Dimensions are game estimates.",
+      "wheelBaseM": 0.425,
+      "wheelCenterZM": 0
     },
     {
       "name": "ICEwave",
