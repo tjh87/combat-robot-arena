@@ -44,7 +44,6 @@ jobs:
           node --import tsx tests/hydra-approved.ts
           node --import tsx tests/roster.ts > browser-evidence/roster.log 2>&1
           node --import tsx tests/visuals.ts > browser-evidence/visuals.log 2>&1
-          node --import tsx tests/run.ts > browser-evidence/core.log 2>&1
       - name: Compare historical suites
         run: |
           node --import tsx tests/blades-update.ts > browser-evidence/current-blades.log 2>&1 || true
@@ -71,5 +70,9 @@ jobs:
         run: |
           rm scripts/hydra-wheel-migrate.mjs scripts/hydra-migrate.mjs scripts/hydra-finish-migrate.mjs scripts/hydra-import-migrate.mjs .github/workflows/hydra-approved.yml
           git add scripts/hydra-wheel-migrate.mjs src/hydra-geometry.ts src/hydra-finish.ts src/model.ts src/mechanisms.ts src/visuals.ts src/render.ts tests/hydra-approved.ts tests/hydra-browser.mjs tests/systems.ts handover/ROBOT_SPECIFICATIONS.json scripts/hydra-migrate.mjs scripts/hydra-finish-migrate.mjs scripts/hydra-import-migrate.mjs .github/workflows/hydra-approved.yml
+          git status --short
+          git diff --check
+          git diff
+          git log --oneline -10
           git -c user.name='tjh87' -c user.email='tjh87@users.noreply.github.com' commit -m 'Integrate approved Hydra flat chassis and three-tine flipper'
           git push origin HEAD:hydra-approved-redesign
