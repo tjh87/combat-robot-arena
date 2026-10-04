@@ -1,0 +1,3 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+const path='package.json',p=JSON.parse(readFileSync(path,'utf8'));Object.assign(p.dependencies,{ioredis:'5.8.2',ws:'8.18.3'});Object.assign(p.devDependencies,{'@types/ws':'8.18.1','@types/node':'24.10.0'});p.scripts['online:build']='node scripts/online-build.mjs';p.scripts['online:test']='node --import tsx tests/online-core.ts';p.scripts['online:serve']='node --import tsx server/local.ts';writeFileSync(path,JSON.stringify(p,null,2)+'\n');
+const buildPath='scripts/build.mjs';let build=readFileSync(buildPath,'utf8');build+='\nif(process.env.VERCEL===\'1\'||process.env.ONLINE_BUILD===\'1\')await import(\'./online-build.mjs\');\n';writeFileSync(buildPath,build);
