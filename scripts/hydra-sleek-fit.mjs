@@ -50,3 +50,12 @@ edit("src/sim.ts",s=>replace(s,"const omega=-dot(sub(body.angvel(),b.chassis.ang
 edit("src/sim.ts",s=>replace(s,"b.driveInertia.get(id)!,c.drive.motor)","b.driveInertia.get(id)!,c.drive.motor,bearingDrag)"));
 
 edit("tests/hydra-mobility-benchmark.ts",s=>replace(s,"if(/^wheel_-?1_\\d(?:_contact)?$/.test(id))","if(/^wheel_-?1_\\d(?:_contact)?$/.test(id)&&col.collisionGroups()!==0)"));
+
+edit("tests/hydra-drive.ts",s=>replace(s,"assert.equal(config.drive.ratio,14)","assert.equal(config.drive.ratio,8.3)"));
+edit("tests/hydra-drive.ts",s=>replace(s,"assert.equal(parseConfig(saved).drive.ratio,14)","assert.equal(parseConfig(saved).drive.ratio,8.3)"));
+edit("tests/hydra-drive.ts",s=>replace(s,"if(/^wheel_-?1_\\d$/.test(id))","if(/^wheel_-?1_\\d(?:_contact)?$/.test(id)&&col.collisionGroups()!==0)"));
+edit("tests/hydra-drive-import.ts",s=>replace(s,"assert.equal(current.drive.hydraTuning,2)","assert.equal(current.drive.hydraTuning,3)"));
+edit("tests/hydra-drive-import.ts",s=>replace(s,"assert.equal(restored.drive.radius,.10);assert.equal(restored.drive.width,.075);assert.equal(restored.drive.ratio,14)","assert.equal(restored.drive.radius,.060);assert.equal(restored.drive.width,.040);assert.equal(restored.drive.ratio,8.3)"));
+edit("tests/hydra-drive-import.ts",s=>replace(s,"(invalid.drive as any).hydraTuning=3","(invalid.drive as any).hydraTuning=4"));
+edit("tests/hydra-mobility-acceptance.ts",s=>replace(s,"assert.equal(c.drive.radius,.10);assert.equal(c.drive.width,.075);assert.equal(c.drive.ratio,14);assert.equal(c.drive.hydraTuning,2)","assert.equal(c.drive.radius,.060);assert.equal(c.drive.width,.040);assert.equal(c.drive.ratio,8.3);assert.equal(c.drive.hydraTuning,3)"));
+edit("tests/hydra-mobility-acceptance.ts",s=>replace(s,"assert.equal(imported.drive.radius,.10);assert.equal(imported.drive.ratio,14)","assert.equal(imported.drive.radius,.060);assert.equal(imported.drive.ratio,8.3)"));

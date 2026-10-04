@@ -34,6 +34,9 @@ jobs:
         run: |
           node --import tsx tests/hydra-mobility-benchmark.ts > browser-evidence/sleek-wheels.log 2>&1
           node --import tsx tests/hydra-sleek-wheels.ts
+          node --import tsx tests/hydra-drive.ts
+          node --import tsx tests/hydra-drive-import.ts
+          node --import tsx tests/hydra-mobility-acceptance.ts
           node --import tsx tests/hydra-approved.ts
           node --import tsx tests/roster.ts > browser-evidence/roster.log 2>&1
       - name: Browser dependencies outside game
@@ -60,6 +63,6 @@ jobs:
           git diff --check
           git diff src/model.ts src/mechanisms.ts src/sim.ts src/finish-geometry.ts src/render.ts src/visuals.ts src/main.ts tests/hydra-browser.mjs tests/hydra-mobility-benchmark.ts handover/ROBOT_SPECIFICATIONS.json
           git log --oneline -10
-          git add src/hydra-wheels.ts src/hydra-wheel-finish.ts src/model.ts src/mechanisms.ts src/sim.ts src/finish-geometry.ts src/render.ts src/visuals.ts src/main.ts tests/hydra-browser.mjs tests/hydra-mobility-benchmark.ts tests/hydra-sleek-wheels.ts handover/ROBOT_SPECIFICATIONS.json scripts/hydra-sleek-fit.mjs .github/workflows/hydra-sleek.yml
+          git add tests/hydra-drive.ts tests/hydra-drive-import.ts tests/hydra-mobility-acceptance.ts src/hydra-wheels.ts src/hydra-wheel-finish.ts src/model.ts src/mechanisms.ts src/sim.ts src/finish-geometry.ts src/render.ts src/visuals.ts src/main.ts tests/hydra-browser.mjs tests/hydra-mobility-benchmark.ts tests/hydra-sleek-wheels.ts handover/ROBOT_SPECIFICATIONS.json scripts/hydra-sleek-fit.mjs .github/workflows/hydra-sleek.yml
           git -c user.name='tjh87' -c user.email='tjh87@users.noreply.github.com' commit -m 'Fit sleek Hydra wheels with retained drivetrain performance'
           git push origin HEAD:hydra-sleek-wheels
