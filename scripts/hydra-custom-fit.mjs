@@ -1,0 +1,2 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+const path='src/hydra-geometry.ts';let s=readFileSync(path,'utf8');for(const[a,b]of[["thickness=Math.min(.0008+.0272*(1-t)**.55","thickness=Math.min(.0008+(w.thickness===.028?.0272:w.thickness-.0008)*(1-t)**.55"],["v(a.x,0,0),'hardox');","v(a.x,0,0),w.material);"]]){if(!s.includes(a))throw Error('Missing custom tine anchor');s=s.replace(a,b);}writeFileSync(path,s);
