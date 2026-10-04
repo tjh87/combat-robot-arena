@@ -44,24 +44,28 @@ try{
  stage='lobby screenshot';await screenshot(a,'online-lobby');stage='start fight';console.log('Start fight');await a.locator('#online-start').click();
  await a.waitForFunction(()=>document.querySelector('#online-clock')?.textContent.includes('LIVE'),undefined,{timeout:30000});
  await b.waitForFunction(()=>document.querySelector('#online-clock')?.textContent.includes('LIVE'),undefined,{timeout:30000});
- const sa=await status(a),sb=await status(b);assert.equal(sa.online.side,0);assert.equal(sb.online.side,1);
- stage='owned controls';await a.keyboard.down('ArrowUp');await a.waitForTimeout(1500);await a.keyboard.up('ArrowUp');
- await b.keyboard.down('ArrowUp');await b.waitForTimeout(1500);await b.keyboard.up('ArrowUp');
+ const sa=await status(a),sb=await status(b);assert.equal(sa.online.side,0);assert.equal(sb.online.side,1);assert.equal(sa.online.viewer,0);assert.equal(sb.online.viewer,1);
+ stage='owned controls';await a.keyboard.down('ArrowUp');await a.waitForTimeout(350);await a.keyboard.up('ArrowUp');await a.waitForTimeout(500);
+ const movedA=(await status(a)).online;assert(movedA.ack[0]>sa.online.ack[0]);assert(Math.hypot(movedA.positions[0].x-sa.online.positions[0].x,movedA.positions[0].z-sa.online.positions[0].z)>.02);
+ await b.keyboard.down('ArrowUp');await b.waitForTimeout(350);await b.keyboard.up('ArrowUp');await b.waitForTimeout(500);
+ const movedB=(await status(b)).online;assert(movedB.ack[1]>sb.online.ack[1]);assert(Math.hypot(movedB.positions[1].x-sb.online.positions[1].x,movedB.positions[1].z-sb.online.positions[1].z)>.02);
  await a.locator('#online-camera').selectOption('pov');await b.locator('#online-camera').selectOption('pov');
  assert.equal((await status(a)).online.camera,'pov');assert.equal((await status(b)).online.camera,'pov');
- stage='refresh';const before=(await status(b)).online.tick;console.log('Reload second player');
+ stage='refresh';const before=(await status(b)).online.tick;console.log('Before reload',JSON.stringify((await status(b)).online));
  await a.evaluate(()=>window.__freezeFrame=true);
  try{
   await b.reload({waitUntil:'domcontentloaded',timeout:60000});
   await b.waitForFunction(()=>window.__arenaTools.has('read_arena_status'),undefined,{timeout:60000});
+  console.log('After startup',JSON.stringify((await status(b)).online));
   await b.waitForFunction(()=>document.querySelector('#online-clock')?.textContent.includes('LIVE'),undefined,{timeout:30000});
  }finally{await a.evaluate(()=>window.__resumeFrames());}
  const resumed=await status(b);assert.equal(resumed.online.room,code);assert.equal(resumed.online.side,1);assert(resumed.online.tick>=before-2);
  await b.locator('#online-camera').selectOption('pov');
  stage='POV screenshots';await screenshot(a,'online-alice-pov');await screenshot(b,'online-bob-pov');
  stage='reconnected screenshot';await screenshot(b,'online-reconnected');assert.deepEqual(errors,[]);assert.deepEqual(failed.filter(url=>!url.includes('/api/online')),[]);
- await writeFile('browser-evidence/online-browser.json',JSON.stringify({status:'passed',source:process.env.GITHUB_SHA,browser:'Chromium / SwiftShader WebGL',roomDigits:4,twoBrowserContexts:true,ownedSides:[0,1],ownedPov:true,resumedSeat:true,serverTickContinues:true,errors,failed},null,2));
+ await writeFile('browser-evidence/online-browser.json',JSON.stringify({status:'passed',source:process.env.GITHUB_SHA,browser:'Chromium / SwiftShader WebGL',roomDigits:4,twoBrowserContexts:true,ownedSides:[0,1],ownedMovement:true,ownedPov:true,resumedSeat:true,serverTickContinues:true,errors,failed},null,2));
  console.log('PASS two browsers, four-digit joining, own controls, own POV, and refresh recovery');
 }catch(error){
- await writeFile('browser-evidence/online-browser-failure.json',JSON.stringify({stage,error:String(error),errors,failed},null,2));throw error;
+ const details=await Promise.all(pages.map(p=>Promise.race([p.evaluate(()=>({status:window.__arenaTools?.get('read_arena_status')?.execute(),sidebar:document.querySelector('#sidebar')?.textContent,clock:document.querySelector('#online-clock')?.textContent})),new Promise(r=>setTimeout(()=>r({error:'Page diagnostics timed out.'}),5000))]).catch(e=>({error:String(e)}))));
+ await writeFile('browser-evidence/online-browser-failure.json',JSON.stringify({stage,error:String(error),errors,failed,pages:details},null,2));throw error;
 }finally{clearTimeout(deadline);await Promise.all(contexts.map(c=>c.close()));await browser.close();}
