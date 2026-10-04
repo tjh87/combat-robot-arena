@@ -3,6 +3,9 @@ on:
   push:
     branches: [hydra-approved-redesign]
     paths: ['.github/workflows/hydra-approved.yml', 'src/hydra-*.ts', 'scripts/hydra-*.mjs', 'tests/hydra-*']
+concurrency:
+  group: hydra-approved-redesign
+  cancel-in-progress: true
 permissions:
   contents: write
 jobs:
@@ -31,6 +34,7 @@ jobs:
           node scripts/hydra-migrate.mjs
           node scripts/hydra-finish-migrate.mjs
           node scripts/hydra-import-migrate.mjs
+          node scripts/hydra-wheel-migrate.mjs
       - name: Build and offline validation
         run: |
           node scripts/build.mjs
@@ -65,7 +69,7 @@ jobs:
           path: browser-evidence
       - name: Commit tested source to feature branch
         run: |
-          rm scripts/hydra-migrate.mjs scripts/hydra-finish-migrate.mjs scripts/hydra-import-migrate.mjs .github/workflows/hydra-approved.yml
-          git add src/hydra-geometry.ts src/hydra-finish.ts src/model.ts src/mechanisms.ts src/visuals.ts src/render.ts tests/hydra-approved.ts tests/hydra-browser.mjs tests/systems.ts handover/ROBOT_SPECIFICATIONS.json scripts/hydra-migrate.mjs scripts/hydra-finish-migrate.mjs scripts/hydra-import-migrate.mjs .github/workflows/hydra-approved.yml
+          rm scripts/hydra-wheel-migrate.mjs scripts/hydra-migrate.mjs scripts/hydra-finish-migrate.mjs scripts/hydra-import-migrate.mjs .github/workflows/hydra-approved.yml
+          git add scripts/hydra-wheel-migrate.mjs src/hydra-geometry.ts src/hydra-finish.ts src/model.ts src/mechanisms.ts src/visuals.ts src/render.ts tests/hydra-approved.ts tests/hydra-browser.mjs tests/systems.ts handover/ROBOT_SPECIFICATIONS.json scripts/hydra-migrate.mjs scripts/hydra-finish-migrate.mjs scripts/hydra-import-migrate.mjs .github/workflows/hydra-approved.yml
           git -c user.name='tjh87' -c user.email='tjh87@users.noreply.github.com' commit -m 'Integrate approved Hydra flat chassis and three-tine flipper'
           git push origin HEAD:hydra-approved-redesign
