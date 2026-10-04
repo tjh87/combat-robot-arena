@@ -1,0 +1,65 @@
+name: Sleek Hydra wheels with retained performance
+on:
+  push:
+    branches: [hydra-sleek-wheels]
+    paths: ['.github/workflows/hydra-sleek.yml','scripts/hydra-sleek-fit.mjs','src/hydra-wheel*.ts','tests/hydra-sleek-wheels.ts']
+permissions:
+  contents: write
+concurrency:
+  group: hydra-sleek-wheels
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Measure the current full-size wheels
+        run: |
+          mkdir -p browser-evidence
+          HYDRA_METRICS=browser-evidence/original-mobility.json node --import tsx tests/hydra-mobility-benchmark.ts > browser-evidence/large-wheels.log 2>&1
+      - name: Build the smaller physical wheels
+        run: |
+          node scripts/hydra-sleek-fit.mjs
+          node scripts/build.mjs
+          node scripts/verify.mjs
+      - name: Compare real movement and validate flipper recovery
+        run: |
+          node --import tsx tests/hydra-mobility-benchmark.ts > browser-evidence/sleek-wheels.log 2>&1
+          node --import tsx tests/hydra-sleek-wheels.ts
+          node --import tsx tests/hydra-approved.ts
+          node --import tsx tests/roster.ts > browser-evidence/roster.log 2>&1
+      - name: Browser dependencies outside game
+        run: |
+          mkdir -p "$RUNNER_TEMP/browser"
+          npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
+          "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Inspect small wheels in Chromium WebGL
+        run: |
+          node scripts/serve.mjs > browser-evidence/server.log 2>&1 &
+          node tests/hydra-browser.mjs
+      - name: Update Hydra game estimates
+        run: |
+          node --import tsx --input-type=module -e "import fs from 'node:fs';import{preset,compile,wheelBase,wheelCentreZ}from'./src/model.ts';const path='handover/ROBOT_SPECIFICATIONS.json',data=JSON.parse(fs.readFileSync(path,'utf8')),c=preset(2),b=compile(c),r=data.robots.find(r=>r.profile==='hydra');Object.assign(r,{drive:c.drive,chassis:c.chassis,totalMassKg:b.mass,wheelBaseM:wheelBase(c),wheelCenterZM:wheelCentreZ(c),geometryNote:'Compact 120 mm wheels with counted steel cores and 8.4:1 gearing. Dimensions and materials are game estimates.'});fs.writeFileSync(path,JSON.stringify(data,null,2)+'\n');"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hydra-sleek-wheels-evidence
+          path: browser-evidence
+      - name: Commit tested source to feature branch
+        run: |
+          rm scripts/hydra-sleek-fit.mjs .github/workflows/hydra-sleek.yml
+          git status --short
+          git diff --check
+          git diff src/model.ts src/mechanisms.ts src/sim.ts src/finish-geometry.ts src/render.ts src/visuals.ts src/main.ts tests/hydra-browser.mjs tests/hydra-mobility-benchmark.ts handover/ROBOT_SPECIFICATIONS.json
+          git log --oneline -10
+          git add src/hydra-wheels.ts src/hydra-wheel-finish.ts src/model.ts src/mechanisms.ts src/sim.ts src/finish-geometry.ts src/render.ts src/visuals.ts src/main.ts tests/hydra-browser.mjs tests/hydra-mobility-benchmark.ts tests/hydra-sleek-wheels.ts handover/ROBOT_SPECIFICATIONS.json scripts/hydra-sleek-fit.mjs .github/workflows/hydra-sleek.yml
+          git -c user.name='tjh87' -c user.email='tjh87@users.noreply.github.com' commit -m 'Fit sleek Hydra wheels with retained drivetrain performance'
+          git push origin HEAD:hydra-sleek-wheels
