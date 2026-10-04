@@ -107,8 +107,8 @@ export function selfRightKind(c:BotConfig):'arm'|'flipper'|'saw'|'gyro'|null{
 }
 export function isRampPart(p:Pick<Part,'id'>){return p.id==='wedge'||p.id==='flipper'||p.id.startsWith('flipper_tine_')||/^(flipper_fang|engine_plow|disc_scoop|cage_skirt|cage_plow|saw_fork|vertical_outrigger|crusher_scoop)_?/.test(p.id);}
 export function batteryPosition(c:BotConfig){return batteryZones(c)[0].position;}
-export function wheelBase(c:BotConfig){return c.chassis.profile==='hypershock'?Math.max(c.chassis.length*.72,2*c.drive.radius+.025):c.chassis.length-2*c.drive.radius-.015;}
-export function wheelCentreZ(c:BotConfig){return c.chassis.profile==='hypershock'?-.065:0;}
+export function wheelBase(c:BotConfig){return c.chassis.profile==='hydra'?c.chassis.length*.305/.64:c.chassis.profile==='hypershock'?Math.max(c.chassis.length*.72,2*c.drive.radius+.025):c.chassis.length-2*c.drive.radius-.015;}
+export function wheelCentreZ(c:BotConfig){return c.chassis.profile==='hydra'?c.chassis.length*.0425/.64:c.chassis.profile==='hypershock'?-.065:0;}
 export function wheelPositionZ(c:BotConfig,i:number){return c.drive.layout===2?0:wheelCentreZ(c)+(i/(c.drive.layout/2-1)-.5)*wheelBase(c);}
 export function bodyOrigin(c:BotConfig,body:string):Vec{
  const w=c.weapon;

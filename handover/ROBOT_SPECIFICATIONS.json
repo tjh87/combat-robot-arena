@@ -425,7 +425,9 @@
         "type": "none"
       },
       "flipperEnergyJ": 18900,
-      "geometryNote": "Approved preview 12. Dimensions and equipment allowance are game estimates."
+      "geometryNote": "Approved preview 12. Dimensions and equipment allowance are game estimates.",
+      "wheelBaseM": 0.305,
+      "wheelCenterZM": 0.0425
     },
     {
       "name": "ICEwave",
