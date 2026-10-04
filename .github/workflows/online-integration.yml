@@ -2,7 +2,7 @@ name: Online game integration
 on:
   push:
     branches: [online-four-digit-rooms]
-    paths: ['.github/workflows/online-integration.yml','scripts/online-ui-fit.mjs','scripts/online-efficiency-fit.mjs','scripts/online-recovery-fit.mjs','src/online/**','tests/online-transport.ts']
+    paths: ['.github/workflows/online-integration.yml','scripts/online-*-fit.mjs','src/online/**','tests/online-transport.ts','tests/online-browser.mjs']
 permissions:
   contents: write
 concurrency:
@@ -11,7 +11,7 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     env:
       ONLINE_REDIS_URL: ${{ secrets.ONLINE_REDIS_URL }}
       ONLINE_NAMESPACE: ci-${{ github.run_id }}
@@ -30,6 +30,7 @@ jobs:
           node scripts/online-ui-fit.mjs
           node scripts/online-efficiency-fit.mjs
           node scripts/online-recovery-fit.mjs
+          node scripts/online-post-fit.mjs
       - name: Types and actual cross-gateway connections
         run: |
           node node_modules/typescript/bin/tsc --project tsconfig.server.json --noEmit
@@ -38,6 +39,15 @@ jobs:
           node scripts/build.mjs
           node scripts/verify.mjs
           node scripts/online-build.mjs
+      - name: Browser dependencies outside game
+        run: |
+          mkdir -p "$RUNNER_TEMP/browser"
+          npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
+          "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Two independent browsers and seat recovery
+        run: |
+          node --import tsx server/test-site.ts > browser-evidence/server.log 2>&1 &
+          node tests/online-browser.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -45,11 +55,11 @@ jobs:
           path: browser-evidence
       - name: Commit tested online integration
         run: |
-          rm scripts/online-ui-fit.mjs scripts/online-efficiency-fit.mjs scripts/online-recovery-fit.mjs .github/workflows/online-integration.yml
+          rm scripts/online-ui-fit.mjs scripts/online-efficiency-fit.mjs scripts/online-recovery-fit.mjs scripts/online-post-fit.mjs .github/workflows/online-integration.yml
           git status --short
           git diff --check
           git diff src/main.ts src/sim.ts src/online/protocol.ts server/engine.ts server/gateway.ts
           git log --oneline -10
-          git add src/main.ts src/sim.ts src/online/protocol.ts src/online/ui.ts src/online/predictor.ts server/gateway.ts server/engine.ts server/checkpoint.ts scripts/online-ui-fit.mjs scripts/online-efficiency-fit.mjs scripts/online-recovery-fit.mjs .github/workflows/online-integration.yml
+          git add src/main.ts src/sim.ts src/online/protocol.ts src/online/ui.ts src/online/predictor.ts src/online/client.ts server/gateway.ts server/engine.ts server/checkpoint.ts scripts/online-ui-fit.mjs scripts/online-efficiency-fit.mjs scripts/online-recovery-fit.mjs scripts/online-post-fit.mjs .github/workflows/online-integration.yml
           git -c user.name='tjh87' -c user.email='tjh87@users.noreply.github.com' commit -m 'Connect online rooms to player-specific game views and controls'
           git push origin HEAD:online-four-digit-rooms
