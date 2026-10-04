@@ -43,12 +43,12 @@ export function hydraChassisParts(c:BotConfig,parts:Part[]){
 export function hydraTineSamples(c:BotConfig,side:number){
  const w=c.weapon;if(w.type!=='flipper')throw Error('Hydra requires a flipper.');const middle=side===0,end=middle?-.520:-.500,sz=w.length/.663,sx=w.width/.22,sy=(c.chassis.height+c.chassis.clearance)/.100;
  const a=[.093,-.248],b=[.055,middle?-.323:-.314],d=[.0015,end+.051],e=[.001,end];
- return Array.from({length:25},(_,i)=>{const t=i/24,u=1-t,y=u*u*u*a[0]+3*u*u*t*b[0]+3*u*t*t*d[0]+t*t*t*e[0],z=u*u*u*a[1]+3*u*u*t*b[1]+3*u*t*t*d[1]+t*t*t*e[1],thickness=Math.min(.0008+.0272*(1-t)**.55,Math.max(.0008,y-.0002));return{x:side*.041*sx,half:(middle?.015-.003*t:.022-.006*t)*sx,y:y*sy-c.chassis.height/2-c.chassis.clearance-w.mount.y,z:(z-.143)*sz,thickness:thickness*sy};});
+ return Array.from({length:25},(_,i)=>{const t=i/24,u=1-t,y=u*u*u*a[0]+3*u*u*t*b[0]+3*u*t*t*d[0]+t*t*t*e[0],z=u*u*u*a[1]+3*u*u*t*b[1]+3*u*t*t*d[1]+t*t*t*e[1],thickness=Math.min(.0008+(w.thickness===.028?.0272:w.thickness-.0008)*(1-t)**.55,Math.max(.0008,y-.0002));return{x:side*.041*sx,half:(middle?.015-.003*t:.022-.006*t)*sx,y:y*sy-c.chassis.height/2-c.chassis.clearance-w.mount.y,z:(z-.143)*sz,thickness:thickness*sy};});
 }
 export function hydraFlipperParts(c:BotConfig,parts:Part[]){
  const w=c.weapon;if(w.type!=='flipper')return;const b=writer(parts),sx=w.width/.22,sz=w.length/.663,sy=(c.chassis.height+c.chassis.clearance)/.100;
  for(const side of[-1,1])b.box('hydra_rail_'+side,'weapon','rotor',v(.014*sx,.012*sy,.378*sz),v(side*.047*sx,.004*sy,-.182*sz));
  b.box('hydra_bridge','weapon','rotor',v(.123*sx,.012*sy,.029*sz),v(0,.004*sy,-.010*sz));
  b.prism('hydra_neck','weapon','rotor',.148*sx,[[.004,-.369],[-.025,-.424],[-.035,-.424],[-.006,-.369]].map(([y,z])=>[y*sy,z*sz]));
- for(const side of[-1,0,1]){const samples=hydraTineSamples(c,side);for(let i=0;i<samples.length-1;i++){const a=samples[i],d=samples[i+1];b.prism('flipper_tine_'+side+'_'+i,'weapon','rotor',2*Math.min(a.half,d.half),[[a.y,a.z],[d.y,d.z],[d.y-d.thickness,d.z],[a.y-a.thickness,a.z]],v(a.x,0,0),'hardox');}}
+ for(const side of[-1,0,1]){const samples=hydraTineSamples(c,side);for(let i=0;i<samples.length-1;i++){const a=samples[i],d=samples[i+1];b.prism('flipper_tine_'+side+'_'+i,'weapon','rotor',2*Math.min(a.half,d.half),[[a.y,a.z],[d.y,d.z],[d.y-d.thickness,d.z],[a.y-a.thickness,a.z]],v(a.x,0,0),w.material);}}
 }
