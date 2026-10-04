@@ -2,7 +2,7 @@ name: Restore original Hydra mobility
 on:
   push:
     branches: [hydra-original-mobility]
-    paths: ['.github/workflows/hydra-original.yml','scripts/hydra-original-drive.mjs','tests/hydra-mobility-*']
+    paths: ['.github/workflows/hydra-original.yml','scripts/hydra-original-drive.mjs','tests/hydra-mobility-*','tests/hydra-drive*.ts']
 permissions:
   contents: write
 concurrency:
@@ -54,7 +54,7 @@ jobs:
           node tests/hydra-browser.mjs
       - name: Update Hydra game estimates
         run: |
-          node --import tsx --input-type=module -e "import fs from 'node:fs';import{preset,compile,wheelBase,wheelCentreZ}from'./src/model.ts';const path='handover/ROBOT_SPECIFICATIONS.json',data=JSON.parse(fs.readFileSync(path,'utf8')),c=preset(2),b=compile(c),r=data.robots.find(r=>r.profile==='hydra');Object.assign(r,{drive:c.drive,chassis:c.chassis,totalMassKg:b.mass,wheelBaseM:wheelBase(c),wheelCenterZM:wheelCentreZ(c)});fs.writeFileSync(path,JSON.stringify(data,null,2)+'\n');"
+          node --import tsx --input-type=module -e "import fs from 'node:fs';import{preset,compile,wheelBase,wheelCentreZ}from'./src/model.ts';const path='handover/ROBOT_SPECIFICATIONS.json',data=JSON.parse(fs.readFileSync(path,'utf8')),c=preset(2),b=compile(c),r=data.robots.find(r=>r.profile==='hydra');Object.assign(r,{drive:c.drive,chassis:c.chassis,totalMassKg:b.mass,wheelBaseM:wheelBase(c),wheelCenterZM:wheelCentreZ(c),geometryNote:'Approved preview 12 body and flipper with the original wheels and drive. Dimensions are game estimates.'});fs.writeFileSync(path,JSON.stringify(data,null,2)+'\n');"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
