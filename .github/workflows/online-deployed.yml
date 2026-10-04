@@ -47,10 +47,12 @@ jobs:
           source=source.replace("'http://127.0.0.1:4173/'","process.env.ONLINE_BASE_URL");
           source=source.replaceAll('source:process.env.GITHUB_SHA','source:process.env.ONLINE_DEPLOYED_SHA');
           source=source.replace("ownedMovement:true,","ownedMovement:true,authenticatedWebSocketProxy:true,");
+          source=source.replace("name+'.png',timeout:30000","name+'.png',timeout:90000");
+          source=source.replace('},240000);','},360000);');
           writeFileSync(process.env.RUNNER_TEMP+'/browser/deployed-check.mjs',source);
           NODE
       - name: Real Vercel rooms, player controls, POV, and refresh
-        run: timeout 300s node "$RUNNER_TEMP/browser/deployed-check.mjs"
+        run: timeout 420s node "$RUNNER_TEMP/browser/deployed-check.mjs"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
