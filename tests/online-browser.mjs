@@ -10,7 +10,12 @@ async function page(){
  const context=await browser.newContext({viewport:{width:1280,height:720}});contexts.push(context);
  const p=await context.newPage();pages.push(p);
  p.on('pageerror',e=>errors.push(String(e)));p.on('requestfailed',r=>failed.push(r.url()));
- await p.addInitScript(()=>{window.__arenaTools=new Map();Object.defineProperty(document,'modelContext',{value:{registerTool(tool){window.__arenaTools.set(tool.name,tool);}},configurable:true});});
+ await p.addInitScript(()=>{
+  window.__arenaTools=new Map();Object.defineProperty(document,'modelContext',{value:{registerTool(tool){window.__arenaTools.set(tool.name,tool);}},configurable:true});
+  const raf=window.requestAnimationFrame.bind(window),pending=[];window.__freezeFrame=false;
+  window.__resumeFrames=()=>{window.__freezeFrame=false;for(const cb of pending.splice(0))raf(cb);};
+  window.requestAnimationFrame=cb=>raf(t=>{if(window.__freezeFrame)pending.push(cb);else cb(t);});
+ });
  await p.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded',timeout:90000});
  await p.waitForFunction(()=>window.__arenaTools.has('read_arena_status'),undefined,{timeout:90000});
  await p.locator('#open-settings').click();await p.locator('#quality').selectOption('low');await p.locator('#pref-reduced').check();await p.locator('#close-settings').click();
@@ -20,9 +25,11 @@ async function page(){
 }
 const status=p=>p.evaluate(()=>window.__arenaTools.get('read_arena_status').execute());
 async function screenshot(p,name){
- const cdp=await p.context().newCDPSession(p);
- try{const {data}=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:false});await writeFile('browser-evidence/'+name+'.png',Buffer.from(data,'base64'));}
- finally{await cdp.detach();}
+ console.log('Capture '+name);
+ await Promise.all(pages.map(view=>view.evaluate(()=>window.__freezeFrame=true)));
+ await p.waitForTimeout(500);
+ try{await p.screenshot({path:'browser-evidence/'+name+'.png',timeout:30000});}
+ finally{await Promise.all(pages.map(view=>view.evaluate(()=>window.__resumeFrames())));}
 }
 try{
  const a=await page(),b=await page();stage='create and join';
@@ -41,11 +48,12 @@ try{
  await b.keyboard.down('ArrowUp');await b.waitForTimeout(1500);await b.keyboard.up('ArrowUp');
  await a.locator('#online-camera').selectOption('pov');await b.locator('#online-camera').selectOption('pov');
  assert.equal((await status(a)).online.camera,'pov');assert.equal((await status(b)).online.camera,'pov');
- stage='POV screenshots';await screenshot(a,'online-alice-pov');await screenshot(b,'online-bob-pov');
- stage='refresh';const before=(await status(b)).online.tick;await b.reload({waitUntil:'domcontentloaded',timeout:90000});
+ stage='refresh';const before=(await status(b)).online.tick;console.log('Reload second player');await b.reload({waitUntil:'domcontentloaded',timeout:90000});
  await b.waitForFunction(()=>window.__arenaTools.has('read_arena_status'),undefined,{timeout:90000});
  await b.waitForFunction(()=>document.querySelector('#online-clock')?.textContent.includes('LIVE'),undefined,{timeout:120000});
  const resumed=await status(b);assert.equal(resumed.online.room,code);assert.equal(resumed.online.side,1);assert(resumed.online.tick>=before-2);
+ await b.locator('#online-camera').selectOption('pov');
+ stage='POV screenshots';await screenshot(a,'online-alice-pov');await screenshot(b,'online-bob-pov');
  stage='reconnected screenshot';await screenshot(b,'online-reconnected');assert.deepEqual(errors,[]);assert.deepEqual(failed.filter(url=>!url.includes('/api/online')),[]);
  await writeFile('browser-evidence/online-browser.json',JSON.stringify({status:'passed',source:process.env.GITHUB_SHA,browser:'Chromium / SwiftShader WebGL',roomDigits:4,twoBrowserContexts:true,ownedSides:[0,1],ownedPov:true,resumedSeat:true,serverTickContinues:true,errors,failed},null,2));
  console.log('PASS two browsers, four-digit joining, own controls, own POV, and refresh recovery');
