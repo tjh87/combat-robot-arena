@@ -71,12 +71,6 @@ export function templateParts(c:BotConfig,parts:Part[]){
    b.tube('crusher_ram_'+side,'weapon_actuator','chassis',v(side*.14,top,.23),v(side*.14,top+.20,.02),.026,'aluminium7075');
   }
  }
- if(p==='hydra'){
-  sideRamps('flipper_fang_side',W*.30+3*.043+.019,.10,-.66,-.50,.030,'titanium');
-  for(const side of[-1,1])for(let j=0;j<4;j++){const mount=groundForkMount(c,side,j),rear=-L/2+.035;
-   b.prism('flipper_fang_'+side+'_'+j,'chassis','ground_fork_'+side+'_'+j,.038,[[floor+HYDRA_TIP.clearance,-.66],[floor+.071,rear],[floor+.08,rear],[floor+HYDRA_TIP.clearance+HYDRA_TIP.thickness,-.66]],v(0,-mount.y,-mount.z),'titanium');
-  }
- }
  if(p==='icewave'&&w.type==='horizontal_bar'){
   // Stationary engine cowl above the rotating bar, with a central bearing.
   const r=.17,bevel=.043,outline=[[-r+bevel,-r],[r-bevel,-r],[r,-r+bevel],[r,r-bevel],[r-bevel,r],[-r+bevel,r],[-r,r-bevel],[-r,-r+bevel]],vertices:number[]=[];

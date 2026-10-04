@@ -1,2 +1,0 @@
-import {readFileSync,writeFileSync} from 'node:fs';
-const path='src/model.ts',s=readFileSync(path,'utf8'),anchor=' let min=v(Infinity,Infinity,Infinity),max=v(-Infinity,-Infinity,-Infinity),mass=0,com=v();';if(!s.includes(anchor))throw Error('Missing Hydra validation anchor');writeFileSync(path,s.replace(anchor," if(w.type==='flipper'&&ch.profile==='hydra'&&(Math.abs(w.mount.x)+w.width*.245>W*.1225||w.mount.y+H/2+ch.clearance<.028||w.mount.z< -L*.10||w.mount.z>L*.48))err('weapon.mount','Keep the Hydra hinge inside the rear center channel and above the floor.');\n"+anchor));

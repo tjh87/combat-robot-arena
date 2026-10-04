@@ -74,7 +74,7 @@ await test('G10 Every authored numeric range rejects nonfinite and outside value
     [0,'battery.capacityWh',100,1000],[0,'weapon.radius',.1,.85],[0,'weapon.width',.02,.7],
     [0,'weapon.thickness',.006,.08],[0,'weapon.teeth',1,12],[0,'weapon.toothDepth',.01,.1],
     [0,'weapon.toothWidth',.015,.5],[0,'weapon.toothHeight',.01,.18],[0,'weapon.ratio',.5,12],[0,'weapon.rpm',100,12000],
-    [2,'weapon.length',.2,.65],[2,'weapon.width',.15,.7],[2,'weapon.thickness',.006,.04],
+    [2,'weapon.length',.2,.8],[2,'weapon.width',.15,.7],[2,'weapon.thickness',.006,.04],
     [2,'weapon.travel',.3,2.1],[2,'weapon.stroke',.2,.5],[2,'weapon.charges',1,12],[0,'selfRight.length',.25,.6],[8,'weapon.armLength',.3,.8],[8,'weapon.armTravel',.6,1.5],
   ];
   for(let i=0;i<5;i++)rows.push([0,`armour.${i}.thickness`,0,.025]);

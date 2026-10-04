@@ -308,29 +308,29 @@
     {
       "name": "Hydra",
       "profile": "hydra",
-      "totalMassKg": 113.20000000000002,
+      "totalMassKg": 113.2000000000004,
       "chassis": {
         "profile": "hydra",
-        "form": "wedge",
+        "form": "box",
         "length": 0.64,
         "width": 0.58,
-        "height": 0.16,
+        "height": 0.08,
         "material": "aluminium7075",
         "thickness": 0.009,
         "wedgeAngle": 25,
         "clearance": 0.018,
-        "equipmentMassKg": 18.629719642711223
+        "equipmentMassKg": 50.608441509370486
       },
       "weapon": {
         "type": "flipper",
-        "length": 0.3,
+        "length": 0.663,
         "width": 0.22,
-        "thickness": 0.012,
+        "thickness": 0.028,
         "material": "hardox",
         "mount": {
           "x": 0,
-          "y": 0.101,
-          "z": -0.335
+          "y": 0.03902,
+          "z": 0.153
         },
         "travel": 1.48,
         "actuator": "F3000",
@@ -349,11 +349,11 @@
           }
         ]
       },
-      "rotorInertiaKgM2": 0.08699017541279973,
+      "rotorInertiaKgM2": 0.9549331739393009,
       "drive": {
         "layout": 4,
-        "radius": 0.1,
-        "width": 0.075,
+        "radius": 0.046,
+        "width": 0.038,
         "material": "rubber",
         "motor": "drive48",
         "ratio": 14,
@@ -396,12 +396,12 @@
           "id": "battery",
           "position": {
             "x": -0.145,
-            "y": -0.022,
+            "y": -0.009,
             "z": 0.1536
           },
           "size": {
             "x": 0.1276,
-            "y": 0.08,
+            "y": 0.044000000000000004,
             "z": 0.1408
           },
           "fraction": 0.5
@@ -410,12 +410,12 @@
           "id": "battery_1",
           "position": {
             "x": 0.145,
-            "y": -0.022,
+            "y": -0.009,
             "z": 0.1536
           },
           "size": {
             "x": 0.1276,
-            "y": 0.08,
+            "y": 0.044000000000000004,
             "z": 0.1408
           },
           "fraction": 0.5
@@ -424,7 +424,8 @@
       "selfRight": {
         "type": "none"
       },
-      "flipperEnergyJ": 18900
+      "flipperEnergyJ": 18900,
+      "geometryNote": "Approved preview 12. Dimensions and equipment allowance are game estimates."
     },
     {
       "name": "ICEwave",

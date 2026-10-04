@@ -1,3 +1,4 @@
+import {hydraTineGeometry} from './hydra-finish';
 import {disposeSawbladeExposure} from './sawblaze-blur';
 import {WallCrackVisual} from './wall-cracks';
 import {AdaptiveResolution,graphicsPixelRatio} from './performance';
@@ -57,6 +58,9 @@ export class ArenaRenderer{
  displayParts(config:BotConfig,parts:Part[]){
   const out:{p:Part,mesh:THREE.Mesh}[]=[],wheels=new Map<string,Part[]>(),composite=config.drive.traction!=='tracks'&&['huge','hypershock'].includes(config.chassis.profile??'');
   for(const p of parts){if(p.id.startsWith('track_belt_')){out.push({p,mesh:trackMesh(p,config)});continue;}if(!p.collides&&p.module!=='battery')continue;
+  if(config.chassis.profile==='hydra'&&p.id.startsWith('flipper_tine_')){
+   if(!p.id.endsWith('_0'))continue;const mesh=this.part(p,config);mesh.geometry.dispose();mesh.geometry=compactGeometry(hydraTineGeometry(config,Number(p.id.split('_')[2])));mesh.name='hydra-bronze-flipper-tine';out.push({p,mesh});continue;
+  }
   if(config.chassis.profile==='sawblaze'&&p.id.startsWith('saw_nose_')){
    if(!p.id.endsWith('_0'))continue;const mesh=this.part(p,config);mesh.geometry.dispose();mesh.geometry=compactGeometry(sawblazeNoseGeometry(config,p.module==='armour_front'));out.push({p,mesh});continue;
   }
