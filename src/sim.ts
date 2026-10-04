@@ -262,8 +262,8 @@ export class Simulation{
  const driveTorqueLimit=c.chassis.profile==='hypershock'&&up.y<-.65?b.compiled.mass*9.81*margin/comHeight*.60*c.drive.radius/c.drive.layout:Infinity;
  const supported=this.floorSupport.has(b.id);b.grounded=false;const axis=this.axis(b,v(1,0,0)),tracks=c.drive.traction==='tracks';
  let hugeDuty:readonly[number,number]|undefined=c.chassis.profile==='huge'&&!tracks?hugeDriveDuty(cmd.left,cmd.right,dot(b.chassis.linvel(),this.forward(b)),b.chassis.angvel().y,axis.y):undefined;
- if((c.chassis.profile==='gigabyte'||tracks)&&supported&&up.y>.65&&b.rollStart<0){
-  const forward=(cmd.left+cmd.right)/2,turn=(cmd.left-cmd.right)/2,speed=dot(b.chassis.linvel(),this.forward(b)),yaw=dot(b.chassis.angvel(),up),drive=clamp(forward*.30+(forward*(tracks?3.2:4.5)-speed)*.55,-1,1),steer=clamp(turn*.30+(yaw+turn*(tracks?1.7:2.4))*(tracks?.45:.85),tracks?-.75:-1,tracks?.75:1);
+ if((c.chassis.profile==='gigabyte'||c.chassis.profile==='hydra'||tracks)&&supported&&up.y>.65&&b.rollStart<0){
+  const forward=(cmd.left+cmd.right)/2,turn=(cmd.left-cmd.right)/2,speed=dot(b.chassis.linvel(),this.forward(b)),yaw=dot(b.chassis.angvel(),up),drive=clamp(forward*.30+(forward*(tracks?3.2:4.5)-speed)*.55,-1,1),steer=clamp(turn*.30+(yaw+turn*(tracks?1.7:2.4))*(tracks?.45:c.chassis.profile==='hydra'?3:.85),tracks?-.75:-1,tracks?.75:1);
   hugeDuty=[clamp(drive+steer,-1,1),clamp(drive-steer,-1,1)];
  }
 

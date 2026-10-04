@@ -356,7 +356,7 @@
         "width": 0.038,
         "material": "rubber",
         "motor": "drive48",
-        "ratio": 14,
+        "ratio": 6.5,
         "magnet": 0
       },
       "battery": {
