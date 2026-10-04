@@ -27,7 +27,7 @@ export function hydraDetail(mesh:THREE.Mesh,p:Part,c:BotConfig){
   const side=Number(roof[2]),uv=new THREE.Float32BufferAttribute(new Float32Array(pos.count*2),2);mesh.geometry.computeBoundingBox();const bounds=mesh.geometry.boundingBox!,size=bounds.getSize(new THREE.Vector3());for(let i=0;i<pos.count;i++){const x=(pos.getX(i)-bounds.min.x)/size.x,z=(pos.getZ(i)-bounds.min.z)/size.z;uv.setXY(i,side<0?1-x:x,z);}mesh.geometry.setAttribute('uv',uv);m.map=hydraRoofTexture(side);m.color.set('#a8a8a8');m.roughness=.72;m.metalness=.025;m.envMapIntensity=.14;mesh.name='hydra-flat-snake-roof';mesh.userData.referencePaint=true;
  }
  if(/^(armour_(left|right)_|hydra_wall_)/.test(id)){
-  const uv=new THREE.Float32BufferAttribute(new Float32Array(pos.count*2),2);for(let i=0;i<pos.count;i++)uv.setXY(i,(pos.getZ(i)+c.chassis.length/2)/c.chassis.length,(pos.getY(i)+c.chassis.height/2)/c.chassis.height);mesh.geometry.setAttribute('uv',uv);m.map=hydraSideTexture(c);m.color.set('#d6d6d6');m.metalness=.10;m.roughness=.62;m.envMapIntensity=.24;
+  const uv=new THREE.Float32BufferAttribute(new Float32Array(pos.count*2),2);for(let i=0;i<pos.count;i++){const z=(pos.getZ(i)+c.chassis.length/2)/c.chassis.length;uv.setXY(i,p.position.x>0?1-z:z,(pos.getY(i)+c.chassis.height/2)/c.chassis.height);}mesh.geometry.setAttribute('uv',uv);m.map=hydraSideTexture(c);m.color.set('#d6d6d6');m.metalness=.10;m.roughness=.62;m.envMapIntensity=.24;
  }
  const chrome=new THREE.MeshStandardMaterial({color:'#b5b8ae',metalness:.94,roughness:.22});let used=false;
  const bolt=(x:number,y:number,z:number)=>{const child=new THREE.Mesh(new THREE.CylinderGeometry(.0025*sx,.0025*sx,.003*sy,6),chrome);child.position.set(x,y,z);mesh.add(child);used=true;};
