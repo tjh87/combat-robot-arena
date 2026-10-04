@@ -43,7 +43,7 @@ export const axisQ=(axis:Vec,angle:number):Quat=>({...mul(axis,Math.sin(angle/2)
 export const quatMul=(a:Quat,b:Quat):Quat=>({x:a.w*b.x+a.x*b.w+a.y*b.z-a.z*b.y,y:a.w*b.y-a.x*b.z+a.y*b.w+a.z*b.x,z:a.w*b.z+a.x*b.y-a.y*b.x+a.z*b.w,w:a.w*b.w-a.x*b.x-a.y*b.y-a.z*b.z});
 export const identity:Quat={x:0,y:0,z:0,w:1};
 export const clamp=(x:number,a:number,b:number)=>Math.min(b,Math.max(a,x));
-export function rng(seed:number){let n=seed>>>0;return()=>{n+=0x6D2B79F5;let t=n;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
+export function rng(seed:number){let n=seed>>>0;const next=()=>{n+=0x6D2B79F5;let t=n;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};return Object.assign(next,{getState:()=>n>>>0,setState:(state:number)=>{n=state>>>0;}});}
 export const SPINNER_TYPES=['horizontal_bar','drum','vertical_disc','vertical_bar','shell_spinner','horizontal_cage','hammer_saw'] as const;
 export const PROFILES=['standard','tombstone','minotaur','hydra','icewave','hypershock','gigabyte','whyachi','huge','sawblaze','deep_six','quantum'] as const;
 export type Profile=typeof PROFILES[number];

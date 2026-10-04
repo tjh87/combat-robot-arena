@@ -33,7 +33,7 @@ type BodyState={p:Vec,com:Vec,q:Quat,lin:Vec,ang:Vec};
 type FallState={peakY:number,airTicks:number,lastContact:number,landing?:{event:ImpactEvent,budget:number,absorbed:number}};
 type AIObs={tick:number,p:Vec,q:Quat,forward:Vec,other:Vec,otherQ:Quat,speed:number,yawRate:number,rpm:number,rpmScale:number,up:number,pin:number,charge:number,enabled:boolean,weaponOn:boolean,weaponWorks:boolean,lastFire:number,flipStart:number,flipAngle:number,lastSelfRight:number,driveLeft:boolean,driveRight:boolean};
 export type Bot={id:0|1;batteryFire?:{localPoint?:Vec,started:number,until:number,attacker:0|1,event:ImpactEvent};compiled:Compiled;driveInertia:Map<string,number>;chassis:RAPIER.RigidBody;rotor?:RAPIER.RigidBody;arm?:RAPIER.RigidBody;roll?:RAPIER.RigidBody;bodies:Map<string,RAPIER.RigidBody>;colliders:Map<string,RAPIER.Collider>;joints:Map<string,RAPIER.ImpulseJoint>;modules:Record<Slot,Module>;startHP:Record<Slot,number>;energy:number;charges:number;weaponOn:boolean;driveSign:1|-1;spinDirection:1|-1;rpm:number;rotorEnergy:number;flipStart:number;flipWork:number;flipAngle:number;rollStart:number;gyroDance?:{ticks:number,settled:number,direction?:number,braking?:boolean};autoRightTicks:number;rollWork:number;rollSettling:boolean;rollStowAt:number;rollStowAngle:number;resumeWeapon:boolean;lastSelfRight:number;lastManualRecovery:number;flipDepth:number;crushAngle:number;crushForce:number;crushContactTicks:number;crushPhase:'closing'|'pressure'|'opening';crushWork:number;crushStart:number;crushEvent?:ImpactEvent;trackPhase?:[number,number];driveRamp:[number,number];gripRelease?:{tick:number,p:Vec,back:Vec,distance:number,travelled:number,lastP:Vec};lastFire:number;command:Command;grounded:boolean;groundTicks:number;powerWork:number;weaponWatts:number;actuatorTorque:number;unstick:{active:boolean,since:number,attempt:number};count:number;pending:number;recovery:number;history:{tick:number,p:Vec,ground:boolean,powered:boolean}[];fouls:number;wall:boolean;pinVictim:boolean;ai:{state:string,reason:string,since:number,command:Command,history:AIObs[],lastProgress:Vec,progressTick:number,waypoint?:Vec,lastWeaponRequest:number,lastFireRequest:number,lastRightRequest:number};lastAction:number;lastHazard:number;lastAttacker:number|null;engage:number;closing:number;pin:number;forced:number;stable:number;faults:string[];};
-export type SimOptions={recordVisuals?:boolean,seed?:number,practice?:boolean,hazards?:boolean,ai?:[boolean,boolean],difficulty?:Difficulty,condition?:Record<Slot,number>,allowDamaged?:boolean,autoUnstick?:boolean};
+export type SimOptions={recordVisuals?:boolean,seed?:number,practice?:boolean,hazards?:boolean,ai?:[boolean,boolean],difficulty?:Difficulty,condition?:Record<Slot,number>,conditionBySide?:[Record<Slot,number>|undefined,Record<Slot,number>|undefined],allowDamaged?:boolean,autoUnstick?:boolean};
 export const AI_SETTINGS={easy:{delay:60,aim:15,ready:.4},medium:{delay:29,aim:7,ready:.6},hard:{delay:15,aim:2,ready:.75}};
 const groups=(membership:number,filter:number)=>(membership<<16)|filter;
 export function colliderDesc(p:Part){let d:RAPIER.ColliderDesc;if(p.shape.kind==='box'){const s=p.shape.size;d=RAPIER.ColliderDesc.cuboid(s.x/2,s.y/2,s.z/2);}else if(p.shape.kind==='cylinder')d=RAPIER.ColliderDesc.cylinder(p.shape.width/2,p.shape.radius);else{const hull=RAPIER.ColliderDesc.convexHull(new Float32Array(p.shape.vertices));if(!hull)throw Error('Invalid convex part: '+p.id);d=hull;}d.setMass(p.mass);
@@ -74,7 +74,7 @@ export class Simulation{
  this.recordVisuals=opt.recordVisuals??true;this.seed=opt.seed??42673;this.random=rng(this.seed);const entrants=configs.map((c,id)=>({id,key:c.identity.name+canonical(c)})).sort((a,b)=>a.key<b.key?-1:a.key>b.key?1:0);this.tiePreference=entrants[Math.floor(this.random()*2)].id;this.options={practice:opt.practice??false,hazards:opt.hazards??true,ai:opt.ai??[false,true],difficulty:opt.difficulty??'medium',autoUnstick:opt.autoUnstick??true};
  for(const config of configs){const errors=compile(config,this.options.practice).errors;if(errors.length)throw Error(errors.map(e=>e.message).join(' '));}if(opt.condition&&Object.values(opt.condition).some(hp=>!Number.isFinite(hp)))throw Error('Invalid module condition');
  this.queue=new RAPIER.EventQueue(true);this.world=new RAPIER.World(v(0,-9.81,0));this.world.timestep=RULES.dt;this.world.numSolverIterations=RULES.solverIterations;this.world.maxCcdSubsteps=RULES.ccdSubsteps;
- configs=matchColors(configs);this.arena();for(let i=0;i<2;i++)this.bots.push(this.makeBot(configs[i],i as 0|1,i===0?opt.condition:undefined));
+ configs=matchColors(configs);this.arena();for(let i=0;i<2;i++)this.bots.push(this.makeBot(configs[i],i as 0|1,opt.conditionBySide?.[i]??(i===0?opt.condition:undefined)));
  this.capture();
  }
  private arena(){
@@ -126,9 +126,9 @@ export class Simulation{
   const first=b.history[0],settled=first&&this.tick-first.tick>=.8*RULES.hz&&Math.abs(first.p.y-b.chassis.translation().y)<.06;
   return !!(b.count>0||settled&&(this.axis(b,v(0,1,0)).y<.65||b.pinVictim||b.wall&&horizontal(first.p,b.chassis.translation())<.08));
  }
- manualUnstick(){
+ manualUnstick(onlyBot?:number){
   const recovered:string[]=[];
-  for(const b of this.bots){if(!this.manualRecoveryReady(b))continue;
+  for(const b of this.bots){if(onlyBot!==undefined&&b.id!==onlyBot)continue;if(!this.manualRecoveryReady(b))continue;
    const c=b.compiled.config,old=b.chassis.translation(),f=this.forward(b),yaw=Math.hypot(f.x,f.z)>.1?Math.atan2(-f.x,-f.z):0,q=axisQ(v(0,1,0),yaw),y=c.chassis.height/2+c.chassis.clearance+.018;
    // Conservative clear space around the full build keeps weapons away from
    // walls, hazards and the other robot after the manual reset.

@@ -15,11 +15,16 @@
     "start": "node scripts/serve.mjs --open",
     "verify": "node scripts/verify.mjs",
     "verify:physics": "node scripts/verify.mjs --physics",
-    "test:performance": "node --import tsx tests/performance.ts"
+    "test:performance": "node --import tsx tests/performance.ts",
+    "online:build": "node scripts/online-build.mjs",
+    "online:test": "node --import tsx tests/online-core.ts",
+    "online:serve": "node --import tsx server/local.ts"
   },
   "dependencies": {
     "@dimforge/rapier3d-compat": "0.19.0",
-    "three": "0.180.0"
+    "three": "0.180.0",
+    "ioredis": "5.8.2",
+    "ws": "8.18.3"
   },
   "devDependencies": {
     "@types/three": "0.180.0",
@@ -27,7 +32,9 @@
     "jsdom": "26.1.0",
     "tsx": "4.20.5",
     "typescript": "5.9.2",
-    "vite": "7.1.7"
+    "vite": "7.1.7",
+    "@types/ws": "8.18.1",
+    "@types/node": "24.10.0"
   },
   "engines": {
     "node": ">=22.12.0"

@@ -23,3 +23,5 @@ export async function present(room:string,guest:string){return Boolean(await red
 export async function claimConnection(room:string,guest:string){const epoch=randomUUID();await presence(room,guest,epoch);return epoch;}
 export async function currentConnection(room:string,guest:string,epoch:string){return await redis().get(key('presence:'+room+':'+guest))===epoch;}
 export async function closeStore(){await connection?.quit();connection=undefined;}
+
+export async function refreshPresence(room:string,guest:string,epoch:string){return await redis().eval("if redis.call('get',KEYS[1])~=ARGV[1] then return 0 end redis.call('pexpire',KEYS[1],15000);return 1",1,key('presence:'+room+':'+guest),epoch)===1;}

@@ -6,3 +6,5 @@ process.chdir(root);
 const check=spawnSync(process.execPath,['node_modules/typescript/bin/tsc','--noEmit'],{cwd:root,stdio:'inherit'});
 if(check.status!==0)process.exit(check.status??1);
 await build({root});
+
+if(process.env.VERCEL==='1'||process.env.ONLINE_BUILD==='1')await import('./online-build.mjs');
