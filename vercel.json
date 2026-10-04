@@ -1,0 +1,1 @@
+{"$schema":"https://openapi.vercel.sh/vercel.json","buildCommand":"npm run build","outputDirectory":"dist","fluid":true,"functions":{"api/online.js":{"maxDuration":300}},"headers":[{"source":"/api/online","headers":[{"key":"Cache-Control","value":"no-store"}]}]}
