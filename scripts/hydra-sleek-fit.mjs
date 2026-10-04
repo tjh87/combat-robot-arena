@@ -59,3 +59,6 @@ edit("tests/hydra-drive-import.ts",s=>replace(s,"assert.equal(restored.drive.rad
 edit("tests/hydra-drive-import.ts",s=>replace(s,"(invalid.drive as any).hydraTuning=3","(invalid.drive as any).hydraTuning=4"));
 edit("tests/hydra-mobility-acceptance.ts",s=>replace(s,"assert.equal(c.drive.radius,.10);assert.equal(c.drive.width,.075);assert.equal(c.drive.ratio,14);assert.equal(c.drive.hydraTuning,2)","assert.equal(c.drive.radius,.060);assert.equal(c.drive.width,.040);assert.equal(c.drive.ratio,8.3);assert.equal(c.drive.hydraTuning,3)"));
 edit("tests/hydra-mobility-acceptance.ts",s=>replace(s,"assert.equal(imported.drive.radius,.10);assert.equal(imported.drive.ratio,14)","assert.equal(imported.drive.radius,.060);assert.equal(imported.drive.ratio,8.3)"));
+
+edit("tests/hydra-mobility-benchmark.ts",s=>replace(s,"for(const mode of[","const steeringGain=Number(process.env.HYDRA_STEERING_GAIN??1);\nfor(const mode of["));
+edit("tests/hydra-mobility-benchmark.ts",s=>replace(s,"left:throttle+turn,right:throttle-turn","left:throttle+turn*steeringGain,right:throttle-turn*steeringGain"));
