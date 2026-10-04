@@ -39,6 +39,8 @@ jobs:
           node scripts/verify.mjs
           node --import tsx tests/hydra-mobility-benchmark.ts > browser-evidence/restored.log 2>&1
           node --import tsx tests/hydra-mobility-acceptance.ts
+          node --import tsx tests/hydra-drive.ts
+          node --import tsx tests/hydra-drive-import.ts
           node --import tsx tests/hydra-approved.ts
           node --import tsx tests/roster.ts > browser-evidence/roster.log 2>&1
       - name: Browser dependencies outside game
