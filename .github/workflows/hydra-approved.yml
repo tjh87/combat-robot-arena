@@ -1,0 +1,71 @@
+name: Approved Hydra cloud validation
+on:
+  push:
+    branches: [hydra-approved-redesign]
+    paths: ['.github/workflows/hydra-approved.yml', 'src/hydra-*.ts', 'scripts/hydra-*.mjs', 'tests/hydra-*']
+permissions:
+  contents: write
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Compare fresh historical baseline
+        run: |
+          mkdir -p browser-evidence
+          git worktree add "$RUNNER_TEMP/hydra-baseline" 95c86dc6c8a6dcf213175d000c2de7a81221e224
+          ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/hydra-baseline/node_modules"
+          cd "$RUNNER_TEMP/hydra-baseline"
+          node --import tsx tests/blades-update.ts > "$GITHUB_WORKSPACE/browser-evidence/baseline-blades.log" 2>&1 || true
+          node --import tsx tests/systems.ts > "$GITHUB_WORKSPACE/browser-evidence/baseline-systems.log" 2>&1 || true
+      - name: Apply approved geometry in cloud
+        run: |
+          node scripts/hydra-migrate.mjs
+          node scripts/hydra-finish-migrate.mjs
+          node scripts/hydra-import-migrate.mjs
+      - name: Build and offline validation
+        run: |
+          node scripts/build.mjs
+          node scripts/verify.mjs
+      - name: Geometry and real physics
+        run: |
+          node --import tsx tests/hydra-approved.ts
+          node --import tsx tests/roster.ts > browser-evidence/roster.log 2>&1
+          node --import tsx tests/visuals.ts > browser-evidence/visuals.log 2>&1
+          node --import tsx tests/run.ts > browser-evidence/core.log 2>&1
+      - name: Compare historical suites
+        run: |
+          node --import tsx tests/blades-update.ts > browser-evidence/current-blades.log 2>&1 || true
+          node --import tsx tests/systems.ts > browser-evidence/current-systems.log 2>&1 || true
+          node -e "const fs=require('fs');for(const name of ['blades','systems']){const failures=p=>fs.readFileSync(p,'utf8').split('\n').filter(l=>l.startsWith('FAIL ')).map(l=>l.split(' AssertionError')[0]).sort();const old=failures('browser-evidence/baseline-'+name+'.log'),now=failures('browser-evidence/current-'+name+'.log');const added=now.filter(l=>!old.includes(l));console.log(JSON.stringify({suite:name,baselineFailures:old,currentFailures:now}));if(added.length)throw Error('New failures: '+added.join(', '));}"
+      - name: Browser dependencies outside game
+        run: |
+          mkdir -p "$RUNNER_TEMP/browser"
+          npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
+          "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Chromium WebGL
+        run: |
+          node scripts/serve.mjs > browser-evidence/server.log 2>&1 &
+          node tests/hydra-browser.mjs
+      - name: Update Hydra game estimates
+        run: |
+          node --import tsx --input-type=module -e "import fs from 'node:fs';import{preset,compile,flipEnergy}from'./src/model.ts';import{batteryZones}from'./src/battery-layout.ts';const path='handover/ROBOT_SPECIFICATIONS.json',data=JSON.parse(fs.readFileSync(path,'utf8')),c=preset(2),b=compile(c),row=data.robots.find(r=>r.profile==='hydra');Object.assign(row,{totalMassKg:b.mass,chassis:c.chassis,weapon:c.weapon,drive:c.drive,rotorInertiaKgM2:b.rotorInertia,batteryZones:batteryZones(c),flipperEnergyJ:flipEnergy(c),geometryNote:'Approved preview 12. Dimensions and equipment allowance are game estimates.'});fs.writeFileSync(path,JSON.stringify(data,null,2)+'\n');"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hydra-approved-evidence
+          path: browser-evidence
+      - name: Commit tested source to feature branch
+        run: |
+          rm scripts/hydra-migrate.mjs scripts/hydra-finish-migrate.mjs scripts/hydra-import-migrate.mjs .github/workflows/hydra-approved.yml
+          git add src/hydra-geometry.ts src/hydra-finish.ts src/model.ts src/mechanisms.ts src/visuals.ts src/render.ts tests/hydra-approved.ts tests/hydra-browser.mjs tests/systems.ts handover/ROBOT_SPECIFICATIONS.json scripts/hydra-migrate.mjs scripts/hydra-finish-migrate.mjs scripts/hydra-import-migrate.mjs .github/workflows/hydra-approved.yml
+          git -c user.name='tjh87' -c user.email='tjh87@users.noreply.github.com' commit -m 'Integrate approved Hydra flat chassis and three-tine flipper'
+          git push origin HEAD:hydra-approved-redesign
