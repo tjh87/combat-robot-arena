@@ -62,3 +62,5 @@ edit("tests/hydra-mobility-acceptance.ts",s=>replace(s,"assert.equal(imported.dr
 
 edit("tests/hydra-mobility-benchmark.ts",s=>replace(s,"for(const mode of[","const steeringGain=Number(process.env.HYDRA_STEERING_GAIN??1);\nfor(const mode of["));
 edit("tests/hydra-mobility-benchmark.ts",s=>replace(s,"left:throttle+turn,right:throttle-turn","left:throttle+turn*steeringGain,right:throttle-turn*steeringGain"));
+
+edit("src/finish-geometry.ts",s=>replace(s,"p.body.startsWith('wheel_')?5:6","p.body.startsWith('wheel_')?(hydraSleekWheels(c)?2:5):6"));
