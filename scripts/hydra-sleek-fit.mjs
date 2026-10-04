@@ -5,7 +5,7 @@ edit('src/model.ts',s=>{
  s="import {hydraSleekWheels} from './hydra-wheels';\n"+s;
  s=replace(s,'racerWheelParts,crusherParts','racerWheelParts,hydraWheelParts,crusherParts');
  s=replace(s,'hydraTuning?:1|2,','hydraTuning?:1|2|3,');
- s=replace(s,"return c.chassis.profile==='hypershock'?Math.max(c.chassis.length*.72","return c.chassis.profile==='hydra'?c.chassis.length*.425/.64:c.chassis.profile==='hypershock'?Math.max(c.chassis.length*.72");
+ s=replace(s,"return c.chassis.profile==='hypershock'?Math.max(c.chassis.length*.72","return c.chassis.profile==='hydra'?(c.chassis.length/.64)*.425:c.chassis.profile==='hypershock'?Math.max(c.chassis.length*.72");
  s=replace(s,'c.chassis.width/2+a+c.drive.width/2+.008','c.chassis.width/2+a+(hydraSleekWheels(c)?Math.max(.075,c.drive.width):c.drive.width)/2+.008');
  s=replace(s,'radius:.10,width:.075,ratio:14,hydraTuning:2','radius:.060,width:.040,ratio:8.3,hydraTuning:3');
  s=replace(s,"en(d.hydraTuning,[1,2] as const,'drive.hydraTuning')","en(d.hydraTuning,[1,2,3] as const,'drive.hydraTuning')");
