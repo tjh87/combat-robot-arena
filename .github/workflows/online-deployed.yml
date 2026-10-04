@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
-      ONLINE_BASE_URL: https://combat-robot-arena-live-43c1shjkw-tjh87s-projects.vercel.app/
-      ONLINE_DEPLOYED_SHA: 7c4fe335368d136aeefb44fdcbedeed25b37daa7
+      ONLINE_BASE_URL: https://combat-robot-arena-live-iq8l051xv-tjh87s-projects.vercel.app/
+      ONLINE_DEPLOYED_SHA: 4c57cb10e805ef8055842bccd16aaec12ee1c7e4
       ONLINE_PREVIEW_OIDC: ${{ secrets.ONLINE_PREVIEW_OIDC }}
     steps:
       - uses: actions/checkout@v4
@@ -21,7 +21,7 @@ jobs:
       - name: Browser tools outside the game
         run: |
           mkdir -p "$RUNNER_TEMP/browser"
-          npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
+          npm install --prefix "$RUNNER_TEMP/browser" playwright@1.63.0 ws@8.18.3
           "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
       - name: Create the origin-scoped preview harness
         run: |
@@ -31,9 +31,22 @@ jobs:
           if(url.protocol!=='https:'||!url.hostname.startsWith('combat-robot-arena-live-')||!url.hostname.endsWith('-tjh87s-projects.vercel.app'))throw Error('The preview target is invalid.');
           if(!process.env.ONLINE_PREVIEW_OIDC)throw Error('The preview credential is unavailable.');
           let source=readFileSync('tests/online-browser.mjs','utf8');
+          source="import ServerWebSocket from './node_modules/ws/wrapper.mjs';\n"+source;
           source=source.replace("browser.newContext({viewport:","browser.newContext({extraHTTPHeaders:{'x-vercel-trusted-oidc-idp-token':process.env.ONLINE_PREVIEW_OIDC},viewport:");
+          source=source.replace('const p=await context.newPage();',`await context.routeWebSocket('**/api/online',route=>{
+            const endpoint=new URL(route.url());
+            if(endpoint.hostname!==new URL(process.env.ONLINE_BASE_URL).hostname)throw Error('The WebSocket target is invalid.');
+            const upstream=new ServerWebSocket(route.url(),route.protocols(),{headers:{Origin:new URL(process.env.ONLINE_BASE_URL).origin,'x-vercel-trusted-oidc-idp-token':process.env.ONLINE_PREVIEW_OIDC},handshakeTimeout:10000}),pending=[];
+            route.onMessage(data=>{if(upstream.readyState===ServerWebSocket.OPEN)upstream.send(data);else pending.push(data);});
+            upstream.on('open',()=>{for(const data of pending.splice(0))upstream.send(data);});
+            upstream.on('message',(data,binary)=>route.send(binary?Buffer.from(data):data.toString()));
+            upstream.on('close',(code,reason)=>void route.close({code:code===4002?4002:1001,reason:reason.toString()}));
+            upstream.on('error',()=>void route.close({code:1012,reason:'The authenticated preview proxy lost its connection.'}));
+            route.onClose(()=>upstream.terminate());
+          });const p=await context.newPage();`);
           source=source.replace("'http://127.0.0.1:4173/'","process.env.ONLINE_BASE_URL");
           source=source.replaceAll('source:process.env.GITHUB_SHA','source:process.env.ONLINE_DEPLOYED_SHA');
+          source=source.replace("ownedMovement:true,","ownedMovement:true,authenticatedWebSocketProxy:true,");
           writeFileSync(process.env.RUNNER_TEMP+'/browser/deployed-check.mjs',source);
           NODE
       - name: Real Vercel rooms, player controls, POV, and refresh
