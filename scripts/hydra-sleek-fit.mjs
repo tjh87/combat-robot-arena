@@ -41,3 +41,10 @@ edit('src/visuals.ts',s=>"import {hydraHubDetail} from './hydra-wheel-finish';\n
 edit('src/main.ts',s=>replace(s,"c.chassis.profile==='hydra'?.5:1,':1'","c.chassis.profile==='hydra'?.1:1,':1'"));
 edit('tests/hydra-browser.mjs',s=>s.replaceAll("['drive.radius','100']","['drive.radius','60']").replaceAll("['drive.width','75']","['drive.width','40']").replaceAll("['drive.ratio','14']","['drive.ratio','8.4']"));
 edit('tests/hydra-mobility-benchmark.ts',s=>s.replace('/^wheel_-?1_\\d$/','/^wheel_-?1_\\d(?:_contact)?$/'));
+
+edit("src/model.ts",s=>replace(s,"export function driveMotorStep(ratio:number,omega:number,throttle:number,inertia:number,id:BotConfig['drive']['motor']='drive48'){","export function driveMotorStep(ratio:number,omega:number,throttle:number,inertia:number,id:BotConfig['drive']['motor']='drive48',bearingDrag=.012){"));
+edit("src/model.ts",s=>replace(s,"k*k*m.efficiency/m.resistance+.012","k*k*m.efficiency/m.resistance+bearingDrag"));
+edit("src/model.ts",s=>replace(s,"I+dt*.012","I+dt*bearingDrag"));
+edit("src/sim.ts",s=>replace(s,"import {hydraSleekWheels}","import {hydraSleekWheels,hydraBearingDrag}"));
+edit("src/sim.ts",s=>replace(s,"const omega=-dot(sub(body.angvel(),b.chassis.angvel()),axis),inversion=gyro?1:b.driveSign;let torque=-omega*.012;","const omega=-dot(sub(body.angvel(),b.chassis.angvel()),axis),inversion=gyro?1:b.driveSign,bearingDrag=hydraSleekWheels(c)?hydraBearingDrag(c):.012;let torque=-omega*bearingDrag;"));
+edit("src/sim.ts",s=>replace(s,"b.driveInertia.get(id)!,c.drive.motor)","b.driveInertia.get(id)!,c.drive.motor,bearingDrag)"));
