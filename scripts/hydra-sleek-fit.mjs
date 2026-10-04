@@ -24,7 +24,7 @@ edit('src/mechanisms.ts',s=>"import {hydraCoreRadius,hydraCoreWidth} from './hyd
 edit('src/sim.ts',s=>{
  s="import {hydraSleekWheels} from './hydra-wheels';\n"+s;
  s=replace(s,"if(c.chassis.profile==='huge'&&c.drive.traction!=='tracks'&&p.body.startsWith('wheel_'))desc.setCollisionGroups(0);","if((c.chassis.profile==='huge'&&c.drive.traction!=='tracks'||hydraSleekWheels(c))&&p.body.startsWith('wheel_'))desc.setCollisionGroups(0);");
- const anchor='  const startHP={} as Record<Slot,number>;';
+ const anchor=' const startHP={} as Record<Slot,number>;';
  const contact="  if(hydraSleekWheels(c))for(const[key,body]of bodies)if(key.startsWith('wheel_')){\n   const part=compiled.parts.find(p=>p.body===key)!,edge=Math.min(.0012,c.drive.width*.08),desc=RAPIER.ColliderDesc.roundCylinder(c.drive.width/2-edge,c.drive.radius-edge,edge).setRotation(axisQ(v(0,0,1),Math.PI/2)).setMass(0).setFriction(1.35).setRestitution(.06).setContactSkin(.001).setCollisionGroups(groups(id===0?2:4,id===0?21:19)).setActiveEvents(RAPIER.ActiveEvents.COLLISION_EVENTS);\n   const collider=this.world.createCollider(desc,body);colliders.set(key+'_contact',collider);this.meta.set(collider.handle,{bot:id,module:part.module,part:{...part,id:key+'_contact'}});\n  }\n";
  return replace(s,anchor,contact+anchor);
 });
