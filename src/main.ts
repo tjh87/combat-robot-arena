@@ -1,3 +1,4 @@
+import {presentHitReadouts} from './hit-presentation';
 import {robotSelectionCards} from './robot-selection';
 import {RoomConnection} from './online/client';
 import type {OnlineFrame} from './online/protocol';
@@ -36,7 +37,6 @@ let build=preset(0),builderBase=0,sim:Simulation,renderer:ArenaRenderer,ready=fa
 let finishingTime=0,replaySoundTick=-1;
 const hazardAudio=new Map<number,number>(),hitReadouts=new HitReadouts(),frameGate=new FrameGate();
 let lastDraw=0,lastTournamentUI=0;
-const hitSizes=new WeakMap<HTMLElement,{key:string,width:number,height:number}>();
 const input=new Input(prefs,()=>['practice','fighting','countdown','replay'].includes(state),pause,toggleCamera,recoverRobots);
 function recoverRobots(){if(!['fighting','practice'].includes(state))return;const recovered=sim.manualUnstick();if(recovered.length){input.clear();caption('Unstuck: '+recovered.join(' and '));}updateHUD();}
 function toggleCamera(){prefs.cameraMode=prefs.cameraMode==='pov'?'tactical':'pov';if(renderer)renderer.cameraMode=prefs.cameraMode;savePreferences(prefs);updateHUD();}
@@ -93,20 +93,10 @@ function updateHUD(){if(!sim||!$('#timer'))return;hud.dataset.camera=prefs.camer
  const debug=$('#debug');debug.classList.toggle('hidden',!prefs.debug);if(prefs.debug)debug.textContent=`TICK ${sim.tick} / 240 Hz\n${renderer.triangleCount.toLocaleString()} triangles · ${renderer.drawCalls} draws\nResolution ${Math.round((renderer.resolution?.scale??1)*100)}% · Adaptive ${prefs.adaptive?'on':'off'}\nPhysics ${sim.physicsMs.toFixed(2)} ms · Render ${renderer.renderMs.toFixed(2)} ms\nBodies ${sim.world.bodies.len()} · Debris ${sim.debris.length}\n${sim.bots.map(b=>`P${b.id+1} ${b.ai.state}: ${b.ai.reason}`).join('\n')}`;
 }
 function updateHitReadouts(){
- const container=$('#hit-readouts');if(!container||!sim)return;
- const active=['fighting','practice','finishing','replay','paused'].includes(state);container.classList.toggle('hidden',!active);if(!active)return;
- const replayFrame=state==='replay'?replayFrames[Math.min(replayFrames.length-1,Math.floor(replayProgress))]:undefined,presentationTick=replayFrame?.tick??sim.tick,hits=(replayFrame?(replayFrame.hits??[]):hitReadouts.update(sim.events,sim.tick)).filter(h=>roundedDamage(h.hp)>1),keys=new Set(hits.map(h=>h.key));
- for(const el of Array.from(container.children))if(!keys.has((el as HTMLElement).dataset.key!))el.remove();
- for(const hit of hits){
-  let el=container.querySelector<HTMLElement>('[data-key="'+hit.key+'"]');if(!el){el=document.createElement('span');el.dataset.key=hit.key;el.className='hit-number p'+(hit.bot+1);el.innerHTML=HIT_BUBBLE_MARKUP;container.appendChild(el);}
-  const contact=renderer.projectCombatPoint?.(hit.point),fallback=renderer.projectCombatPoint?.(sim.bots[hit.bot].chassis.translation()),point=contact?.visible?contact:fallback,age=Math.max(0,(presentationTick-hit.tick)/RULES.hz);el.classList.remove('hidden');
-  const tier=hitTier(roundedDamage(hit.hp)),flare=prefs.reduced?0:Math.max(0,1-Math.max(0,age)/.24);
-  const hp=el.querySelector('.hit-hp')!,label='−'+damageNumber(hit.hp)+' HP';if(hp.textContent!==label)hp.textContent=label;if(el.dataset.tier!==String(tier))el.dataset.tier=String(tier);if(el.dataset.reduced!==String(prefs.reduced))el.dataset.reduced=String(prefs.reduced);
-  // Derive the single impact pop from presentation time so pause and replay agree.
-  const drift=hit.bot===0?-1:1,bounce=prefs.reduced?0:Math.sin(age*18)*Math.exp(-age*7),sway=prefs.reduced?0:drift*(12+9*tier)*(1-Math.exp(-age*3));el.style.setProperty('--hit-wobble',(bounce*5)+'deg');el.style.setProperty('--hit-spread',String(prefs.reduced?1:1+Math.min(age,.5)*.6));el.style.setProperty('--hit-flare',String(flare));el.style.setProperty('--hit-pop',String(1+flare*(.04+tier*.05)+bounce*.09));el.style.setProperty('--hit-glow',([0,2,4,7,10,14,20][tier]*(.65+.35*flare))+'px');
-  const width=renderer.width||container.clientWidth,height=renderer.height||container.clientHeight,sizeKey=[tier,label,width,height,window.devicePixelRatio].join('/');let size=hitSizes.get(el);if(size?.key!==sizeKey){size={key:sizeKey,width:el.offsetWidth,height:el.offsetHeight};hitSizes.set(el,size);}const marginX=Math.min(42,(size.width/2+42)/Math.max(1,width)*100),marginY=Math.min(40,(size.height/2+70)/Math.max(1,height)*100);el.style.left=clamp(Number.isFinite(point?.x)?point!.x:(hit.bot?75:25),marginX,100-marginX)+'%';el.style.top=clamp(Number.isFinite(point?.y)?point!.y:55,marginY,100-marginY)+'%';el.style.transform=`translate(calc(-50% + ${sway}px), ${-16-(prefs.reduced?0:age*52)-bounce*8}px)`;el.style.opacity=String(Math.min(1,(1.3-age)*2.5));
- }
+ const container=$('#hit-readouts');if(!container||!sim)return;const active=['fighting','practice','finishing','replay','paused'].includes(state);container.classList.toggle('hidden',!active);if(!active)return;
+ const replayFrame=state==='replay'?replayFrames[Math.min(replayFrames.length-1,Math.floor(replayProgress))]:undefined;presentHitReadouts(container,replayFrame?(replayFrame.hits??[]):hitReadouts.update(sim.events,sim.tick),replayFrame?.tick??sim.tick,renderer,sim,prefs.reduced);
 }
+
 function updateDamageWarnings(){
  if(!sim)return;
  const warnings:{badge:HTMLElement,x:number,y:number,anchor:number,width:number,height:number}[]=[],viewport=hud.clientWidth||window.innerWidth;
