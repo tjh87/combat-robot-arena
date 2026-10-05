@@ -66,3 +66,5 @@ edit('tests/online-browser.mjs',s=>s.replace('window.__arenaTools=new Map();',"l
 edit('tests/online-browser.mjs',s=>s.replace("name+'.png',timeout:30000","name+'.png',timeout:90000").replace('},240000);','},600000);').replace('four-minute deadline','ten-minute deadline'));
 
 edit("tests/online-browser.mjs",s=>s.replace("finally{await resume();}","finally{await freeze();}"));
+
+edit("tests/online-browser.mjs",s=>s.replace("window.__freezeFrame=false;","window.__freezeFrame=true;"));
