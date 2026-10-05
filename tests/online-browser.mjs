@@ -35,7 +35,7 @@ async function connected(p,code){
 }
 try{
  const a=await page();await a.evaluate(()=>window.__freezeFrame=true);const b=await page();await b.evaluate(()=>window.__freezeFrame=true);stage='create and join';
- await a.locator('#online-name').fill('Alice');await a.locator('[data-online-robot="2"]').click({force:true});await a.locator('#online-create-duel').click({force:true});
+ await a.locator('#online-name').fill('Alice');await a.locator('[data-online-robot="6"]').click({force:true});await a.locator('#online-create-duel').click({force:true});
  await a.waitForFunction(()=>document.querySelector('.online-room-number'),undefined,{timeout:30000,polling:100});
  const code=(await a.locator('.online-room-number').textContent()).trim();assert(/^[1-9]\d{3}$/.test(code));
  await b.locator('#online-name').fill('Bob');await b.locator('#online-code').fill(code);await b.locator('#online-join').click({force:true});
