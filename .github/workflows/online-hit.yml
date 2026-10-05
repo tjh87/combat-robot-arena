@@ -18,7 +18,9 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Reproduce real impacts through the frame and checkpoint paths
-        run: node --import tsx tests/online-hit-probe.ts
+        run: |
+          node --import tsx tests/online-hit-probe.ts
+          node --import tsx tests/online-prediction-probe.ts
       - name: Build the real browser impact probe
         run: |
           node scripts/build.mjs
