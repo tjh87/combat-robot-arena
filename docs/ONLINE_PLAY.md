@@ -91,3 +91,19 @@ The cloud tests cover:
 Tournament progression tests inject results to exercise all bracket stages. They do not claim seven complete, uninterrupted live fights.
 
 Browser tests use Chromium with software WebGL. Windows graphics and audible playback remain manual checks.
+
+## Impact updates and damage bubbles
+
+Online damage bubbles use the authoritative HP readouts from each server frame. Both players see the same integer damage values.
+
+The display suppresses values that round to 1 HP. Exact fractional HP remains in the simulation.
+
+The network callback updates the HUD independently of the graphics loop. Online graphics use a maximum rate of 30 frames per second.
+
+The client permits one prediction job at a time. Each job uses the latest frame and current drive command.
+
+The prediction horizon is 18 physics ticks, or 75 ms. Replies from an older epoch or an outdated frame cannot replace current server poses.
+
+A worker error removes prediction and retains the authoritative view. A new match or lease epoch resets the replica and its prediction state.
+
+The impact regression uses two native browser connections and an armed weapon. It requires visible bubbles, continued ticks, input acknowledgments, graphics updates, and refresh recovery.

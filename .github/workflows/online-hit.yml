@@ -1,7 +1,6 @@
 name: Online first-hit recovery
 on:
-  push:
-    branches: [online-hit-recovery]
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
