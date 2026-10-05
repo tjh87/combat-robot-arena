@@ -3,6 +3,7 @@ import {sawbladeExposure,updateSawbladeExposure} from './sawblaze-blur';
 import * as THREE from 'three';
 import {isSpinner,isHorizontal,clamp,weaponAxis,type BotConfig} from './model';
 
+const usesLegacyExposure=(c:BotConfig):boolean=>c.chassis.profile==='whyachi';
 const EXPOSURE_SECONDS=1/90,SWEEP_STEPS=24,SWEEP_RINGS=4;
 
 // A short angular exposure of the actual rotor. One small, reusable mesh per
@@ -46,7 +47,7 @@ function updateHorizontalSweep(mesh:THREE.Mesh<THREE.BufferGeometry,THREE.MeshBa
 /** Exposure trails supplement, but never replace, the physical rotor pose. */
 export function rotorMotion(config:BotConfig){
  if(config.chassis.profile==='sawblaze'&&config.weapon.type==='hammer_saw')return sawbladeExposure(config);
- if(config.chassis.profile!=='whyachi')return enhancedRotorExposure(config);
+ if(!usesLegacyExposure(config))return enhancedRotorExposure(config);
  const w=config.weapon,root=new THREE.Group();root.name='rotor-motion';
  if(!isSpinner(w))return root;
  root.userData.rotorMotion=true;
