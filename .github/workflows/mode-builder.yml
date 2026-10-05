@@ -1,0 +1,38 @@
+name: Modes and complete builder acceptance
+on:
+  push:
+    branches: [mode-builder-review]
+permissions:
+  contents: read
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      REDIS_URL: ${{ secrets.ONLINE_REDIS_URL }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 40
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Build and offline checks
+        run: |
+          node scripts/build.mjs
+          node scripts/verify.mjs
+          npm run online:build
+          npx tsc -p tsconfig.server.json --noEmit
+      - name: Stock compatibility and component configurations
+        run: |
+          mkdir -p "$RUNNER_TEMP/baseline"
+          git archive 12fc89051c3466beb3b3b7ac4b1aeb623ebbf5a7 | tar -x -C "$RUNNER_TEMP/baseline"
+          ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/baseline/node_modules"
+          BASELINE_ROOT="$RUNNER_TEMP/baseline" node --import tsx tests/builder-components.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mode-builder-evidence
+          path: browser-evidence
