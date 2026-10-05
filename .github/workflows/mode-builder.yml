@@ -31,6 +31,19 @@ jobs:
           git archive 12fc89051c3466beb3b3b7ac4b1aeb623ebbf5a7 | tar -x -C "$RUNNER_TEMP/baseline"
           ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/baseline/node_modules"
           BASELINE_ROOT="$RUNNER_TEMP/baseline" node --import tsx tests/builder-components.ts
+          node --import tsx tests/builder-functional.ts
+          node --import tsx tests/online-core.ts
+      - name: Install isolated browser
+        run: |
+          mkdir -p "$RUNNER_TEMP/browser"
+          npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
+          "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Complete builder flow and multiplayer
+        run: |
+          node --import tsx server/test-site.ts > /tmp/mode-builder.log 2>&1 &
+          for i in $(seq 1 60); do if curl -fsS http://127.0.0.1:4173/api/online > /dev/null; then break; fi; sleep 1; done
+          node tests/mode-builder-browser.mjs
+          node tests/online-browser.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
