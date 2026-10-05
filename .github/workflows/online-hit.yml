@@ -1,0 +1,26 @@
+name: Online first-hit recovery
+on:
+  push:
+    branches: [online-hit-recovery]
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      REDIS_URL: ${{ secrets.ONLINE_REDIS_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Reproduce real impacts through the frame and checkpoint paths
+        run: node --import tsx tests/online-hit-probe.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: online-hit-evidence
+          path: browser-evidence
