@@ -167,8 +167,7 @@ export function extendedRotor(c:BotConfig,w:Spinner,parts:Part[]){
    const pos=v(side*offset,0,0),prefix='hyper_disc_'+(side<0?'left':'right');
    b.ring(prefix,'weapon','rotor',ro,w.innerRadius,thickness,pos,w.material,24);
    for(let i=0;i<3;i++)b.box(prefix+'_spoke_'+i,'weapon','rotor',v(thickness,.023,ro*1.75),pos,w.material,axisQ(v(1,0,0),i*Math.PI/3));
-   if(c.chassis.profile==='whyachi'&&w.type==='horizontal_cage')return;
- for(let i=0;i<w.teeth;i++){
+   for(let i=0;i<w.teeth;i++){
     const a=i*Math.PI*2/w.teeth,r=Math.sqrt(R*R-w.toothHeight*w.toothHeight/4)-w.toothDepth/2;
     b.put(prefix+'_tooth_'+i,'weapon','rotor',chiselShape(v(thickness,w.toothDepth,w.toothHeight)),add(pos,v(0,r*Math.cos(a),r*Math.sin(a))),w.material,axisQ(v(1,0,0),a),i+(side>0?w.teeth:0));
    }
@@ -255,6 +254,7 @@ export function extendedRotor(c:BotConfig,w:Spinner,parts:Part[]){
    [[-.015,top*.90],[.018,top*.92],[.024,top*1.06],[.003,ro*.88],[-.014,ro*.87]],
    v(0,w.width*.75,0),w.material,axisQ(v(0,1,0),i*Math.PI*2/3+Math.PI/6),w.teeth+i);
  }
+ if(c.chassis.profile==='whyachi'&&w.type==='horizontal_cage')return;
  for(let i=0;i<w.teeth;i++){
   let a=i*2*Math.PI/w.teeth;
   if(w.type==='vertical_bar')a=i%2*Math.PI;
