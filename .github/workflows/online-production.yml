@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      TESTED_SOURCE: 65b525fc25b51772418bc9cbe091b93f11c618cf
+      TESTED_SOURCE: b30077ef1f31fc1a4df789ba351a5b4b47df4b89
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 65b525fc25b51772418bc9cbe091b93f11c618cf
+          ref: b30077ef1f31fc1a4df789ba351a5b4b47df4b89
       - uses: actions/setup-node@v4
         with:
           node-version: 24
