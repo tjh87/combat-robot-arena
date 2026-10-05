@@ -3,7 +3,7 @@ import {isSpinner,type Compiled} from './model';
 import {LB_TO_KG,WEAPON_REFERENCES} from './weapon-specs';
 
 export function weaponReferenceHTML(c:Compiled){
- const w=c.config.weapon,ref=WEAPON_REFERENCES[c.componentProfile(config,'weapon')??'standard'];
+ const w=c.config.weapon,ref=WEAPON_REFERENCES[componentProfile(c.config,'weapon')??'standard'];
  if(w.type==='none')return '';
  const mass=c.parts.filter(p=>p.body==='rotor').reduce((sum,p)=>sum+p.mass,0),spin=isSpinner(w);
  const massBasis=spin&&w.massKg!==undefined?(ref?.massLb!==undefined&&Math.abs(mass-ref.massLb*LB_TO_KG)<.0001?ref.massBasis:'custom'):'geometry';
