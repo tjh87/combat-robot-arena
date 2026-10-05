@@ -15,7 +15,7 @@ const references=[...html.matchAll(/(?:src|href)="([^"]+)"/g)].map(match=>match[
 assert(references.length>=3);
 for(const reference of references){assert(reference.startsWith('/')&&!reference.startsWith('//'));assert(files.includes(reference.slice(1)),reference);}
 const scripts=files.filter(file=>file.endsWith('.js')),js=scripts.map(file=>readFileSync(join('dist',file),'utf8')).join('\n');
-assert.equal(scripts.length,4,'Game, graphics, physics, and prediction use local chunks');assert.equal(scripts.filter(file=>/^assets\/predictor-[\w-]+\.js$/.test(file)).length,1,'One local prediction worker is required');
+assert.equal(scripts.length,5,'Game, graphics, physics, prediction, and tournament processing use local chunks');assert.equal(scripts.filter(file=>/^assets\/tournament-worker-[\w-]+\.js$/.test(file)).length,1,'One local tournament worker is required');assert.equal(scripts.filter(file=>/^assets\/predictor-[\w-]+\.js$/.test(file)).length,1,'One local prediction worker is required');
 for(const file of scripts){const code=readFileSync(join('dist',file),'utf8');for(const [,chunk]of code.matchAll(/from\s*["']\.\/([^"']+\.js)["']/g))assert(files.includes('assets/'+chunk),'Missing local module: '+chunk);}
 assert(!/__review|offline-test\.invalid|Injected graphics initialization failure|jsdom/.test(js));
 const offset=js.indexOf('AGFzbQ');assert(offset>=0,'The local physics WASM must be embedded');
