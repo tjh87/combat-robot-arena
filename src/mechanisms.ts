@@ -167,7 +167,8 @@ export function extendedRotor(c:BotConfig,w:Spinner,parts:Part[]){
    const pos=v(side*offset,0,0),prefix='hyper_disc_'+(side<0?'left':'right');
    b.ring(prefix,'weapon','rotor',ro,w.innerRadius,thickness,pos,w.material,24);
    for(let i=0;i<3;i++)b.box(prefix+'_spoke_'+i,'weapon','rotor',v(thickness,.023,ro*1.75),pos,w.material,axisQ(v(1,0,0),i*Math.PI/3));
-   for(let i=0;i<w.teeth;i++){
+   if(c.chassis.profile==='whyachi'&&w.type==='horizontal_cage')return;
+ for(let i=0;i<w.teeth;i++){
     const a=i*Math.PI*2/w.teeth,r=Math.sqrt(R*R-w.toothHeight*w.toothHeight/4)-w.toothDepth/2;
     b.put(prefix+'_tooth_'+i,'weapon','rotor',chiselShape(v(thickness,w.toothDepth,w.toothHeight)),add(pos,v(0,r*Math.cos(a),r*Math.sin(a))),w.material,axisQ(v(1,0,0),a),i+(side>0?w.teeth:0));
    }
@@ -222,12 +223,22 @@ export function extendedRotor(c:BotConfig,w:Spinner,parts:Part[]){
   }
   b.put('vertical_hub','weapon','rotor',{kind:'cylinder',radius:.048,width:w.thickness+.025},v(),w.material,axisQ(v(0,0,1),Math.PI/2));
  }else if(w.type==='horizontal_cage'){
+  if(c.chassis.profile==='whyachi'){
+   const tilt=8*Math.PI/180,lift=.04,L=R-w.toothDepth,span=Math.max(w.width*1.7,w.toothWidth),headR=Math.sqrt(R*R-span*span/4)-w.toothDepth/2,ends:Vec[]=[];
+   for(let i=0;i<3;i++){const a=i*Math.PI*2/3,sy=Math.sin(a/2),cy=Math.cos(a/2),sx=Math.sin(tilt/2),cx=Math.cos(tilt/2),q={x:cy*sx,y:sy*cx,z:-sy*sx,w:cy*cx};const point=(x:number,y:number,z:number)=>{const zz=y*Math.sin(tilt)+z*Math.cos(tilt);return v(x*Math.cos(a)+zz*Math.sin(a),lift+y*Math.cos(tilt)-z*Math.sin(tilt),-x*Math.sin(a)+zz*Math.cos(a));};
+    b.box('cage_arm_'+i,'weapon','rotor',v(w.width,w.thickness,L),point(0,0,L/2),w.material,q);ends.push(point(0,0,L));b.box('cage_hammer_'+i,'weapon','rotor',v(span,w.toothHeight*.65,w.toothDepth*.5),point(0,0,headR),w.material,q);
+    for(const side of[-1,1]){const section=[[side*span*.29,headR-w.toothDepth*.45],[side*span*.5,headR-w.toothDepth*.20],[side*span*.5,Math.sqrt(R*R-span*span/4)]],heights=[w.toothHeight/2,w.toothHeight/2,.004],vertices:number[]=[];for(const sign of[-1,1])for(let k=0;k<3;k++){const p=point(section[k][0],sign*heights[k],section[k][1]);vertices.push(p.x,p.y,p.z);}const area=Math.abs((section[1][0]-section[0][0])*(section[2][1]-section[0][1])-(section[2][0]-section[0][0])*(section[1][1]-section[0][1]))/2,volume=area*heights.reduce((n,h)=>n+2*h,0)/3;b.put(side<0?'tooth_'+i:'tooth_'+i+'_outer','weapon','rotor',{kind:'hull',vertices,volume},v(),w.material,identity,i);}
+   }
+   for(let i=0;i<3;i++)b.tube('cage_tie_'+i,'weapon','rotor',ends[i],ends[(i+1)%3],.008,'titanium');b.put('cage_hub','weapon','rotor',{kind:'cylinder',radius:.052,width:.09},v(0,.02,0),'hardox');
+  }else{
   const ends=Array.from({length:3},(_,i)=>v(Math.sin(i*Math.PI*2/3)*(R-w.toothDepth),0,Math.cos(i*Math.PI*2/3)*(R-w.toothDepth)));
   for(let i=0;i<3;i++){
    b.box('cage_arm_'+i,'weapon','rotor',v(w.width,w.thickness,R-w.toothDepth),mul(ends[i],.5),w.material,axisQ(v(0,1,0),i*Math.PI*2/3));
    b.tube('cage_tie_'+i,'weapon','rotor',ends[i],ends[(i+1)%3],.008,'titanium');
   }
   b.put('cage_hub','weapon','rotor',{kind:'cylinder',radius:.052,width:.05},v(),'hardox');
+
+  }
  }else if(w.type==='shell_spinner'){
   const top=ro*.64,n=24,t=w.thickness;
   for(let i=0;i<n;i++)b.prism('shell_panel_'+i,'weapon','rotor',2*ro*Math.tan(Math.PI/n),[[0,ro-t],[0,ro],[w.width,top],[w.width,top-t]],v(),w.material,axisQ(v(0,1,0),i*2*Math.PI/n));

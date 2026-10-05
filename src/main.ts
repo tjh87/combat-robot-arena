@@ -15,6 +15,7 @@ import {damageStatus} from './combat-damage';
 import {damageBadge} from './damage-view';
 import './style.css';
 import './menu-polish.css';
+import './weapon-effects.css';
 import {RULES,SLOTS,MOUNTS,MATERIALS,MOTORS,ROSTER,PROFILES,isSpinner,flipEnergy,selfRightKind,compile,preset,copy,decodeBuild,encodeBuild,moduleLabel,feedPerTooth,clamp,length,sub,type BotConfig,type Slot,type Material} from './model';
 import {initializePhysics,Simulation,FixedClock,Tournament,repairQuote,refitQuote,neutral,AI_SETTINGS,type Difficulty,type RepairOrder,type VisualFrame,type Command} from './sim';
 import {ArenaRenderer} from './render';
@@ -87,7 +88,7 @@ function updateHUD(){if(!sim||!$('#timer'))return;hud.dataset.camera=prefs.camer
  const cameraButton=$('#camera-button');cameraButton.textContent=`View: ${prefs.cameraMode==='pov'?'P1 POV':'Tactical'} · ${keyLabel(prefs.controls[0].camera)}`;cameraButton.setAttribute('aria-pressed',String(prefs.cameraMode==='pov'));
 
  const flipCue=$('#flip-cue');if(flipCue){const cue=sim.flipOpportunity(sim.bots[0]);flipCue.dataset.ready=String(cue.ready);$('#flip-cue-title').textContent=cue.label;$('#flip-cue-detail').textContent=cue.detail;$('#flip-cue-key').textContent=cue.ready?'PRESS '+keyLabel(prefs.controls[0].weapon):'FLIP ASSIST';}
- updateWeaponGauge($('#weapon-gauge'),sim.bots[0],{weapon:keyLabel(prefs.controls[0].weapon),strike:keyLabel(prefs.controls[0].selfRight)});
+ updateWeaponGauge($('#weapon-gauge'),sim.bots[0],{weapon:keyLabel(prefs.controls[0].weapon),strike:keyLabel(prefs.controls[0].selfRight),reduced:prefs.reduced});
  const cap=$('#caption');cap.classList.toggle('hidden',!prefs.captions||performance.now()>captionUntil);cap.textContent=lastCaption;
  const debug=$('#debug');debug.classList.toggle('hidden',!prefs.debug);if(prefs.debug)debug.textContent=`TICK ${sim.tick} / 240 Hz\n${renderer.triangleCount.toLocaleString()} triangles · ${renderer.drawCalls} draws\nResolution ${Math.round((renderer.resolution?.scale??1)*100)}% · Adaptive ${prefs.adaptive?'on':'off'}\nPhysics ${sim.physicsMs.toFixed(2)} ms · Render ${renderer.renderMs.toFixed(2)} ms\nBodies ${sim.world.bodies.len()} · Debris ${sim.debris.length}\n${sim.bots.map(b=>`P${b.id+1} ${b.ai.state}: ${b.ai.reason}`).join('\n')}`;
 }

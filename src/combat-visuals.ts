@@ -1,3 +1,4 @@
+import {enhancedRotorExposure,updateEnhancedExposure} from './weapon-exposure';
 import {sawbladeExposure,updateSawbladeExposure} from './sawblaze-blur';
 import * as THREE from 'three';
 import {isSpinner,isHorizontal,clamp,weaponAxis,type BotConfig} from './model';
@@ -37,7 +38,7 @@ function updateHorizontalSweep(mesh:THREE.Mesh<THREE.BufferGeometry,THREE.MeshBa
  const radii=[radius*inner,radius*(inner+.08*(1-inner)),radius*.985,radius];
  for(let blade=0;blade<blades;blade++)for(let step=0;step<=SWEEP_STEPS;step++){
   const angle=phase+blade*Math.PI*2/blades-direction*span*step/SWEEP_STEPS,c=Math.cos(angle),s=Math.sin(angle);
-  for(let ring=0;ring<SWEEP_RINGS;ring++)positions.setXYZ((blade*(SWEEP_STEPS+1)+step)*SWEEP_RINGS+ring,c*radii[ring],s*radii[ring],0);
+  for(let ring=0;ring<SWEEP_RINGS;ring++)positions.setXYZ((blade*(SWEEP_STEPS+1)+step)*SWEEP_RINGS+ring,c*radii[ring],s*radii[ring],-(data.inclination??0)*radii[ring]);
  }
  positions.needsUpdate=true;
 }
@@ -45,6 +46,7 @@ function updateHorizontalSweep(mesh:THREE.Mesh<THREE.BufferGeometry,THREE.MeshBa
 /** Exposure trails supplement, but never replace, the physical rotor pose. */
 export function rotorMotion(config:BotConfig){
  if(config.chassis.profile==='sawblaze'&&config.weapon.type==='hammer_saw')return sawbladeExposure(config);
+ if(config.chassis.profile!=='whyachi')return enhancedRotorExposure(config);
  const w=config.weapon,root=new THREE.Group();root.name='rotor-motion';
  if(!isSpinner(w))return root;
  root.userData.rotorMotion=true;
@@ -54,7 +56,7 @@ export function rotorMotion(config:BotConfig){
   const shell=w.type==='shell_spinner',bar=w.type==='horizontal_bar',ro=w.radius-w.toothDepth;
   const levels=shell?[{height:.009+w.toothHeight/2+.003,radius:w.radius,phase:-Math.PI/2,blades:w.teeth},{height:w.width*.75+.027,radius:ro*.88,phase:-Math.PI/3,blades:3}]:[{height:Math.max(w.thickness,w.toothHeight)/2+.003,radius:w.radius,phase:bar?0:-Math.PI/2,blades:bar?2:3}];
   const color=bar?(config.chassis.profile==='icewave'?'#b66040':'#ad4850'):shell?'#919ba3':'#66727d';
-  for(const level of levels){const disk=new THREE.Group();disk.quaternion.copy(orientation);disk.position.y=level.height;disk.add(horizontalSweep(level.radius,shell?.82:bar?.13:.25,level.blades,level.phase,color));root.add(disk);}
+  for(const level of levels){const disk=new THREE.Group();disk.quaternion.copy(orientation);disk.position.y=level.height;const sweep=horizontalSweep(level.radius,shell?.82:bar?.13:.25,level.blades,level.phase,color);if(config.chassis.profile==='whyachi'){disk.position.y+=.04;sweep.geometry.userData.inclination=Math.sin(8*Math.PI/180);}disk.add(sweep);root.add(disk);}
   root.userData.exposureSeconds=EXPOSURE_SECONDS;return root;
  }
  const twin=config.chassis.profile==='hypershock'&&w.type==='vertical_disc',offset=(w.width-Math.min(w.thickness,w.width*.28))/2;
@@ -75,6 +77,7 @@ export function rotorMotion(config:BotConfig){
 export function updateRotorMotion(rotor:THREE.Object3D|undefined,rpm:number,time:number,reduced=false,direction?:number){
  const root=rotor?.getObjectByName('rotor-motion');if(!root)return;
  if(root.userData.sawbladeExposure){updateSawbladeExposure(rotor!,root,rpm,reduced,Math.sign(direction??root.userData.direction??1)||1);return;}
+ if(root.userData.enhancedExposure){updateEnhancedExposure(root,rpm,reduced,direction);return;}
  const speed=Number.isFinite(rpm)?Math.abs(rpm):0,strength=clamp((speed-90)/(root.userData.horizontal?1000:650),0,1);root.visible=strength>.01&&!reduced;
  if(!root.visible)return;
  if(root.userData.horizontal){const spin=Math.sign(direction??root.userData.direction??1)||1;for(const disk of root.children)for(const mesh of disk.children)updateHorizontalSweep(mesh as THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>,speed,spin,strength);return;}

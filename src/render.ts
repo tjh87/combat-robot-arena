@@ -19,7 +19,7 @@ import {RULES,batteryPosition,clamp,SLOTS,MATERIALS,compile,bodyOrigin,povMount,
 import {Simulation,type VisualFrame} from './sim';
 import {ExhaustPlume} from './exhaust';
 import {TireEffects} from './tire-effects';
-import {sparkProfile,sparkParticle,sparkMaterial,writeSparkTrail,SPARK_CAPACITY,SPARK_TRAIL_FLOATS,roundParticleMaterial} from './impact-sparks';
+import {sparkProfile,sparkParticle,sparkMaterial,sparkHeadColor,writeSparkTrail,SPARK_CAPACITY,SPARK_TRAIL_FLOATS,roundParticleMaterial} from './impact-sparks';
 export type Quality='low'|'medium'|'high';
 const vec=(p:Vec)=>new THREE.Vector3(p.x,p.y,p.z);
 export class ArenaRenderer{
@@ -27,7 +27,7 @@ export class ArenaRenderer{
  wallCracks=new WallCrackVisual();
  batteryFireVisual=new BatteryFireVisual();replayFireFrame?:VisualFrame;
  tireEffects=new TireEffects();
- exhaust?:ExhaustPlume;renderer:THREE.WebGLRenderer;scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(42,1,.05,100);insetCamera=new THREE.PerspectiveCamera(76,1,.04,70);arena=new THREE.Group();preMatch=false;cameraSideWall?:THREE.Object3D;bots=new THREE.Group();preview=new THREE.Group();effects=new THREE.Group();bodyGroups=new Map<string,THREE.Group>();partMeshes=new Map<string,THREE.Mesh>();hazardMeshes=new Map<string,THREE.Group>();replayRoot=new THREE.Group();replayGroups=new Map<string,THREE.Object3D>();mainLight:THREE.DirectionalLight;travelEnd?:THREE.Mesh;cameraTarget=new THREE.Vector3(0,.08,0);quality:Quality='medium';mode:'menu'|'match'|'builder'='menu';viewerBotId=0;cameraMode:'tactical'|'pov'|'chase'='tactical';width=1;height=1;resize:ResizeObserver;replay=false;time=0;lastInset=0;inset=false;reduced=false;triangleCount=0;drawCalls=0;renderMs=0;particles:THREE.Points;particlePositions:Float32Array;particleAges:Float32Array;particleVelocity:Float32Array;lastImpact=0;sparkTrails?:THREE.LineSegments;sparkTrailPositions=new Float32Array(SPARK_CAPACITY*SPARK_TRAIL_FLOATS);sparkColors=new Float32Array(SPARK_CAPACITY*SPARK_TRAIL_FLOATS);sparkLifetimes=new Float32Array(SPARK_CAPACITY);sparkLengths=new Float32Array(SPARK_CAPACITY);sparkSizes=new Float32Array(SPARK_CAPACITY);sparkBranches=new Uint8Array(SPARK_CAPACITY);sparkHeadColors=new Float32Array(SPARK_CAPACITY*3);replaySparkTrails?:THREE.LineSegments;previewConfig?:BotConfig;travelLine:THREE.Line;disposed=false;environment:THREE.WebGLRenderTarget;smoke:THREE.Points;smokePositions=new Float32Array(64*3);smokeAges=new Float32Array(64).fill(-1);smokeClock=0;replayParticles?:THREE.Points;insetTarget?:THREE.WebGLRenderTarget;insetScene=new THREE.Scene();insetScreenCamera=new THREE.OrthographicCamera(-1,1,1,-1,0,2);insetQuad=new THREE.Mesh(new THREE.PlaneGeometry(2,2),new THREE.MeshBasicMaterial({toneMapped:false}));travelOrigin:THREE.Mesh;flightLabel?:FlightLabel;
+ exhaust?:ExhaustPlume;renderer:THREE.WebGLRenderer;scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(42,1,.05,100);insetCamera=new THREE.PerspectiveCamera(76,1,.04,70);arena=new THREE.Group();preMatch=false;cameraSideWall?:THREE.Object3D;bots=new THREE.Group();preview=new THREE.Group();effects=new THREE.Group();bodyGroups=new Map<string,THREE.Group>();partMeshes=new Map<string,THREE.Mesh>();hazardMeshes=new Map<string,THREE.Group>();replayRoot=new THREE.Group();replayGroups=new Map<string,THREE.Object3D>();mainLight:THREE.DirectionalLight;travelEnd?:THREE.Mesh;cameraTarget=new THREE.Vector3(0,.08,0);quality:Quality='medium';mode:'menu'|'match'|'builder'='menu';viewerBotId=0;cameraMode:'tactical'|'pov'|'chase'='tactical';width=1;height=1;resize:ResizeObserver;replay=false;time=0;lastInset=0;inset=false;reduced=false;triangleCount=0;drawCalls=0;renderMs=0;particles:THREE.Points;particlePositions:Float32Array;particleAges:Float32Array;particleVelocity:Float32Array;lastImpact=0;sparkTrails?:THREE.LineSegments;sparkTrailPositions=new Float32Array(SPARK_CAPACITY*SPARK_TRAIL_FLOATS);sparkColors=new Float32Array(SPARK_CAPACITY*SPARK_TRAIL_FLOATS);sparkLifetimes=new Float32Array(SPARK_CAPACITY);sparkLengths=new Float32Array(SPARK_CAPACITY);sparkSizes=new Float32Array(SPARK_CAPACITY);sparkBranches=new Uint8Array(SPARK_CAPACITY);sparkHeadColors=new Float32Array(SPARK_CAPACITY*3);sparkTints=new Float32Array(SPARK_CAPACITY*3);replaySparkTrails?:THREE.LineSegments;previewConfig?:BotConfig;travelLine:THREE.Line;disposed=false;environment:THREE.WebGLRenderTarget;smoke:THREE.Points;smokePositions=new Float32Array(64*3);smokeAges=new Float32Array(64).fill(-1);smokeClock=0;replayParticles?:THREE.Points;insetTarget?:THREE.WebGLRenderTarget;insetScene=new THREE.Scene();insetScreenCamera=new THREE.OrthographicCamera(-1,1,1,-1,0,2);insetQuad=new THREE.Mesh(new THREE.PlaneGeometry(2,2),new THREE.MeshBasicMaterial({toneMapped:false}));travelOrigin:THREE.Mesh;flightLabel?:FlightLabel;
  constructor(readonly container:HTMLElement,onLost:()=>void,onRestore:()=>void){
  this.renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});this.renderer.setClearColor(0x0b1015);this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.04;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;this.renderer.shadowMap.autoUpdate=false;container.appendChild(this.renderer.domElement);
  this.renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();onLost();});this.renderer.domElement.addEventListener('webglcontextrestored',onRestore);
@@ -107,7 +107,7 @@ export class ArenaRenderer{
  update(sim:Simulation,dt:number,alpha=1){if(!this.replay)this.wallCracks?.update(sim.wallDamage.cracks);if(this.mode!=='match'&&this.lastVisualTick===sim.tick)return;this.lastVisualTick=sim.tick;for(const b of sim.bots){for(const [key,body]of b.bodies){const group=this.bodyGroups.get(`b${b.id}:${key}`);if(!group)continue;const current=body.translation(),q=body.rotation(),previous=sim.pre.get(body.handle);if(previous&&alpha<1){group.position.lerpVectors(vec(previous.p),vec(current),alpha);group.quaternion.set(previous.q.x,previous.q.y,previous.q.z,previous.q.w).slerp(new THREE.Quaternion(q.x,q.y,q.z,q.w),alpha);}else{group.position.copy(vec(current));group.quaternion.set(q.x,q.y,q.z,q.w);}}for(const p of b.compiled.parts){const mesh=this.partMeshes.get(`b${b.id}:${p.id}`);if(!mesh)continue;const m=b.modules[p.module];mesh.visible=b.colliders.has(p.id);this.applyHealth(mesh,m.max?m.hp/m.max:1);if(p.id.startsWith('track_belt_'))animateTrack(mesh,b.trackPhase?.[mesh.userData.trackSide]??0);}updateRotorMotion(this.bodyGroups.get(`b${b.id}:rotor`),b.rpm,this.time,this.reduced,Math.sign(sim.omega(b))||b.spinDirection);}
  const liveDebris=new Set<string>();for(const d of sim.debris){liveDebris.add(d.id);let group=this.bodyGroups.get(d.id);if(!group){group=new THREE.Group();const mesh=this.part({...d.part,position:v(),rotation:identity},sim.bots[Number(d.id.split('_')[2])===1?1:0].compiled.config);group.add(mesh);this.bots.add(group);this.bodyGroups.set(d.id,group);}group.position.copy(vec(d.body.translation()));const q=d.body.rotation();group.quaternion.set(q.x,q.y,q.z,q.w);}for(const [id,g]of this.bodyGroups)if(id.startsWith('debris_')&&!liveDebris.has(id)){this.disposeObject(g);this.bodyGroups.delete(id);}
  for(const h of sim.hazards){const group=this.hazardMeshes.get('hazard_'+h.id)!;group.position.copy(vec(h.body.translation()));const q=h.body.rotation();group.quaternion.set(q.x,q.y,q.z,q.w);group.traverse(o=>{if(o instanceof THREE.Mesh&&(o.material as THREE.MeshStandardMaterial).emissive)(o.material as THREE.MeshStandardMaterial).emissive.setHex(h.phase==='warning'?0x85420a:0x000000);});}
- for(const event of sim.events)if(event.id>this.lastImpact&&sim.tick-event.tick>=10){this.lastImpact=event.id;if(event.cause!=='crush'&&event.cause!=='battery fire')this.sparks(event.point,event.energy,event.sparkDirection,event.id);}
+ for(const event of sim.events)if(event.id>this.lastImpact&&sim.tick-event.tick>=10){this.lastImpact=event.id;if(event.cause!=='crush'&&event.cause!=='battery fire')this.sparks(event.point,event.energy,event.sparkDirection,event.id,event.allocations.reduce((sum,a)=>sum+a.hp,0));}
  this.exhaust?.update(sim,dt,this.reduced);
  this.tireEffects.update(sim,dt,this.reduced);
  const track=sim.displayedTravel;this.flightLabel?.update(track);this.travelLine.visible=!!track&&this.mode==='match';this.travelOrigin.visible=this.travelLine.visible;if(this.travelEnd)this.travelEnd.visible=this.travelLine.visible;
@@ -118,11 +118,11 @@ export class ArenaRenderer{
  for(let i=0;i<64;i++){if(this.smokeAges[i]<0)this.smokePositions[i*3+1]=-10;else{this.smokeAges[i]-=dt;this.smokePositions[i*3]+=(i%2?.025:-.025)*dt;this.smokePositions[i*3+1]+=.23*dt;}}this.smoke.geometry.getAttribute('position').needsUpdate=true;this.smoke.visible=!this.reduced&&this.smokeAges.some(a=>a>=0);
  this.animateParticles(dt);
  }
- sparks(p:Vec,energy:number,direction:Vec=v(0,.4,1),seed=0){
+ sparks(p:Vec,energy:number,direction:Vec=v(0,.4,1),seed=0,damage=0){
   if(this.reduced)return;const count=sparkProfile(energy).count;let emitted=0;
   for(let i=0;i<this.particleAges.length&&emitted<count;i++)if(this.particleAges[i]<0){
-   const j=i*3,particle=sparkParticle(energy,direction,emitted++,seed),velocity=particle.velocity;
-   this.particlePositions.set([p.x,p.y+.008,p.z],j);this.particleVelocity.set([velocity.x,velocity.y,velocity.z],j);
+   const j=i*3,particle=sparkParticle(energy,direction,emitted++,seed,damage),velocity=particle.velocity;
+   this.sparkTints.set([particle.color.x,particle.color.y,particle.color.z],j);this.particlePositions.set([p.x,p.y+.008,p.z],j);this.particleVelocity.set([velocity.x,velocity.y,velocity.z],j);
    this.particleAges[i]=this.sparkLifetimes[i]=particle.life;this.sparkLengths[i]=particle.trail;this.sparkSizes[i]=particle.size;this.sparkBranches[i]=Number(particle.branch);
   }
   this.particles.geometry.getAttribute('sparkSize').needsUpdate=true;
@@ -136,9 +136,9 @@ export class ArenaRenderer{
    const drag=Math.exp(-.55*dt);this.particleVelocity[j]*=drag;this.particleVelocity[j+2]*=drag;
    for(let k=0;k<3;k++)this.particlePositions[j+k]+=this.particleVelocity[j+k]*dt;
    if(this.particlePositions[j+1]<.012){this.particlePositions[j+1]=.012;this.particleVelocity[j+1]=Math.abs(this.particleVelocity[j+1])*.22;this.particleVelocity[j]*=.78;this.particleVelocity[j+2]*=.78;}
-   const fade=Math.max(0,this.particleAges[i]/this.sparkLifetimes[i]);
-   writeSparkTrail(this.sparkTrailPositions,this.sparkColors,i,this.particlePositions[j],this.particlePositions[j+1],this.particlePositions[j+2],this.particleVelocity[j],this.particleVelocity[j+1],this.particleVelocity[j+2],this.sparkLengths[i],fade,!!this.sparkBranches[i]);
-   this.sparkHeadColors.set([fade,fade*(.5+.5*fade),fade*fade*.65],j);
+   const fade=Math.max(0,this.particleAges[i]/this.sparkLifetimes[i]),tint=v(this.sparkTints[j],this.sparkTints[j+1],this.sparkTints[j+2]);
+   writeSparkTrail(this.sparkTrailPositions,this.sparkColors,i,this.particlePositions[j],this.particlePositions[j+1],this.particlePositions[j+2],this.particleVelocity[j],this.particleVelocity[j+1],this.particleVelocity[j+2],this.sparkLengths[i],fade,!!this.sparkBranches[i],tint);
+   const color=sparkHeadColor(tint,fade);this.sparkHeadColors.set([color.x,color.y,color.z],j);
   }
   this.particles.visible=!this.reduced;if(this.sparkTrails){this.sparkTrails.visible=!this.reduced;this.sparkTrails.geometry.getAttribute('position').needsUpdate=true;this.sparkTrails.geometry.getAttribute('color').needsUpdate=true;}
   this.particles.geometry.getAttribute('position').needsUpdate=true;this.particles.geometry.getAttribute('color').needsUpdate=true;
@@ -158,11 +158,11 @@ export class ArenaRenderer{
  const p=this.replayParticles.geometry.getAttribute('position') as THREE.BufferAttribute,c=this.replayParticles.geometry.getAttribute('color') as THREE.BufferAttribute,sizes=this.replayParticles.geometry.getAttribute('sparkSize') as THREE.BufferAttribute,tail=this.replaySparkTrails.geometry.getAttribute('position') as THREE.BufferAttribute,colors=this.replaySparkTrails.geometry.getAttribute('color') as THREE.BufferAttribute;let j=0;
  for(const e of frame.effects){const t=Math.max(0,(renderTick-e.tick)/RULES.hz),spec=sparkProfile(e.energy);if(t>=spec.life)continue;
   for(let i=0;i<spec.count&&j<SPARK_CAPACITY;i++){
-   const particle=sparkParticle(e.energy,e.direction??v(0,.4,1),i,e.id);if(t>=particle.life)continue;
+   const particle=sparkParticle(e.energy,e.direction??v(0,.4,1),i,e.id,e.damage??0);if(t>=particle.life)continue;
    const {x:vx,y:vy,z:vz}=particle.velocity,fade=1-t/particle.life,drag=(1-Math.exp(-.55*t))/.55;
    const x=e.p.x+vx*drag,y=Math.max(.012,e.p.y+.008+vy*t-4.905*t*t),z=e.p.z+vz*drag;
-   p.setXYZ(j,x,y,z);c.setXYZ(j,fade,fade*(.5+.5*fade),fade*fade*.65);sizes.setX(j,particle.size);
-   writeSparkTrail(tail.array as Float32Array,colors.array as Float32Array,j,x,y,z,vx,vy-9.81*t,vz,particle.trail,fade,particle.branch);j++;
+   const color=sparkHeadColor(particle.color,fade);p.setXYZ(j,x,y,z);c.setXYZ(j,color.x,color.y,color.z);sizes.setX(j,particle.size);
+   writeSparkTrail(tail.array as Float32Array,colors.array as Float32Array,j,x,y,z,vx,vy-9.81*t,vz,particle.trail,fade,particle.branch,particle.color);j++;
   }
  }
  while(j<SPARK_CAPACITY){p.setXYZ(j,0,-10,0);(tail.array as Float32Array).fill(-10,j*SPARK_TRAIL_FLOATS,(j+1)*SPARK_TRAIL_FLOATS);j++;}

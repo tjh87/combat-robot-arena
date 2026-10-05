@@ -367,7 +367,7 @@ export function templateColor(p:Part,c:BotConfig):string|undefined{
   if(id.startsWith('armour_')||id.startsWith('lid'))return c.identity.primary;
  }
  if(profile==='gigabyte'&&(id.startsWith('shell_panel_')||id.startsWith('shell_crown_'))){const i=Number(id.split('_').at(-1)),n=id.includes('crown')?4:6;return [c.identity.secondary,c.identity.primary,'#339d57','#275ca2'][Math.floor(i/n)%4];}
- if(profile==='whyachi'){if(id.startsWith('cage_tie'))return c.identity.secondary;if(p.module==='weapon'&&!id.startsWith('tooth'))return '#202930';}
+ if(profile==='whyachi'){if(id.startsWith('tooth'))return '#f5f9ff';if(id.startsWith('cage_tie'))return c.identity.secondary;if(p.module==='weapon'&&!id.startsWith('tooth'))return '#202930';}
  if(profile==='huge'){if(p.module==='weapon'&&!id.startsWith('tooth'))return c.identity.secondary;if(p.material==='uhmw')return c.identity.primary;}
  if(profile==='sawblaze'){
   if(id.startsWith('saw_arm')||id==='arm_bearing'||id==='disc_hub')return c.identity.secondary;
