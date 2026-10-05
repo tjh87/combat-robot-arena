@@ -57,7 +57,7 @@ export function rotorMotion(config:BotConfig){
   const shell=w.type==='shell_spinner',bar=w.type==='horizontal_bar',ro=w.radius-w.toothDepth;
   const levels=shell?[{height:.009+w.toothHeight/2+.003,radius:w.radius,phase:-Math.PI/2,blades:w.teeth},{height:w.width*.75+.027,radius:ro*.88,phase:-Math.PI/3,blades:3}]:[{height:Math.max(w.thickness,w.toothHeight)/2+.003,radius:w.radius,phase:bar?0:-Math.PI/2,blades:bar?2:3}];
   const color=bar?(config.chassis.profile==='icewave'?'#b66040':'#ad4850'):shell?'#919ba3':'#66727d';
-  for(const level of levels){const disk=new THREE.Group();disk.quaternion.copy(orientation);disk.position.y=level.height;const sweep=horizontalSweep(level.radius,shell?.82:bar?.13:.25,level.blades,level.phase,color);if(config.chassis.profile==='whyachi'){disk.position.y+=.04;sweep.geometry.userData.inclination=Math.sin(8*Math.PI/180);}disk.add(sweep);root.add(disk);}
+  for(const level of levels){const disk=new THREE.Group();disk.quaternion.copy(orientation);disk.position.y=level.height;const sweep=horizontalSweep(level.radius,shell?.82:bar?.13:.25,level.blades,level.phase,color);if(config.chassis.profile==='whyachi'){disk.position.y+=.05;sweep.geometry.userData.inclination=Math.sin(8*Math.PI/180);}disk.add(sweep);root.add(disk);}
   root.userData.exposureSeconds=EXPOSURE_SECONDS;return root;
  }
  const twin=config.chassis.profile==='hypershock'&&w.type==='vertical_disc',offset=(w.width-Math.min(w.thickness,w.width*.28))/2;
