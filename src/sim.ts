@@ -1,3 +1,4 @@
+import {impactEnergy,normalKineticEnergy} from './impact-energy';
 import {hydraSleekWheels,hydraBearingDrag} from './hydra-wheels';
 import {WallDamage,isArenaWall,type WallCrack} from './wall-damage';
 import {batteryAlongRay,batteryZones,BATTERY_CRUSH_RESISTANCE} from './battery-layout';
@@ -22,7 +23,7 @@ export const neutral=():Command=>({left:0,right:0,weapon:false,selfRight:false})
 export type Difficulty='easy'|'medium'|'hard';
 export type Transform={id:string,p:Vec,q:Quat};
 export type VisualFrame={wallCracks?:readonly WallCrack[],tick:number,transforms:Transform[],health:number[][],effects:{id:number,tick:number,p:Vec,energy:number,direction?:Vec}[],hits?:HitReadout[],speeds?:number[],tracks?:number[][],rpm?:number[],directions?:number[],firePoints?:Vec[],fires?:number[]};
-export type ImpactEvent={id:number,tick:number,episode:string,source:string,attacker:number|null,target:number|null,module:Slot|'arena',energy:number,impulse:number,closing:number,point:Vec,rotorBefore:number[],rotorAfter:number[],allocations:{bot:number,module:Slot,energy:number,hp:number}[],cause:string;penetrationDirection?:Vec;breaches?:{target:number,slot:string,point:Vec,work:number}[];releasedTick?:number;fallHeight?:number;fallMassKg?:number;fallSpeed?:number;fallKineticJ?:number;fallGravityJ?:number;fallAbsorbedJ?:number;damageScale?:number;biteDepth?:number;engagement?:number;sparkDirection?:Vec};
+export type ImpactEvent={id:number,tick:number,episode:string,source:string,attacker:number|null,target:number|null,module:Slot|'arena',energy:number,impulse:number,closing:number,point:Vec,rotorBefore:number[],rotorAfter:number[],allocations:{bot:number,module:Slot,energy:number,hp:number}[],cause:string;robotSpeed?:[number,number];translationEnergy?:number;rotationalEnergy?:number;otherContactEnergy?:number;penetrationDirection?:Vec;breaches?:{target:number,slot:string,point:Vec,work:number}[];releasedTick?:number;fallHeight?:number;fallMassKg?:number;fallSpeed?:number;fallKineticJ?:number;fallGravityJ?:number;fallAbsorbedJ?:number;damageScale?:number;biteDepth?:number;engagement?:number;sparkDirection?:Vec};
 export type ContactSample={key:string,a:number,b:number,impulse:number,frictionImpulse:number,closing:number,point:Vec,normal:Vec};
 export type Travel={impactId:number,bot:number,role:'Post-impact travel'|'Recoil travel',origin:Vec,final:Vec,comOrigin:Vec,comFinal:Vec,maxHorizontal:number,horizontal:number,displacement3d:number,path:number,height:number,airtime:number,powered:boolean,compound:boolean,reason:string,ticks:number,still:number,points:Vec[],airborne:boolean,landed:number,endedTick?:number};
 export type RingOut={bot:number,origin:Vec,height:number,distance:number};
@@ -590,9 +591,10 @@ export class Simulation{
  private contacts(rotorBefore:number[]){
  const spinBudget=this.bots.map((b,i)=>{if(!b.rotor||!isSpinner(b.compiled.config.weapon))return 0;const parent=b.arm??b.chassis,axis=rotate(weaponAxis(b.compiled.config.weapon),this.pre.get(parent.handle)!.q),omega=dot(sub(this.pre.get(b.rotor.handle)!.ang,this.pre.get(parent.handle)!.ang),axis);return rotorBefore[i]+Math.max(0,b.actuatorTorque*omega*RULES.dt)+.5*(b.actuatorTorque*RULES.dt)**2/Math.max(.001,b.compiled.rotorInertia);});
  const debit=(hit:ReturnType<Simulation['spinnerContact']>)=>{if(!hit)return 0;const used=Math.min(spinBudget[hit.bot.id],hit.work);spinBudget[hit.bot.id]-=used;this.limitRotorEnergy(hit.bot,spinBudget[hit.bot.id]);return used;};
+ const masses=this.bots.map(b=>[...b.bodies.values()].reduce((total,body)=>total+(body.isValid()?body.mass():0),0)),linear=this.bots.map(b=>this.pre.get(b.chassis.handle)?.lin??v()),motionBudget=masses.map((mass,i)=>.5*mass*dot(linear[i],linear[i]));
  const samples=this.substepContacts??this.contactSamples(),updatedEvents=new Set<ImpactEvent>();this.substepContacts=undefined;this.pushImpulse[0]=this.pushImpulse[1]=0;
  samples.sort((a,b)=>a.a-b.a||a.b-b.b);const aggregate=new Map<string,ContactSample>();for(const s of samples){const old=aggregate.get(s.key);if(old){old.closing=(old.closing*old.impulse+s.closing*s.impulse)/(old.impulse+s.impulse);old.impulse+=s.impulse;old.frictionImpulse+=s.frictionImpulse;}else aggregate.set(s.key,{...s});}
- const wallHits=new Map<string,{wall:import('./wall-damage').WallName,point:Vec,energy:number,impulse:number}>();
+ const wallHits=new Map<string,{wall:import('./wall-damage').WallName,point:Vec,energy:number,impulse:number,velocity:Vec}>();
  const contactMetadata=new Map(this.meta),landingKeys=this.landingContacts([...aggregate.values()],contactMetadata,rotorBefore,updatedEvents);for(const s of aggregate.values()){const ma=contactMetadata.get(s.a)!,mb=contactMetadata.get(s.b)!;
  const ca=this.world.getCollider(s.a),cb=this.world.getCollider(s.b),spinA=cb?.isValid()?this.spinnerContact(ma,cb,s,1):undefined,spinB=ca?.isValid()?this.spinnerContact(mb,ca,s,-1):undefined,spentA=debit(spinA),spentB=debit(spinB);
  if(landingKeys.has(s.key))continue;
@@ -610,10 +612,11 @@ export class Simulation{
  // Saw teeth also remove material while sliding. Count the friction work
  // actually solved at contact, within the same finite cycle budget.
  const relative=hazardInfo?.kind==='blade'?sub(this.preVelocity(ca?.parent()??null,s.point),this.preVelocity(cb?.parent()??null,s.point)):v(),shear=.5*s.frictionImpulse*length(sub(relative,mul(s.normal,dot(relative,s.normal))));
- const rawEnergy=.5*s.impulse*(policy?.cause==='ram'?Math.min(s.closing,ramA+ramB):s.closing)+shear,spinShare=clamp(((spinA?.speed??0)+(spinB?.speed??0))/Math.max(.001,s.closing),0,1),energy=rawEnergy*(1-spinShare)+Math.min(rawEnergy*spinShare,spentA+spentB);
+ const a=ma.bot,b=mb.bot,va=a===null?v():linear[a],vb=b===null?v():linear[b],translationClosing=Math.max(0,dot(sub(va,vb),s.normal)),available=(a===null?0:motionBudget[a])+(b===null?0:motionBudget[b]),normalBudget=normalKineticEnergy(a===null?0:masses[a],b===null?0:masses[b],translationClosing),breakdown=impactEnergy({impulse:s.impulse,closing:policy?.cause==='ram'?Math.min(s.closing,ramA+ramB):s.closing,translationClosing,translationBudget:Math.min(available,normalBudget),spinSpeed:(spinA?.speed??0)+(spinB?.speed??0),spinWork:spentA+spentB,shear}),energy=breakdown.total;
+ if(available>0){if(a!==null)motionBudget[a]=Math.max(0,motionBudget[a]-breakdown.translation*motionBudget[a]/available);if(b!==null)motionBudget[b]=Math.max(0,motionBudget[b]-breakdown.translation*motionBudget[b]/available);}
  const wallHandle=ma.bot===null?s.a:mb.bot===null?s.b:undefined;
  const wallName=wallHandle===undefined?undefined:this.bodyIds.get(this.world.getCollider(wallHandle)?.parent()?.handle??-1);
- if(isArenaWall(wallName)&&Math.abs(s.normal.y)<.4){const key=wallName+'/'+(ma.bot??mb.bot),hit=wallHits.get(key);if(hit){if(energy>hit.energy)hit.point={...s.point};hit.energy+=energy;hit.impulse+=s.impulse;}else wallHits.set(key,{wall:wallName,point:{...s.point},energy,impulse:s.impulse});}
+ if(isArenaWall(wallName)&&Math.abs(s.normal.y)<.4){const key=wallName+'/'+(ma.bot??mb.bot),hit=wallHits.get(key);if(hit){if(energy>hit.energy)hit.point={...s.point};hit.energy+=energy;hit.impulse+=s.impulse;}else wallHits.set(key,{wall:wallName,point:{...s.point},energy,impulse:s.impulse,velocity:{...(ma.bot!==null?linear[ma.bot]:mb.bot!==null?linear[mb.bot]:v())}});}
  episode.impulse+=s.impulse;if(energy<.1)continue;episode.energy+=energy;
  if(episode.energy<(hazardInfo?.kind==='blade'?25:200))continue;
  const hazard=ma.hazard!==undefined?this.hazards[ma.hazard]:mb.hazard!==undefined?this.hazards[mb.hazard]:undefined;const maxEnergy=hazard?hazard.budget:Infinity;
@@ -632,13 +635,13 @@ export class Simulation{
  if(attacker!==null&&target!==null&&attacker!==target){this.bots[target].lastAttacker=attacker;this.bots[target].lastAction=this.tick;this.openTravel(target,event,'Post-impact travel');this.openTravel(attacker,event,'Recoil travel');}
  else if(target!==null){const tr=this.tracking.get(target);if(tr)tr.compound=true;}
  }
- const event=episode.event;updatedEvents.add(event);event.energy=previous+deltaEnergy;event.impulse=episode.impulse;event.closing=Math.max(event.closing,s.closing);this.highlights.hit(event);
+ const event=episode.event;updatedEvents.add(event);event.energy=previous+deltaEnergy;event.impulse=episode.impulse;event.closing=Math.max(event.closing,s.closing);event.robotSpeed=[length(linear[0]),length(linear[1])];const scale=energy>0?deltaEnergy/energy:0;event.translationEnergy=(event.translationEnergy??0)+breakdown.translation*scale;event.rotationalEnergy=(event.rotationalEnergy??0)+breakdown.rotation*scale;event.otherContactEnergy=(event.otherContactEnergy??0)+breakdown.other*scale;this.highlights.hit(event);
  if(policy?.cause==='weapon'&&policy.attacker!==null){const bite=policy.attacker===0?spinA:spinB,attacker=policy.attacker===0?ma.bot!:mb.bot!;event.damageScale=strikeMultiplier(this.bots[attacker].compiled.config)*(bite?.damageScale??1);if(bite){event.biteDepth=Math.max(event.biteDepth??0,bite.depth);event.engagement=Math.max(event.engagement??0,bite.engagement);}}
  if(robotPair&&policy){const shares=event.cause==='weapon'?(event.attacker===ma.bot?[0,ma.module==='weapon'&&mb.module==='weapon'?.5:1.2]:[ma.module==='weapon'&&mb.module==='weapon'?.5:1.2,0]):policy.shares;this.damage(ma.bot!,ma.module,deltaEnergy*shares[0]*(event.damageScale??1),event,ma.part,{point:s.point,direction:mul(s.normal,-1)});this.damage(mb.bot!,mb.module,deltaEnergy*shares[1]*(event.damageScale??1),event,mb.part,{point:s.point,direction:s.normal});
  }
  else{const target=ma.bot!==null?ma:mb;if(target.bot!==null)this.damage(target.bot,target.module,deltaEnergy,event,target.part);}
  }
- for(const hit of wallHits.values())this.wallDamage.impact(hit.wall,hit.point,hit.energy,hit.impulse,this.tick);
+ for(const hit of wallHits.values())this.wallDamage.impact(hit.wall,hit.point,hit.energy,hit.impulse,this.tick,hit.velocity);
  for(const [key,e]of this.episodes)if(this.tick-e.last>2*RULES.hz)this.episodes.delete(key);
  const after=this.bots.map(b=>.5*b.compiled.rotorInertia*this.omega(b)**2);for(const e of updatedEvents)e.rotorAfter=[...after];
  }

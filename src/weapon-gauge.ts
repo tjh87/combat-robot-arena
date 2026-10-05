@@ -6,7 +6,7 @@ import type {Bot} from './sim';
 export const WEAPON_GAUGE_MARKUP=`<section class="weapon-gauge" id="weapon-gauge" role="meter" aria-label="Weapon speed" aria-describedby="gauge-name gauge-label" aria-valuemin="0" aria-valuemax="100">
  <header class="gauge-header"><div class="gauge-identity"><strong id="gauge-name">Robot</strong><span id="gauge-label">Weapon</span></div><span id="gauge-state">Weapon off</span></header>
  <div class="gauge-body"><div class="gauge-dial"><svg viewBox="0 0 140 140" aria-hidden="true"><circle class="gauge-track" cx="70" cy="70" r="60"/><circle id="gauge-speed" cx="70" cy="70" r="60" pathLength="100"/></svg><div class="gauge-readout"><strong id="gauge-rpm">0</strong></div></div>
- <div class="gauge-details"><div class="gauge-metric-row"><span id="gauge-metric">Spin speed</span><small id="gauge-unit">RPM</small></div><strong id="gauge-level">0% of max</strong><span id="gauge-watts">Motor 0 kW</span><span id="gauge-output">100% power</span><span class="gauge-power-track" aria-hidden="true"><i id="gauge-power"></i></span></div></div>
+ <div class="gauge-details"><div class="gauge-metric-row"><span id="gauge-metric">Spin speed</span><small id="gauge-unit">RPM</small></div><strong id="gauge-level">0% of max</strong><span id="gauge-watts">Motor 0 kW</span><span id="gauge-output">100% power</span></div><span class="gauge-rpm-track gauge-power-track" aria-hidden="true"><i id="gauge-power"></i></span></div>
  <footer class="gauge-actions"><span id="gauge-primary"><kbd id="gauge-key">SPACE</kbd><span id="gauge-action">Start weapon</span></span><span id="gauge-secondary" class="hidden"><kbd id="gauge-strike-key">SHIFT</kbd><span id="gauge-strike-action">Swing saw</span></span></footer>
 </section>`;
 
@@ -32,7 +32,7 @@ export function updateWeaponGauge(root:HTMLElement,b:Bot,keys:{weapon:string,str
  const text=(id:string,value:string)=>{const el=root.querySelector<HTMLElement>('#'+id)!;if(el&&el.textContent!==value)el.textContent=value;};
  for(const[id,content]of Object.entries({'gauge-name':c.identity.name,'gauge-label':label,'gauge-state':state,'gauge-rpm':value,'gauge-unit':w.type==='none'?'':unit,'gauge-metric':metric,'gauge-level':level,'gauge-watts':power,'gauge-output':w.type==='none'?'':Math.round(output*100)+'% power','gauge-key':keys.weapon,'gauge-action':action,'gauge-strike-key':keys.strike,'gauge-strike-action':rotate(v(0,1,0),b.chassis.rotation()).y<.2?'Self-right':'Swing saw'}))text(id,content);
  // Keep wide RPM values clear of the ring, without compressing letter spacing.
- root.style.setProperty('--gauge-value-size',(value.length>6?1.375:value.length>5?1.625:2)+'rem');
+ root.style.setProperty('--gauge-value-size',(value.length>6?1.75:value.length>5?1.95:2.2)+'rem');
  root.dataset.kind=spin?'spinner':w.type;root.classList.toggle('gauge-live',active);root.classList.toggle('gauge-damaged',output<.999);
  root.setAttribute('aria-label',spin?'Weapon speed':w.type==='crusher'?'Jaw force':w.type==='flipper'?'Flipper readiness':'No active weapon');root.setAttribute('aria-valuenow',String(Math.round(ratio*100)));root.setAttribute('aria-valuetext',aria);
  const ring=root.querySelector<SVGElement>('#gauge-speed');if(ring)ring.style.strokeDashoffset=String(100-ratio*100);

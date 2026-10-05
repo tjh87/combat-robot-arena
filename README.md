@@ -1,5 +1,11 @@
 # 🤖 Combat Robot Arena
 
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Three.js](https://img.shields.io/badge/Three.js-0.180.0-black?logo=threedotjs)](https://threejs.org/) [![Rapier](https://img.shields.io/badge/Rapier-0.19.0-ef6c35)](https://rapier.rs/) [![Vite](https://img.shields.io/badge/Vite-7.1.7-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
+[![WebGL 2](https://img.shields.io/badge/Graphics-WebGL%202-990000?logo=webgl)](https://www.khronos.org/webgl/) [![WebAssembly](https://img.shields.io/badge/Physics-WebAssembly-654FF0?logo=webassembly&logoColor=white)](https://webassembly.org/) [![Node.js](https://img.shields.io/badge/Hosted%20runtime-Node.js%2024-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/) [![WebSockets](https://img.shields.io/badge/Multiplayer-WebSockets-197a98)](docs/ONLINE_PLAY.md)
+[![Redis](https://img.shields.io/badge/Shared%20state-Redis-DC382D?logo=redis&logoColor=white)](https://redis.io/) [![Upstash](https://img.shields.io/badge/Redis%20hosting-Upstash-00E9A3?logo=upstash&logoColor=black)](https://upstash.com/) [![Vercel](https://img.shields.io/badge/Deployment-Vercel-black?logo=vercel)](https://bbots-tjh87.vercel.app) [![GitHub Actions](https://img.shields.io/badge/Cloud%20checks-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white)](https://github.com/tjh87/combat-robot-arena/actions)
+
+**[Play the live arena](https://bbots-tjh87.vercel.app)** · [Online rooms and controls](docs/ONLINE_PLAY.md) · [Final damage calculation](docs/DAMAGE_CALCULATION.md)
+
 **Build a machine. Pick a rival. Take the arena.**
 
 A local 3D robot-combat game with 11 heavyweight machines, physics-driven weapons, a custom robot builder, AI opponents, local two-player battles and tournaments. Drive from the tactical camera or robot POV, use the arena hazards, watch damage and battery failures unfold, then replay the decisive hit.
@@ -33,10 +39,10 @@ These are screenshots of the current menu, builder and settings UI. The capture 
 - **Physics-driven fights:** separate spinning weapons, articulated arms, hydraulic crushing, flippers, gyroscopic recovery, contact damage, fall damage and ring-outs.
 - **A hazardous arena:** rising paired floor saws, 50 lb hammer heads, an upper deck and lifting screws that reverse when a robot jams.
 - **Robot workshop:** chassis, armour, weapons, motors, batteries, wheels and caterpillar treads; mass limits, saved builds and import/export codes.
-- **Several ways to play:** Quick Fight, practice, three AI difficulties, local two-player control, tournament progression and repairs.
+- **Several ways to play:** Quick Fight, practice, three AI difficulties, local two-player control, four-digit online rooms, and eight-entry tournaments.
 - **Readable action:** compact weapon gauges, Hydra Flip Assist, battery-location hints, speed in km/h and sharp animated damage bubbles with seven damage tiers.
 - **Match presentation:** countdown, local audio, impact effects, replay/highlights, result statistics and small winner-only confetti.
-- **Fully local game:** local assets, local saves and embedded physics WASM. No gameplay account, API key, CDN, backend or ChatGPT Sites connection.
+- **Offline modes:** local assets, local saves, and embedded physics WASM. Online rooms use the hosted WebSocket service and Redis.
 
 ## 🦾 Stock roster
 
