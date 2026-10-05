@@ -42,13 +42,16 @@ jobs:
           npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
           "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
           node --input-type=module -e "import{build}from'esbuild';import{readFileSync,writeFileSync}from'node:fs';await build({entryPoints:['tests/effects-fixture.ts'],bundle:true,format:'esm',platform:'browser',target:'es2022',outfile:'dist/effects-fixture.js'});const html=readFileSync('dist/index.html','utf8');const css=[...html.matchAll(/href=\"([^\"]+\.css)\"/g)].map(m=>'<link rel=\"stylesheet\" href=\"'+m[1]+'\">').join('');writeFileSync('dist/effects-fixture.html','<!doctype html><html><head>'+css+'</head><body><script type=\"module\">import*as fixture from \"/effects-fixture.js\";window.fixtureReady=true;</script></body></html>');"
-      - name: Real browser layouts and native multiplayer
+      - name: Start the browser test site
         run: |
           node --import tsx server/test-site.ts > /tmp/effects-server.log 2>&1 &
           for i in $(seq 1 60); do if curl -fsS http://127.0.0.1:4173/api/online > /dev/null; then break; fi; sleep 1; done
-          node tests/effects-browser.mjs
-          node tests/online-browser.mjs
-          node tests/polish-browser.mjs
+      - name: New instruments, real geometry, exposure, and sparks
+        run: node tests/effects-browser.mjs
+      - name: Native Whyachi multiplayer and refresh recovery
+        run: node tests/online-browser.mjs
+      - name: Tactical and POV layouts at three sizes
+        run: node tests/polish-browser.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
