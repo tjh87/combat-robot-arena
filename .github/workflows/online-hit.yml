@@ -21,10 +21,13 @@ jobs:
         run: |
           node --import tsx tests/online-hit-probe.ts
           node --import tsx tests/online-prediction-probe.ts
+          node --import tsx tests/prediction-policy.ts
       - name: Build the real browser impact probe
         run: |
           node scripts/build.mjs
+          node scripts/verify.mjs
           npm run online:build
+          npx tsc -p tsconfig.server.json --noEmit
           node scripts/online-hit-fixture.mjs
           mkdir -p "$RUNNER_TEMP/browser"
           npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
@@ -34,6 +37,8 @@ jobs:
           node --import tsx server/test-site.ts > /tmp/online-hit-server.log 2>&1 &
           for i in $(seq 1 60); do if curl -fsS http://127.0.0.1:4173/api/online > /dev/null; then break; fi; sleep 1; done
           node tests/online-hit-browser-probe.mjs
+      - name: Native armed impacts and post-hit recovery
+        run: node tests/online-impact-browser.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
