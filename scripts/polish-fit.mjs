@@ -60,3 +60,5 @@ edit('README.md',s=>{
 });
 
 edit("tests/online-browser.mjs",s=>s.replaceAll(".click()",".click({force:true})"));
+
+edit('tests/online-browser.mjs',s=>s.replace('window.__arenaTools=new Map();',"localStorage.setItem('cra.preferences',JSON.stringify({quality:'low',reduced:true}));window.__arenaTools=new Map();").replace("const a=await page(),b=await page();stage='create and join';","const a=await page();await a.evaluate(()=>window.__freezeFrame=true);const b=await page();await b.evaluate(()=>window.__freezeFrame=true);stage='create and join';"));
