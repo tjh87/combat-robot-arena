@@ -4,7 +4,7 @@ import {join} from 'node:path';
 import {createHash} from 'node:crypto';
 
 const files=readdirSync('dist',{recursive:true}).filter(file=>statSync(join('dist',file)).isFile());
-assert(files.every(file=>file==='index.html'||file==='favicon.svg'||file==='audio/License.txt'||file==='audio/match-start.mp3'||/^audio\/landing_(light_01|heavy_0[1-2])\.mp3$/.test(file)||/^audio\/steel_(crash_0[1-3]|strike_0[1-3]|tap_0[1-2])\.mp3$/.test(file)||/^robots\/(tombstone|minotaur|hydra|icewave|hypershock|gigabyte|whyachi|huge|sawblaze|deep_six|quantum)\.png$/.test(file)||/^assets\/(index|physics|graphics|predictor)-[\w-]+\.(js|css)$/.test(file)));
+assert(files.every(file=>file==='index.html'||file==='favicon.svg'||file==='audio/License.txt'||file==='audio/match-start.mp3'||/^audio\/landing_(light_01|heavy_0[1-2])\.mp3$/.test(file)||/^audio\/steel_(crash_0[1-3]|strike_0[1-3]|tap_0[1-2])\.mp3$/.test(file)||/^robots\/(tombstone|minotaur|hydra|icewave|hypershock|gigabyte|whyachi|huge|sawblaze|deep_six|quantum)\.png$/.test(file)||/^assets\/(index|physics|graphics|predictor|tournament-worker)-[\w-]+\.(js|css)$/.test(file)));
 assert.equal(files.filter(file=>file.endsWith('.mp3')).length,12);
 assert(readFileSync('dist/audio/License.txt','utf8').includes('CC0'));
 assert.equal(files.filter(file=>file.startsWith('robots/')).length,11);
