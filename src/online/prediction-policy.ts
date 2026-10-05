@@ -1,0 +1,4 @@
+import type {OnlineFrame,BodyPose} from './protocol';
+export const PREDICTION_LIMITS={leadTicks:18,sourceLagTicks:24,serialLag:2,renderHz:30} as const;
+export type PredictionReply={type:'prediction',match:string,epoch:number,serial:number,sourceTick:number,tick:number,job:number,poses:BodyPose[]};
+export function currentPrediction(reply:PredictionReply,frame:OnlineFrame){return reply.match===frame.match&&reply.epoch===frame.epoch&&Number.isSafeInteger(reply.serial)&&reply.serial<=frame.serial&&frame.serial-reply.serial<=PREDICTION_LIMITS.serialLag&&Number.isSafeInteger(reply.sourceTick)&&reply.sourceTick>=frame.tick-PREDICTION_LIMITS.sourceLagTicks&&reply.sourceTick<=frame.tick&&Number.isSafeInteger(reply.tick)&&reply.tick>=frame.tick-6&&reply.tick<=frame.tick+PREDICTION_LIMITS.leadTicks&&Array.isArray(reply.poses);}
