@@ -1,16 +1,10 @@
 import {compile,decodeBuild,encodeBuild,ROSTER,type BotConfig} from './model';
-const KEY='cra.saved-build';
-export function saveBuild(config:BotConfig,base:number){
- const errors=compile(config,config.weapon.type==='none').errors;
- if(errors.length)throw Error(errors.map(e=>e.message).join(' '));
- localStorage.setItem(KEY,JSON.stringify({base,code:encodeBuild(config)}));
-}
-export function loadBuild():{base:number,config:BotConfig}|undefined{
- try{
-  const raw=JSON.parse(localStorage.getItem(KEY)??'null');
-  if(!raw||!Number.isInteger(raw.base)||raw.base<0||raw.base>=ROSTER.length||typeof raw.code!=='string')return;
-  const config=decodeBuild(raw.code);if(compile(config,config.weapon.type==='none').errors.length)return;
-  return{base:raw.base,config};
- }catch{return;}
-}
+const KEY='cra.saved-build',LIBRARY='cra.build-library';
+export type SavedRobot={id:string,name:string,base:number,code:string,updated:number,combatReady:boolean};
+function validBase(base:number){return Number.isInteger(base)&&base>=-1&&base<ROSTER.length;}
+export function listBuilds():SavedRobot[]{let raw:any[]=[];try{const value=JSON.parse(localStorage.getItem(LIBRARY)??'[]');if(Array.isArray(value))raw=value;}catch{}const rows:SavedRobot[]=[];for(const item of raw){try{if(!item||typeof item.id!=='string'||typeof item.code!=='string'||!validBase(item.base))continue;const config=decodeBuild(item.code);rows.push({id:item.id,name:config.identity.name,base:item.base,code:item.code,updated:Number.isFinite(item.updated)?item.updated:0,combatReady:compile(config).errors.length===0});}catch{}}try{const legacy=JSON.parse(localStorage.getItem(KEY)??'null');if(legacy&&validBase(legacy.base)&&typeof legacy.code==='string'&&!rows.some(r=>r.code===legacy.code)){const config=decodeBuild(legacy.code);rows.push({id:'legacy-build',name:config.identity.name,base:legacy.base,code:legacy.code,updated:0,combatReady:compile(config).errors.length===0});}}catch{}return rows.sort((a,b)=>b.updated-a.updated).slice(0,40);}
+export function saveBuild(config:BotConfig,base:number,id?:string){if(!validBase(base))throw Error('The template reference is invalid.');const errors=compile(config,true).errors;if(errors.length)throw Error(errors.map(e=>e.message).join(' '));const code=encodeBuild(config),rows=listBuilds(),entry:SavedRobot={id:id??'robot-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),name:config.identity.name,base,code,updated:Date.now(),combatReady:compile(config).errors.length===0},next=[entry,...rows.filter(r=>r.id!==entry.id)].slice(0,40);localStorage.setItem(LIBRARY,JSON.stringify(next));localStorage.setItem(KEY,JSON.stringify({base,code}));return entry;}
+export function loadSavedBuild(id:string){const entry=listBuilds().find(r=>r.id===id);if(!entry)return;return{base:entry.base,config:decodeBuild(entry.code),id:entry.id,combatReady:entry.combatReady};}
+export function loadBuild(){const row=listBuilds()[0];if(!row)return;return loadSavedBuild(row.id);}
+export function deleteSavedBuild(id:string){const rows=listBuilds().filter(r=>r.id!==id);localStorage.setItem(LIBRARY,JSON.stringify(rows));try{const legacy=JSON.parse(localStorage.getItem(KEY)??'null');if(legacy&&listBuilds().find(r=>r.id===id)?.code===legacy.code)localStorage.removeItem(KEY);}catch{}if(!rows.length)localStorage.removeItem(KEY);else localStorage.setItem(KEY,JSON.stringify({base:rows[0].base,code:rows[0].code}));}
 export function clearSavedBuild(){localStorage.removeItem(KEY);}
