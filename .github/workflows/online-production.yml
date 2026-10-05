@@ -24,8 +24,16 @@ jobs:
           mkdir -p "$RUNNER_TEMP/browser"
           npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
           "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Use the vertical drum for a repeatable straight approach
+        run: |
+          node --input-type=module <<'NODE'
+          import{readFileSync,writeFileSync}from'node:fs';
+          let source=readFileSync('tests/online-impact-browser.mjs','utf8');
+          source=source.replace('[data-online-robot="0"]','[data-online-robot="1"]').replace('s.rpm?.[0]>1700','s.rpm?.[0]>4000');
+          writeFileSync(process.env.RUNNER_TEMP+'/browser/impact-production.mjs',source);
+          NODE
       - name: Armed impacts, bubbles, ongoing play, and refresh on production
-        run: timeout 660s node tests/online-impact-browser.mjs
+        run: timeout 660s node "$RUNNER_TEMP/browser/impact-production.mjs"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
