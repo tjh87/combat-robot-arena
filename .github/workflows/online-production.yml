@@ -1,4 +1,4 @@
-name: Production online browser check
+name: Production arena acceptance
 on:
   push:
     branches: [online-deployed-checks]
@@ -8,29 +8,38 @@ permissions:
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 20
+    env:
+      TESTED_SOURCE: 65b525fc25b51772418bc9cbe091b93f11c618cf
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: 65b525fc25b51772418bc9cbe091b93f11c618cf
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Browser tools outside the game
+      - name: Install isolated cloud browser
         run: |
           mkdir -p "$RUNNER_TEMP/browser"
           npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
           "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
-      - name: Use the public production URL with native WebSockets
+      - name: Target production and record its source
         run: |
           node --input-type=module <<'NODE'
           import {readFileSync,writeFileSync} from 'node:fs';
-          let source=readFileSync('tests/online-browser.mjs','utf8');
-          source=source.replace("'http://127.0.0.1:4173/'","'https://bbots-tjh87.vercel.app/'");
-          source=source.replaceAll('source:process.env.GITHUB_SHA',"source:'835f9da2557aefb38b8f47b4855a387498b7110c'");
-          source=source.replace("name+'.png',timeout:30000","name+'.png',timeout:90000");
-          source=source.replace('},240000);','},360000);');
-          writeFileSync(process.env.RUNNER_TEMP+'/browser/production-check.mjs',source);
+          for(const name of ['online-browser','polish-browser']){
+            let source=readFileSync('tests/'+name+'.mjs','utf8');
+            source=source.replaceAll('http://127.0.0.1:4173/','https://bbots-tjh87.vercel.app/');
+            source=source.replaceAll('process.env.GITHUB_SHA','process.env.TESTED_SOURCE');
+            source=source.replace("name+'.png',timeout:30000","name+'.png',timeout:90000");
+            source=source.replace('},240000);','},360000);');
+            writeFileSync(process.env.RUNNER_TEMP+'/browser/'+name+'.mjs',source);
+          }
           NODE
-          timeout 420s node "$RUNNER_TEMP/browser/production-check.mjs"
+      - name: Native multiplayer controls and refresh recovery
+        run: timeout 420s node "$RUNNER_TEMP/browser/online-browser.mjs"
+      - name: Photo selection and RPM at three viewports
+        run: timeout 720s node "$RUNNER_TEMP/browser/polish-browser.mjs"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
