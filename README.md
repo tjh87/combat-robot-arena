@@ -4,7 +4,7 @@
 [![WebGL 2](https://img.shields.io/badge/Graphics-WebGL%202-990000?logo=webgl)](https://www.khronos.org/webgl/) [![WebAssembly](https://img.shields.io/badge/Physics-WebAssembly-654FF0?logo=webassembly&logoColor=white)](https://webassembly.org/) [![Node.js](https://img.shields.io/badge/Hosted%20runtime-Node.js%2024-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/) [![WebSockets](https://img.shields.io/badge/Multiplayer-WebSockets-197a98)](docs/ONLINE_PLAY.md)
 [![Redis](https://img.shields.io/badge/Shared%20state-Redis-DC382D?logo=redis&logoColor=white)](https://redis.io/) [![Upstash](https://img.shields.io/badge/Redis%20hosting-Upstash-00E9A3?logo=upstash&logoColor=black)](https://upstash.com/) [![Vercel](https://img.shields.io/badge/Deployment-Vercel-black?logo=vercel)](https://bbots-tjh87.vercel.app) [![GitHub Actions](https://img.shields.io/badge/Cloud%20checks-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white)](https://github.com/tjh87/combat-robot-arena/actions)
 
-**[Play the live arena](https://bbots-tjh87.vercel.app)** · [Online rooms and controls](docs/ONLINE_PLAY.md) · [Final damage calculation](docs/DAMAGE_CALCULATION.md)
+**[Play the live arena](https://bbots-tjh87.vercel.app)** · [Online rooms and controls](docs/ONLINE_PLAY.md) · [Final damage calculation](docs/DAMAGE_CALCULATION.md) · [Weapon instruments and effects](docs/WEAPON_EFFECTS.md)
 
 **Build a machine. Pick a rival. Take the arena.**
 

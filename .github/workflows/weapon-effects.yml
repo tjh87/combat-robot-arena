@@ -1,7 +1,6 @@
 name: Weapon effects acceptance
 on:
-  push:
-    branches: [weapon-colors-whyachi]
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
