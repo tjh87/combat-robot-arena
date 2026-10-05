@@ -1,3 +1,4 @@
+let silhouetteSequence=0;
 import {rpmPresentation,robotSilhouette,RPM_SILHOUETTE_MARKUP} from './rpm-presentation';
 import {clamp,isSpinner,flipEnergy,rotate,v} from './model';
 import {damageStatus} from './combat-damage';
@@ -41,6 +42,7 @@ export function updateWeaponGauge(root:HTMLElement,b:Bot,keys:{weapon:string,str
  const bar=root.querySelector<HTMLElement>('#gauge-power');if(bar)bar.style.width=ratio*100+'%';
  const visual=rpmPresentation(ratio);root.style.setProperty('--rpm-color',visual.color);root.style.setProperty('--rpm-glow',visual.glow);root.style.setProperty('--rpm-shade',visual.shade);root.style.setProperty('--rpm-tip-motion',visual.motion+'px');root.style.setProperty('--rpm-tip-cycle',visual.period+'ms');root.dataset.rpmRatio=String(ratio);root.dataset.rpmNearMax=String(spin&&visual.nearMax&&!keys.reduced);root.dataset.gaugeReduced=String(!!keys.reduced);
  const silhouette=root.querySelector<SVGElement>('#gauge-silhouette');if(silhouette&&silhouette.dataset.profile!==(c.chassis.profile??'standard')){const path=robotSilhouette(c.chassis.profile);for(const id of ['gauge-silhouette-shape','gauge-silhouette-base','gauge-silhouette-outline'])root.querySelector('#'+id)?.setAttribute('d',path);silhouette.dataset.profile=c.chassis.profile??'standard';}
+ if(silhouette&&!silhouette.dataset.clipId){const id='gauge-silhouette-clip-'+(++silhouetteSequence);silhouette.querySelector('clipPath')?.setAttribute('id',id);silhouette.querySelector('#gauge-silhouette-fill')?.setAttribute('clip-path','url(#'+id+')');silhouette.dataset.clipId=id;}
  const fill=root.querySelector('#gauge-silhouette-fill');if(fill){fill.setAttribute('y',String(64*(1-ratio)));fill.setAttribute('height',String(64*ratio));}
  if(hydra){root.setAttribute('role','group');root.setAttribute('aria-label','Hydra flip assist');for(const attr of ['aria-valuenow','aria-valuemin','aria-valuemax','aria-valuetext'])root.removeAttribute(attr);}
  root.querySelector('#gauge-primary')!.classList.toggle('hidden',w.type==='none');root.querySelector('#gauge-secondary')!.classList.toggle('hidden',w.type!=='hammer_saw');

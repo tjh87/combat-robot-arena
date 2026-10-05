@@ -1,0 +1,58 @@
+name: Weapon effects acceptance
+on:
+  push:
+    branches: [weapon-colors-whyachi]
+permissions:
+  contents: read
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      REDIS_URL: ${{ secrets.ONLINE_REDIS_URL }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 30
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Build and offline asset audit
+        run: |
+          node scripts/build.mjs
+          node scripts/verify.mjs
+          npm run online:build
+          npx tsc -p tsconfig.server.json --noEmit
+      - name: Geometry, original mobility, and visual contracts
+        run: |
+          mkdir -p "$RUNNER_TEMP/baseline"
+          git archive 65b525fc25b51772418bc9cbe091b93f11c618cf | tar -x -C "$RUNNER_TEMP/baseline"
+          ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/baseline/node_modules"
+          BASELINE_ROOT="$RUNNER_TEMP/baseline" node --import tsx tests/weapon-effects.ts
+      - name: Finite rotor work and online core
+        run: |
+          CASE='An unpowered impact' node --import tsx tests/engagement-update.ts
+          CASE='Every spinning weapon' node --import tsx tests/engagement-update.ts
+          node --import tsx tests/online-core.ts
+      - name: Browser and isolated fixtures
+        run: |
+          mkdir -p "$RUNNER_TEMP/browser"
+          npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
+          "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
+          node --input-type=module -e "import{build}from'esbuild';import{readFileSync,writeFileSync}from'node:fs';await build({entryPoints:['tests/effects-fixture.ts'],bundle:true,format:'esm',platform:'browser',target:'es2022',outfile:'dist/effects-fixture.js'});const html=readFileSync('dist/index.html','utf8');const css=[...html.matchAll(/href=\"([^\"]+\.css)\"/g)].map(m=>'<link rel=\"stylesheet\" href=\"'+m[1]+'\">').join('');writeFileSync('dist/effects-fixture.html','<!doctype html><html><head>'+css+'</head><body><script type=\"module\">import*as fixture from \"/effects-fixture.js\";window.fixtureReady=true;</script></body></html>');"
+      - name: Real browser layouts and native multiplayer
+        run: |
+          node --import tsx server/test-site.ts > /tmp/effects-server.log 2>&1 &
+          for i in $(seq 1 60); do if curl -fsS http://127.0.0.1:4173/api/online > /dev/null; then break; fi; sleep 1; done
+          node tests/effects-browser.mjs
+          node tests/online-browser.mjs
+          node tests/polish-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: weapon-effects-evidence
+          path: |
+            browser-evidence
+            /tmp/effects-server.log
