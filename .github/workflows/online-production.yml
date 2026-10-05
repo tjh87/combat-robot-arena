@@ -1,4 +1,4 @@
-name: Production arena acceptance
+name: Production online impact recovery
 on:
   push:
     branches: [online-deployed-checks]
@@ -8,40 +8,26 @@ permissions:
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     env:
-      TESTED_SOURCE: b30077ef1f31fc1a4df789ba351a5b4b47df4b89
+      TESTED_SOURCE: 12fc89051c3466beb3b3b7ac4b1aeb623ebbf5a7
+      ARENA_URL: https://bbots-tjh87.vercel.app/
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: b30077ef1f31fc1a4df789ba351a5b4b47df4b89
+          ref: 12fc89051c3466beb3b3b7ac4b1aeb623ebbf5a7
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Install isolated cloud browser
+      - name: Install the isolated browser
         run: |
           mkdir -p "$RUNNER_TEMP/browser"
           npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
           "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
-      - name: Target production and record its source
-        run: |
-          node --input-type=module <<'NODE'
-          import {readFileSync,writeFileSync} from 'node:fs';
-          for(const name of ['online-browser','polish-browser']){
-            let source=readFileSync('tests/'+name+'.mjs','utf8');
-            source=source.replaceAll('http://127.0.0.1:4173/','https://bbots-tjh87.vercel.app/');
-            source=source.replaceAll('process.env.GITHUB_SHA','process.env.TESTED_SOURCE');
-            source=source.replace("name+'.png',timeout:30000","name+'.png',timeout:90000");
-            source=source.replace('},240000);','},360000);');
-            writeFileSync(process.env.RUNNER_TEMP+'/browser/'+name+'.mjs',source);
-          }
-          NODE
-      - name: Native multiplayer controls and refresh recovery
-        run: timeout 420s node "$RUNNER_TEMP/browser/online-browser.mjs"
-      - name: Photo selection and RPM at three viewports
-        run: timeout 720s node "$RUNNER_TEMP/browser/polish-browser.mjs"
+      - name: Armed impacts, bubbles, ongoing play, and refresh on production
+        run: timeout 660s node tests/online-impact-browser.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: online-production-evidence
+          name: online-production-impact-evidence
           path: browser-evidence
