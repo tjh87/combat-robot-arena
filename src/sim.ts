@@ -1,3 +1,4 @@
+import {componentProfile,componentConfig} from './model';
 import {impactEnergy,normalKineticEnergy} from './impact-energy';
 import {hydraSleekWheels,hydraBearingDrag} from './hydra-wheels';
 import {WallDamage,isArenaWall,type WallCrack} from './wall-damage';
@@ -97,17 +98,17 @@ export class Simulation{
  for(const p of compiled.parts){if(!modules[p.module].functional&&p.module.startsWith('armour_'))continue;
  let body=bodies.get(p.body);let local=p;
  if(!body){const mount=bodyOrigin(c,p.body);const world=add(origin,rotate(mount,rotation));body=this.world.createRigidBody(RAPIER.RigidBodyDesc.dynamic().setTranslation(world.x,world.y,world.z).setRotation(rotation).setCcdEnabled(true));bodies.set(p.body,body);this.bodyIds.set(body.handle,`b${id}:${p.body}`);
- const armParent=p.body==='rotor'&&c.weapon.type==='hammer_saw',parent=armParent?bodies.get('weapon_arm')!:chassis,anchor=armParent?armOffset(c.weapon as import('./model').Spinner):mount;const axis=p.body==='rotor'?weaponAxis(c.weapon):p.body==='self_right'&&c.chassis.profile==='gigabyte'?v(0,0,1):v(1,0,0);const data=RAPIER.JointData.revolute(anchor,v(),axis);const joint=this.world.createImpulseJoint(data,parent,body,true) as RAPIER.RevoluteImpulseJoint;joint.setContactsEnabled(false);if(p.body==='rotor'&&c.weapon.type==='flipper')joint.setLimits(-.025,c.weapon.travel);if(p.body==='rotor'&&c.weapon.type==='crusher')joint.setLimits(-c.weapon.travel,.025);if(p.body==='self_right'&&!verticalSelfRight(c))joint.setLimits(c.chassis.profile==='gigabyte'?-.02:-2.5,c.chassis.profile==='gigabyte'?3.1:.02);if(p.body.startsWith('ground_fork_'))joint.setLimits(c.chassis.profile==='sawblaze'?-.02:-.12,c.chassis.profile==='sawblaze'?.015:.18);if(p.body==='weapon_arm'&&c.weapon.type==='hammer_saw')joint.setLimits(-(c.weapon.armTravel??1.12),Math.PI-(c.weapon.armTravel??1.12));joints.set(p.body,joint);}
+ const armParent=p.body==='rotor'&&c.weapon.type==='hammer_saw',parent=armParent?bodies.get('weapon_arm')!:chassis,anchor=armParent?armOffset(c.weapon as import('./model').Spinner):mount;const axis=p.body==='rotor'?weaponAxis(c.weapon):p.body==='self_right'&&componentProfile(c,'selfRight')==='gigabyte'?v(0,0,1):v(1,0,0);const data=RAPIER.JointData.revolute(anchor,v(),axis);const joint=this.world.createImpulseJoint(data,parent,body,true) as RAPIER.RevoluteImpulseJoint;joint.setContactsEnabled(false);if(p.body==='rotor'&&c.weapon.type==='flipper')joint.setLimits(-.025,c.weapon.travel);if(p.body==='rotor'&&c.weapon.type==='crusher')joint.setLimits(-c.weapon.travel,.025);if(p.body==='self_right'&&!verticalSelfRight(c))joint.setLimits(componentProfile(c,'selfRight')==='gigabyte'?-.02:-2.5,componentProfile(c,'selfRight')==='gigabyte'?3.1:.02);if(p.body.startsWith('ground_fork_'))joint.setLimits(componentProfile(c,'selfRight')==='sawblaze'?-.02:-.12,componentProfile(c,'selfRight')==='sawblaze'?.015:.18);if(p.body==='weapon_arm'&&c.weapon.type==='hammer_saw')joint.setLimits(-(c.weapon.armTravel??1.12),Math.PI-(c.weapon.armTravel??1.12));joints.set(p.body,joint);}
  if(p.body.startsWith('wheel_'))local={...p,position:sub(p.position,bodyOrigin(c,p.body))};
- const ramp=isRampPart(p),skid=ramp||/^(frame_skid|drum_bearing|saw_guard|saw_rear_skid|large_(front|tail|side)|vertical_tail)/.test(p.id),desc=colliderDesc(local).setContactSkin(ramp?(unlimitedFlips(c)?.0002:.0005):.001).setFriction(p.material==='rubber'?(c.drive.traction==='tracks'?2.6:c.chassis.profile==='quantum'?1.8:c.chassis.profile==='gigabyte'?1.7:1.35):skid?.12:.55).setRestitution(skid?0:.06).setCollisionGroups(p.collides?groups(id===0?2:4,id===0?21:19):0).setSensor(!p.collides).setActiveEvents(RAPIER.ActiveEvents.COLLISION_EVENTS);
+ const ramp=isRampPart(p),skid=ramp||/^(frame_skid|drum_bearing|saw_guard|saw_rear_skid|large_(front|tail|side)|vertical_tail)/.test(p.id),desc=colliderDesc(local).setContactSkin(ramp?(unlimitedFlips(c)?.0002:.0005):.001).setFriction(p.material==='rubber'?(c.drive.traction==='tracks'?2.6:componentProfile(c,'drive')==='quantum'?1.8:componentProfile(c,'drive')==='gigabyte'?1.7:1.35):skid?.12:.55).setRestitution(skid?0:.06).setCollisionGroups(p.collides?groups(id===0?2:4,id===0?21:19):0).setSensor(!p.collides).setActiveEvents(RAPIER.ActiveEvents.COLLISION_EVENTS);
  // Sliding steel tips must not inherit the floor's high tyre-grip coefficient.
  if(skid)desc.setFrictionCombineRule(RAPIER.CoefficientCombineRule.Min);
- if(p.material==='rubber'&&(c.chassis.profile==='quantum'||c.chassis.profile==='gigabyte'||c.drive.traction==='tracks'))desc.setFrictionCombineRule(RAPIER.CoefficientCombineRule.Max);
- if((c.chassis.profile==='huge'&&c.drive.traction!=='tracks'||hydraSleekWheels(c))&&p.body.startsWith('wheel_'))desc.setCollisionGroups(0);
+ if(p.material==='rubber'&&(componentProfile(c,'drive')==='quantum'||componentProfile(c,'drive')==='gigabyte'||c.drive.traction==='tracks'))desc.setFrictionCombineRule(RAPIER.CoefficientCombineRule.Max);
+ if((componentProfile(c,'weapon')==='huge'&&c.drive.traction!=='tracks'||hydraSleekWheels(c))&&p.body.startsWith('wheel_'))desc.setCollisionGroups(0);
  const collider=this.world.createCollider(desc,body);colliders.set(p.id,collider);this.meta.set(collider.handle,{bot:id,module:p.module,part:p});}
  // Continuous rounded wheel contacts prevent gaps between visual spokes and
  // tread sectors from catching the floor, rails or an opponent's wedge.
- if(c.chassis.profile==='huge'&&c.drive.traction!=='tracks')for(const [key,body]of bodies)if(key.startsWith('wheel_')){
+ if(componentProfile(c,'weapon')==='huge'&&c.drive.traction!=='tracks')for(const [key,body]of bodies)if(key.startsWith('wheel_')){
   const part=compiled.parts.find(p=>p.body===key)!,edge=Math.min(.008,c.drive.width*.2),desc=RAPIER.ColliderDesc.roundCylinder(c.drive.width/2-edge,c.drive.radius-edge,edge).setRotation(axisQ(v(0,0,1),Math.PI/2)).setDensity(0).setFriction(HUGE_HANDLING.friction).setFrictionCombineRule(RAPIER.CoefficientCombineRule.Max).setRestitution(.03).setContactSkin(.001).setCollisionGroups(groups(id===0?2:4,id===0?21:19)).setActiveEvents(RAPIER.ActiveEvents.COLLISION_EVENTS);
   const collider=this.world.createCollider(desc,body);colliders.set(key+'_contact',collider);this.meta.set(collider.handle,{bot:id,module:part.module,part:{...part,id:key+'_contact'}});
  }
@@ -152,7 +153,7 @@ export class Simulation{
  weaponPowered(b:Bot){return !!b.rotor&&b.modules.weapon.present&&b.modules.weapon_actuator.present;}
  axis(b:Bot,axis:Vec){return rotate(axis,b.chassis.rotation());}
  omega(b:Bot){if(!b.rotor)return 0;const parent=b.arm??b.chassis,axis=rotate(weaponAxis(b.compiled.config.weapon),parent.rotation());return dot(sub(b.rotor.angvel(),parent.angvel()),axis);}
- forward(b:Bot){if(b.compiled.config.chassis.profile==='huge'){const f=cross(v(0,1,0),this.axis(b,v(1,0,0)));return mul(f,1/Math.max(.001,length(f)));}return this.axis(b,v(0,0,-1));}
+ forward(b:Bot){if(componentProfile(b.compiled.config,'drive')==='huge'){const f=cross(v(0,1,0),this.axis(b,v(1,0,0)));return mul(f,1/Math.max(.001,length(f)));}return this.axis(b,v(0,0,-1));}
  wholeCOM(b:Bot){let p=v(),mass=0;for(const body of b.bodies.values()){const m=body.mass();mass+=m;p=add(p,mul(body.worldCom(),m));}return mass?mul(p,1/mass):b.chassis.translation();}
  totalMass(b:Bot){return [...b.bodies.values()].reduce((s,x)=>s+x.mass(),0);}
  command(bot:number,cmd:Command){this.bots[bot].command={left:clamp(cmd.left,-1,1),right:clamp(cmd.right,-1,1),weapon:!!cmd.weapon,selfRight:!!cmd.selfRight};}
@@ -187,7 +188,7 @@ export class Simulation{
  automaticSelfRightReady(b:Bot){return b.autoRightTicks>=.6*RULES.hz;}
  private observeRecovery(b:Bot){
   const kind=selfRightKind(b.compiled.config),up=this.axis(b,v(0,1,0)).y;
-  const invertedDriving=b.compiled.config.chassis.profile==='hypershock'&&up<-.7&&b.grounded;
+  const invertedDriving=componentProfile(b.compiled.config,'drive')==='hypershock'&&up<-.7&&b.grounded;
   const tipped=!invertedDriving&&(kind==='gyro'?up<.6:kind==='saw'?up<.2:up<.5);
   if(!kind||!tipped||!this.canSelfRight(b)||b.rollStart>=0||length(b.chassis.linvel())>(kind==='gyro'?1.2:.5)||length(b.chassis.angvel())>(kind==='gyro'?5:2)){b.autoRightTicks=0;return;}
   let supported=false;
@@ -202,20 +203,20 @@ export class Simulation{
   b.autoRightTicks=supported?Math.min(.6*RULES.hz,b.autoRightTicks+1):0;
   if(kind==='gyro'&&this.options.autoUnstick&&this.automaticSelfRightReady(b))this.requestSelfRight(b);
  }
- requestSelfRight(b:Bot){if(selfRightKind(b.compiled.config)==='arm'&&b.rollStart>=0&&this.tick-b.lastSelfRight<(verticalSelfRight(b.compiled.config)?10:b.compiled.config.chassis.profile==='gigabyte'?9:4)*RULES.hz)return false;if(selfRightKind(b.compiled.config)==='gyro'){
+ requestSelfRight(b:Bot){if(selfRightKind(b.compiled.config)==='arm'&&b.rollStart>=0&&this.tick-b.lastSelfRight<(verticalSelfRight(b.compiled.config)?10:componentProfile(b.compiled.config,'selfRight')==='gigabyte'?9:4)*RULES.hz)return false;if(selfRightKind(b.compiled.config)==='gyro'){
   if(!this.canSelfRight(b)||b.rollStart>=0||Math.abs(this.axis(b,v(0,1,0)).y)>.90&&b.grounded||this.tick-b.lastSelfRight<3*RULES.hz)return false;
   b.weaponOn=true;b.spinDirection=(Math.abs(this.omega(b))>50?Math.sign(this.omega(b)):b.compiled.config.weapon.type==='drum'?-b.compiled.config.weapon.direction:b.spinDirection) as 1|-1;b.lastSelfRight=this.tick;b.rollStart=this.tick;b.rollWork=0;b.gyroDance={ticks:0,settled:0,braking:isSpinner(b.compiled.config.weapon)&&Math.abs(this.omega(b))*30/Math.PI>b.compiled.config.weapon.rpm*.55};return true;
  }if(b.compiled.config.weapon.type==='hammer_saw'){
   if(this.axis(b,v(0,1,0)).y>.2)return this.requestStrike(b);
   if(!this.weaponPowered(b)||!b.arm||this.tick-b.lastSelfRight<3*RULES.hz)return false;
   b.lastSelfRight=this.tick;b.rollStart=this.tick;b.rollWork=0;b.rollSettling=false;b.flipStart=-1;return true;
- }if(this.tick-b.lastSelfRight<3*RULES.hz){this.notice('Self-right cooldown: 3 seconds');return false;}const c=b.compiled.config;if(verticalSelfRight(c)&&this.axis(b,v(0,1,0)).y>.9&&b.grounded)return false;if(!this.powered(b)&&c.weapon.type!=='flipper'){this.notice('Self-right unavailable: no drive power');return false;}if(c.weapon.type==='flipper'){const usable=this.weaponPowered(b)&&b.flipStart<0&&this.tick-b.lastFire>=1.5*RULES.hz;if(usable||c.selfRight.type==='none'||!b.modules.self_right.functional){const fired=this.requestFire(b);if(fired)b.lastSelfRight=this.tick;return fired;}}if(c.selfRight.type==='none'||!b.modules.self_right.functional){if(!this.options.ai[b.id])this.notice('No working self-right mechanism');return false;}if(b.energy<2000){this.notice('Self-right needs 2,000 J');return false;}if(c.chassis.profile==='quantum'){b.weaponOn=true;b.crushStart=this.tick;b.crushWork=0;}b.resumeWeapon=(c.chassis.profile==='gigabyte'||verticalSelfRight(c)&&isSpinner(c.weapon))&&b.weaponOn;b.lastSelfRight=this.tick;b.rollStart=this.tick;b.rollWork=0;b.rollSettling=false;return true;}
+ }if(this.tick-b.lastSelfRight<3*RULES.hz){this.notice('Self-right cooldown: 3 seconds');return false;}const c=b.compiled.config;if(verticalSelfRight(c)&&this.axis(b,v(0,1,0)).y>.9&&b.grounded)return false;if(!this.powered(b)&&c.weapon.type!=='flipper'){this.notice('Self-right unavailable: no drive power');return false;}if(c.weapon.type==='flipper'){const usable=this.weaponPowered(b)&&b.flipStart<0&&this.tick-b.lastFire>=1.5*RULES.hz;if(usable||c.selfRight.type==='none'||!b.modules.self_right.functional){const fired=this.requestFire(b);if(fired)b.lastSelfRight=this.tick;return fired;}}if(c.selfRight.type==='none'||!b.modules.self_right.functional){if(!this.options.ai[b.id])this.notice('No working self-right mechanism');return false;}if(b.energy<2000){this.notice('Self-right needs 2,000 J');return false;}if(componentProfile(c,'selfRight')==='quantum'){b.weaponOn=true;b.crushStart=this.tick;b.crushWork=0;}b.resumeWeapon=(componentProfile(c,'selfRight')==='gigabyte'||verticalSelfRight(c)&&isSpinner(c.weapon))&&b.weaponOn;b.lastSelfRight=this.tick;b.rollStart=this.tick;b.rollWork=0;b.rollSettling=false;return true;}
  private notice(s:string){if(this.notices.at(-1)!==s)this.notices.push(s);if(this.notices.length>10)this.notices.shift();}
  private motors(b:Bot){
  if(this.prediction&&b.id!==this.predictionSide)return;
  const wasWeaponOn=b.weaponOn,c=b.compiled.config,cmd=b.command,powered=this.powered(b),weaponPowered=this.weaponPowered(b),output=damageStatus(b.modules),up=this.axis(b,v(0,1,0));b.powerWork=0;b.weaponWatts=0;b.actuatorTorque=0;this.driveWork[b.id]=0;
  for(const body of b.bodies.values()){body.resetForces(false);body.resetTorques(false);}
- if(cmd.weapon){if(c.weapon.type==='flipper')this.requestFire(b);else if(c.weapon.type!=='none'){if((c.chassis.profile==='gigabyte'||verticalSelfRight(c)&&isSpinner(c.weapon))&&b.rollStart>=0)b.resumeWeapon=!b.resumeWeapon;else b.weaponOn=!b.weaponOn;if(c.weapon.type==='crusher'){if(b.weaponOn){b.crushStart=this.tick;b.crushWork=0;b.crushEvent=undefined;b.crushContactTicks=0;b.crushForce=0;b.gripRelease=undefined;}}}}
+ if(cmd.weapon){if(c.weapon.type==='flipper')this.requestFire(b);else if(c.weapon.type!=='none'){if((componentProfile(c,'selfRight')==='gigabyte'||verticalSelfRight(c)&&isSpinner(c.weapon))&&b.rollStart>=0)b.resumeWeapon=!b.resumeWeapon;else b.weaponOn=!b.weaponOn;if(c.weapon.type==='crusher'){if(b.weaponOn){b.crushStart=this.tick;b.crushWork=0;b.crushEvent=undefined;b.crushContactTicks=0;b.crushForce=0;b.gripRelease=undefined;}}}}
  if(cmd.selfRight)this.requestSelfRight(b);
  if(verticalSelfRight(c)&&b.rollStart>=0){cmd.left=0;cmd.right=0;}
  if(b.gripRelease){const release=b.gripRelease,p=b.chassis.translation();release.travelled+=horizontal(p,release.lastP);release.lastP={...p};
@@ -257,21 +258,21 @@ export class Simulation{
    }
   }
  }
- const rotorRecovery=(c.chassis.profile==='gigabyte'||verticalSelfRight(c)&&isSpinner(c.weapon))&&b.rollStart>=0,rotorBraking=rotorRecovery&&Math.max(Math.abs(this.omega(b)),length(b.rotor?.angvel()??v()))*30/Math.PI>180;if(rotorRecovery){b.weaponOn=false;if(rotorBraking)b.rollStart=this.tick;}
- if(c.chassis.profile==='huge'||c.chassis.profile==='gigabyte')b.driveSign=1;else if(b.grounded&&b.groundTicks>=.15*RULES.hz){if(up.y>.70)b.driveSign=1;else if(up.y<-.70)b.driveSign=-1;}
+ const rotorRecovery=(componentProfile(c,'selfRight')==='gigabyte'||verticalSelfRight(c)&&isSpinner(c.weapon))&&b.rollStart>=0,rotorBraking=rotorRecovery&&Math.max(Math.abs(this.omega(b)),length(b.rotor?.angvel()??v()))*30/Math.PI>180;if(rotorRecovery){b.weaponOn=false;if(rotorBraking)b.rollStart=this.tick;}
+ if(componentProfile(c,'drive')==='huge'||componentProfile(c,'drive')==='gigabyte')b.driveSign=1;else if(b.grounded&&b.groundTicks>=.15*RULES.hz){if(up.y>.70)b.driveSign=1;else if(up.y<-.70)b.driveSign=-1;}
  // A two-wheel spinner's reaction can steer it off a straight
  // command. Counter that yaw through the drive motors, within their limits.
- if(c.chassis.profile==='gigabyte'||c.chassis.profile==='huge'){const rate=2.4*RULES.dt;b.driveRamp[0]+=clamp(cmd.left-b.driveRamp[0],-rate,rate);b.driveRamp[1]+=clamp(cmd.right-b.driveRamp[1],-rate,rate);cmd.left=b.driveRamp[0];cmd.right=b.driveRamp[1];}
+ if(componentProfile(c,'drive')==='gigabyte'||componentProfile(c,'drive')==='huge'){const rate=2.4*RULES.dt;b.driveRamp[0]+=clamp(cmd.left-b.driveRamp[0],-rate,rate);b.driveRamp[1]+=clamp(cmd.right-b.driveRamp[1],-rate,rate);cmd.left=b.driveRamp[0];cmd.right=b.driveRamp[1];}
  // The compact wheel stance uses the full-size steering response.
  if(hydraSleekWheels(c)){const forward=(cmd.left+cmd.right)/2,turn=(cmd.left-cmd.right)/2;cmd.left=forward+turn*0.92;cmd.right=forward-turn*0.92;}
- const straightAssist=isHorizontal(c.weapon)&&c.chassis.profile!=='gigabyte'&&c.drive.traction!=='tracks'&&c.drive.layout===2&&b.weaponOn&&b.grounded&&up.y>.65&&Math.abs(cmd.left-cmd.right)<.05&&Math.abs(cmd.left)>.03?clamp(dot(b.chassis.angvel(),up)*.35,-.35,.35):0;
+ const straightAssist=isHorizontal(c.weapon)&&componentProfile(c,'weapon')!=='gigabyte'&&c.drive.traction!=='tracks'&&c.drive.layout===2&&b.weaponOn&&b.grounded&&up.y>.65&&Math.abs(cmd.left-cmd.right)<.05&&Math.abs(cmd.left)>.03?clamp(dot(b.chassis.angvel(),up)*.35,-.35,.35):0;
  // Inverted traction control limits acceleration using the support margin
  // and higher centre of mass. It retains full speed and physical gyroscopic motion.
  const wheelY=c.drive.radius-c.chassis.height/2-c.chassis.clearance,margin=Math.max(.025,wheelBase(c)/2-Math.abs(b.compiled.com.z-wheelCentreZ(c))),comHeight=Math.max(.06,c.drive.radius+wheelY-b.compiled.com.y);
- const driveTorqueLimit=c.chassis.profile==='hypershock'&&up.y<-.65?b.compiled.mass*9.81*margin/comHeight*.60*c.drive.radius/c.drive.layout:Infinity;
+ const driveTorqueLimit=componentProfile(c,'drive')==='hypershock'&&up.y<-.65?b.compiled.mass*9.81*margin/comHeight*.60*c.drive.radius/c.drive.layout:Infinity;
  const supported=this.floorSupport.has(b.id);b.grounded=false;const axis=this.axis(b,v(1,0,0)),tracks=c.drive.traction==='tracks';
- let hugeDuty:readonly[number,number]|undefined=c.chassis.profile==='huge'&&!tracks?hugeDriveDuty(cmd.left,cmd.right,dot(b.chassis.linvel(),this.forward(b)),b.chassis.angvel().y,axis.y):undefined;
- if((c.chassis.profile==='gigabyte'||tracks)&&supported&&up.y>.65&&b.rollStart<0){
+ let hugeDuty:readonly[number,number]|undefined=componentProfile(c,'drive')==='huge'&&!tracks?hugeDriveDuty(cmd.left,cmd.right,dot(b.chassis.linvel(),this.forward(b)),b.chassis.angvel().y,axis.y):undefined;
+ if((componentProfile(c,'weapon')==='gigabyte'||tracks)&&supported&&up.y>.65&&b.rollStart<0){
   const forward=(cmd.left+cmd.right)/2,turn=(cmd.left-cmd.right)/2,speed=dot(b.chassis.linvel(),this.forward(b)),yaw=dot(b.chassis.angvel(),up),drive=clamp(forward*.30+(forward*(tracks?3.2:4.5)-speed)*.55,-1,1),steer=clamp(turn*.30+(yaw+turn*(tracks?1.7:2.4))*(tracks?.45:.85),tracks?-.75:-1,tracks?.75:1);
   hugeDuty=[clamp(drive+steer,-1,1),clamp(drive-steer,-1,1)];
  }
@@ -310,9 +311,9 @@ export class Simulation{
  if(braced){b.chassis.addForce(v(0,-Math.abs(torque)*.8/Math.max(.2,c.chassis.length/2),0),true);const rollAxis=this.axis(b,v(0,0,1)),tilt=this.axis(b,v(1,0,0)).y,rate=dot(b.chassis.angvel(),rollAxis),stiffness=6000,damping=2*Math.sqrt(stiffness*b.compiled.inertia.z);b.chassis.addTorque(mul(rollAxis,clamp(-tilt*stiffness-rate*damping,-1800,1800)),true);const pitchAxis=this.axis(b,v(1,0,0)),pitchRate=dot(b.chassis.angvel(),pitchAxis),pitchDamping=2*Math.sqrt(4000*b.compiled.inertia.x);b.chassis.addTorque(mul(pitchAxis,clamp(rollAxis.y*4000-pitchRate*pitchDamping,-1800,1800)),true);}
  }else if(w.type==='crusher'){
  const cq=b.chassis.rotation(),rq=b.rotor.rotation(),relative=quatMul({x:-cq.x,y:-cq.y,z:-cq.z,w:cq.w},rq),raw=2*Math.atan2(relative.x,relative.w);b.crushAngle=Math.atan2(Math.sin(raw),Math.cos(raw));
- const righting=c.chassis.profile==='quantum'&&b.rollStart>=0;if(righting)b.weaponOn=true;
+ const righting=componentProfile(c,'selfRight')==='quantum'&&b.rollStart>=0;if(righting)b.weaponOn=true;
  if(!righting&&b.weaponOn&&(this.tick-b.crushStart>2.1*RULES.hz||b.crushContactTicks>1.2*RULES.hz||b.crushWork>=QUANTUM_HYDRAULICS.cycleJoules))b.weaponOn=false;
- const quantum=c.chassis.profile==='quantum',pressure=quantum&&b.weaponOn&&b.crushContactTicks>0&&!righting;
+ const quantum=componentProfile(c,'weapon')==='quantum',pressure=quantum&&b.weaponOn&&b.crushContactTicks>0&&!righting;
  b.crushPhase=!b.weaponOn?'opening':pressure?'pressure':'closing';
  // High-flow closing gets the tooth to the target quickly. The pressure
  // stage models local indentation, with its own force/flow curve below.
@@ -343,18 +344,18 @@ export class Simulation{
  }
  if(c.weapon.type==='crusher'&&wasWeaponOn&&!b.weaponOn)this.releaseCrusher(b);
  if(b.roll&&c.selfRight.type==='roll_arm'){
-  if(c.chassis.profile==='gigabyte'){const joint=b.joints.get('self_right') as RAPIER.RevoluteImpulseJoint;joint.setLimits(b.rollStart<0||rotorBraking?-.008:-.02,b.rollStart<0||rotorBraking?.008:3.1);}
-  const elapsed=(this.tick-b.rollStart)/RULES.hz-(c.chassis.profile==='quantum'?.45:0),vertical=verticalSelfRight(c),folding=['hypershock','gigabyte','quantum'].includes(c.chassis.profile??'standard'),localRollAxis=folding&&!vertical?v(0,0,1):v(c.chassis.profile==='hypershock'?-1:1,0,0),rollAxis=this.axis(b,localRollAxis),om=dot(sub(b.roll.angvel(),b.chassis.angvel()),rollAxis),cycling=b.rollStart>=0&&!rotorBraking&&elapsed<(vertical?8:folding?4:2);
-  if((cycling||rotorBraking||c.chassis.profile==='gigabyte'||vertical&&(up.y>.65||c.chassis.profile==='hypershock'&&up.y<-.65)&&b.grounded)&&powered&&b.modules.self_right.functional){
-   const cq=b.chassis.rotation(),rq=b.roll.rotation(),relative=quatMul({x:-cq.x,y:-cq.y,z:-cq.z,w:cq.w},rq),raw=2*Math.atan2(folding&&!vertical?relative.z:relative.x,relative.w)*(c.chassis.profile==='hypershock'?-1:1),wrapped=Math.atan2(Math.sin(raw),Math.cos(raw)),angle=folding&&b.rollStart>=0&&wrapped<-.2?wrapped+Math.PI*2:wrapped;
+  if(componentProfile(c,'weapon')==='gigabyte'){const joint=b.joints.get('self_right') as RAPIER.RevoluteImpulseJoint;joint.setLimits(b.rollStart<0||rotorBraking?-.008:-.02,b.rollStart<0||rotorBraking?.008:3.1);}
+  const elapsed=(this.tick-b.rollStart)/RULES.hz-(componentProfile(c,'selfRight')==='quantum'?.45:0),vertical=verticalSelfRight(c),folding=['hypershock','gigabyte','quantum'].includes(componentProfile(c,'selfRight')??'standard'),localRollAxis=folding&&!vertical?v(0,0,1):v(componentProfile(c,'selfRight')==='hypershock'?-1:1,0,0),rollAxis=this.axis(b,localRollAxis),om=dot(sub(b.roll.angvel(),b.chassis.angvel()),rollAxis),cycling=b.rollStart>=0&&!rotorBraking&&elapsed<(vertical?8:folding?4:2);
+  if((cycling||rotorBraking||componentProfile(c,'selfRight')==='gigabyte'||vertical&&(up.y>.65||componentProfile(c,'selfRight')==='hypershock'&&up.y<-.65)&&b.grounded)&&powered&&b.modules.self_right.functional){
+   const cq=b.chassis.rotation(),rq=b.roll.rotation(),relative=quatMul({x:-cq.x,y:-cq.y,z:-cq.z,w:cq.w},rq),raw=2*Math.atan2(folding&&!vertical?relative.z:relative.x,relative.w)*(componentProfile(c,'selfRight')==='hypershock'?-1:1),wrapped=Math.atan2(Math.sin(raw),Math.cos(raw)),angle=folding&&b.rollStart>=0&&wrapped<-.2?wrapped+Math.PI*2:wrapped;
    // Fold off the deck, push through real floor contact, then stow again.
    if(vertical&&b.rollStart>=0&&!b.rollSettling&&elapsed>.5&&up.y>.90&&b.grounded){b.rollSettling=true;b.rollStowAt=elapsed;b.rollStowAngle=angle;}const phase=vertical?Math.max(0,elapsed)%3.5:elapsed;
    const target=vertical&&b.rollSettling?b.rollStowAngle*clamp(1-(elapsed-b.rollStowAt)/1.25,0,1):cycling&&!b.rollSettling&&phase<(vertical?2.15:folding?1.7:1)?(vertical?4.65:folding?3:-2.35)*clamp(phase/(vertical?1.55:folding?1:.65),0,1):0;
    // A small overshoot past stow must reverse back, not drive another full turn into the floor.
    const error=vertical&&b.rollSettling?Math.atan2(Math.sin(target-angle),Math.cos(target-angle)):target-angle;
-   const rollI=b.compiled.parts.filter(p=>p.body==='self_right').reduce((n,p)=>n+partProperties(p).about(localRollAxis,v()),0),invI=1/Math.max(.001,rollI)+1/Math.max(.001,folding&&!vertical?b.compiled.inertia.z:b.compiled.inertia.x),damping=2*Math.sqrt(750/invI),torque=clamp((error*750-om*damping)/(1+damping*RULES.dt*invI+750*RULES.dt**2*invI),vertical&&b.rollSettling?-140:vertical||c.chassis.profile==='gigabyte'?-650:-350,vertical&&b.rollSettling?140:vertical||c.chassis.profile==='gigabyte'?650:350),limited=workLimitedTorque(torque,om,invI,Math.max(0,Math.min(cycling?(vertical?12000:c.chassis.profile==='gigabyte'?4000:2000)-b.rollWork:b.energy,b.energy)));
+   const rollI=b.compiled.parts.filter(p=>p.body==='self_right').reduce((n,p)=>n+partProperties(p).about(localRollAxis,v()),0),invI=1/Math.max(.001,rollI)+1/Math.max(.001,folding&&!vertical?b.compiled.inertia.z:b.compiled.inertia.x),damping=2*Math.sqrt(750/invI),torque=clamp((error*750-om*damping)/(1+damping*RULES.dt*invI+750*RULES.dt**2*invI),vertical&&b.rollSettling?-140:vertical||componentProfile(c,'selfRight')==='gigabyte'?-650:-350,vertical&&b.rollSettling?140:vertical||componentProfile(c,'selfRight')==='gigabyte'?650:350),limited=workLimitedTorque(torque,om,invI,Math.max(0,Math.min(cycling?(vertical?12000:componentProfile(c,'selfRight')==='gigabyte'?4000:2000)-b.rollWork:b.energy,b.energy)));
    this.torquePair(b,b.roll,rollAxis,limited.torque);if(cycling)b.rollWork+=limited.work;b.powerWork+=limited.work;this.spend(b,limited.work);if(vertical&&b.rollSettling&&Math.abs(angle)<.09&&Math.abs(om)<.5){if(up.y>.85){b.rollStart=-1;if(b.resumeWeapon){b.weaponOn=weaponPowered;b.resumeWeapon=false;}}else b.rollSettling=false;}
-   if(c.chassis.profile==='gigabyte'&&b.rollStart>=0&&!cycling&&!rotorBraking&&Math.abs(angle)<.05&&Math.abs(om)<.5){b.rollStart=-1;if(b.resumeWeapon){b.weaponOn=weaponPowered;b.resumeWeapon=false;}}
+   if(componentProfile(c,'selfRight')==='gigabyte'&&b.rollStart>=0&&!cycling&&!rotorBraking&&Math.abs(angle)<.05&&Math.abs(om)<.5){b.rollStart=-1;if(b.resumeWeapon){b.weaponOn=weaponPowered;b.resumeWeapon=false;}}
   }else{this.torquePair(b,b.roll,rollAxis,-om*2);if(b.rollStart>=0&&(!powered||!b.modules.self_right.functional||!cycling&&!rotorBraking)){b.rollStart=-1;if(b.resumeWeapon){b.weaponOn=weaponPowered;b.resumeWeapon=false;}}}
  }
  if(b.rotor&&isSpinner(c.weapon))b.rotor.addTorque(gyroInertialTorque(b.rotor),true);
@@ -367,7 +368,7 @@ export class Simulation{
   b.unstick.active=false;b.ai.waypoint=undefined;b.ai.lastProgress={...p};b.ai.progressTick=this.tick;b.history=[];
  }
  private stabilizeChassis(b:Bot){
-  const c=b.compiled.config,huge=c.chassis.profile==='huge',shell=c.chassis.profile==='gigabyte';
+  const c=b.compiled.config,huge=componentProfile(c,'weapon')==='huge',shell=componentProfile(c,'weapon')==='gigabyte';
   if((!huge&&!shell)||b.rollStart>=0||(huge?!this.floorSupport.has(b.id):!b.grounded))return;
   const up=this.axis(b,v(0,1,0));if(shell&&up.y<.45)return;
   const target=v(0,huge&&up.y<0?-1:1,0),error=cross(up,target),rate=b.chassis.angvel();
@@ -459,13 +460,13 @@ export class Simulation{
  if(b.ai.waypoint&&horizontal(obs.p,b.ai.waypoint)<.8)b.ai.waypoint=undefined;
  if(!b.gripRelease&&!(w.type==='crusher'&&b.weaponOn)&&obs.p.z<-4.9&&Math.abs(obs.p.x)<2.2&&obs.other.z>-4.8)b.ai.waypoint=v(obs.p.x<0?-2.55:2.55,0,-4.65);
  const danger=this.automaticSelfRightReady(b)||(!b.grounded&&obs.up<.35)||Math.abs(obs.p.x)>6.35||Math.abs(obs.p.z)>6.35||obs.p.y>b.compiled.config.chassis.height/2+b.compiled.config.chassis.clearance+.45;
- const release=b.compiled.config.chassis.profile==='quantum'?b.gripRelease:undefined;
+ const release=componentProfile(b.compiled.config,'weapon')==='quantum'?b.gripRelease:undefined;
  const releaseRemaining=release?release.distance-release.travelled:0;
  const quantumRelease=!!release&&releaseRemaining>.025&&this.tick-release.tick<8*RULES.hz;
  if(release&&!quantumRelease){b.gripRelease=undefined;b.ai.waypoint=undefined;b.ai.lastProgress={...obs.p};b.ai.progressTick=this.tick;}
  const candidates=[
  {state:'recover',score:danger?100:-Infinity,reason:obs.up<-.5?'Use the physical self-right mechanism':'Return to clear floor',target:obs.up<-.5?obs.other:v(),throttle:obs.up<-.5?.15:.65},
- {state:'release',score:quantumRelease?110:obs.pin>=9*RULES.hz?95:-Infinity,reason:'Open the jaw and retreat up to two robot lengths',target:quantumRelease?add(obs.p,mul(release!.back,-2)):obs.other,throttle:b.compiled.config.chassis.profile==='quantum'?-Math.min(.34,Math.max(.035,releaseRemaining*.55)):-.85},
+ {state:'release',score:quantumRelease?110:obs.pin>=9*RULES.hz?95:-Infinity,reason:'Open the jaw and retreat up to two robot lengths',target:quantumRelease?add(obs.p,mul(release!.back,-2)):obs.other,throttle:componentProfile(b.compiled.config,'weapon')==='quantum'?-Math.min(.34,Math.max(.035,releaseRemaining*.55)):-.85},
  {state:'evade',score:!ready&&distance<1.9?82-distance:-Infinity,reason:'Create space for the weapon',target:obs.other,throttle:-.75},
  {state:'spin up',score:!ready?70:-Infinity,reason:'Wait for weapon readiness',target:obs.other,throttle:.28},
  {state:'approach',score:ready?54+Math.min(5,distance):45,reason:disabled?'Push with the working drive':'Close on the opponent',target:obs.other,throttle:!obs.driveLeft||!obs.driveRight?.5:.88},
@@ -476,11 +477,11 @@ export class Simulation{
  const emergency=chosen.state==='recover'||chosen.state==='release';
  if(!emergency&&current&&Number.isFinite(current.score)&&(this.tick-b.ai.since<.3*RULES.hz||current.score+4>=chosen.score))chosen=current;
  const {state,reason,target}=chosen;let throttle=chosen.throttle;if(state!==b.ai.state)b.ai.since=this.tick;b.ai.state=state;b.ai.reason=reason;
- const goal=sub(target,obs.p),error=angleWrap(Math.atan2(goal.x,-goal.z)-heading+aimNoise),turn=clamp(b.compiled.config.chassis.profile==='huge'?error*.8+obs.yawRate*.32:error*1.8,-1,1);if(Math.abs(error)>1.1&&throttle>0)throttle=.15;if(w.type==='crusher'&&state==='attack'&&distance<1.15)throttle=Math.min(throttle,.35);
+ const goal=sub(target,obs.p),error=angleWrap(Math.atan2(goal.x,-goal.z)-heading+aimNoise),turn=clamp(componentProfile(b.compiled.config,'weapon')==='huge'?error*.8+obs.yawRate*.32:error*1.8,-1,1);if(Math.abs(error)>1.1&&throttle>0)throttle=.15;if(w.type==='crusher'&&state==='attack'&&distance<1.15)throttle=Math.min(throttle,.35);
  const cmd:Command={left:clamp(throttle+turn,-1,1),right:clamp(throttle-turn,-1,1),weapon:false,selfRight:false};
  if(w.type==='flipper'){const reach=w.length+w.mount.z*-1+.35;if(!disabled&&state==='attack'&&distance<reach&&Math.abs(angleWrap(toward-heading))<.3&&ready&&this.tick-b.ai.lastFireRequest>=1.5*RULES.hz){cmd.weapon=true;b.ai.lastFireRequest=this.tick;}}
  else if(w.type==='crusher'){if(state!=='release'&&!quantumRelease&&!disabled&&!obs.weaponOn&&distance<.86&&Math.abs(angleWrap(toward-heading))<.24&&this.tick-b.ai.lastWeaponRequest>2.6*RULES.hz){cmd.weapon=true;b.ai.lastWeaponRequest=this.tick;}}
- else if(w.type!=='none'&&!disabled&&!obs.weaponOn&&!((b.compiled.config.chassis.profile==='gigabyte'||verticalSelfRight(b.compiled.config))&&b.rollStart>=0)&&this.tick-b.ai.lastWeaponRequest>opt.delay+4){cmd.weapon=true;b.ai.lastWeaponRequest=this.tick;}
+ else if(w.type!=='none'&&!disabled&&!obs.weaponOn&&!((componentProfile(b.compiled.config,'selfRight')==='gigabyte'||verticalSelfRight(b.compiled.config))&&b.rollStart>=0)&&this.tick-b.ai.lastWeaponRequest>opt.delay+4){cmd.weapon=true;b.ai.lastWeaponRequest=this.tick;}
  if(w.type==='hammer_saw'&&!disabled&&ready&&state==='attack'&&distance<(w.armLength??.59)+.45&&Math.abs(angleWrap(toward-heading))<.35&&obs.flipStart<0&&this.tick-b.ai.lastFireRequest>=1.4*RULES.hz){cmd.selfRight=true;b.ai.lastFireRequest=this.tick;}
  if(state==='recover'&&this.automaticSelfRightReady(b)&&obs.tick-obs.lastSelfRight>=3*RULES.hz&&this.tick-b.ai.lastRightRequest>=3*RULES.hz){cmd.selfRight=true;b.ai.lastRightRequest=this.tick;}
  b.ai.command={...cmd};b.command=cmd;
@@ -503,7 +504,7 @@ export class Simulation{
    // Once a bite is loaded, pressure is shared among the tooth contacts.
    // Keep the pressure stage engaged at the lower per-contact holding load.
    if(!target||force<(b.crushContactTicks>0?25:150)){b.crushContactTicks=0;b.crushPhase='closing';continue;}
-   b.crushContactTicks++;b.crushPhase='pressure';const quantum=b.compiled.config.chassis.profile==='quantum',output=damageStatus(b.modules).weaponOutput;
+   b.crushContactTicks++;b.crushPhase='pressure';const quantum=componentProfile(b.compiled.config,'weapon')==='quantum',output=damageStatus(b.modules).weaponOutput;
    // Rigid colliders cannot deform: pressure work is integrated as local
    // indentation damage. Solver impulses still provide motion and recoil.
    const jawQ=b.rotor!.rotation(),jawPoint=rotate(sub(point,b.rotor!.translation()),{x:-jawQ.x,y:-jawQ.y,z:-jawQ.z,w:jawQ.w}),lever=Math.abs(jawPoint.z),pressure=quantumBiteForce(w.length,lever)*Math.min(1,b.crushContactTicks*RULES.dt/QUANTUM_HYDRAULICS.pressureRiseSeconds)*output;
@@ -647,13 +648,13 @@ export class Simulation{
  }
  damage(id:number,slot:Slot|'arena',energy:number,event?:ImpactEvent,part?:Part,contact?:{point:Vec,direction:Vec}){if(slot==='arena')return;const b=this.bots[id];
  // Flexible HUGE wheels absorb damage without reducing the solved hit impulse.
- if(b.compiled.config.chassis.profile==='huge'&&part?.body.startsWith('wheel_')&&(slot==='drive_left'||slot==='drive_right'))energy*=HUGE_WHEEL_DAMAGE_SCALE;
-const batteryBefore=b.modules.battery.hp,crusher=event?.cause==='crush'&&event.attacker!==null&&event.attacker!==undefined&&event.attacker!==id&&this.bots[event.attacker].compiled.config.chassis.profile==='quantum';
+ if(componentProfile(b.compiled.config,'drive')==='huge'&&part?.body.startsWith('wheel_')&&(slot==='drive_left'||slot==='drive_right'))energy*=HUGE_WHEEL_DAMAGE_SCALE;
+const batteryBefore=b.modules.battery.hp,crusher=event?.cause==='crush'&&event.attacker!==null&&event.attacker!==undefined&&event.attacker!==id&&componentProfile(this.bots[event.attacker].compiled.config,'weapon')==='quantum';
  const q=b.chassis.rotation(),inverse={x:-q.x,y:-q.y,z:-q.z,w:q.w},point=event?rotate(sub(contact?.point??event.point,b.chassis.translation()),inverse):v(100,100,100);
  const incoming=contact?.direction??event?.penetrationDirection;
  const direction=incoming?rotate(incoming,inverse):slot==='armour_rear'?v(0,0,-1):slot==='armour_front'?v(0,0,1):slot==='armour_left'?v(1,0,0):slot==='armour_right'?v(-1,0,0):v(0,-1,0);
  const batteryZone=event?batteryAlongRay(b.compiled.config,point,direction):undefined,overBattery=batteryZone!==undefined;
- const shell=slot==='weapon'&&b.compiled.config.chassis.profile==='gigabyte';
+ const shell=slot==='weapon'&&componentProfile(b.compiled.config,'weapon')==='gigabyte';
  // A located robot strike can make a local hole without erasing the whole armour
  // panel before loading the battery beneath it. Account for puncture work once
  // at this contact site, then spend only the remaining work on internal damage.

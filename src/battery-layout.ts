@@ -1,3 +1,4 @@
+import {componentProfile} from './model';
 import type {BotConfig,Vec,Profile} from './model';
 
 export const BATTERY_CRUSH_RESISTANCE=18; // Game indentation energy, J per HP.
@@ -24,7 +25,7 @@ export const BATTERY_LAYOUTS:Partial<Record<Profile,Layout>>={
  deep_six:{zone:'Left and right lower chassis pods',note:'Unconfirmed placement. The team AMA does not establish battery positions. The two lower chassis zones remain game estimates.',sources:[source('Team Deep Six AMA','https://www.reddit.com/r/battlebots/comments/coottd/ama_with_deep_six/')],centres:[[-.29,0],[.29,0]],size:[.24,.38]},
  quantum:{zone:'Rear chassis bays beside the hydraulic unit',note:'Unconfirmed placement. The team AMA discusses opponent batteries, not the position of Quantum packs. The rear side bays remain game estimates.',sources:[source('RoboChallenge team AMA','https://www.reddit.com/r/battlebots/comments/13hmmck/quantum_ama_with_james_grant_cooper/')],centres:[[-.23,.25],[.23,.25]],size:[.24,.23]},
 };
-export function batteryLayout(c:BotConfig):Layout{return BATTERY_LAYOUTS[c.chassis.profile??'standard']??{zone:'Central rear bay',note:'Custom game layout.',sources:[],centres:[[0,.14]],size:[.35,.30]};}
+export function batteryLayout(c:BotConfig):Layout{return BATTERY_LAYOUTS[componentProfile(c,'battery')]??{zone:'Central rear bay',note:'Custom game layout.',sources:[],centres:[[0,.14]],size:[.35,.30]};}
 export function batteryZones(c:BotConfig){
  const layout=batteryLayout(c),ch=c.chassis,sy=Math.min(.08,ch.height*.55),y=layout.bottomClearance===undefined?Math.max(-ch.height/2+sy/2+.009,-.022):Math.min(ch.height/2-sy/2-.004,-ch.height/2+sy/2+layout.bottomClearance);
  return layout.centres.map(([x,z],i)=>({id:i?'battery_'+i:'battery',position:{x:x*ch.width,y,z:z*ch.length},size:{x:layout.size[0]*ch.width,y:sy,z:layout.size[1]*ch.length},fraction:1/layout.centres.length}));

@@ -1,3 +1,4 @@
+import {componentConfig,componentProfile} from './model';
 import {enhancedRotorExposure,updateEnhancedExposure} from './weapon-exposure';
 import {sawbladeExposure,updateSawbladeExposure} from './sawblaze-blur';
 import * as THREE from 'three';
@@ -45,7 +46,7 @@ function updateHorizontalSweep(mesh:THREE.Mesh<THREE.BufferGeometry,THREE.MeshBa
 }
 
 /** Exposure trails supplement, but never replace, the physical rotor pose. */
-export function rotorMotion(config:BotConfig){
+export function rotorMotion(config:BotConfig){config=componentConfig(config,'weapon');
  if(config.chassis.profile==='sawblaze'&&config.weapon.type==='hammer_saw')return sawbladeExposure(config);
  if(!usesLegacyExposure(config))return enhancedRotorExposure(config);
  const w=config.weapon,root=new THREE.Group();root.name='rotor-motion';

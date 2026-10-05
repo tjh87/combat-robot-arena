@@ -51,8 +51,14 @@ export type Spinner={type:typeof SPINNER_TYPES[number],massKg?:number,armLength?
 export type Flipper={type:'flipper',length:number,width:number,thickness:number,material:Material,mount:Vec,travel:number,actuator:'F3000',stroke:number,charges:number};
 export type Crusher={type:'crusher',length:number,width:number,thickness:number,material:Material,mount:Vec,travel:number,torque:number};
 export type Weapon=Spinner|Flipper|Crusher|{type:'none'};
+export type ComponentKind='weapon'|'drive'|'selfRight'|'battery'|'armour';
+export type StructuralAttachment={id:string,template:number,part:string,mount:Vec,rotation:Quat};
+export function componentProfile(c:BotConfig,kind:ComponentKind):Profile{return c.components?.[kind]??c.chassis.profile??'standard';}
+export function componentConfig(c:BotConfig,kind:ComponentKind):BotConfig{const profile=componentProfile(c,kind);return profile===(c.chassis.profile??'standard')?c:{...c,chassis:{...c.chassis,profile}};}
 export interface BotConfig{
  schemaVersion:2;
+ components?:Partial<Record<ComponentKind,Profile>>;
+ attachments?:StructuralAttachment[];
  identity:{name:string,primary:string,secondary:string};
  chassis:{profile?:Profile,equipmentMassKg?:number,form:'box'|'wedge',length:number,width:number,height:number,material:Material,thickness:number,wedgeAngle:number,clearance:number};
  weapon:Weapon;
@@ -95,21 +101,21 @@ export const armOffset=(w:Spinner)=>v(0,(w.armLength??.55)*Math.sin(1.2),-(w.arm
 export const WEDGE_TIP={clearance:.002,thickness:.003};
 export const HYDRA_TIP={clearance:.0006,thickness:.0012};
 export function groundForkMount(c:BotConfig,side:number,index:number){return c.weapon.type==='hammer_saw'?v(side*.21,-c.chassis.height/2-c.chassis.clearance+.105,-c.chassis.length/2+.08):v(side*(c.chassis.width*.30+index*.043),-c.chassis.height/2-c.chassis.clearance+.0755,-c.chassis.length/2+.035);}
-export function unlimitedFlips(c:BotConfig){return c.chassis.profile==='hydra'&&c.weapon.type==='flipper';}
-export function strikeMultiplier(c:BotConfig){return c.chassis.profile==='deep_six'?4:c.chassis.profile==='huge'?3:unlimitedFlips(c)||isHorizontal(c.weapon)?1.5:1;}
+export function unlimitedFlips(c:BotConfig){return componentProfile(c,'weapon')==='hydra'&&c.weapon.type==='flipper';}
+export function strikeMultiplier(c:BotConfig){return componentProfile(c,'weapon')==='deep_six'?4:componentProfile(c,'weapon')==='huge'?3:unlimitedFlips(c)||isHorizontal(c.weapon)?1.5:1;}
 export function flipEnergy(c:BotConfig){return RULES.flipJoules*(unlimitedFlips(c)?4.5:1);}
-export function verticalSelfRight(c:BotConfig){return c.selfRight.type==='roll_arm'&&['quantum','hypershock'].includes(c.chassis.profile??'');}
+export function verticalSelfRight(c:BotConfig){return c.selfRight.type==='roll_arm'&&['quantum','hypershock'].includes(componentProfile(c,'selfRight'));}
 export function selfRightKind(c:BotConfig):'arm'|'flipper'|'saw'|'gyro'|null{
  if(c.selfRight.type==='roll_arm')return 'arm';
  if(c.weapon.type==='flipper')return 'flipper';
  if(c.weapon.type==='hammer_saw')return 'saw';
- if(c.chassis.profile==='minotaur'&&c.weapon.type==='drum')return 'gyro';
+ if(componentProfile(c,'weapon')==='minotaur'&&c.weapon.type==='drum')return 'gyro';
  return null;
 }
 export function isRampPart(p:Pick<Part,'id'>){return p.id==='wedge'||p.id==='flipper'||p.id.startsWith('flipper_tine_')||/^(flipper_fang|engine_plow|disc_scoop|cage_skirt|cage_plow|saw_fork|vertical_outrigger|crusher_scoop)_?/.test(p.id);}
 export function batteryPosition(c:BotConfig){return batteryZones(c)[0].position;}
-export function wheelBase(c:BotConfig){return c.chassis.profile==='hydra'?(c.chassis.length/.64)*.425:c.chassis.profile==='hypershock'?Math.max(c.chassis.length*.72,2*c.drive.radius+.025):c.chassis.length-2*c.drive.radius-.015;}
-export function wheelCentreZ(c:BotConfig){return c.chassis.profile==='hypershock'?-.065:0;}
+export function wheelBase(c:BotConfig){return componentProfile(c,'drive')==='hydra'?(c.chassis.length/.64)*.425:componentProfile(c,'drive')==='hypershock'?Math.max(c.chassis.length*.72,2*c.drive.radius+.025):c.chassis.length-2*c.drive.radius-.015;}
+export function wheelCentreZ(c:BotConfig){return componentProfile(c,'drive')==='hypershock'?-.065:0;}
 export function wheelPositionZ(c:BotConfig,i:number){return c.drive.layout===2?0:wheelCentreZ(c)+(i/(c.drive.layout/2-1)-.5)*wheelBase(c);}
 export function bodyOrigin(c:BotConfig,body:string):Vec{
  const w=c.weapon;
@@ -210,6 +216,8 @@ export function parseConfig(input:unknown):BotConfig{
  if(!Array.isArray(a.armour)||a.armour.length!==5)fail('Armour must define five unique mounts');
  const seen=new Set();const armour=a.armour.map((p:any)=>{obj(p,'armour');const mount=en(p.mount,MOUNTS,'armour.mount');if(seen.has(mount))fail('Duplicate armour mount');seen.add(mount);return{mount,material:material(p.material,'armour.material'),thickness:bounded(p.thickness,'armour.thickness',0,.025)};});
  const parsed:BotConfig={schemaVersion:2,identity:{name:i.name,primary:i.primary.toLowerCase(),secondary:i.secondary.toLowerCase()},chassis:{profile:en(c.profile??'standard',PROFILES,'chassis.profile'),form:en(c.form,['box','wedge'],'chassis.form'),length:bounded(c.length,'chassis.length',.2,1.2),width:bounded(c.width,'chassis.width',.22,1.3),height:bounded(c.height,'chassis.height',.08,.45),material:material(c.material,'chassis.material'),thickness:bounded(c.thickness,'chassis.thickness',.004,.02),wedgeAngle:bounded(c.wedgeAngle,'chassis.wedgeAngle',10,55),clearance:bounded(c.clearance,'chassis.clearance',.003,.65)},weapon,drive:{traction:en(d.traction??'wheels',['wheels','tracks'],'drive.traction'),layout:en(d.layout,[2,4,6],'drive.layout'),radius:bounded(d.radius,'drive.radius',c.profile==='hydra'?.035:.05,.6),width:bounded(d.width,'drive.width',.025,.18),material:en(d.material,['rubber'],'drive.material'),motor:en(d.motor,['drive48','drive48sport'],'drive.motor'),ratio:bounded(d.ratio,'drive.ratio',5,45),magnet:bounded(d.magnet,'drive.magnet',0,400)},armour,battery:{pack:en(b.pack,['P48'],'battery.pack'),capacityWh:bounded(b.capacityWh,'battery.capacityWh',100,1000)},selfRight:s.type==='none'?{type:'none'}:{type:en(s.type,['roll_arm'],'selfRight.type'),mount:vec(s.mount,'selfRight.mount'),length:bounded(s.length,'selfRight.length',.25,.6),actuator:en(s.actuator,['R600'],'selfRight.actuator')}};
+ if(a.components!==undefined){const source=obj(a.components,'components');const components:NonNullable<BotConfig['components']>={};for(const kind of ['weapon','drive','selfRight','battery','armour'] as ComponentKind[])if(source[kind]!==undefined)components[kind]=en(source[kind],PROFILES,'components.'+kind);parsed.components=components;}
+ if(a.attachments!==undefined){if(!Array.isArray(a.attachments)||a.attachments.length>32)fail('Use at most 32 structural attachments.');parsed.attachments=a.attachments.map((raw:any)=>{const p=obj(raw,'attachment');if(typeof p.id!=='string'||!/^[-a-zA-Z0-9_]{1,48}$/.test(p.id)||typeof p.part!=='string'||!/^[-a-zA-Z0-9_]{1,80}$/.test(p.part))fail('Attachment identifiers are invalid.');const r=obj(p.rotation,'attachment.rotation'),q={x:bounded(r.x,'attachment.rotation.x',-1,1),y:bounded(r.y,'attachment.rotation.y',-1,1),z:bounded(r.z,'attachment.rotation.z',-1,1),w:bounded(r.w,'attachment.rotation.w',-1,1)};if(Math.abs(Math.hypot(q.x,q.y,q.z,q.w)-1)>.001)fail('Attachment rotation must be a unit quaternion.');return{id:p.id,template:en(p.template,ROSTER.map((_,i)=>i),'attachment.template'),part:p.part,mount:vec(p.mount,'attachment.mount'),rotation:q};});if(new Set(parsed.attachments.map(p=>p.id)).size!==parsed.attachments.length)fail('Attachment identifiers must be unique.');}
  if(d.hydraTuning!==undefined)parsed.drive.hydraTuning=en(d.hydraTuning,[1,2,3] as const,'drive.hydraTuning');
  if(c.equipmentMassKg!==undefined)parsed.chassis.equipmentMassKg=bounded(c.equipmentMassKg,'chassis.equipmentMassKg',0,80);
  if(parsed.chassis.profile==='hypershock'&&parsed.weapon.type==='vertical_disc'&&Math.abs(parsed.weapon.radius-.22)<1e-6&&Math.abs(parsed.weapon.width-.035)<1e-6&&Math.abs(parsed.weapon.mount.y-.158)<1e-6&&Math.abs(parsed.weapon.mount.z+.51)<1e-6&&Math.abs(parsed.drive.radius-.135)<1e-6){
@@ -222,20 +230,20 @@ export function parseConfig(input:unknown):BotConfig{
   if(Math.abs((parsed.chassis.equipmentMassKg??-1)-36.915694118748334)<1e-6)parsed.chassis.equipmentMassKg=30.859559305045067;
  }
  // Migrate only the exact legacy stock geometry. Preserve edited builds.
- if(parsed.chassis.profile==='hydra'&&parsed.weapon.type==='flipper'&&parsed.chassis.length===.64&&parsed.chassis.width===.58&&parsed.chassis.height===.16&&parsed.weapon.length===.30&&parsed.weapon.width===.22&&parsed.weapon.thickness===.012&&Math.abs(parsed.weapon.mount.y-.101)<1e-6&&Math.abs(parsed.weapon.mount.z+.335)<1e-6&&parsed.drive.radius===.10&&parsed.drive.width===.075){
+ if(parsed.chassis.profile==='hydra'&&(!parsed.components?.drive||parsed.components.drive==='hydra')&&parsed.weapon.type==='flipper'&&parsed.chassis.length===.64&&parsed.chassis.width===.58&&parsed.chassis.height===.16&&parsed.weapon.length===.30&&parsed.weapon.width===.22&&parsed.weapon.thickness===.012&&Math.abs(parsed.weapon.mount.y-.101)<1e-6&&Math.abs(parsed.weapon.mount.z+.335)<1e-6&&parsed.drive.radius===.10&&parsed.drive.width===.075){
   const stock=preset(2);parsed.chassis.height=.08;parsed.chassis.form='box';if(parsed.identity.primary==='#5c318c')parsed.identity.primary=stock.identity.primary;if(parsed.identity.secondary==='#d8ad4d')parsed.identity.secondary=stock.identity.secondary;parsed.weapon={...parsed.weapon,length:.663,thickness:.028,mount:copy(stock.weapon.type==='flipper'?stock.weapon.mount:v())};parsed.drive.radius=.10;parsed.drive.width=.075;
   if(Math.abs((parsed.chassis.equipmentMassKg??-1)-18.629719642711223)<1e-6)parsed.chassis.equipmentMassKg=stock.chassis.equipmentMassKg;
  }
  // Update the prior stock Hydra drive without replacing custom builds.
- if(parsed.chassis.profile==='hydra'&&parsed.chassis.length===.64&&parsed.chassis.width===.58&&parsed.chassis.height===.08&&parsed.weapon.type==='flipper'&&parsed.weapon.length===.663&&parsed.drive.layout===4&&parsed.drive.radius===.046&&parsed.drive.width===.038&&parsed.drive.motor==='drive48'&&(parsed.drive.hydraTuning===undefined||parsed.drive.hydraTuning===1)&&(parsed.drive.ratio===6.5||parsed.drive.ratio===14)){
+ if(parsed.chassis.profile==='hydra'&&(!parsed.components?.drive||parsed.components.drive==='hydra')&&parsed.chassis.length===.64&&parsed.chassis.width===.58&&parsed.chassis.height===.08&&parsed.weapon.type==='flipper'&&parsed.weapon.length===.663&&parsed.drive.layout===4&&parsed.drive.radius===.046&&parsed.drive.width===.038&&parsed.drive.motor==='drive48'&&(parsed.drive.hydraTuning===undefined||parsed.drive.hydraTuning===1)&&(parsed.drive.ratio===6.5||parsed.drive.ratio===14)){
   parsed.drive.radius=.10;parsed.drive.width=.075;parsed.drive.ratio=14;
   if(Math.abs((parsed.chassis.equipmentMassKg??-1)-50.608441509370486)<1e-6)parsed.chassis.equipmentMassKg=preset(2).chassis.equipmentMassKg;
  }
- if(parsed.chassis.profile==='hydra'&&parsed.chassis.length===.64&&parsed.chassis.width===.58&&parsed.chassis.height===.08&&parsed.weapon.type==='flipper'&&parsed.weapon.length===.663&&parsed.drive.traction!=='tracks'&&parsed.drive.layout===4&&parsed.drive.radius===.10&&parsed.drive.width===.075&&parsed.drive.motor==='drive48'&&parsed.drive.ratio===14&&parsed.drive.hydraTuning!==3){
+ if(parsed.chassis.profile==='hydra'&&(!parsed.components?.drive||parsed.components.drive==='hydra')&&parsed.chassis.length===.64&&parsed.chassis.width===.58&&parsed.chassis.height===.08&&parsed.weapon.type==='flipper'&&parsed.weapon.length===.663&&parsed.drive.traction!=='tracks'&&parsed.drive.layout===4&&parsed.drive.radius===.10&&parsed.drive.width===.075&&parsed.drive.motor==='drive48'&&parsed.drive.ratio===14&&parsed.drive.hydraTuning!==3){
   parsed.drive.radius=.060;parsed.drive.width=.040;parsed.drive.ratio=8.3;
   if(Math.abs((parsed.chassis.equipmentMassKg??-1)-41.35266615371938)<1e-6)parsed.chassis.equipmentMassKg=preset(2).chassis.equipmentMassKg;
  }
- if(parsed.chassis.profile==='hydra')parsed.drive.hydraTuning=3;
+ if(parsed.chassis.profile==='hydra'&&(!parsed.components?.drive||parsed.components.drive==='hydra'))parsed.drive.hydraTuning=3;
  // Keep saved stock builds compatible with the vertical recovery mechanisms.
  if(parsed.selfRight.type==='roll_arm'){
   const arm=parsed.selfRight,close=(a:number,b:number)=>Math.abs(a-b)<1e-6;
@@ -305,7 +313,7 @@ export function compile(raw:BotConfig,practice=false):Compiled{
  const volume=shape.kind==='box'?shape.size.x*shape.size.y*shape.size.z:shape.kind==='cylinder'?Math.PI*shape.radius**2*shape.width:shape.volume;
  parts.push({id,module:slot,body,shape,position:pos,rotation,material,mass:mass??volume*(material==='rubber'?1100:MATERIALS[material].density),collides,tooth});}
  const box=(id:string,slot:Slot,body:string,size:Vec,pos:Vec,mat:Material|'rubber',mass?:number,collides=true,rot=identity)=>part(id,slot,body,{kind:'box',size},pos,mat,mass,rot,collides);
- const L=ch.length,W=ch.width,H=ch.height,T=ch.thickness;
+ const L=ch.length,W=ch.width,H=ch.height,T=ch.thickness,wc=componentConfig(c,'weapon'),dc=componentConfig(c,'drive'),rc=componentConfig(c,'selfRight');
  module('chassis',1200,ch.material);
  if(ch.equipmentMassKg)for(const side of[-1,1])box('internal_equipment_'+side,'chassis','chassis',v(W*.25,H*.5,L*.65),v(side*W*.28,-H*.10,0),'aluminium7075',ch.equipmentMassKg/2,false);
  // Clipped steel shells use the same authored hulls for rendering and physics.
@@ -344,10 +352,10 @@ export function compile(raw:BotConfig,practice=false):Compiled{
  if(t){if(a.mount==='top')plate('armour_top','armour_top',t,pos.y,a.material);else if(recessedDrum&&a.mount==='front'){for(const side of[-1,1])box('armour_front_'+side,'armour_front','chassis',v(wing,H,t),v(side*(notchWidth+wing)/2,0,pos.z),a.material);}else if(split&&(a.mount==='front'||a.mount==='rear')){for(const side of[-1,1])box('armour_'+a.mount+'_'+side,('armour_'+a.mount) as Slot,'chassis',v(W/2-.055,H,t),v(side*(W/4+.0275),pos.y,pos.z),a.material);}else if(ch.profile==='sawblaze'&&a.mount==='front')sawblazeFrontParts(c,parts,'armour_front',t,a.material);else box('armour_'+a.mount,('armour_'+a.mount) as Slot,'chassis',size,pos,a.material);}
  }
  const wheelY=c.drive.radius-(ch.clearance+H/2),armourAt=(side:number)=>c.armour.find(a=>a.mount===(side<0?'left':'right'))!.thickness,sideArm=Math.max(armourAt(-1),armourAt(1));
- for(const side of [-1,1]){const slot:Slot=side===-1?'drive_left':'drive_right',sideArm=armourAt(side);module(slot,ch.profile==='quantum'?550:400,'aluminium7075');
+ for(const side of [-1,1]){const slot:Slot=side===-1?'drive_left':'drive_right',sideArm=armourAt(side);module(slot,dc.chassis.profile==='quantum'?550:400,'aluminium7075');
  for(let i=0;i<c.drive.layout/2;i++){const z=wheelPositionZ(c,i),x=bodyOrigin(c,`wheel_${side}_${i}`).x;const id=`wheel_${side}_${i}`;
- if(ch.profile==='huge'&&c.drive.traction!=='tracks')largeWheelParts(c,id,slot,v(x,wheelY,z),parts);else if(ch.profile==='hypershock'&&c.drive.traction!=='tracks')racerWheelParts(c,id,slot,v(x,wheelY,z),parts);else if(hydraSleekWheels(c))hydraWheelParts(c,id,slot,v(x,wheelY,z),parts);else part(id,slot,id,{kind:'cylinder',radius:c.drive.radius,width:c.drive.width},v(x,wheelY,z),'rubber',c.drive.traction==='tracks'?.9:undefined,axisQ(v(0,0,1),Math.PI/2));
- if(ch.profile==='minotaur')part('gyro_hub_'+side+'_'+i,slot,id,{kind:'cylinder',radius:.023,width:.045},v(x+side*(c.drive.width/2+.018),wheelY,z),'aluminium7075',undefined,axisQ(v(0,0,1),Math.PI/2));
+ if(dc.chassis.profile==='huge'&&c.drive.traction!=='tracks')largeWheelParts(dc,id,slot,v(x,wheelY,z),parts);else if(dc.chassis.profile==='hypershock'&&c.drive.traction!=='tracks')racerWheelParts(dc,id,slot,v(x,wheelY,z),parts);else if(hydraSleekWheels(c))hydraWheelParts(dc,id,slot,v(x,wheelY,z),parts);else part(id,slot,id,{kind:'cylinder',radius:c.drive.radius,width:c.drive.width},v(x,wheelY,z),'rubber',c.drive.traction==='tracks'?.9:undefined,axisQ(v(0,0,1),Math.PI/2));
+ if(dc.chassis.profile==='minotaur')part('gyro_hub_'+side+'_'+i,slot,id,{kind:'cylinder',radius:.023,width:.045},v(x+side*(c.drive.width/2+.018),wheelY,z),'aluminium7075',undefined,axisQ(v(0,0,1),Math.PI/2));
  box('motor_'+id,slot,'chassis',v(.07,.065,.10),v(side*(W/2-.075),wheelY,z),'aluminium7075',MOTORS[c.drive.motor].mass,false);
  box('axle_'+id,slot,'chassis',v(.045,.04,.04),v(side*(W/2+.012),wheelY,z),'hardox');}}
  if(c.drive.traction==='tracks')for(const side of[-1,1]){
@@ -358,23 +366,23 @@ export function compile(raw:BotConfig,practice=false):Compiled{
  box('electronics','chassis','chassis',v(.13,.025,.08),v(split?.22:0,.035,split?0:.15),'aluminium7075',1.15,false);
  if(c.drive.magnet)box('magnets','chassis','chassis',v(.15,.009,.14),v(0,-H/2+.016,.02),'hardox',c.drive.magnet/80,false);
  if(ch.profile==='hydra'){for(let i=parts.length-1;i>=0;i--)if(/^(floor|lid|side-?1|end-?1|corner_|wedge|armour_)/.test(parts[i].id))parts.splice(i,1);hydraChassisParts(c,parts);}
- templateParts(c,parts);
+ if(wc===c)templateParts(c,parts);else{const base:Part[]=[],kit:Part[]=[];templateParts(c,base);templateParts(wc,kit);const mechanical=(p:Part)=>p.module==='weapon'||p.module==='weapon_actuator'||p.body==='weapon_arm'||p.body==='rotor'||/^(saw_|disc_|engine_|crusher_)/.test(p.id);parts.push(...base.filter(p=>!mechanical(p)),...kit.filter(mechanical));}
  let rotorInertia=0,tip=0,availableRPM=0,spinup=0;
  if(w.type!=='none'){
- module('weapon',w.type==='crusher'?650:500,w.material);module('weapon_actuator',350,'aluminium7075');if(ch.profile==='gigabyte')box('shell_brake','weapon_actuator','chassis',v(.10,.035,.08),v(0,.13,.11),'hardox',1.2,false);
+ module('weapon',w.type==='crusher'?650:500,w.material);module('weapon_actuator',350,'aluminium7075');if(wc.chassis.profile==='gigabyte')box('shell_brake','weapon_actuator','chassis',v(.10,.035,.08),v(0,.13,.11),'hardox',1.2,false);
  box('weapon_motor','weapon_actuator','chassis',v(.105,.07,.11),v(split?.22:0,.015,split?0:-.13),'aluminium7075',w.type==='flipper'||w.type==='crusher'?4.2:MOTORS[w.motor].mass,false);
  if(w.type==='horizontal_bar'&&w.mount.z< -L/2){const under=w.mount.y+Math.max(w.thickness,w.toothHeight)/2< -H/2-.004,supportLength=Math.abs(w.mount.z)+.05-L/2;box('weapon_support','weapon_actuator','chassis',v(under?.11:.07,.018,supportLength),v(w.mount.x,under?-H/2+.012:w.mount.y-Math.max(w.thickness,w.toothHeight)/2-.022,(w.mount.z-L/2+.05)/2),'aluminium7075');part('weapon_spindle','weapon_actuator','chassis',{kind:'cylinder',radius:.022,width:.015},v(w.mount.x,under?w.mount.y+.022:w.mount.y-.035,w.mount.z),'hardox');}
  else if(w.type==='drum'){
   // Bearing cheeks also support the nose. The drum clears the floor even
   // while its forward mass loads a two-wheel chassis.
-  const rear=-L/2+.02,front=w.mount.z-.035,bottom=-H/2-ch.clearance+.002,top=ch.profile==='minotaur'?Math.max(w.mount.y+.034,-bottom):w.mount.y+.034;
+  const rear=-L/2+.02,front=w.mount.z-.035,bottom=-H/2-ch.clearance+.002,top=wc.chassis.profile==='minotaur'?Math.max(w.mount.y+.034,-bottom):w.mount.y+.034;
   const section=[[rear,-H/2],[front,bottom],[front,top-.035],[front+.035,top],[rear,top]];
   let twiceArea=0;for(let i=0;i<section.length;i++){const a=section[i],b=section[(i+1)%section.length];twiceArea+=a[0]*b[1]-a[1]*b[0];}
   for(const side of[-1,1]){const vertices:number[]=[],cx=w.mount.x+side*(w.width/2+.012);for(const x of[cx-.007,cx+.007])for(const [z,y]of section)vertices.push(x,y,z);part('drum_bearing_'+side,'weapon_actuator','chassis',{kind:'hull',vertices,volume:Math.abs(twiceArea)*.007},v(),'aluminium7075');}
  }
  else box('weapon_mount','weapon_actuator','chassis',v(.09,.025,.12),v(w.mount.x,w.mount.y-.035,w.mount.z+.03),'hardox',1.5,false);
- if(w.type==='crusher'){crusherParts(c,parts);}
- else if(w.type==='flipper'&&ch.profile==='hydra'){hydraFlipperParts(c,parts);}
+ if(w.type==='crusher'){crusherParts(wc,parts);}
+ else if(w.type==='flipper'&&wc.chassis.profile==='hydra'){hydraFlipperParts(wc,parts);}
  else if(w.type==='flipper'){
  const tip=unlimitedFlips(c)?HYDRA_TIP:{clearance:.003,thickness:.004},drop=H/2+ch.clearance+w.mount.y-tip.clearance-tip.thickness/2,vertices:number[]=[];
  for(const x of [-w.width/2,w.width/2])for(const z of [0,-w.length])for(const side of [-1,1])vertices.push(x,(z===0?0:-drop)+side*(z===0?w.thickness/2:tip.thickness/2),z);
@@ -391,7 +399,7 @@ export function compile(raw:BotConfig,practice=false):Compiled{
  const ro=w.radius-w.toothDepth,ri=w.innerRadius,n=20;
  for(let j=0;j<n;j++){const a=j*2*Math.PI/n,b=(j+1)*2*Math.PI/n,vertices:number[]=[];for(const x of [-w.width/2,w.width/2])for(const [r,t]of[[ri,a],[ro,a],[ro,b],[ri,b]])vertices.push(x,r*Math.cos(t),r*Math.sin(t));const volume=w.width*(ro*ro-ri*ri)*Math.sin(2*Math.PI/n)/2;part('drum_'+j,'weapon','rotor',{kind:'hull',vertices,volume},v(),w.material);rotorInertia+=.5*parts.at(-1)!.mass*(ro*ro+ri*ri);}
  }
- if(w.type!=='horizontal_bar'&&w.type!=='drum')extendedRotor(c,w,parts);
+ if(w.type!=='horizontal_bar'&&w.type!=='drum')extendedRotor(wc,w,parts);
  else for(let i=0;i<w.teeth;i++){const a=i*2*Math.PI/w.teeth,r=Math.sqrt(Math.max(.0001,w.radius*w.radius-(w.type==='drum'?w.toothHeight:w.width)**2/4))-w.toothDepth/2;const size=w.type==='drum'?v(w.toothWidth,w.toothDepth,w.toothHeight):v(w.toothDepth,w.toothHeight,w.toothWidth);let pos:Vec,rotation:Quat;if(w.type==='drum'){pos=v(0,r*Math.cos(a),r*Math.sin(a));rotation=axisQ(v(1,0,0),a);}else{const side=i%2===0?1:-1,n=side===1?Math.ceil(w.teeth/2):Math.floor(w.teeth/2),j=Math.floor(i/2),z=n===1?0:(j/(n-1)-.5)*(w.width-w.toothWidth);pos=v(side*r,0,z);rotation=identity;}part('tooth_'+i,'weapon','rotor',chiselShape(size),pos,w.material,undefined,rotation,true,i);}
  tip=w.rpm*Math.PI/30*w.radius;availableRPM=48*MOTORS[w.motor].kv/w.ratio;
  if(w.massKg!==undefined){const rotor=parts.filter(p=>p.body==='rotor'),geometricMass=rotor.reduce((sum,p)=>sum+p.mass,0);for(const p of rotor)p.mass*=w.massKg/geometricMass;}
@@ -409,7 +417,7 @@ export function compile(raw:BotConfig,practice=false):Compiled{
  if((w.type==='drum'||w.type==='vertical_disc'||w.type==='vertical_bar')&&w.mount.y+H/2+ch.clearance-w.radius<.003)err('weapon.radius','Drum must clear the floor by 3 mm.');
  if(w.type==='vertical_bar'){
   if(w.teeth!==2)err('weapon.teeth','A vertical bar uses two opposing teeth.');
-  if(ch.profile==='huge'&&Math.hypot(w.mount.y-(c.drive.radius-H/2-ch.clearance),w.mount.z)+w.radius>c.drive.radius-.012)err('weapon.radius','Keep HUGE’s blade at least 12 mm inside its wheel circle.');
+  if(wc.chassis.profile==='huge'&&Math.hypot(w.mount.y-(c.drive.radius-H/2-ch.clearance),w.mount.z)+w.radius>c.drive.radius-.012)err('weapon.radius','Keep HUGE’s blade at least 12 mm inside its wheel circle.');
   const centreGap=ch.profile==='huge'||ch.profile==='deep_six';
   if(centreGap&&w.thickness>.10)err('weapon.thickness','The vertical blade must fit the centre channel.');
   if(!centreGap&&w.mount.z+w.radius> -L/2-.005&&w.mount.y-w.radius<H/2+.005)err('weapon.mount','Use a split frame or move the vertical bar clear of the chassis.');
@@ -423,7 +431,7 @@ export function compile(raw:BotConfig,practice=false):Compiled{
   if(y>=w.width-.004||inner<Math.hypot(W/2+sideArm+c.drive.width+.008,L/2+.004))err('weapon.radius','The shell must enclose the chassis and wheels with clearance.');
   if(w.mount.y+H/2+ch.clearance-Math.max(0,w.toothHeight/2-.009)<.003)err('weapon.mount','The shell must clear the floor by 3 mm.');
  }
- if(w.type==='hammer_saw'&&ch.profile==='sawblaze'&&sawblazeSweepClearance(c,parts)<.002)err('weapon.mount','The complete blade sweep must clear the chassis and front forks.');
+ if(w.type==='hammer_saw'&&wc.chassis.profile==='sawblaze'&&sawblazeSweepClearance(wc,parts)<.002)err('weapon.mount','The complete blade sweep must clear the chassis and front forks.');
  if(w.type==='hammer_saw'&&H/2+ch.clearance+w.mount.y+(w.armLength??.59)*Math.sin(1.2-(w.armTravel??1.12))-w.radius<.003)err('weapon.armTravel','The lowered disc must clear the floor by 3 mm.');
 
  }
@@ -437,12 +445,12 @@ export function compile(raw:BotConfig,practice=false):Compiled{
  if(c.selfRight.type==='roll_arm'){
  module('self_right',200,'titanium');
  if(verticalSelfRight(c)){
-  const span=W+c.drive.width*2+(c.chassis.profile==='hypershock'?.11:.07),fold=c.chassis.profile==='hypershock'?1:-1;
+  const span=W+c.drive.width*2+(rc.chassis.profile==='hypershock'?.11:.07),fold=rc.chassis.profile==='hypershock'?1:-1;
   for(const side of[-1,1])part('vertical_righting_rail_'+side,'self_right','self_right',{kind:'cylinder',radius:.008,width:c.selfRight.length},v(side*.065,0,fold*c.selfRight.length/2),'titanium',undefined,axisQ(v(1,0,0),Math.PI/2));
   part('vertical_righting_foot','self_right','self_right',{kind:'cylinder',radius:.013,width:span},v(0,0,fold*(c.selfRight.length-.015)),'rubber',undefined,axisQ(v(0,0,1),Math.PI/2));
   part('vertical_righting_hinge','self_right','self_right',{kind:'cylinder',radius:.023,width:.17},v(),'aluminium7075',undefined,axisQ(v(0,0,1),Math.PI/2));
   if(c.selfRight.mount.y<H/2+.028||Math.abs(c.selfRight.mount.x)>.04||(fold===1?c.selfRight.mount.z> -L*.28||c.selfRight.mount.z+c.selfRight.length>L/2+.05:c.selfRight.mount.z<L*.28||c.selfRight.mount.z-c.selfRight.length< -L/2-.05))err('selfRight.mount','Keep the vertical folding arm centred above the deck.');
- }else if(ch.profile==='gigabyte'){
+ }else if(rrc.chassis.profile==='gigabyte'){
   for(const side of[-1,1])part('shell_righting_rail_'+side,'self_right','self_right',{kind:'cylinder',radius:.012,width:c.selfRight.length},v(c.selfRight.length/2,0,side*.09),'titanium',undefined,axisQ(v(0,0,1),Math.PI/2));
   box('shell_righting_foot','self_right','self_right',v(.06,.028,.27),v(c.selfRight.length-.03,0,0),'rubber');
   if(w.type!=='shell_spinner'||c.selfRight.mount.y<w.mount.y+w.width+.025||Math.abs(c.selfRight.mount.x)>w.radius*.65||Math.abs(c.selfRight.mount.z)>.04)err('selfRight.mount','Keep the folding arm above the shell roof.');
@@ -457,6 +465,7 @@ export function compile(raw:BotConfig,practice=false):Compiled{
  if(Math.abs(wheelY)+c.drive.radius<H/2)err('drive.radius','Wheels cannot reach the floor.');
  if(w.type==='flipper'&&ch.profile!=='hydra'&&(w.mount.y-w.thickness/2<H/2+.004||w.mount.z> -L/2-.005))err('weapon.mount','Place the flipper hinge above and in front of the chassis.');
  if(w.type==='flipper'&&ch.profile==='hydra'&&(Math.abs(w.mount.x)+w.width*.245>W*.1225||w.mount.y+H/2+ch.clearance<.028||w.mount.z< -L*.10||w.mount.z>L*.48))err('weapon.mount','Keep the Hydra hinge inside the rear center channel and above the floor.');
+ for(const attachment of c.attachments??[]){const donor=compile(preset(attachment.template),true).parts.find(p=>p.id===attachment.part);if(!donor||donor.body!=='chassis'||donor.module==='weapon'||donor.module==='weapon_actuator'||donor.module==='battery'||donor.module==='self_right'||donor.module.startsWith('drive_')){err('attachments','Choose a structural chassis or armor part. Install a functional assembly for motors, wheels, weapons, batteries, or arms.');continue;}const id='addon_'+attachment.id,p={...copy(donor),id,position:copy(attachment.mount),rotation:copy(attachment.rotation)};parts.push(p);if(p.module.startsWith('armour_')){const m=modules[p.module],hp=p.mass/(MATERIALS[p.material as Material]?.density??1100)*200000;m.present=m.functional=true;m.max+=hp;m.hp+=hp;m.material=p.material as Material;}}
  let min=v(Infinity,Infinity,Infinity),max=v(-Infinity,-Infinity,-Infinity),mass=0,com=v();
  function bounds(p:Part){const offset=p.body.startsWith('wheel_')?v():bodyOrigin(c,p.body);
  if(p.body==='rotor'&&isSpinner(w))return{pos:add(bodyOrigin(c,'rotor'),v(0,w.type==='shell_spinner'?w.width/2:0,0)),ext:isHorizontal(w)?v(w.radius,w.type==='shell_spinner'?w.width/2:Math.max(w.thickness,w.toothHeight)/2,w.radius):v((w.type==='vertical_bar'?w.thickness:w.width)/2,w.radius,w.radius)};

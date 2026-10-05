@@ -1,3 +1,4 @@
+import {componentConfig,componentProfile} from './model';
 let silhouetteSequence=0;
 import {rpmPresentation,robotSilhouette,RPM_SILHOUETTE_MARKUP} from './rpm-presentation';
 import {clamp,isSpinner,flipEnergy,rotate,v} from './model';
@@ -18,7 +19,7 @@ export const HYDRA_GAUGE_MARKUP=WEAPON_GAUGE_MARKUP.replace(/<div class="gauge-b
 const decimal=(n:number)=>n.toLocaleString(undefined,{maximumFractionDigits:1});
 const weaponNames:Record<string,string>={horizontal_bar:'Bar spinner',horizontal_cage:'Cage spinner',vertical_disc:'Disc spinner',vertical_bar:'Vertical spinner',drum:'Drum spinner',shell_spinner:'Shell spinner',hammer_saw:'Hammer saw',flipper:'Flipper',crusher:'Crusher',none:'Push bot'};
 export function updateWeaponGauge(root:HTMLElement,b:Bot,keys:{weapon:string,strike:string,reduced?:boolean}){
- const c=b.compiled.config,w=c.weapon,hydra=c.chassis.profile==='hydra'&&w.type==='flipper',spin=isSpinner(w),output=damageStatus(b.modules).weaponOutput,watts=b.weaponWatts??0;
+ const c=b.compiled.config,w=c.weapon,hydra=componentProfile(c,'weapon')==='hydra'&&w.type==='flipper',spin=isSpinner(w),output=damageStatus(b.modules).weaponOutput,watts=b.weaponWatts??0;
  const ratio=spin?clamp(b.rpm/w.rpm,0,1):w.type==='crusher'?clamp(b.crushForce/QUANTUM_HYDRAULICS.rearForce,0,1):w.type==='flipper'?1:0;
  let label=weaponNames[w.type]??'Spinner',state='No weapon',value='—',unit='NO WEAPON',metric='Drive only',level='Push to attack',power='',action='',aria='No active weapon';
  if(spin){
@@ -41,7 +42,7 @@ export function updateWeaponGauge(root:HTMLElement,b:Bot,keys:{weapon:string,str
  // The compact bar mirrors the displayed speed, force, or flipper readiness.
  const bar=root.querySelector<HTMLElement>('#gauge-power');if(bar)bar.style.width=ratio*100+'%';
  const visual=rpmPresentation(ratio);root.style.setProperty('--rpm-color',visual.color);root.style.setProperty('--rpm-glow',visual.glow);root.style.setProperty('--rpm-shade',visual.shade);root.style.setProperty('--rpm-tip-motion',visual.motion+'px');root.style.setProperty('--rpm-tip-cycle',visual.period+'ms');root.dataset.rpmRatio=String(ratio);root.dataset.rpmNearMax=String(spin&&visual.nearMax&&!keys.reduced);root.dataset.gaugeReduced=String(!!keys.reduced);
- const silhouette=root.querySelector<SVGElement>('#gauge-silhouette');if(silhouette&&silhouette.dataset.profile!==(c.chassis.profile??'standard')){const path=robotSilhouette(c.chassis.profile);for(const id of ['gauge-silhouette-shape','gauge-silhouette-base','gauge-silhouette-outline'])root.querySelector('#'+id)?.setAttribute('d',path);silhouette.dataset.profile=c.chassis.profile??'standard';}
+ const silhouette=root.querySelector<SVGElement>('#gauge-silhouette');if(silhouette&&silhouette.dataset.profile!==(componentProfile(c,'weapon')??'standard')){const path=robotSilhouette(componentProfile(c,'weapon'));for(const id of ['gauge-silhouette-shape','gauge-silhouette-base','gauge-silhouette-outline'])root.querySelector('#'+id)?.setAttribute('d',path);silhouette.dataset.profile=componentProfile(c,'weapon')??'standard';}
  if(silhouette&&!silhouette.dataset.clipId){const id='gauge-silhouette-clip-'+(++silhouetteSequence);silhouette.querySelector('clipPath')?.setAttribute('id',id);silhouette.querySelector('#gauge-silhouette-fill')?.setAttribute('clip-path','url(#'+id+')');silhouette.dataset.clipId=id;}
  const fill=root.querySelector('#gauge-silhouette-fill');if(fill){fill.setAttribute('y',String(64*(1-ratio)));fill.setAttribute('height',String(64*ratio));}
  if(hydra){root.setAttribute('role','group');root.setAttribute('aria-label','Hydra flip assist');for(const attr of ['aria-valuenow','aria-valuemin','aria-valuemax','aria-valuetext'])root.removeAttribute(attr);}

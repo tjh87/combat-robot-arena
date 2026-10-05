@@ -1,3 +1,4 @@
+import {componentConfig} from './model';
 import {hydraSleekWheels} from './hydra-wheels';
 import {hydraTineGeometry} from './hydra-finish';
 import {disposeSawbladeExposure} from './sawblaze-blur';
@@ -48,7 +49,7 @@ export class ArenaRenderer{
  makeArena(){buildFoundry(this.arena);this.cameraSideWall=this.arena.getObjectByName('camera-side-wall');this.arena.updateMatrixWorld(true);this.arena.traverse(o=>{o.matrixAutoUpdate=false;o.matrixWorldAutoUpdate=false;});}
 
  geometry(p:Part,config:BotConfig){return compactGeometry(finishedGeometry(p,config));}
- part(p:Part,config:BotConfig){const material=p.material==='rubber'?this.material('#151a1c',.78,.03):this.material(MATERIALS[p.material].color,MATERIALS[p.material].roughness,MATERIALS[p.material].metalness);
+ part(p:Part,config:BotConfig){if(p.body.startsWith('wheel_')||p.module.startsWith('drive_'))config=componentConfig(config,'drive');else if(p.body==='self_right'||p.module==='self_right')config=componentConfig(config,'selfRight');else if(p.module==='weapon'||p.module==='weapon_actuator'||p.body==='rotor'||p.body==='weapon_arm')config=componentConfig(config,'weapon');else if(p.module==='battery')config=componentConfig(config,'battery');const material=p.material==='rubber'?this.material('#151a1c',.78,.03):this.material(MATERIALS[p.material].color,MATERIALS[p.material].roughness,MATERIALS[p.material].metalness);
  if(p.module==='battery'){material.color.set('#274145');material.roughness=.55;material.metalness=.2;}
  if(p.id.startsWith('lid')||p.id.startsWith('armour_')||p.id==='wedge'){material.color.set(p.id.startsWith('armour_top')||p.id.startsWith('lid')?config.identity.primary:config.identity.secondary);material.roughness=['minotaur','tombstone','deep_six'].includes(config.chassis.profile??'')?.28:.20;material.clearcoat=.85;material.clearcoatRoughness=.18;}
  if(config.weapon.type==='horizontal_bar'&&p.id.startsWith('armour_')&&p.id!=='armour_top')material.color.lerp(new THREE.Color('#151a20'),.85);

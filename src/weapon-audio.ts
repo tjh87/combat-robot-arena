@@ -1,3 +1,4 @@
+import {componentConfig,componentProfile} from './model';
 import {type BotConfig} from './model';
 type Voice={label:string,base:number,pulse:number,harmonics:number[],noise:number,roughness:number,band:number,gain:number};
 export const WEAPON_VOICES:Record<string,Voice>={
