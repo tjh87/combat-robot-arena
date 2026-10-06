@@ -1,0 +1,95 @@
+name: Online match transition acceptance
+on:
+  push:
+    branches: [online-transition-review]
+permissions:
+  contents: read
+env:
+  REDIS_URL: ${{ secrets.ONLINE_REDIS_URL }}
+jobs:
+  builder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 40
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: node scripts/build.mjs
+      - name: Offline assets and server types
+        run: |
+          node scripts/verify.mjs
+          npm run online:build
+          npx tsc -p tsconfig.server.json --noEmit
+      - name: Stock, mixed assemblies, and physical fit
+        run: |
+          mkdir -p "$RUNNER_TEMP/baseline"
+          git archive 12fc89051c3466beb3b3b7ac4b1aeb623ebbf5a7 | tar -x -C "$RUNNER_TEMP/baseline"
+          ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/baseline/node_modules"
+          BASELINE_ROOT="$RUNNER_TEMP/baseline" node --import tsx tests/builder-components.ts
+          node --import tsx tests/builder-functional.ts
+          node --import tsx tests/builder-fit.ts
+          mkdir -p "$RUNNER_TEMP/wall-baseline"
+          git archive 454c6578e704063d00a78dc620d8c8c5f50eef0d | tar -x -C "$RUNNER_TEMP/wall-baseline"
+          ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/wall-baseline/node_modules"
+          BASELINE_ROOT="$RUNNER_TEMP/wall-baseline" node --import tsx tests/wall-performance.ts
+          node --import tsx tests/online-core.ts
+          node --import tsx tests/online-transport.ts
+      - name: Install isolated browser
+        run: |
+          mkdir -p "$RUNNER_TEMP/browser"
+          npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
+          "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Start local game service
+        run: |
+          node --import tsx server/test-site.ts > /tmp/mode-builder.log 2>&1 &
+          for i in $(seq 1 60); do if curl -fsS http://127.0.0.1:4173/api/online > /dev/null; then break; fi; sleep 1; done
+      - name: Builder, library, fit worker, and saved Practice robot
+        run: node tests/mode-builder-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mode-builder-evidence
+          path: |
+            browser-evidence
+            /tmp/mode-builder.log
+  online:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 40
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: node scripts/build.mjs
+      - run: node tests/build-mode-fixture.mjs
+      - name: Install isolated browser
+        run: |
+          mkdir -p "$RUNNER_TEMP/browser"
+          npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
+          "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Start local game service
+        run: |
+          node --import tsx server/test-site.ts > /tmp/mode-builder.log 2>&1 &
+          for i in $(seq 1 60); do if curl -fsS http://127.0.0.1:4173/api/online > /dev/null; then break; fi; sleep 1; done
+      - name: Complete native tournament, saved robot, repairs, and spectator gauges
+        run: node tests/online-tournament-browser.mjs
+      - name: Independent controls, POV, and refresh
+        run: node tests/online-browser.mjs
+      - name: Armed impacts, bubbles, continued control, rendering, and refresh
+        run: node tests/online-impact-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: online-mode-evidence
+          path: |
+            browser-evidence
+            /tmp/mode-builder.log
