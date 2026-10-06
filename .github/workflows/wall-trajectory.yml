@@ -1,0 +1,31 @@
+name: Exact wall trajectory acceptance
+on:
+  push:
+    branches: [online-performance-review]
+    paths: ['tests/wall-performance.ts', '.github/workflows/wall-trajectory.yml']
+permissions:
+  contents: read
+jobs:
+  wall:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 40
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: node scripts/build.mjs
+      - run: |
+          mkdir -p "$RUNNER_TEMP/wall-baseline"
+          git archive 454c6578e704063d00a78dc620d8c8c5f50eef0d | tar -x -C "$RUNNER_TEMP/wall-baseline"
+          ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/wall-baseline/node_modules"
+          BASELINE_ROOT="$RUNNER_TEMP/wall-baseline" node --import tsx tests/wall-performance.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: exact-wall-trajectory-evidence
+          path: browser-evidence
