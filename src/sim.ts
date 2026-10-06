@@ -443,7 +443,7 @@ export class Simulation{
   for(const b of this.bots){b.command=neutral();this.motors(b);}
   this.integrateWorld();this.tick++;this.containArena();this.limitFlightHeight();this.sampleTravel();this.updateRingOut();
   for(const b of this.bots)b.rpm=Math.abs(this.omega(b))*30/Math.PI;
-  if(this.tick%(RULES.hz/AI_SETTINGS[this.options.difficulty].decisionHz)===0&&this.frames.at(-1)?.tick!==this.tick)this.capture();
+  if(this.tick%(RULES.hz/60)===0&&this.frames.at(-1)?.tick!==this.tick)this.capture();
  }
  private updateRingOut(){const ring=this.result?.ringOut;if(!ring)return;const p=this.bots[ring.bot].chassis.translation();ring.height=Math.max(ring.height,p.y-ring.origin.y);ring.distance=Math.max(ring.distance,horizontal(p,ring.origin));}
  finalizeFinish(){this.updateRingOut();for(const id of this.tracking.keys())this.closeTravel(id,'Match ended');}
@@ -488,7 +488,7 @@ export class Simulation{
  }
  step(commands?:[Command,Command]){
  if(this.result||this.fault||this.disposed)return;const start=performance.now();try{
- if(commands)commands.forEach((c,i)=>{if(!this.options.ai[i])this.command(i,c);});for(const b of this.bots)this.observeRecovery(b);this.observeAI();if(this.tick%(RULES.hz/60)===0)for(const b of this.bots)if(this.options.ai[b.id])this.decide(b);
+ if(commands)commands.forEach((c,i)=>{if(!this.options.ai[i])this.command(i,c);});for(const b of this.bots)this.observeRecovery(b);this.observeAI();if(this.tick%(RULES.hz/AI_SETTINGS[this.options.difficulty].decisionHz)===0)for(const b of this.bots)if(this.options.ai[b.id])this.decide(b);
  this.pre.clear();for(const b of this.bots)for(const body of b.bodies.values())this.pre.set(body.handle,{p:{...body.translation()},com:{...body.worldCom()},q:{...body.rotation()},lin:{...body.linvel()},ang:{...body.angvel()}});
  const requestedDrive=this.bots.map(b=>({left:b.command.left,right:b.command.right})),rotorBefore=this.bots.map(b=>.5*b.compiled.rotorInertia*this.omega(b)**2);for(const b of this.bots){this.recoverStuck(b);this.motors(b);}if(!this.prediction)this.hazardsStep();for(const h of this.hazards){const body=h.body;this.pre.set(body.handle,{p:{...body.translation()},com:{...body.worldCom()},q:{...body.rotation()},lin:{...body.linvel()},ang:{...body.angvel()}});}this.integrateWorld();this.tick++;this.startedContacts.clear();this.queue.drainCollisionEvents((a,b,started)=>{if(started)this.startedContacts.add(`${Math.min(a,b)}:${Math.max(a,b)}`);});
  for(const b of this.bots){for(const body of b.bodies.values())if(![body.translation(),body.rotation(),body.linvel(),body.angvel()].every(value=>Object.values(value).every(Number.isFinite)))throw Error('A robot has an invalid physics state.');}
