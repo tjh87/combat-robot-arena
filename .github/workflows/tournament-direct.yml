@@ -1,7 +1,6 @@
 name: Tournament direct fight acceptance
 on:
-  push:
-    branches: [tournament-direct-fight-review]
+  workflow_dispatch:
 permissions:
   contents: read
 env:
