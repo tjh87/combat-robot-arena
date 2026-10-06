@@ -25,17 +25,17 @@ try{
   const p=await page(false);await p.evaluate(async({code,index})=>{
    const m=window.fixture,c=new m.RoomConnection(()=>m.preset(index%11),()=> 'Driver '+index);window.client=c;window.rooms=[];window.frames=[];window.clientErrors=[];const repairs=new Set();
    c.onRoom=room=>{window.rooms.push({phase:room.phase,round:room.round,current:room.current,champion:room.champion,rounds:room.rounds});if(room.phase==='repair'&&!repairs.has(room.round)&&room.rounds[room.round].some(match=>match.winner===c.guest)&&!room.entrants.find(p=>p.id===c.guest)?.repairDone){repairs.add(room.round);c.send({type:'repair'});}};
-   c.onFrame=frame=>{window.frames.push({match:frame.match,tick:frame.tick,phase:frame.phase});if(window.frames.length>20)window.frames.shift();};c.onError=e=>window.clientErrors.push(e);
+   c.onFrame=frame=>{const room=c.room,match=room?.rounds[room.round]?.[room.current],side=match?.a===c.guest?0:match?.b===c.guest?1:-1;if(side>=0&&frame.phase==='fight'&&frame.match===match.id)c.send({type:'input',match:frame.match,seq:Math.max(frame.ack[side],window.controlSeq??0)+1,left:1,right:1,actions:[]}),window.controlSeq=Math.max(frame.ack[side],window.controlSeq??0)+1;window.frames.push({match:frame.match,tick:frame.tick,phase:frame.phase});if(window.frames.length>20)window.frames.shift();};c.onError=e=>window.clientErrors.push(e);
    await c.connect();const end=Date.now()+30000;while(c.state!=='connected'&&Date.now()<end)await new Promise(r=>setTimeout(r,50));if(c.state!=='connected')throw Error('Socket did not connect');c.join(code);
   },{code,index:i});await p.waitForFunction(()=>window.client.room,undefined,{timeout:30000});await p.evaluate(()=>window.client.send({type:'ready',ready:true}));
  }
  await a.locator('#online-ready').click({force:true});await b.locator('#online-ready').click({force:true});await a.waitForFunction(()=>document.querySelectorAll('.online-players li').length===8&&[...document.querySelectorAll('.online-players li')].every(e=>e.textContent.includes('READY')),undefined,{timeout:30000,polling:100});await a.locator('#online-start').click({force:true});
  stage='seven native fights';const first=await until(a,s=>s.framePhase==='fight');assert(first.robots.includes('Tournament Custom'));
- const transitions=[];const end=Date.now()+600000;let last='';
+ const transitions=[],driven=new Map();const end=Date.now()+600000;let last='';
  while(Date.now()<end){
   const s=(await status(a)).online,key=s.phase+'/'+s.tick+'/'+s.side;
   if(s.phase!==last){transitions.push({phase:s.phase,tick:s.tick,side:s.side});last=s.phase;}
-  for(const p of[a,b]){if(await p.locator('#online-repair').count())await p.locator('#online-repair').click({force:true});}
+  for(const p of[a,b]){const driver=(await status(p)).online;if(driver.side>=0&&driver.framePhase==='fight'&&driven.get(p)!==driver.match){await p.keyboard.up('ArrowUp');await p.keyboard.down('ArrowUp');driven.set(p,driver.match);}if(await p.locator('#online-repair').count())await p.locator('#online-repair').click({force:true});}
   if(s.phase==='finished')break;
   await a.waitForTimeout(500);
  }
