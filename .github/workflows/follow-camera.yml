@@ -1,7 +1,6 @@
 name: Follow camera and doubled hard acceptance
 on:
-  push:
-    branches: [follow-camera-hard-review]
+  workflow_dispatch:
 permissions:
   contents: read
 env:
