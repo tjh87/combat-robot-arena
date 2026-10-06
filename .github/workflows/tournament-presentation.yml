@@ -41,6 +41,8 @@ jobs:
           for i in $(seq 1 60); do if curl -fsS http://127.0.0.1:4173/api/online > /dev/null; then break; fi; sleep 1; done
       - name: Direct fight, skipped background workers, and repair choice
         run: node tests/tournament-presentation-browser.mjs
+      - name: Native online bracket and physical frame
+        run: node tests/tournament-online-presentation-browser.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
