@@ -453,7 +453,7 @@ export function compile(raw:BotConfig,practice=false):Compiled{
  }else if(rc.chassis.profile==='gigabyte'){
   for(const side of[-1,1])part('shell_righting_rail_'+side,'self_right','self_right',{kind:'cylinder',radius:.012,width:c.selfRight.length},v(c.selfRight.length/2,0,side*.09),'titanium',undefined,axisQ(v(0,0,1),Math.PI/2));
   box('shell_righting_foot','self_right','self_right',v(.06,.028,.27),v(c.selfRight.length-.03,0,0),'rubber');
-  if(w.type!=='shell_spinner'||c.selfRight.mount.y<w.mount.y+w.width+.025||Math.abs(c.selfRight.mount.x)>w.radius*.65||Math.abs(c.selfRight.mount.z)>.04)err('selfRight.mount','Keep the folding arm above the shell roof.');
+  const roof=w.type==='shell_spinner'?w.mount.y+w.width+.025:H/2+.028,span=w.type==='shell_spinner'?w.radius*.65:W/2;if(c.selfRight.mount.y<roof||Math.abs(c.selfRight.mount.x)>span||Math.abs(c.selfRight.mount.z)>.04)err('selfRight.mount','Keep the folding arm above the roof and inside the frame width.');
  }else{
   box('roll_arm','self_right','self_right',v(.05,.035,c.selfRight.length),v(0,0,c.selfRight.length/2),'titanium');
   if(c.selfRight.mount.y<H/2+.028||Math.abs(c.selfRight.mount.x)<W/2+armourAt(c.selfRight.mount.x)+c.drive.width+.038)err('selfRight.mount','Place the roll arm above the chassis and outside the wheel envelope.');
@@ -463,8 +463,8 @@ export function compile(raw:BotConfig,practice=false):Compiled{
  if(c.drive.traction==='tracks'&&c.drive.layout===2)err('drive.layout','Caterpillar treads need 4 or 6 rollers.');
  if(c.drive.layout>2&&(wheelBase(c)/(c.drive.layout/2-1))<c.drive.radius*2+.006)err('drive.radius','Adjacent wheels overlap.');
  if(Math.abs(wheelY)+c.drive.radius<H/2)err('drive.radius','Wheels cannot reach the floor.');
- if(w.type==='flipper'&&ch.profile!=='hydra'&&(w.mount.y-w.thickness/2<H/2+.004||w.mount.z> -L/2-.005))err('weapon.mount','Place the flipper hinge above and in front of the chassis.');
- if(w.type==='flipper'&&ch.profile==='hydra'&&(Math.abs(w.mount.x)+w.width*.245>W*.1225||w.mount.y+H/2+ch.clearance<.028||w.mount.z< -L*.10||w.mount.z>L*.48))err('weapon.mount','Keep the Hydra hinge inside the rear center channel and above the floor.');
+ if(w.type==='flipper'&&wc.chassis.profile!=='hydra'&&(w.mount.y-w.thickness/2<H/2+.004||w.mount.z> -L/2-.005))err('weapon.mount','Place the flipper hinge above and in front of the chassis.');
+ if(w.type==='flipper'&&wc.chassis.profile==='hydra'&&(Math.abs(w.mount.x)+w.width*.245>W*.1225||w.mount.y+H/2+ch.clearance<.028||w.mount.z< -L*.10||w.mount.z>L*.48))err('weapon.mount','Keep the Hydra hinge inside the rear center channel and above the floor.');
  for(const attachment of c.attachments??[]){const donor=compile(preset(attachment.template),true).parts.find(p=>p.id===attachment.part);if(!donor||donor.body!=='chassis'||donor.module==='weapon'||donor.module==='weapon_actuator'||donor.module==='battery'||donor.module==='self_right'||donor.module.startsWith('drive_')){err('attachments','Choose a structural chassis or armor part. Install a functional assembly for motors, wheels, weapons, batteries, or arms.');continue;}const id='addon_'+attachment.id,p={...copy(donor),id,position:copy(attachment.mount),rotation:copy(attachment.rotation)};parts.push(p);if(p.module.startsWith('armour_')){const m=modules[p.module],hp=p.mass/(MATERIALS[p.material as Material]?.density??1100)*200000;m.present=m.functional=true;m.max+=hp;m.hp+=hp;m.material=p.material as Material;}}
  let min=v(Infinity,Infinity,Infinity),max=v(-Infinity,-Infinity,-Infinity),mass=0,com=v();
  function bounds(p:Part){const offset=p.body.startsWith('wheel_')?v():bodyOrigin(c,p.body);

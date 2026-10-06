@@ -98,7 +98,7 @@ export class Simulation{
  for(const p of compiled.parts){if(!modules[p.module].functional&&p.module.startsWith('armour_'))continue;
  let body=bodies.get(p.body);let local=p;
  if(!body){const mount=bodyOrigin(c,p.body);const world=add(origin,rotate(mount,rotation));body=this.world.createRigidBody(RAPIER.RigidBodyDesc.dynamic().setTranslation(world.x,world.y,world.z).setRotation(rotation).setCcdEnabled(true));bodies.set(p.body,body);this.bodyIds.set(body.handle,`b${id}:${p.body}`);
- const armParent=p.body==='rotor'&&c.weapon.type==='hammer_saw',parent=armParent?bodies.get('weapon_arm')!:chassis,anchor=armParent?armOffset(c.weapon as import('./model').Spinner):mount;const axis=p.body==='rotor'?weaponAxis(c.weapon):p.body==='self_right'&&componentProfile(c,'selfRight')==='gigabyte'?v(0,0,1):v(1,0,0);const data=RAPIER.JointData.revolute(anchor,v(),axis);const joint=this.world.createImpulseJoint(data,parent,body,true) as RAPIER.RevoluteImpulseJoint;joint.setContactsEnabled(false);if(p.body==='rotor'&&c.weapon.type==='flipper')joint.setLimits(-.025,c.weapon.travel);if(p.body==='rotor'&&c.weapon.type==='crusher')joint.setLimits(-c.weapon.travel,.025);if(p.body==='self_right'&&!verticalSelfRight(c))joint.setLimits(componentProfile(c,'selfRight')==='gigabyte'?-.02:-2.5,componentProfile(c,'selfRight')==='gigabyte'?3.1:.02);if(p.body.startsWith('ground_fork_'))joint.setLimits(componentProfile(c,'selfRight')==='sawblaze'?-.02:-.12,componentProfile(c,'selfRight')==='sawblaze'?.015:.18);if(p.body==='weapon_arm'&&c.weapon.type==='hammer_saw')joint.setLimits(-(c.weapon.armTravel??1.12),Math.PI-(c.weapon.armTravel??1.12));joints.set(p.body,joint);}
+ const armParent=p.body==='rotor'&&c.weapon.type==='hammer_saw',parent=armParent?bodies.get('weapon_arm')!:chassis,anchor=armParent?armOffset(c.weapon as import('./model').Spinner):mount;const axis=p.body==='rotor'?weaponAxis(c.weapon):p.body==='self_right'&&componentProfile(c,'selfRight')==='gigabyte'?v(0,0,1):v(1,0,0);const data=RAPIER.JointData.revolute(anchor,v(),axis);const joint=this.world.createImpulseJoint(data,parent,body,true) as RAPIER.RevoluteImpulseJoint;joint.setContactsEnabled(false);if(p.body==='rotor'&&c.weapon.type==='flipper')joint.setLimits(-.025,c.weapon.travel);if(p.body==='rotor'&&c.weapon.type==='crusher')joint.setLimits(-c.weapon.travel,.025);if(p.body==='self_right'&&!verticalSelfRight(c))joint.setLimits(componentProfile(c,'selfRight')==='gigabyte'?-.02:-2.5,componentProfile(c,'selfRight')==='gigabyte'?3.1:.02);if(p.body.startsWith('ground_fork_'))joint.setLimits(componentProfile(c,'weapon')==='sawblaze'?-.02:-.12,componentProfile(c,'weapon')==='sawblaze'?.015:.18);if(p.body==='weapon_arm'&&c.weapon.type==='hammer_saw')joint.setLimits(-(c.weapon.armTravel??1.12),Math.PI-(c.weapon.armTravel??1.12));joints.set(p.body,joint);}
  if(p.body.startsWith('wheel_'))local={...p,position:sub(p.position,bodyOrigin(c,p.body))};
  const ramp=isRampPart(p),skid=ramp||/^(frame_skid|drum_bearing|saw_guard|saw_rear_skid|large_(front|tail|side)|vertical_tail)/.test(p.id),desc=colliderDesc(local).setContactSkin(ramp?(unlimitedFlips(c)?.0002:.0005):.001).setFriction(p.material==='rubber'?(c.drive.traction==='tracks'?2.6:componentProfile(c,'drive')==='quantum'?1.8:componentProfile(c,'drive')==='gigabyte'?1.7:1.35):skid?.12:.55).setRestitution(skid?0:.06).setCollisionGroups(p.collides?groups(id===0?2:4,id===0?21:19):0).setSensor(!p.collides).setActiveEvents(RAPIER.ActiveEvents.COLLISION_EVENTS);
  // Sliding steel tips must not inherit the floor's high tyre-grip coefficient.
@@ -272,7 +272,7 @@ export class Simulation{
  const driveTorqueLimit=componentProfile(c,'drive')==='hypershock'&&up.y<-.65?b.compiled.mass*9.81*margin/comHeight*.60*c.drive.radius/c.drive.layout:Infinity;
  const supported=this.floorSupport.has(b.id);b.grounded=false;const axis=this.axis(b,v(1,0,0)),tracks=c.drive.traction==='tracks';
  let hugeDuty:readonly[number,number]|undefined=componentProfile(c,'drive')==='huge'&&!tracks?hugeDriveDuty(cmd.left,cmd.right,dot(b.chassis.linvel(),this.forward(b)),b.chassis.angvel().y,axis.y):undefined;
- if((componentProfile(c,'weapon')==='gigabyte'||tracks)&&supported&&up.y>.65&&b.rollStart<0){
+ if((componentProfile(c,'drive')==='gigabyte'||tracks)&&supported&&up.y>.65&&b.rollStart<0){
   const forward=(cmd.left+cmd.right)/2,turn=(cmd.left-cmd.right)/2,speed=dot(b.chassis.linvel(),this.forward(b)),yaw=dot(b.chassis.angvel(),up),drive=clamp(forward*.30+(forward*(tracks?3.2:4.5)-speed)*.55,-1,1),steer=clamp(turn*.30+(yaw+turn*(tracks?1.7:2.4))*(tracks?.45:.85),tracks?-.75:-1,tracks?.75:1);
   hugeDuty=[clamp(drive+steer,-1,1),clamp(drive-steer,-1,1)];
  }
@@ -344,7 +344,7 @@ export class Simulation{
  }
  if(c.weapon.type==='crusher'&&wasWeaponOn&&!b.weaponOn)this.releaseCrusher(b);
  if(b.roll&&c.selfRight.type==='roll_arm'){
-  if(componentProfile(c,'weapon')==='gigabyte'){const joint=b.joints.get('self_right') as RAPIER.RevoluteImpulseJoint;joint.setLimits(b.rollStart<0||rotorBraking?-.008:-.02,b.rollStart<0||rotorBraking?.008:3.1);}
+  if(componentProfile(c,'selfRight')==='gigabyte'){const joint=b.joints.get('self_right') as RAPIER.RevoluteImpulseJoint;joint.setLimits(b.rollStart<0||rotorBraking?-.008:-.02,b.rollStart<0||rotorBraking?.008:3.1);}
   const elapsed=(this.tick-b.rollStart)/RULES.hz-(componentProfile(c,'selfRight')==='quantum'?.45:0),vertical=verticalSelfRight(c),folding=['hypershock','gigabyte','quantum'].includes(componentProfile(c,'selfRight')??'standard'),localRollAxis=folding&&!vertical?v(0,0,1):v(componentProfile(c,'selfRight')==='hypershock'?-1:1,0,0),rollAxis=this.axis(b,localRollAxis),om=dot(sub(b.roll.angvel(),b.chassis.angvel()),rollAxis),cycling=b.rollStart>=0&&!rotorBraking&&elapsed<(vertical?8:folding?4:2);
   if((cycling||rotorBraking||componentProfile(c,'selfRight')==='gigabyte'||vertical&&(up.y>.65||componentProfile(c,'selfRight')==='hypershock'&&up.y<-.65)&&b.grounded)&&powered&&b.modules.self_right.functional){
    const cq=b.chassis.rotation(),rq=b.roll.rotation(),relative=quatMul({x:-cq.x,y:-cq.y,z:-cq.z,w:cq.w},rq),raw=2*Math.atan2(folding&&!vertical?relative.z:relative.x,relative.w)*(componentProfile(c,'selfRight')==='hypershock'?-1:1),wrapped=Math.atan2(Math.sin(raw),Math.cos(raw)),angle=folding&&b.rollStart>=0&&wrapped<-.2?wrapped+Math.PI*2:wrapped;
@@ -368,7 +368,7 @@ export class Simulation{
   b.unstick.active=false;b.ai.waypoint=undefined;b.ai.lastProgress={...p};b.ai.progressTick=this.tick;b.history=[];
  }
  private stabilizeChassis(b:Bot){
-  const c=b.compiled.config,huge=componentProfile(c,'drive')==='huge',shell=componentProfile(c,'weapon')==='gigabyte';
+  const c=b.compiled.config,huge=componentProfile(c,'drive')==='huge',shell=componentProfile(c,'drive')==='gigabyte';
   if((!huge&&!shell)||b.rollStart>=0||(huge?!this.floorSupport.has(b.id):!b.grounded))return;
   const up=this.axis(b,v(0,1,0));if(shell&&up.y<.45)return;
   const target=v(0,huge&&up.y<0?-1:1,0),error=cross(up,target),rate=b.chassis.angvel();
