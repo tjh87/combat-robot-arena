@@ -43,10 +43,15 @@ jobs:
         run: |
           node --import tsx server/test-site.ts > /tmp/mode-builder.log 2>&1 &
           for i in $(seq 1 60); do if curl -fsS http://127.0.0.1:4173/api/online > /dev/null; then break; fi; sleep 1; done
+          node tests/build-mode-fixture.mjs
           node tests/mode-builder-browser.mjs
+          node tests/tournament-worker-browser.mjs
+          node tests/online-tournament-browser.mjs
           node tests/online-browser.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: mode-builder-evidence
-          path: browser-evidence
+          path: |
+            browser-evidence
+            /tmp/mode-builder.log
