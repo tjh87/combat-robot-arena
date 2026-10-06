@@ -36,6 +36,8 @@ The camera menu contains tactical, robot POV, and chase views. Spectators can fo
 
 The online match continues while a participant opens view options. Focus loss clears held controls.
 
+The **Your saved robots** selector includes legal custom robots from the local library. [Robot builder instructions](ROBOT_BUILDER.md) explain assemblies, fit tests, statistics, and saves.
+
 ## Tournament rules
 
 A tournament has eight entrants. Empty entries become AI robots when the host starts the tournament.
@@ -44,7 +46,7 @@ The server runs the tournament fights in sequence. The bracket shows the active 
 
 Winners retain damage between rounds. Each winner receives a 900-point repair budget before the next round.
 
-The repair window lasts up to 45 seconds. The server applies automatic repairs for AI robots and incomplete purchases.
+Only an eligible winner can purchase repairs. The repair window lasts up to 45 seconds. The server applies automatic repairs for AI robots and incomplete purchases.
 
 ## Connections and recovery
 
@@ -88,7 +90,9 @@ The cloud tests cover:
 - Concurrent rooms and capacity release
 - Host-only recovery after an injected simulation fault.
 
-Tournament progression tests inject results to exercise all bracket stages. They do not claim seven complete, uninterrupted live fights.
+The core progression tests inject results to exercise bracket transitions. A separate native browser check runs seven physical fights through all three rounds.
+
+The native check includes a saved custom robot, repair purchases, spectator updates, final results, and the champion. Offline tournament checks run seven physical fights in a worker.
 
 Browser tests use Chromium with software WebGL. Windows graphics and audible playback remain manual checks.
 
@@ -98,7 +102,7 @@ Online damage bubbles use the authoritative HP readouts from each server frame. 
 
 The display suppresses values that round to 1 HP. Exact fractional HP remains in the simulation.
 
-The network callback updates the HUD independently of the graphics loop. Online graphics use a maximum rate of 30 frames per second.
+The network callback updates the HUD independently of the graphics loop. Online graphics use a maximum rate of 60 frames per second.
 
 The client permits one prediction job at a time. Each job uses the latest frame and current drive command.
 
@@ -107,3 +111,13 @@ The prediction horizon is 18 physics ticks, or 75 ms. Replies from an older epoc
 A worker error removes prediction and retains the authoritative view. A new match or lease epoch resets the replica and its prediction state.
 
 The impact regression uses two native browser connections and an armed weapon. It requires visible bubbles, continued ticks, input acknowledgments, graphics updates, and refresh recovery.
+
+## Presentation and workload
+
+Tournament opponents run in a separate worker in offline mode. Progress messages update at most four times per second during a fight.
+
+A failed worker stops the fight without a result. Retry creates a fresh worker and rejects replies from the previous job.
+
+Online instruments use the selected weapon assembly. A spectator camera change rebuilds the instruments for the selected robot.
+
+Graphics use the browser frame loop with a 60 FPS cap. Hardware, network latency, and server load determine the actual frame rate.

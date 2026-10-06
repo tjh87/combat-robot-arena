@@ -280,3 +280,23 @@ Report exact tests run. Identify old reused reports as historical evidence.
 Keep manual WebGL, audible playback and Windows execution gaps explicit until someone performs those checks.
 Do not change the project license, publish public assets, install telemetry or add remote dependencies without authorization.
 
+
+## 12. Builder and mode update: 6 October 2026
+
+The builder supports all 11 templates and scratch builds. Functional assemblies retain independent sources across chassis changes.
+
+Each template supplies its compiled part catalogue. Structural attachments retain physical mass and contact geometry.
+
+The builder shows floor and wheel warnings. A separate worker examines settled wheel support and spinner clearance.
+
+The statistics toggle controls the per-part table. The local library retains multiple named robots and the earlier saved build.
+
+Saved robots enter offline fights and tournaments. Legal saved robots also enter online rooms.
+
+Offline tournament opponents run in a worker. Retry replaces a failed worker, and outdated job replies cannot set a winner.
+
+Online graphics use a 60 FPS cap. The network and HUD remain independent of the graphics loop.
+
+Spectator instruments follow the selected robot. Only eligible tournament winners can purchase repairs.
+
+The current acceptance suite includes seven real worker fights and seven native online tournament fights. Core bracket tests retain injected results for transition coverage.

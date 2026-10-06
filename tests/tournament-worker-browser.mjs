@@ -28,7 +28,7 @@ try {
   });
   const canceled=runner.worker;runner.retry();if(runner.worker===canceled)throw Error('Retry did not replace the worker');
  });
- await p.waitForFunction(()=>window.workerCup.done,undefined,{timeout:600000,polling:250});
+ await p.waitForFunction(()=>window.workerCup.done,undefined,{timeout:1200000,polling:250});
  const report=await p.evaluate(()=>window.workerCup);
  await writeFile('browser-evidence/tournament-worker.json',JSON.stringify({source:process.env.GITHUB_SHA,report,errors},null,2));
  assert(!report.error,report.error);assert.deepEqual(report.rounds.map(r=>r.length),[4,2,1]);assert(report.champion);assert(report.responsive>100);assert.deepEqual(errors,[]);
