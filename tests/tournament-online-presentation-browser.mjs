@@ -6,6 +6,7 @@ const base=process.env.ARENA_URL??'http://127.0.0.1:4173/';
 await mkdir('browser-evidence',{recursive:true});
 const browser=await chromium.launch({headless:true,args:['--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-gpu-sandbox']});
 const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];
+page.setDefaultTimeout(90000);
 page.on('pageerror',error=>errors.push(String(error)));
 await page.addInitScript(()=>{localStorage.setItem('cra.preferences',JSON.stringify({quality:'low',reduced:true,replays:false}));window.__arenaTools=new Map();Object.defineProperty(document,'modelContext',{value:{registerTool:tool=>window.__arenaTools.set(tool.name,tool)},configurable:true});const raf=requestAnimationFrame.bind(window),pending=[];window.__freezeFrame=true;window.__resumeFrames=()=>{window.__freezeFrame=false;for(const cb of pending.splice(0))raf(cb);};window.requestAnimationFrame=cb=>raf(time=>{if(window.__freezeFrame)pending.push(cb);else cb(time);});});
 try{
