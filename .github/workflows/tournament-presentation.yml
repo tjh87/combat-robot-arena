@@ -1,0 +1,50 @@
+name: Tournament presentation acceptance
+on:
+  push:
+    branches: [tournament-presentation-review]
+permissions:
+  contents: read
+env:
+  REDIS_URL: ${{ secrets.ONLINE_REDIS_URL }}
+jobs:
+  builder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 40
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: node scripts/build.mjs
+      - name: Offline assets and server types
+        run: |
+          node scripts/verify.mjs
+          npm run online:build
+          npx tsc -p tsconfig.server.json --noEmit
+      - name: Seeded instant progression and preserved conditions
+        run: |
+          node --import tsx tests/tournament-direct.ts
+          node --import tsx tests/tournament-presentation.ts
+      - run: node tests/build-skip-fixture.mjs
+      - name: Install isolated browser
+        run: |
+          mkdir -p "$RUNNER_TEMP/browser"
+          npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
+          "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Start local game service
+        run: |
+          node --import tsx server/test-site.ts > /tmp/mode-builder.log 2>&1 &
+          for i in $(seq 1 60); do if curl -fsS http://127.0.0.1:4173/api/online > /dev/null; then break; fi; sleep 1; done
+      - name: Direct fight, skipped background workers, and repair choice
+        run: node tests/tournament-presentation-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tournament-presentation-evidence
+          path: |
+            browser-evidence
+            /tmp/mode-builder.log
