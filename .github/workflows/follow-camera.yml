@@ -1,0 +1,53 @@
+name: Follow camera and doubled hard acceptance
+on:
+  push:
+    branches: [follow-camera-hard-review]
+permissions:
+  contents: read
+env:
+  REDIS_URL: ${{ secrets.ONLINE_REDIS_URL }}
+jobs:
+  builder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 40
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: node scripts/build.mjs
+      - name: Offline assets and server types
+        run: |
+          node scripts/verify.mjs
+          npm run online:build
+          npx tsc -p tsconfig.server.json --noEmit
+      - name: Follow math and doubled hard decisions
+        run: |
+          mkdir -p "$RUNNER_TEMP/baseline"
+          git archive f9cd20e55153320d08df240aef349c36c72705d3 | tar -x -C "$RUNNER_TEMP/baseline"
+          ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/baseline/node_modules"
+          node --import tsx tests/follow-camera.ts
+          BASELINE_ROOT="$RUNNER_TEMP/baseline" node --import tsx tests/hard-double.ts
+      - run: node tests/build-follow-fixture.mjs
+      - name: Install isolated browser
+        run: |
+          mkdir -p "$RUNNER_TEMP/browser"
+          npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
+          "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Start local game service
+        run: |
+          node --import tsx server/test-site.ts > /tmp/mode-builder.log 2>&1 &
+          for i in $(seq 1 60); do if curl -fsS http://127.0.0.1:4173/api/online > /dev/null; then break; fi; sleep 1; done
+      - name: Follow camera, opponent telemetry, and persistent view
+        run: node tests/follow-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: follow-camera-evidence
+          path: |
+            browser-evidence
+            /tmp/mode-builder.log
