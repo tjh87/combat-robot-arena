@@ -1,0 +1,55 @@
+name: Builder recovery acceptance
+on:
+  push:
+    branches: [mode-builder-review]
+    paths: ['src/main.ts', 'tests/mode-builder-browser.mjs', '.github/workflows/builder-regression.yml']
+permissions:
+  contents: read
+env:
+  REDIS_URL: ${{ secrets.ONLINE_REDIS_URL }}
+jobs:
+  builder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 40
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: node scripts/build.mjs
+      - name: Offline assets and server types
+        run: |
+          node scripts/verify.mjs
+          npm run online:build
+          npx tsc -p tsconfig.server.json --noEmit
+      - name: Stock, mixed assemblies, and physical fit
+        run: |
+          mkdir -p "$RUNNER_TEMP/baseline"
+          git archive 12fc89051c3466beb3b3b7ac4b1aeb623ebbf5a7 | tar -x -C "$RUNNER_TEMP/baseline"
+          ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/baseline/node_modules"
+          BASELINE_ROOT="$RUNNER_TEMP/baseline" node --import tsx tests/builder-components.ts
+          node --import tsx tests/builder-functional.ts
+          node --import tsx tests/builder-fit.ts
+          node --import tsx tests/online-core.ts
+      - name: Install isolated browser
+        run: |
+          mkdir -p "$RUNNER_TEMP/browser"
+          npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
+          "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Start local game service
+        run: |
+          node --import tsx server/test-site.ts > /tmp/mode-builder.log 2>&1 &
+          for i in $(seq 1 60); do if curl -fsS http://127.0.0.1:4173/api/online > /dev/null; then break; fi; sleep 1; done
+      - name: Builder, library, fit worker, and saved Practice robot
+        run: node tests/mode-builder-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mode-builder-evidence
+          path: |
+            browser-evidence
+            /tmp/mode-builder.log

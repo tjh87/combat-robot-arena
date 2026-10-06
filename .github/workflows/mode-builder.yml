@@ -1,7 +1,6 @@
 name: Modes and complete builder acceptance
 on:
-  push:
-    branches: [mode-builder-review]
+  workflow_dispatch:
 permissions:
   contents: read
 env:
