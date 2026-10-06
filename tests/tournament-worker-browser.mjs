@@ -26,6 +26,7 @@ try {
    tournament.advance();
    if(tournament.champion){evidence.champion=tournament.champion.name;runner.dispose();clearInterval(heartbeat);evidence.done=true;}
   });
+  const canceled=runner.worker;runner.retry();if(runner.worker===canceled)throw Error('Retry did not replace the worker');
  });
  await p.waitForFunction(()=>window.workerCup.done,undefined,{timeout:600000,polling:250});
  const report=await p.evaluate(()=>window.workerCup);
