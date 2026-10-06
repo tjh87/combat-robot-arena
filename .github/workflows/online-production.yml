@@ -1,44 +1,51 @@
-name: Production online impact recovery
+name: Production builder and tournament acceptance
 on:
   push:
     branches: [online-deployed-checks]
     paths: ['.github/workflows/online-production.yml']
 permissions:
   contents: read
+env:
+  TESTED_SOURCE: 454c6578e704063d00a78dc620d8c8c5f50eef0d
+  ARENA_URL: https://bbots-tjh87.vercel.app/
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    env:
-      TESTED_SOURCE: 12fc89051c3466beb3b3b7ac4b1aeb623ebbf5a7
-      ARENA_URL: https://bbots-tjh87.vercel.app/
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 12fc89051c3466beb3b3b7ac4b1aeb623ebbf5a7
+          ref: 454c6578e704063d00a78dc620d8c8c5f50eef0d
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Install the isolated browser
+          cache: npm
+      - run: npm ci
+      - name: Build the isolated protocol client fixture
+        run: node tests/build-mode-fixture.mjs
+      - name: Install isolated browser
         run: |
           mkdir -p "$RUNNER_TEMP/browser"
           npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
           "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
-      - name: Use the vertical drum for a repeatable straight approach
+      - name: Prepare production tournament support clients
         run: |
           node --input-type=module <<'NODE'
           import{readFileSync,writeFileSync}from'node:fs';
-          let source=readFileSync('tests/online-impact-browser.mjs','utf8');
-          source=source.replace('[data-online-robot="0"]','[data-online-robot="1"]').replace('s.rpm?.[0]>1700','s.rpm?.[0]>4000');
-          source=source.replace('window.__damageSeen=[];',"const post=Worker.prototype.postMessage;Worker.prototype.postMessage=function(message,...args){if(message?.type==='frame'&&message.frame)window.__impactAuthority=message.frame;return post.call(this,message,...args);};window.__damageSeen=[];");
-          source=source.replace("await a.keyboard.down('ArrowUp');const hit=await until(b,s=>(s.damage?.[1]??0)>2,20);await a.keyboard.up('ArrowUp');",`let hit;const aimEnd=Date.now()+30000;let steering='',forward=false;while(Date.now()<aimEnd){const remote=(await status(b)).online;if((remote.damage?.[1]??0)>2){hit=remote;break;}const aim=await a.evaluate(()=>{const f=window.__impactAuthority;if(!f)return;const own=f.bodies.find(p=>p.id==='b0:chassis'),other=f.bodies.find(p=>p.id==='b1:chassis');if(!own||!other)return;const q=own.q,sign=f.bots[0].driveSign??1,fx=-2*(q.x*q.z+q.w*q.y)*sign,fz=-(1-2*(q.x*q.x+q.y*q.y))*sign,tx=other.p.x-own.p.x,tz=other.p.z-own.p.z;return{error:Math.atan2(fx*tz-fz*tx,fx*tx+fz*tz),distance:Math.hypot(tx,tz)};});if(aim){const next=Math.abs(aim.error)>.12?(aim.error>0?'ArrowRight':'ArrowLeft'):'';if(next!==steering){if(steering)await a.keyboard.up(steering);if(next)await a.keyboard.down(next);steering=next;}const drive=Math.abs(aim.error)<.45;if(drive!==forward){if(drive)await a.keyboard.down('ArrowUp');else await a.keyboard.up('ArrowUp');forward=drive;}console.log('AIM',JSON.stringify(aim));}await a.waitForTimeout(120);}if(steering)await a.keyboard.up(steering);if(forward)await a.keyboard.up('ArrowUp');if(!hit)throw Error('No armed contact after the controlled approach: '+JSON.stringify((await status(a)).online));`);
-          source=source.replace('s.tick>=tick-2&&!s.result','s.tick>=tick-2&&s.result?.reason!=="Disconnect forfeit"');
-          writeFileSync(process.env.RUNNER_TEMP+'/browser/impact-production.mjs',source);
+          let source=readFileSync('tests/online-tournament-browser.mjs','utf8');
+          source='import {readFile} from "node:fs/promises";\n'+source;
+          source=source.replace("const base='http://127.0.0.1:4173/';","const base=process.env.ARENA_URL;const fixtureJS=await readFile('dist/mode-fixture.js','utf8'),fixtureHTML=await readFile('dist/mode-fixture.html','utf8');");
+          source=source.replace('contexts.push(context);',"await context.route('**/mode-fixture.html',route=>route.fulfill({body:fixtureHTML,contentType:'text/html'}));await context.route('**/mode-fixture.js',route=>route.fulfill({body:fixtureJS,contentType:'text/javascript'}));contexts.push(context);");
+          writeFileSync(process.env.RUNNER_TEMP+'/browser/tournament-production.mjs',source);
           NODE
-      - name: Armed impacts, bubbles, ongoing play, and refresh on production
-        run: timeout 660s node "$RUNNER_TEMP/browser/impact-production.mjs"
+      - name: Production templates, scratch recovery, fit, saves, and Practice
+        run: node tests/mode-builder-browser.mjs
+      - name: Seven physical production fights, repairs, spectator gauges, and champion
+        run: node "$RUNNER_TEMP/browser/tournament-production.mjs"
+      - name: Production armed contact, bubbles, ongoing control, rendering, and refresh
+        run: node tests/online-impact-browser.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: online-production-impact-evidence
+          name: production-mode-builder-evidence
           path: browser-evidence
