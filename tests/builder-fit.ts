@@ -14,4 +14,5 @@ const scratch=await physicalFit(scratchBuild());assert(scratch.ok,JSON.stringify
 const donor=templateParts(0).find(p=>!partKit(p)&&p.collides&&p.body==='chassis')!;
 const blocked=addStructuralPart(scratchBuild(),0,donor.id);blocked.attachments![0].mount.y=-.25;
 const rejected=await physicalFit(blocked);console.log(JSON.stringify({blocked:rejected}));assert(!rejected.ok);assert(rejected.issues.some(i=>/floor|wheel/i.test(i.message)));
+const obstructed=addStructuralPart(scratchBuild(),0,'floor');obstructed.attachments![0].mount={x:0,y:-.025,z:0};const wheelCollision=await physicalFit(obstructed);console.log(JSON.stringify({wheelCollision}));assert(!wheelCollision.ok);assert(wheelCollision.issues.some(i=>/intersects wheel/.test(i.message)));
 console.log('PASS physical fit for eleven stock robots, scratch, and floor-obstructing parts');

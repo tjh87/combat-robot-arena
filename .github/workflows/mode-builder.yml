@@ -48,6 +48,7 @@ jobs:
           node tests/tournament-worker-browser.mjs
           node tests/online-tournament-browser.mjs
           node tests/online-browser.mjs
+          node tests/online-impact-browser.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
