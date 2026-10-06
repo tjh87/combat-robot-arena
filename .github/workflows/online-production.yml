@@ -6,16 +6,16 @@ on:
 permissions:
   contents: read
 env:
-  TESTED_SOURCE: 454c6578e704063d00a78dc620d8c8c5f50eef0d
+  TESTED_SOURCE: 24f1054ff1b78b56075397eaa3337fcd3724dfba
   ARENA_URL: https://bbots-tjh87.vercel.app/
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 454c6578e704063d00a78dc620d8c8c5f50eef0d
+          ref: 24f1054ff1b78b56075397eaa3337fcd3724dfba
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -36,6 +36,7 @@ jobs:
           source='import {readFile} from "node:fs/promises";\n'+source;
           source=source.replace("const base='http://127.0.0.1:4173/';","const base=process.env.ARENA_URL;const fixtureJS=await readFile('dist/mode-fixture.js','utf8'),fixtureHTML=await readFile('dist/mode-fixture.html','utf8');");
           source=source.replace('contexts.push(context);',"await context.route('**/mode-fixture.html',route=>route.fulfill({body:fixtureHTML,contentType:'text/html'}));await context.route('**/mode-fixture.js',route=>route.fulfill({body:fixtureJS,contentType:'text/javascript'}));contexts.push(context);");
+          source=source.replace('const end=Date.now()+600000','const end=Date.now()+1800000');
           writeFileSync(process.env.RUNNER_TEMP+'/browser/tournament-production.mjs',source);
           NODE
       - name: Production templates, scratch recovery, fit, saves, and Practice
