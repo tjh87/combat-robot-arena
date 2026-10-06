@@ -10,7 +10,7 @@ import {HitReadouts,type HitReadout} from './hit-readouts';
 import {contactSparkDirection} from './impact-sparks';
 import {MatchHighlights} from './match-highlights';
 import {toothBite,remainingSpin} from './weapon-impact';
-import {colliderBounds,previousColliderPose} from './arena-wall';
+import {colliderBounds,previousColliderPose,cacheColliderGeometry} from './arena-wall';
 import {BATTERY_FIRE,HUGE_WHEEL_DAMAGE_SCALE,damageStatus,contactDamage} from './combat-damage';
 import {QUANTUM_HYDRAULICS,quantumBiteForce} from './weapon-specs';
 import {HUGE_HANDLING,hugeDriveDuty} from './huge-handling';
@@ -387,7 +387,7 @@ export class Simulation{
    const correction=v(),blocked=new Set<'x'|'z'>();let rotorBlocked=false;
    for(const col of b.colliders.values()){
     if(!col.isValid()||col.isSensor()||!col.collisionGroups())continue;
-    const oldBody=this.pre.get(col.parent()!.handle);if(!oldBody)continue;
+    const oldBody=this.pre.get(col.parent()!.handle);if(!oldBody)continue;cacheColliderGeometry(col);
     const oldPose=previousColliderPose(col,oldBody),old=colliderBounds(col,oldPose.p,quatMul(oldBody.q,oldPose.localRotation)),now=colliderBounds(col);
     for(const axis of['x','z']as const)for(const side of[-1,1]){
      // A robot that already cleared the wall can complete a real ring-out.
