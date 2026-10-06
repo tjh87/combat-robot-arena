@@ -300,3 +300,22 @@ Online graphics use a 60 FPS cap. The network and HUD remain independent of the 
 Spectator instruments follow the selected robot. Only eligible tournament winners can purchase repairs.
 
 The current acceptance suite includes seven real worker fights and seven native online tournament fights. Core bracket tests retain injected results for transition coverage.
+
+
+## 13. Tournament presentation and repair studio
+
+The bracket shows robot portraits and current-cup wins and losses. Records use entrant identities, including robots with duplicate names.
+
+Green animated paths show advancement. Red animated paths show elimination. Round winners and the overall champion receive separate victory panels.
+
+The offline repair studio uses component cards, recommended purchases, HP previews, and the existing 900-point budget. Partial purchases show their selected amount.
+
+Material changes and livery controls remain available under advanced controls. Broken components retain the replacement surcharge.
+
+Offline players can enter the next fight immediately or purchase repairs first. Damage carries forward without an automatic repair purchase.
+
+Online play uses the shared bracket and records. The full bracket clears local held controls while the authoritative fight continues.
+
+Online repair purchases retain their automatic allocation. The application and system reduced-motion preferences disable the new animations.
+
+Acceptance details and source coverage are in [TOURNAMENT_PRESENTATION.md](../docs/TOURNAMENT_PRESENTATION.md).

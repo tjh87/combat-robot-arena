@@ -1,7 +1,6 @@
 name: Tournament presentation acceptance
 on:
-  push:
-    branches: [tournament-presentation-review]
+  workflow_dispatch:
 permissions:
   contents: read
 env:

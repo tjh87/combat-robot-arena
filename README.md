@@ -110,6 +110,12 @@ Every prompt begins with **what to install and how to build/run on Windows**, th
 
 The game and included build tools run offline. Codex and AI models are separate; hosted AI requires internet. The package does not promise disconnected Codex inference.
 
+## Tournament presentation
+
+The cup uses animated result paths, robot portraits, and current-cup win/loss records. The offline repair studio shows component choices and a live budget.
+
+[Presentation and acceptance details](docs/TOURNAMENT_PRESENTATION.md)
+
 ## 📦 Package and source map
 
 | Path | Contents |
