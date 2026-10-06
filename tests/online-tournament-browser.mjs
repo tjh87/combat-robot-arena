@@ -23,8 +23,8 @@ try{
  const b=await page();await b.locator('[data-nav="online"]').click({force:true});await b.waitForFunction(()=>document.querySelector('#online-connection')?.textContent.startsWith('connected'),undefined,{timeout:30000,polling:100});await b.locator('[data-online-robot="2"]').click({force:true});await b.locator('#online-code').fill(code);await b.locator('#online-join').click({force:true});await b.waitForFunction(()=>document.querySelector('.online-room-number'),undefined,{timeout:30000,polling:100});
  for(let i=2;i<8;i++){
   const p=await page(false);await p.evaluate(async({code,index})=>{
-   const m=window.fixture,c=new m.RoomConnection(()=>m.preset(index%11),()=> 'Driver '+index);window.client=c;window.rooms=[];window.frames=[];window.clientErrors=[];
-   c.onRoom=room=>{window.rooms.push({phase:room.phase,round:room.round,current:room.current,champion:room.champion,rounds:room.rounds});if(room.phase==='repair'&&room.rounds[room.round].some(match=>match.winner===c.guest)&&!room.entrants.find(p=>p.id===c.guest)?.repairDone)c.send({type:'repair'});};
+   const m=window.fixture,c=new m.RoomConnection(()=>m.preset(index%11),()=> 'Driver '+index);window.client=c;window.rooms=[];window.frames=[];window.clientErrors=[];const repairs=new Set();
+   c.onRoom=room=>{window.rooms.push({phase:room.phase,round:room.round,current:room.current,champion:room.champion,rounds:room.rounds});if(room.phase==='repair'&&!repairs.has(room.round)&&room.rounds[room.round].some(match=>match.winner===c.guest)&&!room.entrants.find(p=>p.id===c.guest)?.repairDone){repairs.add(room.round);c.send({type:'repair'});}};
    c.onFrame=frame=>{window.frames.push({match:frame.match,tick:frame.tick,phase:frame.phase});if(window.frames.length>20)window.frames.shift();};c.onError=e=>window.clientErrors.push(e);
    await c.connect();const end=Date.now()+30000;while(c.state!=='connected'&&Date.now()<end)await new Promise(r=>setTimeout(r,50));if(c.state!=='connected')throw Error('Socket did not connect');c.join(code);
   },{code,index:i});await p.waitForFunction(()=>window.client.room,undefined,{timeout:30000});await p.evaluate(()=>window.client.send({type:'ready',ready:true}));
