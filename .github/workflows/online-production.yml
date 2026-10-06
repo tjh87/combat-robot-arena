@@ -6,7 +6,7 @@ on:
 permissions:
   contents: read
 env:
-  TESTED_SOURCE: 24f1054ff1b78b56075397eaa3337fcd3724dfba
+  TESTED_SOURCE: f9cd20e55153320d08df240aef349c36c72705d3
   ARENA_URL: https://bbots-tjh87.vercel.app/
 jobs:
   browser:
@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 24f1054ff1b78b56075397eaa3337fcd3724dfba
+          ref: f9cd20e55153320d08df240aef349c36c72705d3
       - uses: actions/setup-node@v4
         with:
           node-version: 24
