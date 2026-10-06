@@ -1,4 +1,4 @@
-name: Production third-person and opponent telemetry acceptance
+name: Production direct tournament fight acceptance
 on:
   push:
     branches: [online-deployed-checks]
@@ -6,16 +6,16 @@ on:
 permissions:
   contents: read
 env:
-  TESTED_SOURCE: baa7a9c5c958eab851d87f3ea682cdb707d6b95d
+  TESTED_SOURCE: 295c5111e3345f2f6eeef7315095f7c5dbf9d390
   ARENA_URL: https://bbots-tjh87.vercel.app/
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: baa7a9c5c958eab851d87f3ea682cdb707d6b95d
+          ref: 295c5111e3345f2f6eeef7315095f7c5dbf9d390
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -24,19 +24,10 @@ jobs:
           mkdir -p "$RUNNER_TEMP/browser"
           npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
           "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
-      - name: Third-person view, target HP, camera cycle, and persistence
-        run: node tests/follow-browser.mjs
-      - name: Prepare native ownership check for production
-        run: |
-          node --input-type=module <<'NODE'
-          import{readFileSync,writeFileSync}from'node:fs';
-          const source=readFileSync('tests/follow-online-browser.mjs','utf8').replace('http://127.0.0.1:4173/',process.env.ARENA_URL);
-          writeFileSync(process.env.RUNNER_TEMP+'/browser/follow-production.mjs',source);
-          NODE
-      - name: Both online follow views, opponent ownership, HP, and refresh
-        run: node "$RUNNER_TEMP/browser/follow-production.mjs"
+      - name: Enter the physical tournament fight without a countdown
+        run: node tests/tournament-direct-browser.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: production-follow-camera-evidence
+          name: production-tournament-direct-evidence
           path: browser-evidence
