@@ -1,4 +1,4 @@
-name: Production builder and tournament acceptance
+name: Production third-person and opponent telemetry acceptance
 on:
   push:
     branches: [online-deployed-checks]
@@ -6,47 +6,37 @@ on:
 permissions:
   contents: read
 env:
-  TESTED_SOURCE: f9cd20e55153320d08df240aef349c36c72705d3
+  TESTED_SOURCE: baa7a9c5c958eab851d87f3ea682cdb707d6b95d
   ARENA_URL: https://bbots-tjh87.vercel.app/
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: f9cd20e55153320d08df240aef349c36c72705d3
+          ref: baa7a9c5c958eab851d87f3ea682cdb707d6b95d
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: npm
-      - run: npm ci
-      - name: Build the isolated protocol client fixture
-        run: node tests/build-mode-fixture.mjs
       - name: Install isolated browser
         run: |
           mkdir -p "$RUNNER_TEMP/browser"
           npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
           "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
-      - name: Prepare production tournament support clients
+      - name: Third-person view, target HP, camera cycle, and persistence
+        run: node tests/follow-browser.mjs
+      - name: Prepare native ownership check for production
         run: |
           node --input-type=module <<'NODE'
           import{readFileSync,writeFileSync}from'node:fs';
-          let source=readFileSync('tests/online-tournament-browser.mjs','utf8');
-          source='import {readFile} from "node:fs/promises";\n'+source;
-          source=source.replace("const base='http://127.0.0.1:4173/';","const base=process.env.ARENA_URL;const fixtureJS=await readFile('dist/mode-fixture.js','utf8'),fixtureHTML=await readFile('dist/mode-fixture.html','utf8');");
-          source=source.replace('contexts.push(context);',"await context.route('**/mode-fixture.html',route=>route.fulfill({body:fixtureHTML,contentType:'text/html'}));await context.route('**/mode-fixture.js',route=>route.fulfill({body:fixtureJS,contentType:'text/javascript'}));contexts.push(context);");
-          source=source.replace('const end=Date.now()+600000','const end=Date.now()+1800000');
-          writeFileSync(process.env.RUNNER_TEMP+'/browser/tournament-production.mjs',source);
+          const source=readFileSync('tests/follow-online-browser.mjs','utf8').replace('http://127.0.0.1:4173/',process.env.ARENA_URL);
+          writeFileSync(process.env.RUNNER_TEMP+'/browser/follow-production.mjs',source);
           NODE
-      - name: Production templates, scratch recovery, fit, saves, and Practice
-        run: node tests/mode-builder-browser.mjs
-      - name: Seven physical production fights, repairs, spectator gauges, and champion
-        run: node "$RUNNER_TEMP/browser/tournament-production.mjs"
-      - name: Production armed contact, bubbles, ongoing control, rendering, and refresh
-        run: node tests/online-impact-browser.mjs
+      - name: Both online follow views, opponent ownership, HP, and refresh
+        run: node "$RUNNER_TEMP/browser/follow-production.mjs"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: production-mode-builder-evidence
+          name: production-follow-camera-evidence
           path: browser-evidence
