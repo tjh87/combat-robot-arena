@@ -44,6 +44,8 @@ jobs:
           for i in $(seq 1 60); do if curl -fsS http://127.0.0.1:4173/api/online > /dev/null; then break; fi; sleep 1; done
       - name: Follow camera, opponent telemetry, and persistent view
         run: node tests/follow-browser.mjs
+      - name: Native online follow ownership and opponent health
+        run: node tests/follow-online-browser.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
