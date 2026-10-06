@@ -4,9 +4,9 @@ import {pathToFileURL} from 'node:url';
 const {chromium}=await import(pathToFileURL(process.env.RUNNER_TEMP+'/browser/node_modules/playwright/index.mjs').href);
 await mkdir('browser-evidence',{recursive:true});
 const browser=await chromium.launch({headless:true});
-const errors=[];
+const errors=[];let p;
 try {
- const p=await browser.newPage();p.on('pageerror',e=>errors.push(String(e)));
+ p=await browser.newPage();p.on('pageerror',e=>errors.push(String(e)));
  await p.goto('http://127.0.0.1:4173/mode-fixture.html');
  await p.waitForFunction(()=>window.fixtureReady,undefined,{timeout:90000});
  await p.evaluate(async()=>{
@@ -33,4 +33,4 @@ try {
  await writeFile('browser-evidence/tournament-worker.json',JSON.stringify({source:process.env.GITHUB_SHA,report,errors},null,2));
  assert(!report.error,report.error);assert.deepEqual(report.rounds.map(r=>r.length),[4,2,1]);assert(report.champion);assert(report.responsive>100);assert.deepEqual(errors,[]);
  console.log('PASS seven real worker fights, three tournament rounds, champion, and responsive browser');
-} finally {await browser.close();}
+} catch(error){const report=await p?.evaluate(()=>window.workerCup).catch(()=>null);await writeFile('browser-evidence/tournament-worker-failure.json',JSON.stringify({error:String(error),report,errors},null,2));throw error;} finally {await browser.close();}

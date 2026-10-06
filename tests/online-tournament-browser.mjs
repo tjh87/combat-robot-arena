@@ -30,20 +30,20 @@ try{
   },{code,index:i});await p.waitForFunction(()=>window.client.room,undefined,{timeout:30000});await p.evaluate(()=>window.client.send({type:'ready',ready:true}));
  }
  await a.locator('#online-ready').click({force:true});await b.locator('#online-ready').click({force:true});await a.waitForFunction(()=>document.querySelectorAll('.online-players li').length===8&&[...document.querySelectorAll('.online-players li')].every(e=>e.textContent.includes('READY')),undefined,{timeout:30000,polling:100});await a.locator('#online-start').click({force:true});
- stage='seven native fights';const first=await until(a,s=>s.framePhase==='fight');assert(first.robots.includes('Tournament Custom'));
+ stage='seven native fights';const first=await until(a,s=>s.framePhase==='fight');let customSeen=first.robots.includes('Tournament Custom'),spectatorChecks=0;const followed=new Map();
  const transitions=[],driven=new Map();const end=Date.now()+600000;let last='';
  while(Date.now()<end){
-  const s=(await status(a)).online,key=s.phase+'/'+s.tick+'/'+s.side;
+  const s=(await status(a)).online;customSeen ||=s.robots?.includes('Tournament Custom')??false;
   if(s.phase!==last){transitions.push({phase:s.phase,tick:s.tick,side:s.side});last=s.phase;}
-  for(const p of[a,b]){const driver=(await status(p)).online;if(driver.side>=0&&driver.framePhase==='fight'&&driven.get(p)!==driver.match){await p.keyboard.up('ArrowUp');await p.keyboard.down('ArrowUp');driven.set(p,driver.match);}if(await p.locator('#online-repair').count())await p.locator('#online-repair').click({force:true});}
+  for(const p of[a,b]){const driver=(await status(p)).online;if(driver.side<0&&driver.framePhase==='fight'&&followed.get(p)!==driver.match){assert.equal(driver.viewer,0,'A new spectator match resets to the first robot');await p.locator('#online-follow').click({force:true});const next=(await status(p)).online;assert.equal(next.viewer,1);assert.equal(await p.locator('#gauge-name').textContent(),next.robots[1]);followed.set(p,driver.match);spectatorChecks++;}if(driver.side>=0&&driver.framePhase==='fight'&&driven.get(p)!==driver.match){await p.keyboard.up('ArrowUp');await p.keyboard.down('ArrowUp');driven.set(p,driver.match);}if(await p.locator('#online-repair').count())await p.locator('#online-repair').click({force:true});}
   if(s.phase==='finished')break;
   await a.waitForTimeout(500);
  }
- const complete=(await status(a)).online;assert.equal(complete.phase,'finished',JSON.stringify({complete,transitions}));
+ const complete=(await status(a)).online;assert(customSeen,'The saved robot must enter its physical quarterfinal');assert(spectatorChecks>0);assert.equal(complete.phase,'finished',JSON.stringify({complete,transitions}));
  await until(a,s=>!!s.result,30000);assert(await a.locator('.online-result-card').count());
  assert((await a.locator('.online-bracket section').count())===3);assert(/Champion:/.test(await a.locator('#sidebar').textContent()));
- for(const p of pages.slice(2)){assert.deepEqual(await p.evaluate(()=>window.clientErrors),[]);const last=await p.evaluate(()=>window.client.room);assert.equal(last.phase,'finished');assert.deepEqual(last.rounds.map(r=>r.length),[4,2,1]);assert(last.rounds.flat().every(m=>m.status==='finished'&&m.winner));}
+ for(const p of pages.slice(2)){assert.deepEqual(await p.evaluate(()=>window.clientErrors),[]);const last=await p.evaluate(()=>window.client.room);assert.equal(last.phase,'finished');assert.deepEqual(last.rounds.map(r=>r.length),[4,2,1]);assert(last.rounds.flat().every(m=>m.status==='finished'&&m.winner&&m.result?.reason!=='Disconnect forfeit'));}
  stage='spectator render';await a.bringToFront();await a.evaluate(()=>window.__resumeFrames());await until(a,s=>s.renderedTick>=complete.tick,60000);await a.evaluate(()=>window.__freezeFrame=true);
- assert.deepEqual(errors,[]);await writeFile('browser-evidence/online-tournament.json',JSON.stringify({status:'passed',source:process.env.GITHUB_SHA,code,savedRobot:first.robots,completedMatches:7,transitions,complete,errors},null,2));console.log('PASS native eight-seat tournament, saved robot, seven matches, repairs, spectator progression, result, and champion');
+ assert.deepEqual(errors,[]);await writeFile('browser-evidence/online-tournament.json',JSON.stringify({status:'passed',source:process.env.GITHUB_SHA,code,savedRobot:'Tournament Custom',customSeen,spectatorChecks,completedMatches:7,transitions,complete,errors},null,2));console.log('PASS native eight-seat tournament, saved robot, seven matches, repairs, spectator progression, result, and champion');
 }catch(error){await writeFile('browser-evidence/online-tournament-failure.json',JSON.stringify({stage,error:String(error),errors},null,2));throw error;}
 finally{await Promise.all(contexts.map(c=>c.close()));await browser.close();}
