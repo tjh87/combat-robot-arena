@@ -28,7 +28,7 @@ try{
  await page.waitForFunction(()=>document.querySelector('.online-players .ready-chip')?.textContent==='READY',undefined,{timeout:30000,polling:100});
  await click('#online-start');
  await page.waitForFunction(()=>document.querySelector('#online-bracket-open'),undefined,{timeout:60000,polling:100});
- assert.equal(await page.locator('.online-bracket section').count(),3);
+ assert.equal(await page.locator('.online-bracket section').count(),1,'Only the active quarterfinal round exists before advancement');
  const initial=await page.evaluate(()=>window.__arenaTools.get('read_arena_status').execute());
  await click('#online-bracket-open');
  assert.equal(await page.locator('#online-cup-map .cup-stage').count(),3);
