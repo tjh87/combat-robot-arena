@@ -1,3 +1,4 @@
+import {componentProfile} from './model';
 import {combustionSamples,ENGINE_CADENCE,engineMix} from './icewave-audio';
 import {clamp,isSpinner,type BotConfig} from './model';
 import type {ImpactEvent} from './sim';
@@ -131,7 +132,7 @@ export class GameAudio{
  if(!this.context)return;const now=this.context.currentTime;
  for(let bot=0;bot<2;bot++){
  const fire=burning[bot]>0?this.fireVoice(bot):this.fireLoops[bot];if(fire)fire.gain.gain.setTargetAtTime(active&&burning[bot]>0?(bot===0?.16:.11):0,now,.06);
- const c=configs[bot],profile=weaponVoiceKey(c),timbre=WEAPON_VOICES[profile],w=c?.weapon,rpm=Math.max(0,rpms[bot]??0),rps=rpm/60,spin=w&&isSpinner(w),speed=spin?clamp(rpm/w.rpm,0,1):0,gas=c?.chassis.profile==='icewave',shell=w?.type==='shell_spinner',drum=w?.type==='drum',disc=w?.type==='vertical_disc'||w?.type==='hammer_saw',cage=w?.type==='horizontal_cage',big=c?.chassis.profile==='deep_six',load=clamp((watts[bot]??0)/8640,0,1),attenuation=bot===0?1:.62,actuator=clamp(Math.abs(actuatorSpeeds[bot]??0)/4,0,1),running=enabled[bot]??rpm>30;
+ const c=configs[bot],profile=weaponVoiceKey(c),timbre=WEAPON_VOICES[profile],w=c?.weapon,rpm=Math.max(0,rpms[bot]??0),rps=rpm/60,spin=w&&isSpinner(w),speed=spin?clamp(rpm/w.rpm,0,1):0,gas=!!c&&componentProfile(c,'weapon')==='icewave',shell=w?.type==='shell_spinner',drum=w?.type==='drum',disc=w?.type==='vertical_disc'||w?.type==='hammer_saw',cage=w?.type==='horizontal_cage',big=c?.chassis.profile==='deep_six',load=clamp((watts[bot]??0)/8640,0,1),attenuation=bot===0?1:.62,actuator=clamp(Math.abs(actuatorSpeeds[bot]??0)/4,0,1),running=enabled[bot]??rpm>30;
  const loop=this.weaponVoice(bot,profile),pump=spin?0:clamp(actuator*.75+load*.55,0,1);loop.source.playbackRate.setTargetAtTime(spin?.3+speed*1.15:.72+pump*.44,now,.10);loop.filter.frequency.setTargetAtTime(timbre.band*(.45+speed*.55+pump*.4),now,.1);loop.gain.gain.setTargetAtTime(active&&!gas?(spin?speed:pump)*timbre.gain*attenuation:0,now,.07);
  const frequencies=[35+(speeds[bot]??0)*24,Math.max(18,rps*(spin?w.teeth:2)),gas?90+speed*80:Math.max(40,rps*(spin?w.ratio:2)*(drum?8:disc?7:6)),gas?45+speed*40:Math.max(20,rps*(shell?1.5:cage?1:2))+actuator*80];
  const gains=[Math.min(.018,(speeds[bot]??0)*.007),speed*(drum?.040:big?.038:cage?.032:.026),speed*(gas?.007:disc?.015:.010)*(1+load*.5),speed*(shell?.034:big?.028:.016)+actuator*.023];

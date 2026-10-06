@@ -417,7 +417,7 @@ export function compile(raw:BotConfig,practice=false):Compiled{
  if((w.type==='drum'||w.type==='vertical_disc'||w.type==='vertical_bar')&&w.mount.y+H/2+ch.clearance-w.radius<.003)err('weapon.radius','Drum must clear the floor by 3 mm.');
  if(w.type==='vertical_bar'){
   if(w.teeth!==2)err('weapon.teeth','A vertical bar uses two opposing teeth.');
-  if(wc.chassis.profile==='huge'&&Math.hypot(w.mount.y-(c.drive.radius-H/2-ch.clearance),w.mount.z)+w.radius>c.drive.radius-.012)err('weapon.radius','Keep HUGE’s blade at least 12 mm inside its wheel circle.');
+  if(ch.profile==='huge'&&componentProfile(c,'drive')==='huge'&&Math.hypot(w.mount.y-(c.drive.radius-H/2-ch.clearance),w.mount.z)+w.radius>c.drive.radius-.012)err('weapon.radius','Keep HUGE’s blade at least 12 mm inside its wheel circle.');
   const centreGap=ch.profile==='huge'||ch.profile==='deep_six';
   if(centreGap&&w.thickness>.10)err('weapon.thickness','The vertical blade must fit the centre channel.');
   if(!centreGap&&w.mount.z+w.radius> -L/2-.005&&w.mount.y-w.radius<H/2+.005)err('weapon.mount','Use a split frame or move the vertical bar clear of the chassis.');

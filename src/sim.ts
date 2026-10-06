@@ -104,11 +104,11 @@ export class Simulation{
  // Sliding steel tips must not inherit the floor's high tyre-grip coefficient.
  if(skid)desc.setFrictionCombineRule(RAPIER.CoefficientCombineRule.Min);
  if(p.material==='rubber'&&(componentProfile(c,'drive')==='quantum'||componentProfile(c,'drive')==='gigabyte'||c.drive.traction==='tracks'))desc.setFrictionCombineRule(RAPIER.CoefficientCombineRule.Max);
- if((componentProfile(c,'weapon')==='huge'&&c.drive.traction!=='tracks'||hydraSleekWheels(c))&&p.body.startsWith('wheel_'))desc.setCollisionGroups(0);
+ if((componentProfile(c,'drive')==='huge'&&c.drive.traction!=='tracks'||hydraSleekWheels(c))&&p.body.startsWith('wheel_'))desc.setCollisionGroups(0);
  const collider=this.world.createCollider(desc,body);colliders.set(p.id,collider);this.meta.set(collider.handle,{bot:id,module:p.module,part:p});}
  // Continuous rounded wheel contacts prevent gaps between visual spokes and
  // tread sectors from catching the floor, rails or an opponent's wedge.
- if(componentProfile(c,'weapon')==='huge'&&c.drive.traction!=='tracks')for(const [key,body]of bodies)if(key.startsWith('wheel_')){
+ if(componentProfile(c,'drive')==='huge'&&c.drive.traction!=='tracks')for(const [key,body]of bodies)if(key.startsWith('wheel_')){
   const part=compiled.parts.find(p=>p.body===key)!,edge=Math.min(.008,c.drive.width*.2),desc=RAPIER.ColliderDesc.roundCylinder(c.drive.width/2-edge,c.drive.radius-edge,edge).setRotation(axisQ(v(0,0,1),Math.PI/2)).setDensity(0).setFriction(HUGE_HANDLING.friction).setFrictionCombineRule(RAPIER.CoefficientCombineRule.Max).setRestitution(.03).setContactSkin(.001).setCollisionGroups(groups(id===0?2:4,id===0?21:19)).setActiveEvents(RAPIER.ActiveEvents.COLLISION_EVENTS);
   const collider=this.world.createCollider(desc,body);colliders.set(key+'_contact',collider);this.meta.set(collider.handle,{bot:id,module:part.module,part:{...part,id:key+'_contact'}});
  }
@@ -368,7 +368,7 @@ export class Simulation{
   b.unstick.active=false;b.ai.waypoint=undefined;b.ai.lastProgress={...p};b.ai.progressTick=this.tick;b.history=[];
  }
  private stabilizeChassis(b:Bot){
-  const c=b.compiled.config,huge=componentProfile(c,'weapon')==='huge',shell=componentProfile(c,'weapon')==='gigabyte';
+  const c=b.compiled.config,huge=componentProfile(c,'drive')==='huge',shell=componentProfile(c,'weapon')==='gigabyte';
   if((!huge&&!shell)||b.rollStart>=0||(huge?!this.floorSupport.has(b.id):!b.grounded))return;
   const up=this.axis(b,v(0,1,0));if(shell&&up.y<.45)return;
   const target=v(0,huge&&up.y<0?-1:1,0),error=cross(up,target),rate=b.chassis.angvel();
@@ -477,7 +477,7 @@ export class Simulation{
  const emergency=chosen.state==='recover'||chosen.state==='release';
  if(!emergency&&current&&Number.isFinite(current.score)&&(this.tick-b.ai.since<.3*RULES.hz||current.score+4>=chosen.score))chosen=current;
  const {state,reason,target}=chosen;let throttle=chosen.throttle;if(state!==b.ai.state)b.ai.since=this.tick;b.ai.state=state;b.ai.reason=reason;
- const goal=sub(target,obs.p),error=angleWrap(Math.atan2(goal.x,-goal.z)-heading+aimNoise),turn=clamp(componentProfile(b.compiled.config,'weapon')==='huge'?error*.8+obs.yawRate*.32:error*1.8,-1,1);if(Math.abs(error)>1.1&&throttle>0)throttle=.15;if(w.type==='crusher'&&state==='attack'&&distance<1.15)throttle=Math.min(throttle,.35);
+ const goal=sub(target,obs.p),error=angleWrap(Math.atan2(goal.x,-goal.z)-heading+aimNoise),turn=clamp(componentProfile(b.compiled.config,'drive')==='huge'?error*.8+obs.yawRate*.32:error*1.8,-1,1);if(Math.abs(error)>1.1&&throttle>0)throttle=.15;if(w.type==='crusher'&&state==='attack'&&distance<1.15)throttle=Math.min(throttle,.35);
  const cmd:Command={left:clamp(throttle+turn,-1,1),right:clamp(throttle-turn,-1,1),weapon:false,selfRight:false};
  if(w.type==='flipper'){const reach=w.length+w.mount.z*-1+.35;if(!disabled&&state==='attack'&&distance<reach&&Math.abs(angleWrap(toward-heading))<.3&&ready&&this.tick-b.ai.lastFireRequest>=1.5*RULES.hz){cmd.weapon=true;b.ai.lastFireRequest=this.tick;}}
  else if(w.type==='crusher'){if(state!=='release'&&!quantumRelease&&!disabled&&!obs.weaponOn&&distance<.86&&Math.abs(angleWrap(toward-heading))<.24&&this.tick-b.ai.lastWeaponRequest>2.6*RULES.hz){cmd.weapon=true;b.ai.lastWeaponRequest=this.tick;}}
