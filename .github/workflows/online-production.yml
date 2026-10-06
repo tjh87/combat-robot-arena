@@ -1,4 +1,4 @@
-name: Production direct tournament fight acceptance
+name: Production tournament presentation acceptance
 on:
   push:
     branches: [online-deployed-checks]
@@ -6,16 +6,16 @@ on:
 permissions:
   contents: read
 env:
-  TESTED_SOURCE: 295c5111e3345f2f6eeef7315095f7c5dbf9d390
+  TESTED_SOURCE: b5eb11e61a3ff37bd1dcfb60b53948a7ad9c4bb4
   ARENA_URL: https://bbots-tjh87.vercel.app/
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 295c5111e3345f2f6eeef7315095f7c5dbf9d390
+          ref: b5eb11e61a3ff37bd1dcfb60b53948a7ad9c4bb4
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -24,10 +24,12 @@ jobs:
           mkdir -p "$RUNNER_TEMP/browser"
           npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
           "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
-      - name: Enter the physical tournament fight without a countdown
-        run: node tests/tournament-direct-browser.mjs
+      - name: Tournament portrait, records, bracket, and direct physical entry
+        run: node tests/tournament-presentation-browser.mjs
+      - name: Native online bracket, close controls, and physical frame
+        run: node tests/tournament-online-presentation-browser.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: production-tournament-direct-evidence
+          name: production-tournament-presentation-evidence
           path: browser-evidence
