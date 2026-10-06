@@ -32,6 +32,7 @@ jobs:
           ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/baseline/node_modules"
           BASELINE_ROOT="$RUNNER_TEMP/baseline" node --import tsx tests/builder-components.ts
           node --import tsx tests/builder-functional.ts
+          node --import tsx tests/builder-fit.ts
           node --import tsx tests/online-core.ts
       - name: Install isolated browser
         run: |
