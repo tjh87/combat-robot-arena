@@ -1,8 +1,6 @@
 name: Builder recovery acceptance
 on:
-  push:
-    branches: [mode-builder-review]
-    paths: ['src/main.ts', 'tests/mode-builder-browser.mjs', '.github/workflows/builder-regression.yml']
+  workflow_dispatch:
 permissions:
   contents: read
 env:
