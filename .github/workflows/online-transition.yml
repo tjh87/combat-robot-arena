@@ -1,7 +1,6 @@
 name: Online match transition acceptance
 on:
-  push:
-    branches: [online-transition-review]
+  workflow_dispatch:
 permissions:
   contents: read
 env:
