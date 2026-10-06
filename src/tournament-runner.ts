@@ -21,6 +21,11 @@ export class TournamentRunner {
   const m=round[index];this.active=this.tournament.round+'/'+index;this.tournament.busy=true;
   this.worker.postMessage({type:'match',jobId:++this.jobId,round:this.tournament.round,index,configs:[m.a.config,m.b.config],hazards:this.tournament.hazards,seed:this.tournament.seed+this.tournament.round*31+index});
  }
+ skipRemaining(){
+  if(this.tournament.playerMatch)throw Error('Finish your fight before preparing the next round.');
+  this.worker?.terminate();this.worker=undefined;this.active='';this.progress=0;this.jobId++;
+  const resolved=this.tournament.quickResolveComputerMatches();this.createWorker();return resolved;
+ }
  retry(){this.worker?.terminate();this.worker=undefined;this.tournament.fault=undefined;this.active='';this.progress=0;this.createWorker();this.update();}
  dispose(){this.worker?.postMessage({type:'stop'});this.worker?.terminate();this.worker=undefined;this.active='';this.tournament.busy=false;}
 }
