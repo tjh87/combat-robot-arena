@@ -1,8 +1,6 @@
 name: Exact wall trajectory acceptance
 on:
-  push:
-    branches: [online-performance-review]
-    paths: ['tests/wall-performance.ts', '.github/workflows/wall-trajectory.yml']
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:

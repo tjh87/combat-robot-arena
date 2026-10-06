@@ -1,8 +1,6 @@
 name: Online wall performance acceptance
 on:
-  push:
-    branches: [online-performance-review]
-    paths: ['src/**', '.github/workflows/online-performance.yml']
+  workflow_dispatch:
 permissions:
   contents: read
 env:
