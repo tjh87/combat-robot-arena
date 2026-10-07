@@ -1,0 +1,53 @@
+name: Combat visibility and tournament fixes
+on:
+  push:
+    branches: [combat-visibility-review]
+permissions:
+  contents: read
+env:
+  REDIS_URL: ${{ secrets.ONLINE_REDIS_URL }}
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Build, offline assets, and online types
+        run: |
+          node scripts/build.mjs
+          node scripts/verify.mjs
+          npm run online:build
+          npx tsc -p tsconfig.server.json --noEmit
+      - name: Seeded physics, durability, stable cameras, and tournament flow
+        run: |
+          node --import tsx tests/combat-visibility.ts
+          node --import tsx tests/follow-camera.ts
+          node --import tsx tests/tournament-direct.ts
+          node --import tsx tests/tournament-presentation.ts
+          node --import tsx tests/quantum-update.ts
+      - run: node tests/build-skip-fixture.mjs
+      - name: Install isolated browser
+        run: |
+          mkdir -p "$RUNNER_TEMP/browser"
+          npm install --prefix "$RUNNER_TEMP/browser" playwright@1.58.2
+          "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Start local game service
+        run: |
+          node --import tsx server/test-site.ts > /tmp/combat-visibility.log 2>&1 &
+          for i in $(seq 1 60); do if curl -fsS http://127.0.0.1:4173/api/online > /dev/null; then break; fi; sleep 1; done
+      - name: Keyboard V, fragments, champion, readable records, and aligned arrows
+        run: node tests/tournament-presentation-browser.mjs
+      - name: Native online bracket and physical frame
+        run: node tests/tournament-online-presentation-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: combat-visibility-evidence
+          path: |
+            browser-evidence
+            /tmp/combat-visibility.log

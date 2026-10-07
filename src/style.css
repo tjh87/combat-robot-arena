@@ -221,3 +221,5 @@
 
 /* A large, explicit arrowhead keeps the opponent location visible. */
 .opponent-pointer>span{width:44px;height:44px;font-size:44px;line-height:1;color:#ff334e;text-shadow:0 0 3px #fff7,0 3px 8px #000;transform-origin:50% 50%}.opponent-pointer strong{font-size:14px;border:1px solid #ff5e7780;background:#07121de8;padding:5px 9px}.opponent-pointer small{font-size:12px}.opponent-pointer[data-on-screen="true"]{margin-top:22px}.opponent-pointer[data-on-screen="true"]>span{width:38px;height:38px;font-size:38px}
+
+.opponent-pointer>span svg{width:100%;height:100%;overflow:visible}

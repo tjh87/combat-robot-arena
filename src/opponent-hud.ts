@@ -1,6 +1,6 @@
 import type {ArenaRenderer} from './render';
 import type {Simulation} from './sim';
-export const OPPONENT_HUD_MARKUP='<div class="opponent-pointer hidden" id="opponent-pointer" aria-hidden="true"><span id="opponent-arrow">▲</span><strong id="opponent-distance"></strong><small id="opponent-edge-hp"></small></div><section class="opponent-floating-hp hidden" id="opponent-floating-hp" aria-label="Opponent health"><span id="opponent-floating-name"></span><div class="opponent-hp-track"><i id="opponent-hp-fill"></i></div><small id="opponent-hp-value"></small></section>';
+export const OPPONENT_HUD_MARKUP='<div class="opponent-pointer hidden" id="opponent-pointer" aria-hidden="true"><span id="opponent-arrow"><svg viewBox="0 0 44 44" aria-hidden="true"><path d="M22 3 41 40 22 31 3 40Z" fill="#ff334e" stroke="#ffbdc8" stroke-width="1.5"/></svg></span><strong id="opponent-distance"></strong><small id="opponent-edge-hp"></small></div><section class="opponent-floating-hp hidden" id="opponent-floating-hp" aria-label="Opponent health"><span id="opponent-floating-name"></span><div class="opponent-hp-track"><i id="opponent-hp-fill"></i></div><small id="opponent-hp-value"></small></section>';
 export function updateOpponentHud(root:HTMLElement,renderer:ArenaRenderer,sim:Simulation,active=true){
  const pointer=root.querySelector<HTMLElement>('#opponent-pointer'),health=root.querySelector<HTMLElement>('#opponent-floating-hp');if(!pointer||!health)return;
  pointer.classList.toggle('hidden',!active);health.classList.toggle('hidden',!active);if(!active)return;

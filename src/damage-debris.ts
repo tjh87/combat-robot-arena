@@ -12,8 +12,8 @@ export class DamageDebris{
  get count(){return this.fragments.length;}
  reset(){for(const piece of this.fragments){piece.mesh.removeFromParent();piece.mesh.material.dispose();}this.fragments=[];this.hp.clear();this.pending.clear();this.serial=0;this.time=0;}
  observe(bot:number,slot:Slot,hp:number,max:number,source:()=>FragmentSource|undefined,time:number,reduced=false){
-  const key=bot+'/'+slot,previous=this.hp.get(key);this.hp.set(key,hp);if(previous===undefined||hp>=previous||reduced){this.pending.set(key,0);return 0;}
-  const loss=(this.pending.get(key)??0)+previous-hp,count=fragmentCount(loss,max);if(!count){this.pending.set(key,loss);return 0;}this.pending.set(key,Math.max(0,loss-count*Math.max(DAMAGE_DEBRIS.minLoss,max*.04)));const part=source();if(!part)return 0;
+  const key=bot+'/'+slot,previous=this.hp.get(key);this.hp.set(key,hp);if(previous===undefined||hp>previous||reduced){this.pending.set(key,0);return 0;}
+  if(hp===previous)return 0;const loss=(this.pending.get(key)??0)+previous-hp,count=fragmentCount(loss,max);if(!count){this.pending.set(key,loss);return 0;}this.pending.set(key,Math.max(0,loss-count*Math.max(DAMAGE_DEBRIS.minLoss,max*.04)));const part=source();if(!part)return 0;
   const kind=fragmentKind(slot),random=rng(bot*100003+this.serial++*7919+Math.floor(time*240)),out=part.position.clone().sub(part.center);out.y=0;if(out.lengthSq()<.0001)out.set(1,0,0);out.normalize();
   for(let i=0;i<count;i++){
    if(this.fragments.length>=DAMAGE_DEBRIS.capacity){const old=this.fragments.shift()!;old.mesh.removeFromParent();old.mesh.material.dispose();}
