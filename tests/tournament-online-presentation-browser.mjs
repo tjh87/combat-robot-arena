@@ -44,8 +44,8 @@ try{
  await page.waitForFunction(async()=>{const status=await window.__arenaTools.get('read_arena_status').execute();return status.online?.renderedTick>0;},undefined,{timeout:90000,polling:100});
  await page.evaluate(()=>window.__freezeFrame=true);
  const final=await page.evaluate(()=>window.__arenaTools.get('read_arena_status').execute());
- assert.deepEqual(errors,[]);
- await writeFile('browser-evidence/native-online-cup.json',JSON.stringify({status:'passed',source:process.env.TESTED_SOURCE??process.env.GITHUB_SHA,url:base,code,initial,final,stages:3,entrants:8,paths:12,records:8,close:true,physicalFrame:true,errors},null,2));
+ await page.keyboard.press('v');assert.equal(await page.locator('#hud').getAttribute('data-camera'),'tactical');await page.keyboard.press('v');assert.equal(await page.locator('#hud').getAttribute('data-camera'),'chase');assert.equal(await page.locator('#opponent-arrow svg').count(),1);assert.deepEqual(errors,[]);
+ await writeFile('browser-evidence/native-online-cup.json',JSON.stringify({status:'passed',source:process.env.TESTED_SOURCE??process.env.GITHUB_SHA,url:base,code,initial,final,stages:3,entrants:8,paths:12,records:8,close:true,physicalFrame:true,keyboardV:true,redArrowhead:true,errors},null,2));
  console.log('PASS native online room, bracket records and paths, close control, and physical frame');
 }catch(error){await writeFile('browser-evidence/native-online-cup-failure.json',JSON.stringify({error:String(error),errors,body:await page.locator('body').textContent().catch(()=>null)},null,2));throw error;}
 finally{if(await page.locator('#online-exit').count())await page.locator('#online-exit').click({force:true}).catch(()=>{});await browser.close();}
