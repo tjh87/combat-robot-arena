@@ -1,3 +1,4 @@
+import {assertCupArrows} from './cup-arrow-browser.mjs';
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {pathToFileURL} from 'node:url';
@@ -35,7 +36,7 @@ try{
  assert.equal(await page.locator('#online-cup-map .cup-entry[data-entry]').count(),8);
  assert.equal(await page.locator('#online-cup-map .cup-path').count(),12);
  assert.equal(await page.locator('#online-cup-map').getAttribute('data-reduced'),'true');
- assert.equal(await page.locator('#online-cup-map .cup-record').count(),8);
+ assert.equal(await page.locator('#online-cup-map .cup-record').count(),8);const aiNames=await page.locator('.cup-compact-match>div:not(.is-player)>span:not(.cup-record)').allTextContents();assert.equal(new Set(aiNames).size,7);await assertCupArrows(page);
  await page.screenshot({path:'browser-evidence/native-online-cup.png',timeout:90000,animations:'disabled'});
  await click('#online-cup-close');
  assert.equal(await page.locator('#online-cup-map').count(),0);
@@ -45,7 +46,7 @@ try{
  await page.evaluate(()=>window.__freezeFrame=true);
  const final=await page.evaluate(()=>window.__arenaTools.get('read_arena_status').execute());
  await page.keyboard.press('v');assert.equal(await page.locator('#hud').getAttribute('data-camera'),'tactical');await page.keyboard.press('v');assert.equal(await page.locator('#hud').getAttribute('data-camera'),'chase');assert.equal(await page.locator('#opponent-arrow svg').count(),1);assert.deepEqual(errors,[]);
- await writeFile('browser-evidence/native-online-cup.json',JSON.stringify({status:'passed',source:process.env.TESTED_SOURCE??process.env.GITHUB_SHA,url:base,code,initial,final,stages:3,entrants:8,paths:12,records:8,close:true,physicalFrame:true,keyboardV:true,redArrowhead:true,errors},null,2));
+ await writeFile('browser-evidence/native-online-cup.json',JSON.stringify({status:'passed',source:process.env.TESTED_SOURCE??process.env.GITHUB_SHA,url:base,code,initial,final,stages:3,entrants:8,paths:12,records:8,close:true,physicalFrame:true,keyboardV:true,redArrowhead:true,diverseAi:true,arrowsAligned:true,errors},null,2));
  console.log('PASS native online room, bracket records and paths, close control, and physical frame');
 }catch(error){await writeFile('browser-evidence/native-online-cup-failure.json',JSON.stringify({error:String(error),errors,body:await page.locator('body').textContent().catch(()=>null)},null,2));throw error;}
 finally{if(await page.locator('#online-exit').count())await page.locator('#online-exit').click({force:true}).catch(()=>{});await browser.close();}
