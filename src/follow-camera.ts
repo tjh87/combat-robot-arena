@@ -4,9 +4,9 @@ export const CAMERA_STABILITY={positionHz:7,verticalHz:4,yawHz:5,maxYawRate:3.2}
 const wrapped=(angle:number)=>Math.atan2(Math.sin(angle),Math.cos(angle));
 export function trackingHeading(q:THREE.Quaternion,config:BotConfig,previous=0){
  if(componentProfile(config,'drive')==='huge'){const forward=new THREE.Vector3(0,1,0).cross(new THREE.Vector3(1,0,0).applyQuaternion(q));if(forward.x*forward.x+forward.z*forward.z>.08)return Math.atan2(forward.x,-forward.z);return previous;}
- // Project the rotation onto the world vertical axis. Pitch and roll do not
- // turn the camera upside down or reverse its heading at a vertical pose.
- if(q.y*q.y+q.w*q.w<.0025)return previous;return wrapped(-2*Math.atan2(q.y,q.w));
+ // A vertical pose keeps the last reliable heading. Once the robot settles,
+ // the filtered camera follows its real front direction without a sudden turn.
+ const forward=new THREE.Vector3(0,0,-1).applyQuaternion(q);if(forward.x*forward.x+forward.z*forward.z<.08)return previous;return Math.atan2(forward.x,-forward.z);
 }
 export class StableTrackingPose{
  private subject='';private position=new THREE.Vector3();private yaw=0;
