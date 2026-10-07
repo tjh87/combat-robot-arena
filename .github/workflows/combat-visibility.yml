@@ -1,7 +1,6 @@
 name: Combat visibility and tournament fixes
 on:
-  push:
-    branches: [combat-visibility-review]
+  workflow_dispatch:
 permissions:
   contents: read
 env:

@@ -56,3 +56,7 @@ Controlled player results covered the complete UI progression. A separate browse
 The controlled UI fixture paused arena frames. The native online check resumed the renderer and received an actual physical frame.
 
 The screenshots used Chromium WebGL with SwiftShader. Windows GPU behavior and audible playback remain manual checks.
+
+## Later corrections
+
+[Combat visibility corrections](COMBAT_VISIBILITY.md) add automatic championship completion, larger records, user highlights, diverse entrants, and layout-aware connector paths.

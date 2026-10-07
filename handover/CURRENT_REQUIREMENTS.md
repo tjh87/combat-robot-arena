@@ -319,3 +319,20 @@ Online play uses the shared bracket and records. The full bracket clears local h
 Online repair purchases retain their automatic allocation. The application and system reduced-motion preferences disable the new animations.
 
 Acceptance details and source coverage are in [TOURNAMENT_PRESENTATION.md](../docs/TOURNAMENT_PRESENTATION.md).
+
+
+## 14. Combat visibility and tournament corrections: 7 October 2026
+
+The opponent pointer uses a larger red arrowhead. V enters or exits third person and returns to the previous combat view.
+
+Combat camera tracking filters impact motion and retains a level horizon. POV and the inset use separate filters.
+
+The final tournament result declares the champion automatically. Current-cup records use larger text, and gold highlights identify the user robot.
+
+New cups use fresh seeds and distinct computer templates. Connector paths follow entrant identities across shuffled rounds and update after layout changes.
+
+Quantum uses 400 HP for each drive and 500 HP for the weapon. These values replace its earlier durability bonuses.
+
+Actual component HP loss produces matching cosmetic fragments. Destroyed armor retains physical debris. Reduced motion disables the cosmetic fragments.
+
+[COMBAT_VISIBILITY.md](../docs/COMBAT_VISIBILITY.md) records the behavior, settings, and acceptance scope.

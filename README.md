@@ -64,6 +64,11 @@ Each stock machine has 1,200 chassis HP. These are reference-inspired game model
 
 ## 🎮 Controls
 
+Press **V** to enter or exit the third-person view.
+
+[Camera, tournament, durability, and debris corrections](docs/COMBAT_VISIBILITY.md)
+
+
 | Action | Player 1 | Player 2 |
 | --- | --- | --- |
 | Drive | Arrow keys | I / J / K / L |
