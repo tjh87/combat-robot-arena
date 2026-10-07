@@ -352,7 +352,7 @@ export function compile(raw:BotConfig,practice=false):Compiled{
  if(t){if(a.mount==='top')plate('armour_top','armour_top',t,pos.y,a.material);else if(recessedDrum&&a.mount==='front'){for(const side of[-1,1])box('armour_front_'+side,'armour_front','chassis',v(wing,H,t),v(side*(notchWidth+wing)/2,0,pos.z),a.material);}else if(split&&(a.mount==='front'||a.mount==='rear')){for(const side of[-1,1])box('armour_'+a.mount+'_'+side,('armour_'+a.mount) as Slot,'chassis',v(W/2-.055,H,t),v(side*(W/4+.0275),pos.y,pos.z),a.material);}else if(ch.profile==='sawblaze'&&a.mount==='front')sawblazeFrontParts(c,parts,'armour_front',t,a.material);else box('armour_'+a.mount,('armour_'+a.mount) as Slot,'chassis',size,pos,a.material);}
  }
  const wheelY=c.drive.radius-(ch.clearance+H/2),armourAt=(side:number)=>c.armour.find(a=>a.mount===(side<0?'left':'right'))!.thickness,sideArm=Math.max(armourAt(-1),armourAt(1));
- for(const side of [-1,1]){const slot:Slot=side===-1?'drive_left':'drive_right',sideArm=armourAt(side);module(slot,dc.chassis.profile==='quantum'?550:400,'aluminium7075');
+ for(const side of [-1,1]){const slot:Slot=side===-1?'drive_left':'drive_right',sideArm=armourAt(side);module(slot,400,'aluminium7075');
  for(let i=0;i<c.drive.layout/2;i++){const z=wheelPositionZ(c,i),x=bodyOrigin(c,`wheel_${side}_${i}`).x;const id=`wheel_${side}_${i}`;
  if(dc.chassis.profile==='huge'&&c.drive.traction!=='tracks')largeWheelParts(dc,id,slot,v(x,wheelY,z),parts);else if(dc.chassis.profile==='hypershock'&&c.drive.traction!=='tracks')racerWheelParts(dc,id,slot,v(x,wheelY,z),parts);else if(hydraSleekWheels(c))hydraWheelParts(dc,id,slot,v(x,wheelY,z),parts);else part(id,slot,id,{kind:'cylinder',radius:c.drive.radius,width:c.drive.width},v(x,wheelY,z),'rubber',c.drive.traction==='tracks'?.9:undefined,axisQ(v(0,0,1),Math.PI/2));
  if(dc.chassis.profile==='minotaur')part('gyro_hub_'+side+'_'+i,slot,id,{kind:'cylinder',radius:.023,width:.045},v(x+side*(c.drive.width/2+.018),wheelY,z),'aluminium7075',undefined,axisQ(v(0,0,1),Math.PI/2));
@@ -369,7 +369,7 @@ export function compile(raw:BotConfig,practice=false):Compiled{
  if(wc===c)templateParts(c,parts);else{const base:Part[]=[],kit:Part[]=[];templateParts(c,base);templateParts(wc,kit);const mechanical=(p:Part)=>p.module==='weapon'||p.module==='weapon_actuator'||p.body==='weapon_arm'||p.body==='rotor'||/^(saw_|disc_|engine_|crusher_)/.test(p.id);parts.push(...base.filter(p=>!mechanical(p)),...kit.filter(mechanical));}
  let rotorInertia=0,tip=0,availableRPM=0,spinup=0;
  if(w.type!=='none'){
- module('weapon',w.type==='crusher'?650:500,w.material);module('weapon_actuator',350,'aluminium7075');if(wc.chassis.profile==='gigabyte')box('shell_brake','weapon_actuator','chassis',v(.10,.035,.08),v(0,.13,.11),'hardox',1.2,false);
+ module('weapon',500,w.material);module('weapon_actuator',350,'aluminium7075');if(wc.chassis.profile==='gigabyte')box('shell_brake','weapon_actuator','chassis',v(.10,.035,.08),v(0,.13,.11),'hardox',1.2,false);
  box('weapon_motor','weapon_actuator','chassis',v(.105,.07,.11),v(split?.22:0,.015,split?0:-.13),'aluminium7075',w.type==='flipper'||w.type==='crusher'?4.2:MOTORS[w.motor].mass,false);
  if(w.type==='horizontal_bar'&&w.mount.z< -L/2){const under=w.mount.y+Math.max(w.thickness,w.toothHeight)/2< -H/2-.004,supportLength=Math.abs(w.mount.z)+.05-L/2;box('weapon_support','weapon_actuator','chassis',v(under?.11:.07,.018,supportLength),v(w.mount.x,under?-H/2+.012:w.mount.y-Math.max(w.thickness,w.toothHeight)/2-.022,(w.mount.z-L/2+.05)/2),'aluminium7075');part('weapon_spindle','weapon_actuator','chassis',{kind:'cylinder',radius:.022,width:.015},v(w.mount.x,under?w.mount.y+.022:w.mount.y-.035,w.mount.z),'hardox');}
  else if(w.type==='drum'){
@@ -492,3 +492,6 @@ export const moduleLabel=(id:string)=>id.replace(/^armour_/,'Armour · ').replac
 
 /** Diagnostic only; never changes collision response or damage. */
 export function feedPerTooth(approachSpeed:number,toothCount:number,omega:number):number|null{return toothCount>0&&Math.abs(omega)>1e-6?2*Math.PI*Math.max(0,approachSpeed)/(toothCount*Math.abs(omega)):null;}
+
+export function freshTournamentSeed(){const values=new Uint32Array(1);globalThis.crypto.getRandomValues(values);return values[0]||1;}
+export function tournamentTemplates(random:()=>number,excluded:string[]=[]){const pool=ROSTER.map((_,i)=>i).filter(i=>!excluded.includes(ROSTER[i].profile));for(let i=pool.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}return pool;}
