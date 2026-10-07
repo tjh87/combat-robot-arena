@@ -3,7 +3,7 @@ const source=await readFile('src/main.ts','utf8'),html=await readFile('dist/inde
 const path='tests/skip-main.generated.ts';
 const adapted=source.replaceAll("from './","from '../src/").replaceAll("import './","import '../src/").replaceAll("new URL('./","new URL('../src/");
 await writeFile(path,adapted+`
-export function fixtureStatus(){return{state,round:tournament?.round,champion:tournament?.champion?.name,eliminated:tournament?.eliminated,pending:tournament?.matches[tournament.round].filter(m=>!m.winner).length,condition:tournament?.condition,startHP:sim?.bots[0].startHP.chassis,reasons:tournament?.matches.map(r=>r.map(m=>m.reason))};}
+export function fixtureStatus(){return{state,seed:tournament?.seed,opponents:tournament?.entries.filter(e=>!e.player).map(e=>e.config.chassis.profile),round:tournament?.round,champion:tournament?.champion?.name,eliminated:tournament?.eliminated,pending:tournament?.matches[tournament.round].filter(m=>!m.winner).length,condition:tournament?.condition,startHP:sim?.bots[0].startHP.chassis,reasons:tournament?.matches.map(r=>r.map(m=>m.reason))};}
 export function fixturePauseArena(){cancelAnimationFrame(animationId);animationId=0;}
 export function fixtureSwapSemis(){if(!tournament?.matches[1])throw Error('No semifinals');tournament.matches[1].reverse();renderBracket();}
 export function fixtureComponentLoss(slot:Slot,loss:number){renderer.update(sim,1/60);sim.damage(0,slot,loss*MATERIALS[sim.bots[0].modules[slot].material].resistance);renderer.update(sim,1/60);return{count:renderer.damageDebris.count,pieces:renderer.damageDebris.root.children.map(o=>o.userData),hp:sim.bots[0].modules[slot].hp};}
