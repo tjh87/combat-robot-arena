@@ -23,9 +23,15 @@ await test('Quantum self-rights from both sides and two inverted orientations us
  }return rows;
 });
 await test('Quantum has a smooth open skull, real cutouts, and pointed inner fangs',()=>{
- const head=quantumHead(preset(10));let meshes=0,holes=0,triangles=0;
- head.traverse(o=>{if(!(o instanceof THREE.Mesh))return;meshes++;const g=o.geometry as THREE.ExtrudeGeometry;assert([...g.attributes.position.array].every(Number.isFinite));holes+=(g.parameters.shapes as THREE.Shape).holes.length;triangles+=g.attributes.position.count/3;assert.equal(g.parameters.options.bevelSegments,3);});
- assert.equal(holes,9);assert.equal(meshes,7);assert(head.getObjectByName('quantum-inner-fang'));for(const side of[-1,1]){const fang=quantumFang(preset(10),side);assert([...fang.geometry.attributes.position.array].every(Number.isFinite));assert.equal(Math.sign(fang.position.x),side);fang.geometry.computeBoundingBox();assert(fang.geometry.boundingBox!.max.y-fang.geometry.boundingBox!.min.y>.19);}const size=new THREE.Box3().setFromObject(head).getSize(new THREE.Vector3());assert(size.x<.30&&size.y<.50&&size.z<.70);return{meshes,holes,triangles,size};
+ const c=preset(10);if(c.weapon.type!=='crusher')throw Error('Expected crusher');const head=quantumHead(c);head.updateMatrixWorld(true);let meshes=0,triangles=0;const normals=new Set<string>();
+ head.traverse(o=>{if(!(o instanceof THREE.Mesh))return;meshes++;const g=o.geometry;assert([...g.attributes.position.array].every(Number.isFinite));triangles+=(g.index?.count??g.attributes.position.count)/3;const n=g.attributes.normal;for(let i=0;i<n.count;i++)normals.add([n.getX(i),n.getY(i),n.getZ(i)].map(v=>v.toFixed(2)).join('/'));});
+ const scale=c.weapon.length/.66,half=c.weapon.width*.43,ray=new THREE.Raycaster(),holes=[];
+ for(const [f,y]of[[.167,.252],[.342,.346],[.534,.351]]){ray.set(new THREE.Vector3(-1,y*scale,-f*scale),new THREE.Vector3(1,0,0));assert.equal(ray.intersectObject(head,true).length,0,'Both cheek openings must remain physically open');holes.push({surface:'both cheeks',f,y});}
+ ray.set(new THREE.Vector3(-1,.29*scale,-.25*scale),new THREE.Vector3(1,0,0));assert(ray.intersectObject(head,true).length>0,'The rays must detect solid cheek material');
+ for(const [x,f]of[[-half*.44,.325],[half*.44,.325],[0,.535]]){ray.set(new THREE.Vector3(x,1,-f*scale),new THREE.Vector3(0,-1,0));assert.equal(ray.intersectObject(head,true).length,0,'The crown opening must remain physically open');holes.push({surface:'crown',x,f});}
+ ray.set(new THREE.Vector3(0,1,-.22*scale),new THREE.Vector3(0,-1,0));assert(ray.intersectObject(head,true).length>0,'The rays must detect solid crown material');assert.equal(meshes,8);assert(normals.size>128);assert(triangles<60000);assert(head.getObjectByName('quantum-inner-fang'));
+ for(const side of[-1,1]){const fang=quantumFang(c,side);assert([...fang.geometry.attributes.position.array].every(Number.isFinite));assert.equal(Math.sign(fang.position.x),side);fang.geometry.computeBoundingBox();assert(fang.geometry.boundingBox!.max.y-fang.geometry.boundingBox!.min.y>.19);fang.geometry.dispose();(fang.material as THREE.Material).dispose();}
+ const size=new THREE.Box3().setFromObject(head).getSize(new THREE.Vector3());assert(size.x<c.weapon.width+.04&&size.y<.50&&size.z<.70);head.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();(o.material as THREE.Material).dispose();}});return{meshes,holes:9,rayChecks:holes,triangles,size};
 });
 await test('Hit readouts count actual HP once, combine contacts, and expire on simulation time',()=>{
  const numbers=new HitReadouts(),events=[{id:1,point:v(),allocations:[{bot:1,hp:40}]} as ImpactEvent];
