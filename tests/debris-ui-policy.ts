@@ -18,8 +18,8 @@ await test('Destroyed armour still removes its collider and preserves detached m
  const simulation=new Simulation([preset(0),preset(1)],{hazards:false,ai:[false,false]});try{for(let tick=0;tick<60;tick++)simulation.step();const bot=simulation.bots[0],before=simulation.totalMass(bot),part=bot.compiled.parts.find(candidate=>candidate.module==='armour_left')!;simulation.damage(0,'armour_left',1e7);simulation.step();assert(!bot.modules.armour_left.functional);assert(!bot.colliders.has(part.id));assert(simulation.debris.length>0);assert(simulation.totalMass(bot)<before);return{physicalDebris:simulation.debris.length,massRemoved:before-simulation.totalMass(bot)};}finally{simulation.dispose();}
 });
 
-await test('Quick Fight status row uses an explicit shared baseline layout',()=>{
- const css=readFileSync('src/menu-polish.css','utf8'),renderer=readFileSync('src/render.ts','utf8');assert(css.includes('grid-template-columns:minmax(0,1fr) max-content'));assert(css.includes('align-items:baseline'));assert(css.includes('line-height:1'));assert(renderer.includes('COMPONENT_DEBRIS_VISIBLE&&present.has(id)'));assert(renderer.includes("this.damageDebris.root.visible=this.mode==='match'&&COMPONENT_DEBRIS_VISIBLE"));return{baselineAligned:true,replayDebrisHidden:true};
+await test('Quick Fight status row cannot wrap and shares a measured visual centre',()=>{
+ const css=readFileSync('src/menu-polish.css','utf8'),main=readFileSync('src/main.ts','utf8'),renderer=readFileSync('src/render.ts','utf8');assert(main.includes('<span class="menu-heading">QUICK FIGHT'));assert(!main.includes('QUICK FIGHT / MATCH SETUP'));assert(css.includes('white-space:nowrap'));assert(css.includes('align-items:center'));assert(css.includes('min-height:16px;line-height:16px'));assert(css.includes('height:16px'));assert(renderer.includes('COMPONENT_DEBRIS_VISIBLE&&present.has(id)'));assert(renderer.includes("this.damageDebris.root.visible=this.mode==='match'&&COMPONENT_DEBRIS_VISIBLE"));return{noWrap:true,visuallyCentered:true,replayDebrisHidden:true};
 });
 
 writeFileSync('docs/debris-ui-policy-results.json',JSON.stringify(results,null,2));

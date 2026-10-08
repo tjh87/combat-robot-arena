@@ -10,3 +10,6 @@
 
 /* Keep compact status telemetry on the same text baseline as its section label. */
 .menu-hero .eyebrow{display:grid;grid-template-columns:minmax(0,1fr) max-content;align-items:baseline;min-height:1.1em;line-height:1}.menu-status{display:inline-flex;align-items:baseline;justify-content:flex-end;line-height:1;transform:none}
+
+/* Prevent the former “MATCH SETUP” wrap; both compact labels share a measured visual centre. */
+.menu-hero .eyebrow{display:flex;align-items:center;gap:10px;min-height:16px;line-height:16px}.menu-hero .menu-heading{display:block;flex:0 0 auto;white-space:nowrap;line-height:inherit}.menu-hero .menu-status{display:flex;flex:0 0 auto;align-items:center;justify-content:flex-end;height:16px;margin-left:auto;font-size:.64rem;line-height:16px}
