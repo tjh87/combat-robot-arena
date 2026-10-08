@@ -7,8 +7,9 @@ import {finishedGeometry} from '../src/finish-geometry';
 import {ROSTER,preset,compile,RULES} from '../src/model';
 import {Simulation,initializePhysics,Tournament} from '../src/sim';
 import {BatteryFireVisual} from '../src/battery-fire-visual';
-import {ArenaRenderer} from '../src/render';
+import {ArenaRenderer,impactLightProfile} from '../src/render';
 import {GameAudio} from '../src/audio';
+import {SnapshotTiming} from '../src/online/timing';
 
 const checks:{name:string,detail:unknown}[]=[];
 function test(name:string,run:()=>unknown){const detail=run();checks.push({name,detail});console.log('PASS',name);}
@@ -20,6 +21,12 @@ test('Presentation rate is bounded on 60, 120 and 144 Hz displays; static screen
 test('Adaptive resolution responds to sustained load, recovers slowly, and keeps manual quality available',()=>{
  const r=new AdaptiveResolution();for(let i=0;i<31*14;i++)r.sample(1/31);assert.equal(r.scale,.65);const low=r.scale;for(let i=0;i<60*9;i++)r.sample(1/60);assert(r.scale>low&&r.scale<1);const prior=r.scale;r.sample(2);assert.equal(r.scale,prior);
  assert.equal(graphicsPixelRatio('high',2,3840,2160,false),1.5);const ratio=graphicsPixelRatio('medium',2,3840,2160);assert(ratio**2*3840*2160<=1600*900+.01);assert.equal(graphicsPixelRatio('medium',1,1280,720),1);return{minimumScale:low,recovered:r.scale,mediumPixelBudget:1600*900};
+});
+test('Online timing buffer stays near current snapshots on a stable link and widens only for arrival jitter',()=>{
+ const timing=new SnapshotTiming();timing.observe(0,1000);timing.observe(33,1033);const stable=timing.delay;timing.observe(66,1106);const jittered=timing.delay;assert.equal(stable,42);assert(jittered>stable);for(let i=0;i<18;i++)timing.observe(99+i*33,1139+i*33);assert(timing.delay<jittered);for(let i=0;i<8;i++)timing.observe(700+i*33,1900+i*200);assert(timing.delay<=140);return{stable,jittered,recovered:timing.delay,maximum:140};
+});
+test('Impact light profile is bounded and scales only with authoritative contact energy',()=>{
+ const quiet=impactLightProfile(150),medium=impactLightProfile(2500,80),heavy=impactLightProfile(25000,500);assert.equal(quiet.intensity,0);assert(medium.intensity>0&&heavy.intensity>medium.intensity);assert(heavy.distance>medium.distance);assert.equal(heavy.color,0xff9b55);return{medium,heavy};
 });
 test('All 11 robot shapes keep every triangle, UV seam and normal after vertex indexing',()=>{
  let parts=0,oldBytes=0,newBytes=0;
@@ -38,7 +45,7 @@ test('Instanced graphics buffers are released when a scene is replaced',()=>{
 test('Static menus reuse shadows; moving robots and replays refresh medium shadows at 30 Hz',()=>{
  const renderer=Object.create(ArenaRenderer.prototype) as ArenaRenderer;let shadows=0;
  const graphics={shadowMap:{enabled:true,needsUpdate:false},info:{render:{triangles:0,calls:0}},setViewport(){},setScissorTest(){},render(){if(this.shadowMap.needsUpdate){shadows++;this.shadowMap.needsUpdate=false;}}};
- Object.assign(renderer,{renderer:graphics,scene:new THREE.Scene(),arena:new THREE.Group(),bots:new THREE.Group(),preview:new THREE.Group(),effects:new THREE.Group(),camera:new THREE.PerspectiveCamera(42,1,.05,100),cameraTarget:new THREE.Vector3(),bodyGroups:new Map(),replayGroups:new Map(),batteryFireVisual:new BatteryFireVisual(),quality:'medium',mode:'menu',cameraMode:'tactical',time:0,width:1280,height:720,replay:false,reduced:false,inset:false,lastShadowTime:-Infinity,lastShadowTick:-1,lastShadowMode:'',shadowDirty:true});
+ Object.assign(renderer,{renderer:graphics,scene:new THREE.Scene(),arena:new THREE.Group(),bots:new THREE.Group(),preview:new THREE.Group(),effects:new THREE.Group(),camera:new THREE.PerspectiveCamera(42,1,.05,100),cameraTarget:new THREE.Vector3(),bodyGroups:new Map(),replayGroups:new Map(),damageDebris:{root:new THREE.Group()},batteryFireVisual:new BatteryFireVisual(),impactLight:new THREE.PointLight(),followCamera:{reset(){}},povTracking:{reset(){}},quality:'medium',mode:'menu',cameraMode:'tactical',time:0,width:1280,height:720,replay:false,reduced:false,inset:false,lastShadowTime:-Infinity,lastShadowTick:-1,lastShadowMode:'',shadowDirty:true});
  for(let i=0;i<60;i++)renderer.draw(undefined,1/30);assert.equal(shadows,1);
  const sim={bots:[0,1].map(id=>({id,compiled:{config:preset(id)},chassis:{translation:()=>({x:id*2,y:.2,z:0})}})),tick:0,batteryFireSeconds:()=>0} as unknown as Simulation;renderer.mode='match';const before=shadows;
  for(let i=0;i<60;i++){sim.tick++;renderer.draw(sim,1/60);}assert(shadows-before>=29&&shadows-before<=31,`shadow updates: ${shadows-before}`);

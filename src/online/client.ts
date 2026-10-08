@@ -1,9 +1,9 @@
-import {ONLINE_PROTOCOL,ROOM_LIMITS,decodeFrame,type OnlineRoom,type OnlineFrame} from './protocol';
+import {ONLINE_PROTOCOL,ROOM_LIMITS,decodeFrame,encodeInput,type OnlineRoom,type OnlineFrame,type OnlineInput} from './protocol';
 import type {BotConfig} from '../model';
 export type ConnectionState='connecting'|'connected'|'reconnecting'|'closed';
 export class RoomConnection{
  socket?:WebSocket;guest='';room?:OnlineRoom;state:ConnectionState='closed';ping=0;offset=0;
- private samples:number[]=[];private reconnectTimer?:ReturnType<typeof setTimeout>;private heartbeat?:ReturnType<typeof setInterval>;private handshake?:ReturnType<typeof setTimeout>;private attempts=0;private stopped=false;private connecting=false;private candidate?:WebSocket;private abort?:AbortController;private opened=0;private lastMessage=0;private pending:unknown[]=[];
+ jitter=0;inputEncoding:'json'|'binary-v1'='json';private samples:number[]=[];private rttSamples:number[]=[];private reconnectTimer?:ReturnType<typeof setTimeout>;private heartbeat?:ReturnType<typeof setInterval>;private handshake?:ReturnType<typeof setTimeout>;private attempts=0;private stopped=false;private connecting=false;private candidate?:WebSocket;private abort?:AbortController;private opened=0;private lastMessage=0;private pending:unknown[]=[];
  onRoom:(room:OnlineRoom)=>void=()=>{};onFrame:(frame:OnlineFrame)=>void=()=>{};onState:(state:ConnectionState)=>void=()=>{};onError:(message:string)=>void=()=>{};
  constructor(public config:()=>BotConfig,public name:()=>string,readonly endpoint='/api/online'){}
  private change(state:ConnectionState){if(this.state!==state){this.state=state;this.onState(state);}}
@@ -28,6 +28,7 @@ export class RoomConnection{
      const message=JSON.parse(event.data);
      if(message.type==='welcome'){
       if(message.protocol!==ONLINE_PROTOCOL)throw Error('Refresh the game to update online support.');
+      this.inputEncoding=message.inputEncoding==='binary-v1'?'binary-v1':'json';
       const saved=this.room??this.saved();
       if(saved)socket.send(JSON.stringify({type:'join',code:saved.code,expectedId:saved.id,name:this.name(),config:this.config()}));
       else this.promote(socket,message.guest);
@@ -35,7 +36,7 @@ export class RoomConnection{
       if(socket===this.candidate)this.promote(socket,session.guest);
       this.room=message.room;localStorage.setItem('cra.online.room',JSON.stringify({id:this.room!.id,code:this.room!.code}));this.onRoom(this.room!);
      }else if(message.type==='pong'){
-      const rtt=Date.now()-message.at;if(rtt>=0&&rtt<5000){this.ping=rtt;this.samples.push(message.serverTime-message.at-rtt/2);this.samples=this.samples.slice(-9);this.offset=[...this.samples].sort((a,b)=>a-b)[Math.floor(this.samples.length/2)];}
+      const rtt=Date.now()-message.at;if(rtt>=0&&rtt<5000){const prior=this.ping;this.rttSamples.push(rtt);this.rttSamples=this.rttSamples.slice(-9);this.ping=[...this.rttSamples].sort((a,b)=>a-b)[Math.floor(this.rttSamples.length/2)];this.jitter=this.jitter?this.jitter*.8+Math.abs(rtt-prior)*.2:0;this.samples.push(message.serverTime-message.at-rtt/2);this.samples=this.samples.slice(-9);this.offset=[...this.samples].sort((a,b)=>a-b)[Math.floor(this.samples.length/2)];}
      }else if(message.type==='renew'){if(socket===this.socket)void this.connect();}
      else if(message.type==='error'){
       if(/expired|number changed/.test(message.message)){localStorage.removeItem('cra.online.room');this.room=undefined;if(socket===this.candidate)this.promote(socket,session.guest);}
@@ -78,6 +79,7 @@ export class RoomConnection{
   clearTimeout(this.reconnectTimer);this.reconnectTimer=setTimeout(()=>void this.connect(),Math.min(5000,250*2**Math.min(this.attempts++,5))+Math.random()*150);
  }
  send(value:unknown){if(this.socket?.readyState===WebSocket.OPEN&&this.socket.bufferedAmount<64*1024)this.socket.send(JSON.stringify(value));}
+ sendInput(value:OnlineInput){if(this.socket?.readyState===WebSocket.OPEN&&this.socket.bufferedAmount<64*1024)this.socket.send(this.inputEncoding==='binary-v1'?encodeInput(value):JSON.stringify(value));}
  request(value:unknown){if(this.state==='connected')this.send(value);else if(this.pending.length<32)this.pending.push(value);}
  create(mode:'duel'|'tournament',hazards:boolean){this.request({type:'create',mode,name:this.name(),config:this.config(),hazards});}
  join(code:string){this.request({type:'join',code,name:this.name(),config:this.config()});}

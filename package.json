@@ -1,6 +1,7 @@
 {
   "name": "combat-robot-arena",
   "version": "1.0.0",
+  "packageManager": "npm@10.9.2",
   "private": true,
   "type": "module",
   "scripts": {
