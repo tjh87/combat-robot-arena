@@ -1,4 +1,4 @@
-/* Revamp menu theme (opt-in via the top-bar "UI" switch).
+/* Revamp menu theme (the default and only menu design; applied by menu-theme.ts).
    Every rule is scoped to html[data-menu-theme="revamp"] and only targets HTML menu chrome:
    top bar, sidebars, menu panels, settings/repair/tournament modals. The 3D scene (#scene),
    robots, fight HUD (#hud) and arena overlay are intentionally never selected here. */
@@ -18,8 +18,7 @@ html[data-menu-theme="revamp"] .nav button.active:after{content:'';position:abso
 html[data-menu-theme="revamp"] .nav button{position:relative}
 html[data-menu-theme="revamp"] .top-actions{gap:10px}
 html[data-menu-theme="revamp"] .version{padding:6px 10px;border:1px solid var(--rv-line);border-radius:999px;font:600 .66rem var(--rv-mono);color:var(--rv-muted)}
-html[data-menu-theme="revamp"] :is(.settings-btn,.theme-toggle){height:32px;padding:0 12px!important;border:1px solid var(--rv-line-2)!important;border-radius:8px;background:var(--rv-panel)!important;color:var(--rv-text)!important;font:600 .74rem var(--rv-body)}
-html[data-menu-theme="revamp"] .theme-toggle[aria-pressed="true"]{border-color:var(--rv-accent)!important;color:var(--rv-accent)!important}
+html[data-menu-theme="revamp"] .settings-btn{height:32px;padding:0 12px!important;border:1px solid var(--rv-line-2)!important;border-radius:8px;background:var(--rv-panel)!important;color:var(--rv-text)!important;font:600 .74rem var(--rv-body)}
 html[data-menu-theme="revamp"] .shell{inset:64px 0 33px}
 
 /* Sidebar shell and typography */
