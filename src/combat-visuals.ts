@@ -1,6 +1,7 @@
 import {componentConfig,componentProfile} from './model';
 import {enhancedRotorExposure,updateEnhancedExposure} from './weapon-exposure';
 import {sawbladeExposure,updateSawbladeExposure} from './sawblaze-blur';
+import {weaponBlurProfile} from './weapon-blur';
 import * as THREE from 'three';
 import {isSpinner,isHorizontal,clamp,weaponAxis,type BotConfig} from './model';
 
@@ -27,14 +28,14 @@ function horizontalSweep(radius:number,inner:number,blades:number,phase:number,c
  return mesh;
 }
 
-function updateHorizontalSweep(mesh:THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>,rpm:number,direction:number,strength:number){
+function updateHorizontalSweep(mesh:THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>,rpm:number,direction:number,targetRPM:number,reduced:boolean){
  const geometry=mesh.geometry,data=geometry.userData;
- mesh.material.opacity=.58*strength;
+	 const profile=weaponBlurProfile(rpm,targetRPM,data.blades,reduced);mesh.material.opacity=profile.opacity;
  // Geometry is shared with replay clones. Cache against the buffer itself so
  // returning from a replay restores the live exposure even at unchanged RPM.
  if(Math.abs((data.rpm??-100)-rpm)<.5&&data.direction===direction)return;
  data.rpm=rpm;data.direction=direction;
- const {radius,inner,blades,phase}=data,span=Math.min(Math.PI*2/blades,rpm*Math.PI/30*EXPOSURE_SECONDS);
+	 const {radius,inner,blades,phase}=data,span=profile.exposure;
  data.exposureAngle=span;
  const positions=geometry.getAttribute('position') as THREE.BufferAttribute;
  const radii=[radius*inner,radius*(inner+.08*(1-inner)),radius*.985,radius];
@@ -80,11 +81,11 @@ export function updateRotorMotion(rotor:THREE.Object3D|undefined,rpm:number,time
  const root=rotor?.getObjectByName('rotor-motion');if(!root)return;
  if(root.userData.sawbladeExposure){updateSawbladeExposure(rotor!,root,rpm,reduced,Math.sign(direction??root.userData.direction??1)||1);return;}
  if(root.userData.enhancedExposure){updateEnhancedExposure(root,rpm,reduced,direction);return;}
- const speed=Number.isFinite(rpm)?Math.abs(rpm):0,strength=clamp((speed-90)/(root.userData.horizontal?1000:650),0,1);root.visible=strength>.01&&!reduced;
- if(!root.visible)return;
- if(root.userData.horizontal){const spin=Math.sign(direction??root.userData.direction??1)||1;for(const disk of root.children)for(const mesh of disk.children)updateHorizontalSweep(mesh as THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>,speed,spin,strength);return;}
- for(const disk of root.children)for(const obj of disk.children){const mesh=obj as THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>;
-  mesh.material.opacity=strength*mesh.userData.blurGain;
+	 const speed=Number.isFinite(rpm)?Math.abs(rpm):0,profile=weaponBlurProfile(speed,root.userData.targetRPM,1,reduced);root.visible=profile.strength>.01;
+	 if(!root.visible)return;
+	 if(root.userData.horizontal){const spin=Math.sign(direction??root.userData.direction??1)||1;for(const disk of root.children)for(const mesh of disk.children)updateHorizontalSweep(mesh as THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>,speed,spin,root.userData.targetRPM,reduced);return;}
+	 for(const disk of root.children)for(const obj of disk.children){const mesh=obj as THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>;
+	  mesh.material.opacity=profile.opacity*mesh.userData.blurGain;
   // Slightly different exposure phases prevent symmetric blades aliasing to stillness.
   mesh.rotation.z=-time*(7+Math.min(rpm/240,12))*(direction??root.userData.direction??1)-mesh.userData.phase*.11;
  }

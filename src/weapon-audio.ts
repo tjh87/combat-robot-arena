@@ -1,5 +1,4 @@
-import {componentConfig,componentProfile} from './model';
-import {type BotConfig} from './model';
+import {clamp,isSpinner,type BotConfig} from './model';
 type Voice={label:string,base:number,pulse:number,harmonics:number[],noise:number,roughness:number,band:number,gain:number};
 export const WEAPON_VOICES:Record<string,Voice>={
  tombstone:{label:'Heavy bar · twin chop',base:48,pulse:26,harmonics:[1,.48,.25,.16,.09],noise:.32,roughness:.8,band:1400,gain:.17},
@@ -14,6 +13,13 @@ export const WEAPON_VOICES:Record<string,Voice>={
  deep_six:{label:'Heavy vertical · flywheel roar',base:32,pulse:22,harmonics:[1,.76,.42,.25,.31,.12],noise:.55,roughness:.88,band:2300,gain:.22},
  quantum:{label:'Crusher · loaded hydraulic pump',base:108,pulse:18,harmonics:[.7,1,.18,.08,.32],noise:.42,roughness:.28,band:1700,gain:.18},
 };
+
+export type WeaponSpinSound={active:boolean,normalized:number,bladePass:number,motorHz:number,loopRate:number,filterHz:number,loopGain:number,bladeGain:number,motorGain:number,airHz:number,airGain:number};
+export function weaponSpinSound(config:BotConfig|undefined,rpm:number,watts=0,acceleration=0):WeaponSpinSound{
+ const weapon=config?.weapon;if(!weapon||!isSpinner(weapon))return{active:false,normalized:0,bladePass:0,motorHz:0,loopRate:0,filterHz:0,loopGain:0,bladeGain:0,motorGain:0,airHz:0,airGain:0};
+ const value=Number.isFinite(rpm)?Math.max(0,rpm):0,normalized=clamp(value/Math.max(1,weapon.rpm),0,1.15),rps=value/60,load=clamp(watts/8640,0,1),ramp=clamp(Math.max(0,acceleration),0,2),drum=weapon.type==='drum',disc=weapon.type==='vertical_disc'||weapon.type==='hammer_saw',shell=weapon.type==='shell_spinner',cage=weapon.type==='horizontal_cage',motorScale=drum?8:disc?7:6,bladePass=Math.max(18,rps*Math.max(1,weapon.teeth)),motorHz=Math.max(40,rps*Math.max(1,weapon.ratio)*motorScale),loopRate=.30+Math.pow(normalized,.66)*1.17+ramp*.055,filterHz=520+Math.pow(normalized,.58)*4300+load*650+ramp*850,loopGain=normalized*(.88+load*.12+ramp*.08),bladeGain=normalized*(.84+ramp*.16),motorGain=normalized*(.84+load*.16),airHz=180+normalized*(shell?800:drum?2920:disc?2240:1480)+ramp*780,airGain=normalized*normalized*(.82+load*.18)+ramp*.06;
+ return{active:true,normalized,bladePass,motorHz,loopRate,filterHz,loopGain,bladeGain,motorGain,airHz,airGain};
+}
 export function weaponVoiceKey(c?:BotConfig){
  const key=c?.chassis.profile;if(key&&WEAPON_VOICES[key])return key;
  const types:Record<string,string>={drum:'minotaur',flipper:'hydra',crusher:'quantum',vertical_disc:'hypershock',shell_spinner:'gigabyte',horizontal_cage:'whyachi',hammer_saw:'sawblaze',vertical_bar:'deep_six'};
@@ -27,7 +33,6 @@ export function weaponVoiceSamples(key:string,sampleRate:number){
   let tone=0;for(let j=0;j<p.harmonics.length;j++)tone+=Math.sin(phase*(j+1)+.08*Math.sin(2*Math.PI*6*t))*p.harmonics[j]/sum;
   data[i]=Math.tanh((tone*(1-p.noise)+((key==='gigabyte'||key==='deep_six')?low*3:noise)*p.noise)*envelope*1.8)*.7;
  }
- // Crossfade cyclic noise at the loop boundary. Tonal periods are integer Hz.
  const seam=Math.floor(sampleRate*.025);for(let i=0;i<seam;i++){const mix=i/seam;data[data.length-seam+i]=data[data.length-seam+i]*(1-mix)+data[i]*mix;}
  return data;
 }

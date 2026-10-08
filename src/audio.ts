@@ -2,14 +2,14 @@ import {componentProfile} from './model';
 import {combustionSamples,ENGINE_CADENCE,engineMix} from './icewave-audio';
 import {clamp,isSpinner,type BotConfig} from './model';
 import type {ImpactEvent} from './sim';
-import {WEAPON_VOICES,weaponVoiceKey,weaponVoiceSamples} from './weapon-audio';
+import {WEAPON_VOICES,weaponSpinSound,weaponVoiceKey,weaponVoiceSamples} from './weapon-audio';
 export type ImpactSurface='metal'|'plastic'|'rubber';
 export const METAL_IMPACTS={tap:['steel_tap_01','steel_tap_02'],strike:['steel_strike_01','steel_strike_02','steel_strike_03'],crash:['steel_crash_01','steel_crash_02','steel_crash_03']} as const;
 export const LANDING_IMPACTS={landLight:['landing_light_01'],landHeavy:['landing_heavy_01','landing_heavy_02']} as const;
 export function impactSurface(module:string,material?:string):ImpactSurface{return material==='rubber'||!material&&module.startsWith('drive_')?'rubber':material==='uhmw'?'plastic':'metal';}
-export function impactProfile(energy:number,surface:ImpactSurface='metal'){
- const strength=clamp(Math.log1p(Math.max(0,energy)/80)/Math.log1p(12000/80),0,1);
- return{strength,style:strength>.72?'crash' as const:strength>.34?'strike' as const:'tap' as const,gain:energy>0?.035+.85*strength**.8:0,duration:.12+strength*.74,frequency:surface==='metal'?135-50*strength:surface==='plastic'?220-80*strength:110-35*strength,cutoff:surface==='metal'?8500+strength*2500:surface==='plastic'?1600+strength*1400:600+strength*700};
+export function impactProfile(energy:number,surface:ImpactSurface='metal',damage=0){
+ const energyStrength=clamp(Math.log1p(Math.max(0,energy)/80)/Math.log1p(12000/80),0,1),damageStrength=clamp(Math.log1p(Math.max(0,damage))/Math.log1p(250),0,1),strength=clamp(energyStrength+(1-energyStrength)*damageStrength*.33,0,1);
+ return{energyStrength,damageStrength,strength,style:strength>.72?'crash' as const:strength>.34?'strike' as const:'tap' as const,gain:energy>0?.035+.85*strength**.8+damageStrength*.035:0,duration:.12+strength*.74+damageStrength*.13,frequency:surface==='metal'?135-50*strength-12*damageStrength:surface==='plastic'?220-80*strength-18*damageStrength:110-35*strength-8*damageStrength,cutoff:surface==='metal'?8500+strength*2500-damageStrength*900:surface==='plastic'?1600+strength*1400-damageStrength*180:600+strength*700-damageStrength*90};
 }
 // Contacts gain energy across several physics steps. Wait 83 ms to hear the
 // strength of the hit, instead of permanently using its tiny first impulse.
@@ -31,7 +31,7 @@ export function readyImpactSounds(events:ImpactEvent[],tick:number,lastID:number
  for(const e of ready){
   if(events.some(old=>old.id<=lastID&&sameHit(old,e)))continue;
   const first=grouped.find(old=>sameHit(old,e));
-  if(first)continue;const contacts=events.filter(candidate=>candidate.id>=e.id&&sameHit(e,candidate));grouped.push({...e,energy:e.cause==='landing'?contacts.reduce((sum,c)=>sum+c.energy,0):Math.max(...contacts.map(c=>c.energy)),fallHeight:Math.max(...contacts.map(c=>c.fallHeight??0))});
+  if(first)continue;const contacts=events.filter(candidate=>candidate.id>=e.id&&sameHit(e,candidate));grouped.push({...e,energy:e.cause==='landing'?contacts.reduce((sum,c)=>sum+c.energy,0):Math.max(...contacts.map(c=>c.energy)),fallHeight:Math.max(...contacts.map(c=>c.fallHeight??0)),allocations:contacts.flatMap(c=>c.allocations??[])});
  }
  return{events:grouped,lastID:cursor};
 }
@@ -50,7 +50,7 @@ export class GameAudio{
    for(let bot=0;bot<2;bot++)(this.combustionLoops[bot]??=[])[index]=this.loopVoice(buffer,7000);
   }
  }
- resetEngines(){if(this.context)for(const voice of this.combustionLoops.flat().concat(this.fireLoops).filter(Boolean))voice.gain.gain.setTargetAtTime(0,this.context.currentTime,.02);}
+ resetEngines(){this.weaponState=[{speed:0,time:0},{speed:0,time:0}];if(this.context)for(const voice of this.combustionLoops.flat().concat(this.fireLoops).filter(Boolean))voice.gain.gain.setTargetAtTime(0,this.context.currentTime,.02);}
  resetCountdown(){this.pauseCountdown();this.countdownStep=0;}
  pauseCountdown(){for(const voice of this.countdownVoices){voice.osc.onended=null;voice.osc.stop();voice.osc.disconnect();voice.gain.disconnect();}this.countdownVoices=[];}
  updateCountdown(elapsed:number){
@@ -86,7 +86,7 @@ export class GameAudio{
   voice={...this.loopVoice(buffer,WEAPON_VOICES[profile].band),profile};this.weaponLoops[bot]=voice;return voice;
  }
  impactLibrary:Record<keyof typeof METAL_IMPACTS|keyof typeof LANDING_IMPACTS,AudioBuffer[]>={tap:[],strike:[],crash:[],landLight:[],landHeavy:[]};impactLoad?:Promise<void>;impactSerial=0;
- context?:AudioContext;master?:GainNode;sfx?:GainNode;voices=0;tones:{osc:OscillatorNode,gain:GainNode}[]=[];air:{source:AudioBufferSourceNode,filter:BiquadFilterNode,gain:GainNode}[]=[];available=true;
+ context?:AudioContext;master?:GainNode;sfx?:GainNode;voices=0;tones:{osc:OscillatorNode,gain:GainNode}[]=[];air:{source:AudioBufferSourceNode,filter:BiquadFilterNode,gain:GainNode}[]=[];available=true;private weaponState=[{speed:0,time:0},{speed:0,time:0}];
  start(master:number,sfx:number){this.quiet=false;try{if(!this.context){
  const ctx=this.context=new AudioContext();this.master=ctx.createGain();this.sfx=ctx.createGain();this.sfx.connect(this.master);
  if(ctx.createDynamicsCompressor){const limiter=ctx.createDynamicsCompressor();limiter.threshold.value=-5;limiter.knee.value=3;limiter.ratio.value=16;limiter.attack.value=.002;limiter.release.value=.12;this.master.connect(limiter);limiter.connect(ctx.destination);}else this.master.connect(ctx.destination);
@@ -112,41 +112,41 @@ export class GameAudio{
   filter.type='highpass';filter.frequency.value=2500;gain.gain.value=.10+level*.065;source.connect(filter);filter.connect(gain);gain.connect(this.sfx);this.voices++;source.start();
   source.onended=()=>{source.disconnect();filter.disconnect();gain.disconnect();this.voices=Math.max(0,this.voices-1);};
  }
- impact(energy:number,surface:ImpactSurface='metal',fallHeight?:number){
+ impact(energy:number,surface:ImpactSurface='metal',fallHeight?:number,damage=0){
  if(surface==='metal'&&fallHeight===undefined)this.spark(energy);
  if(energy<=0||this.context?.state!=='running'||!this.sfx||this.voices>=12)return;this.voices++;
- const ctx=this.context,p=impactProfile(energy,surface),serial=this.impactSerial++,landing=fallHeight!==undefined,heavyLanding=landing&&(fallHeight>.65||energy>2500),clips=this.impactLibrary[landing?(heavyLanding?'landHeavy':'landLight'):p.style],recorded=(landing||surface==='metal')&&clips.length>0,buffer=recorded?clips[serial%clips.length]:ctx.createBuffer(1,Math.ceil(ctx.sampleRate*p.duration),ctx.sampleRate),data=recorded?undefined:buffer.getChannelData(0);let seed=73221+serial*7919,low=0;
+ const ctx=this.context,p=impactProfile(energy,surface,damage),serial=this.impactSerial++,landing=fallHeight!==undefined,heavyLanding=landing&&(fallHeight>.65||energy>2500),clips=this.impactLibrary[landing?(heavyLanding?'landHeavy':'landLight'):p.style],recorded=(landing||surface==='metal')&&clips.length>0,buffer=recorded?clips[serial%clips.length]:ctx.createBuffer(1,Math.ceil(ctx.sampleRate*p.duration),ctx.sampleRate),data=recorded?undefined:buffer.getChannelData(0);let seed=73221+serial*7919,low=0;
  if(data){
  for(let i=0;i<data.length;i++){
   const t=i/ctx.sampleRate;seed=(seed*1664525+1013904223)>>>0;const noise=seed/4294967296*2-1;low=.86*low+.14*noise;
   const attack=Math.min(1,t/.0005),envelope=attack*Math.exp(-t/(.018+p.strength*.08));
   // Short broadband deformation, without pitched bell or pan resonances.
   const ring=!landing&&surface==='metal'?low*.30*Math.exp(-t/(.035+p.strength*.085)):0;
-  const thump=Math.sin(2*Math.PI*(55+35*(1-p.strength))*t)*p.strength*.48*Math.exp(-t/.10);
+  const thump=Math.sin(2*Math.PI*(55+35*(1-p.strength))*t)*(p.strength*.48+p.damageStrength*.16)*Math.exp(-t/(.10+p.damageStrength*.025));
   data[i]=clamp((landing?low*2.8:surface==='rubber'?low*2:noise)*envelope*.66+ring+thump*(landing?1.25:1),-1,1);
  }}
- const source=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),gain=ctx.createGain();source.buffer=buffer;if(recorded)source.playbackRate.value=landing?(heavyLanding?.90:.98)-p.strength*.025+(serial%3-1)*.008:1-p.strength*.10+(serial%3-1)*.012;filter.type='lowpass';filter.frequency.value=landing?(heavyLanding?2100:3000):p.cutoff;gain.gain.value=landing?Math.min(.95,p.gain+.08):p.gain;
+ const source=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),gain=ctx.createGain();source.buffer=buffer;if(recorded)source.playbackRate.value=landing?(heavyLanding?.90:.98)-p.strength*.025-p.damageStrength*.025+(serial%3-1)*.008:1-p.strength*.10-p.damageStrength*.045+(serial%3-1)*.012;filter.type='lowpass';filter.frequency.value=landing?(heavyLanding?2100:3000):p.cutoff;gain.gain.value=landing?Math.min(.95,p.gain+.08):p.gain;
  source.connect(filter);filter.connect(gain);gain.connect(this.sfx);source.start();source.onended=()=>{source.disconnect();filter.disconnect();gain.disconnect();this.voices=Math.max(0,this.voices-1);};
  }
  motors(speeds:number[],rpms:number[],active:boolean,configs:BotConfig[]=[],watts:number[]=[],enabled:boolean[]=[],actuatorSpeeds:number[]=[],burning:number[]=[]){
  if(!this.context)return;const now=this.context.currentTime;
  for(let bot=0;bot<2;bot++){
- const fire=burning[bot]>0?this.fireVoice(bot):this.fireLoops[bot];if(fire)fire.gain.gain.setTargetAtTime(active&&burning[bot]>0?(bot===0?.16:.11):0,now,.06);
- const c=configs[bot],profile=weaponVoiceKey(c),timbre=WEAPON_VOICES[profile],w=c?.weapon,rpm=Math.max(0,rpms[bot]??0),rps=rpm/60,spin=w&&isSpinner(w),speed=spin?clamp(rpm/w.rpm,0,1):0,gas=!!c&&componentProfile(c,'weapon')==='icewave',shell=w?.type==='shell_spinner',drum=w?.type==='drum',disc=w?.type==='vertical_disc'||w?.type==='hammer_saw',cage=w?.type==='horizontal_cage',big=c?.chassis.profile==='deep_six',load=clamp((watts[bot]??0)/8640,0,1),attenuation=bot===0?1:.62,actuator=clamp(Math.abs(actuatorSpeeds[bot]??0)/4,0,1),running=enabled[bot]??rpm>30;
- const loop=this.weaponVoice(bot,profile),pump=spin?0:clamp(actuator*.75+load*.55,0,1);loop.source.playbackRate.setTargetAtTime(spin?.3+speed*1.15:.72+pump*.44,now,.10);loop.filter.frequency.setTargetAtTime(timbre.band*(.45+speed*.55+pump*.4),now,.1);loop.gain.gain.setTargetAtTime(active&&!gas?(spin?speed:pump)*timbre.gain*attenuation:0,now,.07);
- const frequencies=[35+(speeds[bot]??0)*24,Math.max(18,rps*(spin?w.teeth:2)),gas?90+speed*80:Math.max(40,rps*(spin?w.ratio:2)*(drum?8:disc?7:6)),gas?45+speed*40:Math.max(20,rps*(shell?1.5:cage?1:2))+actuator*80];
- const gains=[Math.min(.018,(speeds[bot]??0)*.007),speed*(drum?.040:big?.038:cage?.032:.026),speed*(gas?.007:disc?.015:.010)*(1+load*.5),speed*(shell?.034:big?.028:.016)+actuator*.023];
- if(!spin){frequencies[2]=220+actuator*360;gains[2]=actuator*.025;}
- for(let layer=0;layer<4;layer++){const tone=this.tones[layer*2+bot];if(!tone)continue;tone.osc.frequency.setTargetAtTime(frequencies[layer],now,.07);tone.gain.gain.setTargetAtTime(active&&(!gas||layer===0)?gains[layer]*attenuation*.45:0,now,.07);}
- const air=this.air[bot];if(air){air.filter.frequency.setTargetAtTime(160+speed*(shell?750:drum?2800:disc?2100:1400)+actuator*1800,now,.10);air.gain.gain.setTargetAtTime(active?(speed*speed*(gas?.014:shell?.11:big?.10:.07)+actuator*.055)*attenuation:0,now,.12);}
- const engine=engineMix(speed),combustion=this.combustionLoops[bot];
- if(combustion)for(const [index,mode] of (['idle','mid','full'] as const).entries()){
-  const voice=combustion[index];if(!voice)continue;
-  voice.source.playbackRate.setTargetAtTime(engine.hz/ENGINE_CADENCE[mode],now,.065);
-  voice.filter.frequency.setTargetAtTime(engine.cutoff+load*700,now,.08);
-  voice.gain.gain.setTargetAtTime(active&&gas?Math.sqrt(engine.levels[index])*(.26+speed*.35+load*.07)*attenuation:0,now,.065);
- }
-
+  const fire=burning[bot]>0?this.fireVoice(bot):this.fireLoops[bot];if(fire)fire.gain.gain.setTargetAtTime(active&&burning[bot]>0?(bot===0?.16:.11):0,now,.06);
+  const c=configs[bot],profile=weaponVoiceKey(c),timbre=WEAPON_VOICES[profile],w=c?.weapon,rpm=Math.max(0,rpms[bot]??0),spin=!!w&&isSpinner(w),previous=this.weaponState[bot]??{speed:0,time:0},speed=spin?clamp(rpm/Math.max(1,w!.rpm),0,1):0,elapsed=previous.time?clamp(now-previous.time,.025,.25):.1,acceleration=previous.time&&spin?clamp((speed-previous.speed)/elapsed,-2.5,2.5):0,spinSound=weaponSpinSound(c,rpm,watts[bot]??0,acceleration);this.weaponState[bot]={speed,time:now};
+  const gas=!!c&&componentProfile(c,'weapon')==='icewave',shell=w?.type==='shell_spinner',drum=w?.type==='drum',disc=w?.type==='vertical_disc'||w?.type==='hammer_saw',cage=w?.type==='horizontal_cage',big=c?.chassis.profile==='deep_six',load=clamp((watts[bot]??0)/8640,0,1),attenuation=bot===0?1:.62,actuator=clamp(Math.abs(actuatorSpeeds[bot]??0)/4,0,1),running=enabled[bot]??rpm>30;
+  const loop=this.weaponVoice(bot,profile),pump=spin?0:clamp(actuator*.75+load*.55,0,1);loop.source.playbackRate.setTargetAtTime(spin?spinSound.loopRate:.72+pump*.44,now,.10);loop.filter.frequency.setTargetAtTime(spin?Math.max(timbre.band*.36,spinSound.filterHz):timbre.band*(.45+pump*.4),now,.1);loop.gain.gain.setTargetAtTime(active&&!gas?(spin?spinSound.loopGain:pump)*timbre.gain*attenuation:0,now,.07);
+  const frequencies=[35+(speeds[bot]??0)*24,spin?spinSound.bladePass:Math.max(18,rpm/60*2),gas?90+speed*80:spin?spinSound.motorHz:Math.max(40,rpm/60*2),gas?45+speed*40:Math.max(20,rpm/60*(shell?1.5:cage?1:2))+actuator*80];
+  const gains=[Math.min(.018,(speeds[bot]??0)*.007),spin?spinSound.bladeGain*(drum?.040:big?.038:cage?.032:.026):0,spin?spinSound.motorGain*(gas?.007:disc?.015:.010):0,spin?speed*(shell?.034:big?.028:.016)+actuator*.023:actuator*.023];
+  if(!spin){frequencies[2]=220+actuator*360;gains[2]=actuator*.025;}
+  for(let layer=0;layer<4;layer++){const tone=this.tones[layer*2+bot];if(!tone)continue;tone.osc.frequency.setTargetAtTime(frequencies[layer],now,.07);tone.gain.gain.setTargetAtTime(active&&(!gas||layer===0)?gains[layer]*attenuation*.45:0,now,.07);}
+  const air=this.air[bot];if(air){air.filter.frequency.setTargetAtTime(spin?spinSound.airHz:160+actuator*1800,now,.10);air.gain.gain.setTargetAtTime(active?(spin?spinSound.airGain*(gas?.014:shell?.11:big?.10:.07)+actuator*.055:actuator*.055)*attenuation:0,now,.12);}
+  const engine=engineMix(speed),combustion=this.combustionLoops[bot];
+  if(combustion)for(const [index,mode] of (['idle','mid','full'] as const).entries()){
+   const voice=combustion[index];if(!voice)continue;
+   voice.source.playbackRate.setTargetAtTime(engine.hz/ENGINE_CADENCE[mode],now,.065);
+   voice.filter.frequency.setTargetAtTime(engine.cutoff+load*700,now,.08);
+   voice.gain.gain.setTargetAtTime(active&&gas?Math.sqrt(engine.levels[index])*(.26+speed*.35+load*.07)*attenuation:0,now,.065);
+  }
  }
  }
 

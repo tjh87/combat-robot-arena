@@ -6,6 +6,8 @@ import {Simulation,initializePhysics,neutral,FixedClock} from '../src/sim';
 import {rotorMotion,updateRotorMotion} from '../src/combat-visuals';
 import {ArenaRenderer} from '../src/render';
 import {GameAudio} from '../src/audio';
+import {weaponBlurProfile} from '../src/weapon-blur';
+import {weaponSpinSound} from '../src/weapon-audio';
 
 const results:any[]=[];
 async function check(name:string,run:()=>unknown){if(process.env.CASE&&!name.includes(process.env.CASE))return;try{const detail=await run();results.push({name,status:'passed',detail});console.log('PASS',name,JSON.stringify(detail));}catch(e){results.push({name,status:'failed',error:String(e)});console.log('FAIL',name,String(e));}writeFileSync('docs/gameplay-results.json',JSON.stringify(results,null,2));}
@@ -45,10 +47,10 @@ await check('Mirror matches use distinct liveries without changing physics or th
  return{templates:10};
 });
 await check('Rotor exposure trails appear at speed, animate, and vanish when stopped',()=>{
- for(const i of[0,1,3,4,5,6,7,8,9]){const rotor=new THREE.Group(),effect=rotorMotion(preset(i));rotor.add(effect);updateRotorMotion(rotor,0,0);assert(!effect.visible);updateRotorMotion(rotor,1500,1);assert(effect.visible);const mesh=effect.children[0].children[0] as THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>,angle=mesh.rotation.z;assert(mesh.material.opacity>0);updateRotorMotion(rotor,1500,1.016);if(effect.userData.horizontal){assert.equal(mesh.rotation.z,angle);assert(mesh.geometry.userData.exposureAngle>0);}else assert.notEqual(mesh.rotation.z,angle);updateRotorMotion(rotor,1500,2,true);assert(!effect.visible);effect.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();(o.material as THREE.Material).dispose();}});}return{spinnerTemplates:9};
+ for(const i of[0,1,3,4,5,6,7,8,9]){const rotor=new THREE.Group(),effect=rotorMotion(preset(i));rotor.add(effect);updateRotorMotion(rotor,0,0);assert(!effect.visible);updateRotorMotion(rotor,1500,1);assert(effect.visible);const mesh=(effect.userData.sawbladeExposure?effect.children[0]:effect.children[0].children[0]) as THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>,angle=mesh.rotation.z;assert(mesh.material.opacity>0);updateRotorMotion(rotor,1500,1.016);if(effect.userData.horizontal){assert.equal(mesh.rotation.z,angle);assert(mesh.geometry.userData.exposureAngle>0);}else if(effect.userData.sawbladeExposure)assert((mesh.material as unknown as THREE.ShaderMaterial).uniforms.exposureAngle.value>0);else if(effect.userData.enhancedExposure)assert(mesh.geometry.userData.exposureAngle>0);else assert.notEqual(mesh.rotation.z,angle);updateRotorMotion(rotor,1500,2,true);assert(!effect.visible);effect.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();(o.material as THREE.Material).dispose();}});}return{spinnerTemplates:9};
 });
 await check('Opponent direction remains on screen for targets in front, behind and on either side',()=>{
- const r=Object.create(ArenaRenderer.prototype) as ArenaRenderer;r.camera=new THREE.PerspectiveCamera(76,16/9,.05,100);r.camera.position.set(0,.7,0);r.camera.lookAt(0,.7,-1);r.bodyGroups=new Map();const other=new THREE.Group();r.bodyGroups.set('b1:chassis',other);const fake={bots:[{chassis:{translation:()=>v()}},{chassis:{translation:()=>v()}}]} as any;
+	 const r=Object.create(ArenaRenderer.prototype) as ArenaRenderer;r.camera=new THREE.PerspectiveCamera(76,16/9,.05,100);r.camera.position.set(0,.7,0);r.camera.lookAt(0,.7,-1);r.bodyGroups=new Map();r.viewerBotId=0;r.replay=false;r.width=1280;r.height=720;const other=new THREE.Group();r.bodyGroups.set('b1:chassis',other);const fake={bots:[{chassis:{translation:()=>v()},compiled:{envelope:{y:.3}}},{chassis:{translation:()=>v()},compiled:{envelope:{y:.3}}}]} as any;
  const data=[];for(const p of[v(0,0,-4),v(0,0,4),v(-4,0,0),v(4,0,0),v(-4,0,4)]){other.position.set(p.x,p.y,p.z);const indicator=r.opponentIndicator(fake);assert(Object.values(indicator).every(x=>typeof x==='boolean'||Number.isFinite(x)));assert(indicator.x>=7&&indicator.x<=93&&indicator.y>=20&&indicator.y<=80);if(p.z>0)assert(indicator.behind);data.push(indicator);}return data;
 });
 await check('Weapon sound frequencies follow rotor RPM, blade count and motor ratio',()=>{
@@ -56,6 +58,13 @@ await check('Weapon sound frequencies follow rotor RPM, blade count and motor ra
  const make=()=>({gain:new Param(),playbackRate:new Param(),frequency:new Param(),Q:new Param(),connect(){},disconnect(){},start(){},stop(){}});
  (globalThis as any).AudioContext=class{state='running';sampleRate=8000;currentTime=1;destination={};createGain(){return make();}createOscillator(){return make();}createBiquadFilter(){return make();}createBufferSource(){return make();}createBuffer(_a:number,length:number){return{getChannelData:()=>new Float32Array(length)};}resume(){return Promise.resolve();}close(){return Promise.resolve();}};
  const audio=new GameAudio();try{audio.start(.7,.8);const configs=[preset(0),preset(1)];audio.motors([1,0],[1200,2400],true,configs,[2000,3000]);assert.equal(audio.tones[2].osc.frequency.value,40);assert.equal(audio.tones[3].osc.frequency.value,160);assert(audio.air[0].gain.gain.value>0);const slow=audio.tones[4].osc.frequency.value;audio.motors([1,0],[2400,2400],true,configs,[2000,3000]);assert.equal(audio.tones[4].osc.frequency.value,slow*2);audio.mute();assert(audio.tones.every(t=>t.gain.gain.value===0));assert(audio.air.every(t=>t.gain.gain.value===0));return{voices:audio.tones.length,airLayers:audio.air.length};}finally{audio.dispose();}
+});
+await check('Weapon sound and blur profiles retain distinct low, mid, high, and reduced-motion bands',()=>{
+ const config=preset(1),target=config.weapon.rpm,low=weaponBlurProfile(target*.02,target,config.weapon.teeth),mid=weaponBlurProfile(target*.42,target,config.weapon.teeth),high=weaponBlurProfile(target,target,config.weapon.teeth),reduced=weaponBlurProfile(target,target,config.weapon.teeth,true);
+ assert.equal(low.strength,0);assert(mid.strength>0&&mid.exposure>0);assert(high.exposure>=mid.exposure);assert(high.exposure<=high.toothPitch);assert.equal(reduced.strength,0);assert.equal(reduced.exposure,0);
+ const slow=weaponSpinSound(config,target*.35,1600,0),fast=weaponSpinSound(config,target*.85,6400,.8),coast=weaponSpinSound(config,target*.85,6400,-.8);
+ assert(slow.bladePass<fast.bladePass&&slow.motorHz<fast.motorHz);assert(fast.loopRate>slow.loopRate);assert(fast.loopRate>coast.loopRate);assert(fast.airGain>slow.airGain);
+ return{lowOpacity:low.opacity,midExposure:mid.exposure,highExposure:high.exposure,toothPitch:high.toothPitch,fastBladeHz:fast.bladePass};
 });
 await check('Damaged armour changes its finish without overlay markers',()=>{
  const context=new Proxy({}, {get:()=>()=>{}});Object.assign(globalThis,{document:{createElement:()=>({width:1,height:1,getContext:()=>context})}});

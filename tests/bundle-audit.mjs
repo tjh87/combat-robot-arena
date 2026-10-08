@@ -4,10 +4,11 @@ import {join} from 'node:path';
 import {createHash} from 'node:crypto';
 
 const files=readdirSync('dist',{recursive:true}).filter(file=>statSync(join('dist',file)).isFile());
-assert(files.every(file=>file==='index.html'||file==='favicon.svg'||file==='audio/License.txt'||file==='audio/match-start.mp3'||/^audio\/landing_(light_01|heavy_0[1-2])\.mp3$/.test(file)||/^audio\/steel_(crash_0[1-3]|strike_0[1-3]|tap_0[1-2])\.mp3$/.test(file)||/^robots\/(tombstone|minotaur|hydra|icewave|hypershock|gigabyte|whyachi|huge|sawblaze|deep_six|quantum)\.png$/.test(file)||/^assets\/(index|physics|graphics|predictor|tournament-worker|build-fit-worker)-[\w-]+\.(js|css)$/.test(file)));
+assert(files.every(file=>file==='index.html'||file==='favicon.svg'||file==='audio/License.txt'||file==='audio/match-start.mp3'||/^audio\/landing_(light_01|heavy_0[1-2])\.mp3$/.test(file)||/^audio\/steel_(crash_0[1-3]|strike_0[1-3]|tap_0[1-2])\.mp3$/.test(file)||/^robots\/(tombstone|minotaur|hydra|icewave|hypershock|gigabyte|whyachi|huge|sawblaze|deep_six|quantum)\.png$/.test(file)||/^branding\/arena-logo-(64|96|256)\.png$/.test(file)||/^assets\/(index|physics|graphics|predictor|tournament-worker|build-fit-worker)-[\w-]+\.(js|css)$/.test(file)));
 assert.equal(files.filter(file=>file.endsWith('.mp3')).length,12);
 assert(readFileSync('dist/audio/License.txt','utf8').includes('CC0'));
 assert.equal(files.filter(file=>file.startsWith('robots/')).length,11);
+assert.equal(files.filter(file=>file.startsWith('branding/')).length,3);
 for(const file of files.filter(file=>file.startsWith('robots/'))){const bytes=readFileSync(join('dist',file));assert(bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])),file+' must be a valid PNG');}
 assert(!files.some(file=>file.endsWith('.mp4')),'No video is shipped');
 const html=readFileSync('dist/index.html','utf8');

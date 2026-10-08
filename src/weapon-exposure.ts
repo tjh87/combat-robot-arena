@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {isSpinner,isHorizontal,weaponAxis,clamp,type BotConfig} from './model';
+import {weaponBlurProfile} from './weapon-blur';
 const STEPS=48,RINGS=6;
 function ribbon(radius:number,inner:number,blades:number,phase:number,color:string){
  const count=blades*(STEPS+1)*RINGS,g=new THREE.BufferGeometry(),positions=new Float32Array(count*3),colors=new Float32Array(count*4),indices:number[]=[],paint=new THREE.Color(color),steel=new THREE.Color('#e7f1f8');
@@ -14,6 +15,6 @@ export function enhancedRotorExposure(config:BotConfig){
  for(const l of levels){const plane=new THREE.Group();plane.quaternion.copy(orientation);plane.position.set(axis.x*l.offset,axis.y*l.offset,axis.z*l.offset);plane.add(ribbon(l.radius,l.inner,l.blades,l.phase,config.identity.secondary));root.add(plane);}return root;
 }
 export function updateEnhancedExposure(root:THREE.Object3D,rpm:number,reduced:boolean,direction?:number){
- const speed=Number.isFinite(rpm)?Math.abs(rpm):0,strength=clamp((speed-60)/Math.max(180,root.userData.targetRPM*.65),0,1),spin=Math.sign(direction??root.userData.direction??1)||1;root.visible=strength>.01&&!reduced;if(!root.visible)return;
- for(const plane of root.children)for(const object of plane.children){const mesh=object as THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>,g=mesh.geometry,d=g.userData;mesh.material.opacity=.50*strength;if(Math.abs((d.rpm??-999)-speed)<.5&&d.direction===spin)continue;d.rpm=speed;d.direction=spin;const span=Math.min(Math.PI*2/d.blades,speed*Math.PI/30*(1/120+strength/240));d.exposureAngle=span;const radii=[d.radius*d.inner,d.radius*(d.inner+.045*(1-d.inner)),d.radius*(d.inner+.35*(1-d.inner)),d.radius*.94,d.radius*.985,d.radius];const p=g.getAttribute('position') as THREE.BufferAttribute;for(let b=0;b<d.blades;b++)for(let s=0;s<=STEPS;s++){const a=d.phase+b*Math.PI*2/d.blades-spin*span*s/STEPS;for(let r=0;r<RINGS;r++)p.setXYZ((b*(STEPS+1)+s)*RINGS+r,Math.cos(a)*radii[r],Math.sin(a)*radii[r],0);}p.needsUpdate=true;}
+	 const speed=Number.isFinite(rpm)?Math.abs(rpm):0,spin=Math.sign(direction??root.userData.direction??1)||1,base=weaponBlurProfile(speed,root.userData.targetRPM,1,reduced);root.visible=base.strength>.01;if(!root.visible)return;
+	 for(const plane of root.children)for(const object of plane.children){const mesh=object as THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>,g=mesh.geometry,d=g.userData,profile=weaponBlurProfile(speed,root.userData.targetRPM,d.blades,reduced);mesh.material.opacity=profile.opacity;if(Math.abs((d.rpm??-999)-speed)<.5&&d.direction===spin)continue;d.rpm=speed;d.direction=spin;const span=profile.exposure;d.exposureAngle=span;const radii=[d.radius*d.inner,d.radius*(d.inner+.045*(1-d.inner)),d.radius*(d.inner+.35*(1-d.inner)),d.radius*.94,d.radius*.985,d.radius];const p=g.getAttribute('position') as THREE.BufferAttribute;for(let b=0;b<d.blades;b++)for(let s=0;s<=STEPS;s++){const a=d.phase+b*Math.PI*2/d.blades-spin*span*s/STEPS;for(let r=0;r<RINGS;r++)p.setXYZ((b*(STEPS+1)+s)*RINGS+r,Math.cos(a)*radii[r],Math.sin(a)*radii[r],0);}p.needsUpdate=true;}
 }

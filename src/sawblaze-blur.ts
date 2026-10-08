@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {sawbladeContours} from './sawblade-profile';
 import {clamp,type BotConfig} from './model';
+import {weaponBlurProfile} from './weapon-blur';
 
 const ANGLES=256,RADII=128,TAU=Math.PI*2,SHUTTER=1/60;
 function contains(points:THREE.Vector2[],y:number,z:number){let inside=false;for(let i=0,j=points.length-1;i<points.length;j=i++){const a=points[i],b=points[j];if((a.y>z)!==(b.y>z)&&y<(b.x-a.x)*(z-a.y)/(b.y-a.y)+a.x)inside=!inside;}return inside;}
@@ -31,9 +32,9 @@ float alpha=strength*min(0.88,coverage.x*0.84+coverage.y*0.36);if(alpha<0.002)di
  mask.dispose();geometry.dispose();return root;
 }
 export function updateSawbladeExposure(rotor:THREE.Object3D,root:THREE.Object3D,rpm:number,reduced:boolean,direction:number){
- const speed=Number.isFinite(rpm)?Math.abs(rpm):0,strength=reduced?0:clamp((speed-60)/Math.max(600,root.userData.targetRPM*.70),0,1),span=Math.min(TAU,speed*Math.PI/30*SHUTTER);
- root.visible=strength>.001;root.userData.exposureAngle=span;root.userData.strength=strength;root.userData.spinDirection=direction;
- for(const child of root.children){const mesh=child as THREE.Mesh<THREE.BufferGeometry,THREE.ShaderMaterial>;mesh.material.uniforms.exposureAngle.value=span;mesh.material.uniforms.strength.value=strength;mesh.material.uniforms.direction.value=direction;}
+	 const speed=Number.isFinite(rpm)?Math.abs(rpm):0,profile=weaponBlurProfile(speed,root.userData.targetRPM,1,reduced),strength=profile.strength,span=profile.exposure;
+	 root.visible=strength>.001;root.userData.exposureAngle=span;root.userData.strength=strength;root.userData.spinDirection=direction;
+	 for(const child of root.children){const mesh=child as THREE.Mesh<THREE.BufferGeometry,THREE.ShaderMaterial>;mesh.material.uniforms.exposureAngle.value=span;mesh.material.uniforms.strength.value=strength;mesh.material.uniforms.direction.value=direction;}
  rotor.traverse(object=>{if(!(object instanceof THREE.Mesh)||!object.userData.svgBlade)return;object.traverse(child=>{if(!(child instanceof THREE.Mesh))return;const opacity=1-.95*strength;for(const material of Array.isArray(child.material)?child.material:[child.material]){const transparent=opacity<.999;if(material.transparent!==transparent){material.transparent=transparent;material.needsUpdate=true;}material.opacity=opacity;material.depthWrite=!transparent;}if(child.userData.restShadow===undefined)child.userData.restShadow=child.castShadow;child.castShadow=strength<.5&&child.userData.restShadow;});});
 }
 export function disposeSawbladeExposure(material:THREE.Material){if(material instanceof THREE.ShaderMaterial&&material.userData.sawbladeExposure)material.uniforms.polarCoverage.value.dispose();}
