@@ -1,0 +1,122 @@
+/* Revamp menu theme (opt-in via the top-bar "UI" switch).
+   Every rule is scoped to html[data-menu-theme="revamp"] and only targets HTML menu chrome:
+   top bar, sidebars, menu panels, settings/repair/tournament modals. The 3D scene (#scene),
+   robots, fight HUD (#hud) and arena overlay are intentionally never selected here. */
+html[data-menu-theme="revamp"]{--rv-bg:#0e1114;--rv-panel:#171c21;--rv-panel-2:#1d242a;--rv-line:#2a333b;--rv-line-2:#3a4650;--rv-text:#e8eef2;--rv-muted:#8b98a3;--rv-accent:#35e0d2;--rv-accent-ink:#06211f;--rv-p2:#ff5c8a;--rv-head:'Bahnschrift SemiCondensed','Bahnschrift','Roboto Condensed','Arial Narrow',system-ui,sans-serif;--rv-body:system-ui,'Segoe UI',Roboto,Arial,sans-serif;--rv-mono:ui-monospace,'Cascadia Mono',Consolas,'Courier New',monospace;--cyan:#35e0d2}
+
+/* Top bar */
+html[data-menu-theme="revamp"] .topbar{height:64px;padding:0 20px;gap:24px;background:var(--rv-bg);border-bottom:1px solid var(--rv-line);box-shadow:none}
+html[data-menu-theme="revamp"] .brand{min-width:250px;gap:12px;font:700 1.05rem/1.05 var(--rv-head);letter-spacing:.04em;color:var(--rv-text)}
+html[data-menu-theme="revamp"] .brand small{font:600 .62rem var(--rv-mono);letter-spacing:.2em;color:var(--rv-muted)}
+html[data-menu-theme="revamp"] .brand-mark{width:34px;height:34px;border:1.5px solid var(--rv-accent);border-radius:9px;background:#0b1a1c;box-shadow:none;transform:none}
+html[data-menu-theme="revamp"] .brand-mark img{transform:none;filter:grayscale(1) contrast(1.15) brightness(.95);mix-blend-mode:screen}
+html[data-menu-theme="revamp"] .nav{gap:4px;padding:0;border-left:1px solid var(--rv-line);padding-left:16px;align-items:center}
+html[data-menu-theme="revamp"] .nav button{height:38px;padding:0 16px;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--rv-muted);font:600 .86rem var(--rv-head);letter-spacing:.1em}
+html[data-menu-theme="revamp"] .nav button:hover{color:var(--rv-text);background:var(--rv-panel)}
+html[data-menu-theme="revamp"] .nav button.active{color:var(--rv-text);background:var(--rv-panel);border-color:var(--rv-line-2)}
+html[data-menu-theme="revamp"] .nav button.active:after{content:'';position:absolute;left:14px;right:14px;bottom:-1px;height:2px;border-radius:2px;background:var(--rv-accent);box-shadow:none}
+html[data-menu-theme="revamp"] .nav button{position:relative}
+html[data-menu-theme="revamp"] .top-actions{gap:10px}
+html[data-menu-theme="revamp"] .version{padding:6px 10px;border:1px solid var(--rv-line);border-radius:999px;font:600 .66rem var(--rv-mono);color:var(--rv-muted)}
+html[data-menu-theme="revamp"] :is(.settings-btn,.theme-toggle){height:32px;padding:0 12px!important;border:1px solid var(--rv-line-2)!important;border-radius:8px;background:var(--rv-panel)!important;color:var(--rv-text)!important;font:600 .74rem var(--rv-body)}
+html[data-menu-theme="revamp"] .theme-toggle[aria-pressed="true"]{border-color:var(--rv-accent)!important;color:var(--rv-accent)!important}
+html[data-menu-theme="revamp"] .shell{inset:64px 0 33px}
+
+/* Sidebar shell and typography */
+html[data-menu-theme="revamp"] .sidebar{background:var(--rv-bg);border-right:1px solid var(--rv-line);padding:22px 20px;gap:16px;font-family:var(--rv-body);color:var(--rv-text)}
+html[data-menu-theme="revamp"] .sidebar h1{font:700 1.9rem/1.05 var(--rv-head);letter-spacing:.01em;text-transform:uppercase;color:var(--rv-text);margin:8px 0 6px}
+html[data-menu-theme="revamp"] .sidebar p{color:var(--rv-muted);font-size:.84rem;line-height:1.5}
+html[data-menu-theme="revamp"] .sidebar .eyebrow,html[data-menu-theme="revamp"] .section-label{font:700 .7rem var(--rv-head);letter-spacing:.14em;color:var(--rv-muted);text-transform:uppercase}
+html[data-menu-theme="revamp"] .section-label span:last-child{font:600 .64rem var(--rv-mono);color:#66737d}
+html[data-menu-theme="revamp"] .sidebar label{color:var(--rv-muted);font-size:.78rem}
+html[data-menu-theme="revamp"] .sidebar :is(input:not([type=checkbox]):not([type=range]),select){background:var(--rv-panel);border:1px solid var(--rv-line-2);border-radius:8px;color:var(--rv-text);padding:9px 11px}
+html[data-menu-theme="revamp"] .sidebar :is(input,select):focus-visible{outline:2px solid var(--rv-accent);outline-offset:1px}
+html[data-menu-theme="revamp"] .sidebar input[type=checkbox]{accent-color:var(--rv-accent)}
+
+/* Buttons inside menus */
+html[data-menu-theme="revamp"] :is(.sidebar,.modal) button{border-radius:8px;border-color:var(--rv-line-2);background:var(--rv-panel);color:var(--rv-text)}
+html[data-menu-theme="revamp"] :is(.sidebar,.modal) button:hover:not(:disabled){background:var(--rv-panel-2);border-color:#56646f}
+html[data-menu-theme="revamp"] :is(.sidebar,.modal) button.primary,html[data-menu-theme="revamp"] :is(.sidebar,.modal) button.orange{background:var(--rv-accent);border-color:var(--rv-accent);color:var(--rv-accent-ink);font:700 .95rem var(--rv-head);letter-spacing:.08em;text-transform:uppercase}
+html[data-menu-theme="revamp"] :is(.sidebar,.modal) button.primary:hover:not(:disabled){background:#62ece0;border-color:#62ece0}
+
+/* Quick Fight / Practice hero */
+html[data-menu-theme="revamp"] .menu-hero{flex:none;min-height:44px;padding:12px 14px;border:1px solid var(--rv-line);border-radius:10px;background:var(--rv-panel);box-shadow:inset 3px 0 var(--rv-accent)}
+html[data-menu-theme="revamp"] .menu-hero:after{display:none}
+html[data-menu-theme="revamp"] .menu-hero .eyebrow{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:20px;line-height:20px;color:var(--rv-text);font:700 .82rem var(--rv-head);letter-spacing:.14em}
+html[data-menu-theme="revamp"] .menu-hero .menu-heading{white-space:nowrap}
+html[data-menu-theme="revamp"] .menu-hero h1{color:var(--rv-text)}
+html[data-menu-theme="revamp"] .menu-status{margin-left:auto!important;height:20px!important;line-height:18px!important;font-size:.62rem!important;padding:0 8px;border:1px solid #2b5a56;border-radius:999px;color:var(--rv-accent)!important;font-family:var(--rv-mono)!important}
+
+/* Segmented controls */
+html[data-menu-theme="revamp"] :is(.mode-switch,.difficulty){display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;padding:4px;border:1px solid var(--rv-line);border-radius:10px;background:var(--rv-panel)}
+html[data-menu-theme="revamp"] :is(.mode-switch,.difficulty) button{border:0;background:transparent;color:var(--rv-muted);font:600 .8rem var(--rv-head);letter-spacing:.08em;text-transform:uppercase;box-shadow:none}
+html[data-menu-theme="revamp"] :is(.mode-switch,.difficulty) button.active{background:var(--rv-accent);color:var(--rv-accent-ink)}
+
+/* Robot cards (offline list, opponent gallery, online grid) */
+html[data-menu-theme="revamp"] .opponent-picker{padding:12px;border:1px solid var(--rv-line);border-left:3px solid var(--rv-p2);border-radius:10px;background:var(--rv-panel)}
+html[data-menu-theme="revamp"] .opponent-picker .section-label{color:var(--rv-p2)}
+html[data-menu-theme="revamp"] :is(.opponent-gallery,.roster-panel)>summary{border:1px solid var(--rv-line-2);border-radius:8px;background:var(--rv-panel-2);color:var(--rv-text)}
+html[data-menu-theme="revamp"] .random-pick{border-color:var(--rv-line-2)!important;background:transparent!important;color:var(--rv-text)!important}
+html[data-menu-theme="revamp"] .bot-options .bot-card{border:1px solid var(--rv-line);border-radius:10px;background:var(--rv-panel)}
+html[data-menu-theme="revamp"] .bot-options .bot-card:hover{border-color:#56646f;background:var(--rv-panel-2)}
+html[data-menu-theme="revamp"] .bot-options .bot-card.active{border-color:var(--rv-accent);background:#132726;box-shadow:inset 3px 0 var(--rv-accent)}
+html[data-menu-theme="revamp"] .bot-options .bot-card .bot-index{font-family:var(--rv-mono);color:var(--rv-muted)}
+html[data-menu-theme="revamp"] .bot-options .bot-card.active .bot-index{color:var(--rv-accent)}
+html[data-menu-theme="revamp"] .bot-options .bot-card strong{font:700 .92rem var(--rv-head);letter-spacing:.05em}
+html[data-menu-theme="revamp"] .robot-photo{border:1px solid var(--rv-line-2)!important;border-radius:6px;background:#0a0d10!important}
+html[data-menu-theme="revamp"] .roster-card{border-color:var(--rv-line)!important;border-radius:8px!important;background:var(--rv-panel)!important;color:var(--rv-text)!important}
+html[data-menu-theme="revamp"] .roster-card:is(:hover,:focus-visible){border-color:#56646f!important;background:var(--rv-panel-2)!important}
+html[data-menu-theme="revamp"] .roster-card.active{border-color:var(--rv-accent)!important;background:#132726!important;box-shadow:inset 0 0 0 1px #35e0d255!important}
+html[data-menu-theme="revamp"] .roster-copy strong{font-family:var(--rv-head)!important;letter-spacing:.04em}
+html[data-menu-theme="revamp"] .roster-check{color:var(--rv-accent)!important}
+html[data-menu-theme="revamp"] .online-robot-picker{border-color:var(--rv-line)!important;background:var(--rv-panel)!important}
+html[data-menu-theme="revamp"] .online-robot-picker .roster-grid{border-top-color:var(--rv-line)!important}
+html[data-menu-theme="revamp"] .selected-machine{border-color:var(--rv-line)!important;background:var(--rv-panel)!important}
+html[data-menu-theme="revamp"] .selected-machine-name{font-family:var(--rv-head)!important;letter-spacing:.04em;text-transform:uppercase}
+html[data-menu-theme="revamp"] .selected-machine-label{color:var(--rv-accent)!important}
+html[data-menu-theme="revamp"] .sidebar .field:has(#saved-fighter){border-color:var(--rv-line)!important;background:var(--rv-panel)!important}
+html[data-menu-theme="revamp"] .sidebar .field:has(#saved-fighter) label:before{color:var(--rv-accent)}
+html[data-menu-theme="revamp"] .side-footer button{background:transparent;border-color:var(--rv-line)}
+
+/* Online lobby and room */
+html[data-menu-theme="revamp"] .online-heading .eyebrow{color:var(--rv-muted)}
+html[data-menu-theme="revamp"] .online-status-chip{border-color:var(--rv-line-2);background:var(--rv-panel);color:var(--rv-text);font-family:var(--rv-mono)}
+html[data-menu-theme="revamp"] .online-status-chip[data-connected="true"]:before{background:var(--rv-accent);box-shadow:0 0 8px #35e0d266}
+html[data-menu-theme="revamp"] .online-mode-card{border-radius:10px;background:var(--rv-panel)!important;border-color:var(--rv-line-2)!important;color:var(--rv-text)!important;text-transform:none!important;font-family:var(--rv-body)!important;letter-spacing:0!important}
+html[data-menu-theme="revamp"] .online-mode-card.primary{border-color:var(--rv-accent)!important;box-shadow:inset 3px 0 var(--rv-accent)}
+html[data-menu-theme="revamp"] .online-mode-card strong{font:700 1rem var(--rv-head);letter-spacing:.06em;text-transform:uppercase}
+html[data-menu-theme="revamp"] .online-mode-card small,html[data-menu-theme="revamp"] .online-mode-card.primary small{color:var(--rv-muted)}
+html[data-menu-theme="revamp"] :is(.online-join-card,.online-invite){border:1px solid var(--rv-line);border-radius:10px;background:var(--rv-panel)}
+html[data-menu-theme="revamp"] .online-code-row input{font-family:var(--rv-mono);letter-spacing:.3em;text-align:center}
+html[data-menu-theme="revamp"] .online-room-number{font-family:var(--rv-mono)!important;color:var(--rv-accent)!important}
+html[data-menu-theme="revamp"] .online-players li{border-color:var(--rv-line);background:var(--rv-panel)}
+html[data-menu-theme="revamp"] .online-players strong{font-family:var(--rv-head);letter-spacing:.04em}
+html[data-menu-theme="revamp"] .ready-chip{border-radius:999px;background:var(--rv-panel-2);border-color:var(--rv-line-2);color:var(--rv-muted)}
+html[data-menu-theme="revamp"] .ready-chip[data-ready="true"]{background:#123331;border-color:#2b6f69;color:var(--rv-accent)}
+html[data-menu-theme="revamp"] .online-phase{border-color:var(--rv-line-2);background:var(--rv-panel);font-family:var(--rv-mono)}
+html[data-menu-theme="revamp"] .online-bracket section{border-color:var(--rv-line);background:var(--rv-panel)}
+
+/* Modals: settings, repair, tournament */
+html[data-menu-theme="revamp"] .modal-backdrop{background:#05070acc;backdrop-filter:blur(8px)}
+html[data-menu-theme="revamp"] .modal{background:var(--rv-panel)!important;border:1px solid var(--rv-line-2)!important;border-top:1px solid var(--rv-line-2)!important;border-radius:14px!important;box-shadow:0 24px 80px #000a!important;color:var(--rv-text);font-family:var(--rv-body)}
+html[data-menu-theme="revamp"] .modal :is(h2,h3){font-family:var(--rv-head);letter-spacing:.03em;text-transform:uppercase}
+html[data-menu-theme="revamp"] .modal :is(input:not([type=checkbox]):not([type=range]),select){background:var(--rv-bg);border:1px solid var(--rv-line-2);border-radius:8px;color:var(--rv-text)}
+html[data-menu-theme="revamp"] .modal :is(input[type=checkbox],input[type=range]){accent-color:var(--rv-accent)}
+html[data-menu-theme="revamp"] .setting-section{border-color:var(--rv-line)!important;background:var(--rv-bg)!important;border-radius:10px}
+html[data-menu-theme="revamp"] :is(.cup-eyebrow,.cup-intro-art>span){color:var(--rv-accent)!important;font-family:var(--rv-head)!important}
+html[data-menu-theme="revamp"] .cup-shell-header>span{border-color:var(--rv-line-2)!important;background:var(--rv-bg)!important;color:var(--rv-muted)!important}
+html[data-menu-theme="revamp"] .cup-stage>header>span,html[data-menu-theme="revamp"] .cup-crown-stage>header>span{border-color:var(--rv-line-2);background:var(--rv-bg);color:var(--rv-accent)}
+html[data-menu-theme="revamp"] :is(.cup-stage,.cup-crown-stage) h3{font-family:var(--rv-head);letter-spacing:.14em}
+html[data-menu-theme="revamp"] .cup-match{border-color:var(--rv-line-2);background:var(--rv-bg);box-shadow:none}
+html[data-menu-theme="revamp"] .cup-match[data-state="active"]{border-color:var(--rv-accent);box-shadow:0 0 0 1px #35e0d233}
+html[data-menu-theme="revamp"] .cup-entry.won{background:#12302d;box-shadow:inset 3px 0 var(--rv-accent)}
+html[data-menu-theme="revamp"] .cup-entry.won :is(.cup-entry-body>strong,.cup-result-badge){color:#9ef3ea}
+html[data-menu-theme="revamp"] .cup-entry.is-player .cup-entry-body>strong:before{color:var(--rv-accent)}
+html[data-menu-theme="revamp"] .cup-path.win{stroke:var(--rv-accent)}
+html[data-menu-theme="revamp"] .cup-crown{border-color:var(--rv-line-2);background:var(--rv-bg)}
+html[data-menu-theme="revamp"] .cup-shell #bracket-next{background:var(--rv-accent)!important;border-color:var(--rv-accent)!important;color:var(--rv-accent-ink)!important;box-shadow:none!important}
+html[data-menu-theme="revamp"] :is(.cup-shell,.repair-studio) .cup-action-bar{background:#171c21f2}
+html[data-menu-theme="revamp"] :is(.cup-intro,.cup-champion){border-color:var(--rv-line-2)!important;background:var(--rv-panel)!important}
+
+/* Footer rule bar */
+html[data-menu-theme="revamp"] .rulebar{background:var(--rv-bg);border-top:1px solid var(--rv-line);color:var(--rv-muted);font-family:var(--rv-mono)}

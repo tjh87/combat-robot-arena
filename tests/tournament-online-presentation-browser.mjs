@@ -34,7 +34,7 @@ try{
  await click('#online-bracket-open');
  assert.equal(await page.locator('#online-cup-map .cup-stage').count(),3);
  assert.equal(await page.locator('#online-cup-map .cup-entry[data-entry]').count(),8);
- assert.equal(await page.locator('#online-cup-map .cup-path').count(),12);
+ assert.equal(await page.locator('#online-cup-map .cup-path').count(),14);
  assert.equal(await page.locator('#online-cup-map').getAttribute('data-reduced'),'true');
  assert.equal(await page.locator('#online-cup-map .cup-record').count(),8);const aiNames=await page.locator('.cup-compact-match>div:not(.is-player)>span:not(.cup-record)').allTextContents();assert.equal(new Set(aiNames).size,7);await assertCupArrows(page);
  await page.screenshot({path:'browser-evidence/native-online-cup.png',timeout:90000,animations:'disabled'});
