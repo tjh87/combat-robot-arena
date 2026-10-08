@@ -39,6 +39,10 @@ test('All 11 robot shapes keep every triangle, UV seam and normal after vertex i
 test('Inactive battery flames issue no buffer uploads and active flames still move and light the robot',()=>{
  const fire=new BatteryFireVisual(),p=fire.flames.geometry.getAttribute('position');const initial=p.version;for(let i=0;i<120;i++)fire.update([],i/60);assert.equal(p.version,initial);assert(!fire.flames.visible&&!fire.smoke.visible);fire.update([{position:{x:1,y:2,z:3},active:true}],1);assert(fire.flames.visible&&fire.lights[0].intensity>0&&p.version>initial);const active=p.version;fire.update([],2);assert.equal(p.version,active);assert.equal(fire.lights[0].intensity,0);return{idleUpdates:120,idleUploads:0};
 });
+test('Inactive damage smoke performs no position-buffer uploads while active smoke still advances',()=>{
+ const renderer=Object.create(ArenaRenderer.prototype) as any,positions=new Float32Array(64*3),ages=new Float32Array(64).fill(-1),geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));Object.assign(renderer,{reduced:false,smokeClock:0,smokeAges:ages,smokeActive:0,smokeCursor:0,smokePositions:positions,smoke:new THREE.Points(geometry,new THREE.PointsMaterial())});const attribute=geometry.getAttribute('position'),initial=attribute.version;
+ renderer.updateSmoke({bots:[]},1/60);assert.equal(attribute.version,initial);assert(!renderer.smoke.visible);ages[0]=1;renderer.smokeActive=1;positions[1]=.5;renderer.updateSmoke({bots:[]},1/60);assert(attribute.version>initial);assert(renderer.smoke.visible);return{idleUploads:0,activeUploads:attribute.version-initial};
+});
 test('Instanced graphics buffers are released when a scene is replaced',()=>{
  const renderer=Object.create(ArenaRenderer.prototype) as ArenaRenderer,root=new THREE.Group(),mesh=new THREE.InstancedMesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial(),5);root.add(mesh);let released=0;mesh.addEventListener('dispose',()=>released++);renderer.clear(root);assert.equal(released,1);assert.equal(root.children.length,0);return{instanceDisposals:released};
 });

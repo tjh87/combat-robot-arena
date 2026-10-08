@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import {compile,preset,partProperties,v,rotate,quatMul,axisQ,identity,SLOTS} from '../src/model';
 import {Simulation,initializePhysics,RAPIER,colliderDesc} from '../src/sim';
 import {ArenaRenderer} from '../src/render';
+import {StableTrackingPose,trackingHeading} from '../src/follow-camera';
 import {buildFoundry,hazardVisual} from '../src/visuals';
 
 // Scene graph and physics tests, without a browser or a WebGL substitute.
@@ -37,24 +38,23 @@ await test('Compact preset geometry preserves legal envelopes and underside blad
  }finally{sim.dispose();}
 });
 
-await test('Body-mounted POV uses the interpolated robot heading, pitch and roll',()=>{
+await test('Body-mounted POV uses the interpolated robot heading with a stabilized level horizon',()=>{
  const renderer=Object.create(ArenaRenderer.prototype) as ArenaRenderer,sim=new Simulation([preset(0),preset(1)],{practice:true,hazards:false});
- Object.assign(renderer,{bodyGroups:new Map(),replayGroups:new Map(),replay:false});const group=new THREE.Group();group.position.set(2,.4,-3);renderer.bodyGroups.set('b0:chassis',group);
+ Object.assign(renderer,{bodyGroups:new Map(),replayGroups:new Map(),replay:false,povTracking:new StableTrackingPose(),insetTracking:new StableTrackingPose(),followGeneration:0});const group=new THREE.Group();group.position.set(2,.4,-3);renderer.bodyGroups.set('b0:chassis',group);
  const camera=new THREE.PerspectiveCamera(76,16/9,.05,100);let poses=0;
  try{for(const angles of[[0,0,0],[0,Math.PI/2,0],[.4,1.1,.7],[0,0,Math.PI]]){
-  group.quaternion.setFromEuler(new THREE.Euler(...angles as [number,number,number]));renderer.positionPOVCamera(camera,sim);
-  const forward=new THREE.Vector3(0,-.14,-1).normalize().applyQuaternion(group.quaternion),up=new THREE.Vector3(0,1,0).applyQuaternion(group.quaternion),c=sim.bots[0].compiled.config;
-  assert(camera.getWorldDirection(new THREE.Vector3()).distanceTo(forward)<1e-7);assert(camera.up.distanceTo(up)<1e-7);
-  const local=camera.position.clone().sub(group.position).applyQuaternion(group.quaternion.clone().invert());assert(local.y>c.chassis.height/2);assert(local.z>0);poses++;
+  group.quaternion.setFromEuler(new THREE.Euler(...angles as [number,number,number]));renderer.followGeneration++;renderer.positionPOVCamera(camera,sim);
+  const c=sim.bots[0].compiled.config,yaw=trackingHeading(group.quaternion,c),forward=new THREE.Vector3(0,-.14,-1).normalize().applyAxisAngle(new THREE.Vector3(0,1,0),-yaw);
+  assert(camera.getWorldDirection(new THREE.Vector3()).distanceTo(forward)<1e-7);assert(camera.up.distanceTo(new THREE.Vector3(0,1,0))<1e-7);assert(camera.position.y>group.position.y+c.chassis.height/2);poses++;
  }
- renderer.replay=true;const recorded=new THREE.Group();recorded.position.set(-5,.3,4);recorded.rotation.y=-1;renderer.replayGroups.set('b0:chassis',recorded);renderer.positionPOVCamera(camera,sim);
- assert(camera.position.distanceTo(recorded.position)<.7);assert(camera.getWorldDirection(new THREE.Vector3()).distanceTo(new THREE.Vector3(0,-.14,-1).normalize().applyQuaternion(recorded.quaternion))<1e-7);
+ renderer.replay=true;renderer.followGeneration++;const recorded=new THREE.Group();recorded.position.set(-5,.3,4);recorded.rotation.y=-1;renderer.replayGroups.set('b0:chassis',recorded);renderer.positionPOVCamera(camera,sim);
+ const replayYaw=trackingHeading(recorded.quaternion,sim.bots[0].compiled.config);assert(camera.position.distanceTo(recorded.position)<.7);assert(camera.getWorldDirection(new THREE.Vector3()).distanceTo(new THREE.Vector3(0,-.14,-1).normalize().applyAxisAngle(new THREE.Vector3(0,1,0),-replayYaw))<1e-7);
  return{livePoses:poses,recordedReplayPose:true};}finally{sim.dispose();}
 });
 
 await test('Detailed arena and robots retain finite geometry within the triangle budget',()=>{
  const renderer=Object.create(ArenaRenderer.prototype) as ArenaRenderer,scene=new THREE.Group();buildFoundry(scene);
- for(let i=0;i<3;i++)for(const part of compile(preset(i)).parts.filter(p=>p.collides))scene.add(renderer.part(part,preset(i)));
+ for(let i=0;i<3;i++)for(const {mesh} of renderer.displayParts(preset(i),compile(preset(i)).parts))scene.add(mesh);
  for(const kind of['hammer','blade','auger'] as const)scene.add(hazardVisual(kind));
  let triangles=0,draws=0,maps=0;
  scene.traverse(o=>{if(o instanceof THREE.Mesh){const p=o.geometry.getAttribute('position');assert([...p.array].every(Number.isFinite));triangles+=(o.geometry.index?.count??p.count)/3;draws++;if((o.material as THREE.MeshStandardMaterial).map)maps++;}});
@@ -62,7 +62,7 @@ await test('Detailed arena and robots retain finite geometry within the triangle
 });
 
 await test('Painted top armour survives replay cycles without disposing live textures',()=>{
- const renderer=Object.create(ArenaRenderer.prototype) as ArenaRenderer;Object.assign(renderer,{bots:new THREE.Group(),bodyGroups:new Map(),replayRoot:new THREE.Group(),replayGroups:new Map(),replay:false,reduced:false});
+ const renderer=Object.create(ArenaRenderer.prototype) as ArenaRenderer;Object.assign(renderer,{bots:new THREE.Group(),bodyGroups:new Map(),replayRoot:new THREE.Group(),replayGroups:new Map(),replay:false,reduced:false,damageDebris:{reset(){}},followCamera:{reset(){}},povTracking:new StableTrackingPose(),insetTracking:new StableTrackingPose()});
  const c=preset(0),p=compile(c).parts.find(p=>p.id==='armour_top')!,mesh=renderer.part(p,c),body=new THREE.Group();body.add(mesh);renderer.bots.add(body);renderer.bodyGroups.set('b0:chassis',body);
  let disposals=0;mesh.traverse(o=>{if(o instanceof THREE.Mesh){const map=(o.material as THREE.MeshStandardMaterial).map;map?.addEventListener('dispose',()=>disposals++);}});
  for(let i=0;i<10;i++){renderer.startReplay();renderer.replayFrame({tick:0,transforms:[{id:'b0:chassis',p:v(),q:identity}],health:[SLOTS.map(()=>1),SLOTS.map(()=>1)],effects:[]});renderer.endReplay();assert.equal(disposals,0);}

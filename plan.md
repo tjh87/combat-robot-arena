@@ -22,6 +22,13 @@ Improve the existing Three.js/Rapier combat game without changing its fixed 240 
 - Keep the existing color management, adaptive resolution, 60 FPS gameplay presentation cap, reduced-motion behavior, and 240 Hz physics untouched. The new light does not add a post-processing pass or create physics behavior.
 - Preserve the industrial broadcast-arena look rather than adding unrelated art or external assets.
 
+### Wall impact readability and shared presentation efficiency
+
+- Extend cosmetic, replay-safe wall damage with deterministic **shear** patterns for glancing impacts and denser **shatter** patterns for the heaviest impacts, while retaining hairline, starburst, branching, and fracture patterns for the existing energy bands. Pattern choice may use only recorded contact energy, impulse, direction, and deterministic seed; it never changes wall collision geometry, damage, or physics.
+- Keep the existing wall limits: 200 J / 20 N·s visual thresholds, 0.25-second local repeat suppression, 48 stored cracks, 72 segments per crack, and one bounded line buffer / draw call. Older replay crack records continue to resolve through their original energy-based fallback.
+- Remove avoidable presentation-only allocations from body interpolation and front-marker orientation, and skip idle smoke buffer uploads while preserving active smoke movement, reduced-motion behavior, shadows, camera modes, menus, builder, practice, local two-player, AI, online replica display, tournaments, and replays.
+- Preserve the existing adaptive resolution, frame gates, fixed 240 Hz simulation, input rate, gameplay timing, collision response, robot behavior, and game modes. Smoothness changes must only affect visual scheduling and resource use.
+
 ## Design direction
 
 - **Design movement:** Broadcast-grade industrial robot sport — machined steel, warning-light accents, and readable competition telemetry.
@@ -48,8 +55,10 @@ Improve the existing Three.js/Rapier combat game without changing its fixed 240 
 | `src/online/online.css` | Legible, non-obstructive connection-health styling. |
 | `server/gateway.ts` | Binary-control acceptance, bounded validation, and legacy JSON compatibility. |
 | `src/render.ts` | Pooled impact light visual integrated into the existing spark/render lifecycle. |
+| `src/wall-damage.ts` / `src/wall-fracture.ts` | Deterministic cosmetic pattern selection and bounded line generation for wall impacts. |
+| `src/wall-cracks.ts` | One fixed GPU buffer and one draw call for all visible wall damage. |
 | `tests/online-core.ts` | Binary input round-trip and malformed-packet regression coverage. |
-| `tests/performance.ts` | Timing-buffer and impact-light behavior checks that do not claim GPU measurement. |
+| `tests/performance.ts` / `tests/wall-cracks.ts` | Presentation-resource and deterministic wall-pattern checks that do not claim GPU measurement. |
 
 ## Constraints
 
