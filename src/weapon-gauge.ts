@@ -1,10 +1,11 @@
 import {componentConfig,componentProfile} from './model';
 let silhouetteSequence=0;
 import {rpmPresentation,robotSilhouette,RPM_SILHOUETTE_MARKUP} from './rpm-presentation';
-import {clamp,isSpinner,flipEnergy,rotate,v} from './model';
+import {clamp,isSpinner,flipEnergy,rotate,v,selfRightKind} from './model';
 import {damageStatus} from './combat-damage';
 import {QUANTUM_HYDRAULICS} from './weapon-specs';
 import type {Bot} from './sim';
+import {reportTouchWeapon} from './touch-controls';
 
 export const WEAPON_GAUGE_MARKUP=`<section class="weapon-gauge" id="weapon-gauge" role="meter" aria-label="Weapon speed" aria-describedby="gauge-name gauge-label" aria-valuemin="0" aria-valuemax="100">
  <header class="gauge-header"><div class="gauge-identity"><strong id="gauge-name">Robot</strong><span id="gauge-label">Weapon</span></div><span class="gauge-silhouette-slot">${RPM_SILHOUETTE_MARKUP}</span><span id="gauge-state">Weapon off</span></header>
@@ -35,6 +36,7 @@ export function updateWeaponGauge(root:HTMLElement,b:Bot,keys:{weapon:string,str
  const text=(id:string,value:string)=>{const el=root.querySelector<HTMLElement>('#'+id)!;if(el&&el.textContent!==value)el.textContent=value;};
  for(const[id,content]of Object.entries({'gauge-name':c.identity.name,'gauge-label':label,'gauge-state':state,'gauge-rpm':value,'gauge-unit':w.type==='none'?'':unit,'gauge-metric':metric,'gauge-level':level,'gauge-watts':power,'gauge-output':w.type==='none'?'':Math.round(output*100)+'% power','gauge-key':keys.weapon,'gauge-action':action,'gauge-strike-key':keys.strike,'gauge-strike-action':rotate(v(0,1,0),b.chassis.rotation()).y<.2?'Self-right':'Swing saw'}))text(id,content);
  // Keep wide RPM values clear of the ring, without compressing letter spacing.
+ reportTouchWeapon({ratio,value,unit:w.type==='none'?'':unit,on:active,action,strike:selfRightKind(c)==='saw'&&rotate(v(0,1,0),b.chassis.rotation()).y>=.2?'Swing saw':'Self-right',canStrike:!!selfRightKind(c)});
  root.style.setProperty('--gauge-value-size',(value.length>6?1.75:value.length>5?1.95:2.2)+'rem');
  root.dataset.kind=spin?'spinner':w.type;root.classList.toggle('gauge-live',active);root.classList.toggle('gauge-damaged',output<.999);
  root.setAttribute('aria-label',spin?'Weapon speed':w.type==='crusher'?'Jaw force':w.type==='flipper'?'Flipper readiness':'No active weapon');root.setAttribute('aria-valuenow',String(Math.round(ratio*100)));root.setAttribute('aria-valuetext',aria);
