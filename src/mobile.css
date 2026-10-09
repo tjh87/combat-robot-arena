@@ -127,5 +127,9 @@ html.touch-playing #hud .player-panel.pre-fight .hud-stats{font:500 10px/1.25 va
 html.touch-playing #hud .player-panel.pre-fight .hud-start-rpm{grid-template-rows:9px 36px 12px 8px}
 html.touch-playing #hud .player-panel.pre-fight .hud-start-rpm .rpm-silhouette{width:52px;height:36px}
 
-/* Match the desktop fivefold health treatment while reserving room for the mobile countdown and controls. */
-html.touch-playing #hud .player-panel .health-track{height:35px!important;border-radius:6px!important}
+/* Final fit-safe health treatment keeps the telemetry under the bar readable on phones. */
+html.touch-playing #hud .player-panel .health-track{height:21px!important;border-radius:5px!important}
+html.touch-playing #hud .player-panel .hud-stats{display:grid!important;grid-template-columns:minmax(0,1fr);gap:2px;font:700 12px/1.2 var(--font-mono)!important;color:#f4fbff!important;letter-spacing:.01em;text-shadow:0 1px 3px #000e}
+
+/* The countdown-specific selector needs the same readable telemetry scale. */
+html.touch-playing #hud .player-panel.pre-fight .hud-stats{display:grid!important;grid-template-columns:minmax(0,1fr);gap:2px;font:700 12px/1.2 var(--font-mono)!important;color:#f4fbff!important;letter-spacing:.01em;text-shadow:0 1px 3px #000e}

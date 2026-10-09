@@ -181,5 +181,8 @@
 #hud .hud-start-rpm small{color:var(--start-rpm-color,var(--start-band,var(--hud-muted)))}
 #hud .hud-start-rpm[data-rpm-band="redline"] .rpm-silhouette{filter:drop-shadow(0 0 8px var(--start-rpm-color,#ff2d8e))}
 
-/* Fivefold health-bar thickness makes current chassis condition readable at a glance. */
-#hud .player-panel .health-track{height:70px!important;border-radius:9px!important}
+/* Final health treatment: reduced from 70 px, with readable chassis and charge telemetry below. */
+#hud .player-panel .health-track{height:42px!important;border-radius:7px!important}
+#hud .player-panel .hud-stats{display:grid!important;grid-template-columns:minmax(0,1fr);gap:3px;font:700 20px/1.25 var(--font-mono)!important;color:#f4fbff!important;letter-spacing:.015em;text-shadow:0 2px 4px #000e,0 0 8px #000b}
+#hud .player-panel .hud-stats #battery-0,#hud .player-panel .hud-stats #battery-1{color:#cfe8f0!important}
+#hud .player-panel.pre-fight .hud-stats{font:700 19px/1.25 var(--font-mono)!important}
