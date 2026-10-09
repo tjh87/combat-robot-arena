@@ -19,7 +19,7 @@ export class TournamentRunner {
   const round=this.tournament.matches[this.tournament.round],index=round.findIndex(m=>!m.a.player&&!m.b.player&&!m.winner);
   if(index<0){this.tournament.busy=false;return;}
   const m=round[index];this.active=this.tournament.round+'/'+index;this.tournament.busy=true;
-  this.worker.postMessage({type:'match',jobId:++this.jobId,round:this.tournament.round,index,configs:[m.a.config,m.b.config],hazards:this.tournament.hazards,seed:this.tournament.seed+this.tournament.round*31+index});
+  this.worker.postMessage({type:'match',jobId:++this.jobId,round:this.tournament.round,index,configs:[m.a.config,m.b.config],hazards:this.tournament.hazards,difficulty:this.tournament.difficulty,seed:this.tournament.seed+this.tournament.round*31+index});
  }
  skipRemaining(){
   if(this.tournament.playerMatch)throw Error('Finish your fight before preparing the next round.');

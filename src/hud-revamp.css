@@ -194,3 +194,69 @@
 #hud .player-panel .hud-start-rpm-label{font:800 13px/1.1 var(--font-mono)!important;color:#edf8ff!important;text-shadow:0 2px 4px #000e}
 #hud .player-panel .hud-start-rpm strong{font:800 24px/1 var(--font-mono)!important;color:var(--start-rpm-color,var(--hud-p1));text-shadow:0 2px 4px #000e}
 #hud .player-panel .hud-start-rpm small{font:800 13px/1.1 var(--font-mono)!important;text-shadow:0 2px 4px #000e}
+
+
+/* Broadcast scale requested for the central clock, knockout readout, and bottom-left weapon box. */
+#hud .player-panel{width:min(41vw,560px)!important;min-width:min(41vw,560px)!important;max-width:min(41vw,560px)!important}
+#hud .player-panel.pre-fight{width:min(41vw,600px)!important;min-width:min(41vw,600px)!important;max-width:min(41vw,600px)!important}
+#hud .timer{min-width:162px;padding:5px 7px 6px!important}
+#hud .timer .digits{font:700 3.75rem/1 var(--font-mono)!important;letter-spacing:.015em}
+#hud .clock-track{height:5px!important;margin:5px 0 4px!important}
+#hud .timer .eyebrow{font:700 10px/1.2 var(--font-mono)!important;letter-spacing:.12em}
+#hud .ko-countdowns{padding-top:118px!important;gap:20px!important}
+#hud .ko-countdown{width:260px!important;gap:4px!important;padding:10px 12px 11px!important}
+#hud .ko-title{font:700 13px/1.1 var(--hud-head)!important;letter-spacing:.15em}
+#hud .ko-dial{width:124px!important;height:124px!important}
+#hud .ko-dial svg{stroke-width:10!important}
+#hud .ko-readout strong,#hud .ko-countdown.critical strong{font:800 3.8rem/1 var(--font-mono)!important}
+#hud .ko-name{font:700 13px/1.15 var(--hud-head)!important}
+#hud .ko-label{font:600 11px/1.3 var(--font-mono)!important}
+#hud .ko-ticks{gap:3px!important;margin-top:4px!important}
+#hud .ko-ticks b{height:7px!important}
+#hud .ko-ticks em{font-size:7px!important}
+#hud .ko-hint{margin-top:5px!important;padding:5px 8px!important;font-size:11px!important}
+#hud .weapon-instruments{left:16px!important;bottom:16px!important;max-width:min(44vw,408px)!important;gap:9px!important}
+#hud .weapon-instruments .caption{max-width:408px!important;padding:6px 10px!important;font-size:14px!important}
+#hud .weapon-instruments .weapon-gauge{width:24rem!important;max-width:calc(100vw - 32px)!important;background:#08121ab8!important;border-width:1px!important;border-radius:10px!important}
+#hud .weapon-gauge .gauge-header{padding:8px 12px!important;gap:8px!important}
+#hud .weapon-gauge .gauge-header strong,#hud .weapon-gauge #gauge-name{font-size:19px!important}
+#hud .weapon-gauge .gauge-header :is(span,#gauge-state),#hud .weapon-gauge #gauge-label{font-size:13px!important}
+#hud .weapon-gauge .gauge-header #gauge-state{padding:3px 7px!important;font-size:12px!important}
+#hud .weapon-gauge .gauge-body{grid-template-columns:88px minmax(0,1fr)!important;gap:12px!important;padding:10px 12px!important}
+#hud .weapon-gauge .gauge-dial{width:88px!important;height:88px!important}
+#hud .weapon-gauge .gauge-dial svg{stroke-width:9px!important}
+#hud .weapon-gauge .gauge-dial .gauge-readout strong{font-size:19px!important}
+#hud .weapon-gauge .gauge-details{gap:3px!important;font:600 15px/1.25 var(--font-mono)!important}
+#hud .weapon-gauge .gauge-details :is(#gauge-metric,#gauge-unit,#gauge-watts,#gauge-output){font:600 14px/1.25 var(--font-mono)!important}
+#hud .weapon-gauge .gauge-details #gauge-level{font:800 20px/1.15 var(--font-mono)!important}
+#hud .weapon-gauge .gauge-rpm-track{height:8px!important}
+#hud .weapon-gauge .gauge-actions{padding:8px 12px!important;font:600 14px/1.25 var(--font-ui,system-ui)!important;gap:8px 14px!important}
+#hud .weapon-gauge .gauge-actions kbd{padding:2px 5px!important;font-size:13px!important}
+#hud .weapon-gauge .gauge-flip-assist{min-height:96px!important;padding:12px 14px!important;font-size:15px!important}
+#hud .weapon-gauge .gauge-flip-assist strong{font-size:22px!important}
+#hud .weapon-gauge .gauge-flip-assist small{font-size:14px!important}
+@media (max-width:760px){
+ #hud .timer{min-width:106px!important;padding:4px 6px!important}
+ #hud .timer .digits{font-size:2rem!important}
+ #hud .clock-track{height:3px!important;margin:3px 0!important}
+ #hud .timer .eyebrow{font-size:7px!important}
+ #hud .ko-countdowns{padding-top:88px!important;gap:10px!important}
+ #hud .ko-countdown{width:182px!important;padding:7px 8px!important}
+ #hud .ko-title{font-size:9px!important}
+ #hud .ko-dial{width:78px!important;height:78px!important}
+ #hud .ko-readout strong,#hud .ko-countdown.critical strong{font-size:2.4rem!important}
+ #hud .ko-name{font-size:9px!important}
+ #hud .ko-label{font-size:8px!important}
+ #hud .weapon-instruments{left:10px!important;bottom:10px!important;max-width:calc(100vw - 20px)!important}
+ #hud .weapon-instruments .weapon-gauge{width:min(20rem,calc(100vw - 20px))!important}
+ #hud .weapon-gauge .gauge-header{padding:6px 8px!important}
+ #hud .weapon-gauge .gauge-header strong,#hud .weapon-gauge #gauge-name{font-size:15px!important}
+ #hud .weapon-gauge .gauge-header :is(span,#gauge-state),#hud .weapon-gauge #gauge-label{font-size:10px!important}
+ #hud .weapon-gauge .gauge-body{grid-template-columns:68px minmax(0,1fr)!important;gap:8px!important;padding:8px!important}
+ #hud .weapon-gauge .gauge-dial{width:68px!important;height:68px!important}
+ #hud .weapon-gauge .gauge-details{font-size:11px!important}
+ #hud .weapon-gauge .gauge-details :is(#gauge-metric,#gauge-unit,#gauge-watts,#gauge-output){font-size:10px!important}
+ #hud .weapon-gauge .gauge-details #gauge-level{font-size:15px!important}
+ #hud .weapon-gauge .gauge-actions{padding:6px 8px!important;font-size:10px!important}
+ #hud .weapon-gauge .gauge-actions kbd{font-size:10px!important}
+}

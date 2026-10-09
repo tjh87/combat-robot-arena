@@ -51,6 +51,11 @@ Improve the existing Three.js/Rapier combat game without changing its fixed 240 
 - Replace the Foundry Cup's single, inherited contender preview with a dedicated horizontal tile rail containing every stock robot and its locally bundled portrait. A player selects exactly one contender before bracket generation; the choice receives an explicit active state, native button focus, `aria-pressed` state, and a live selected-contender summary.
 - When the player enters from a custom build, retain that build as an additional custom contender tile. Starting the cup commits only the chosen contender, while the existing seven distinct AI opponents, bracket seeding, countdown, repairs, damage carry-over, offline tournament simulation, physics, and controls remain unchanged.
 
+### Tournament difficulty and broadcast HUD scale
+
+- Add an explicit Easy / Medium / Hard selector to the Foundry Cup entry panel. Lock the selected setting into the tournament, show it in the bracket header, and propagate it to both the player's computer opponent and background computer-only bouts, including the worker and synchronous fallback. Difficulty changes AI decision parameters only; it does not change robot configurations, seeds, bracket structure, damage, timing, controls, or physics.
+- Enlarge only the visual display of the knockout readout to twice its current numerical scale, the live match clock to three times its current numerical scale, and the bottom-left weapon instrument to twice its current panel width with proportionally larger type, dial, meter, and control labels. Preserve the three-minute match duration, ten-second knockout rule, all HUD values and semantics, and fit-safe smaller overrides for narrow/mobile layouts.
+
 ### Online copy hierarchy and Quick Fight centering
 
 - Separate the selected-machine label, robot name, weapon family, mass/build-limit detail, and controls note into visible line-level elements in the online panel. Keep the selected local portrait, exact robot identity, weapon title, 113.398 kg limit, accessibility label, and picker behavior unchanged.
@@ -126,6 +131,8 @@ Improve the existing Three.js/Rapier combat game without changing its fixed 240 
 | `src/rpm-presentation.ts` / `src/main.ts` / `src/hud-revamp.css` | Reusable silhouette fill and enlarged countdown-only player cards. |
 | `src/main.ts` | Tournament countdown parity, contender selection entry flow, local logo markup, and recorded-damage audio routing. |
 | `src/robot-selection.ts` / `src/tournament.css` | Reusable accessible tournament tile rail and the responsive foundry-style selection layout. |
+| `src/hud-revamp.css` | Broadcast-safe match-clock, knockout, and bottom-left weapon-instrument scaling. |
+| `src/sim.ts` / `src/tournament-runner.ts` / `src/tournament-worker.ts` | Tournament difficulty storage and consistent background-bout AI propagation. |
 | `public/branding/` | Derived local logo and favicon files from the user-supplied artwork. |
 | `src/damage-debris.ts` / `src/render.ts` | Component-debris presentation policy; physical detached-component simulation remains unmodified. |
 | `tests/online-core.ts` | Binary input round-trip and malformed-packet regression coverage. |
