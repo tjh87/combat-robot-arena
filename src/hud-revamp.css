@@ -180,3 +180,6 @@
 #hud .hud-start-rpm[data-rpm-band="redline"]{--start-band:#ff2d8e}
 #hud .hud-start-rpm small{color:var(--start-rpm-color,var(--start-band,var(--hud-muted)))}
 #hud .hud-start-rpm[data-rpm-band="redline"] .rpm-silhouette{filter:drop-shadow(0 0 8px var(--start-rpm-color,#ff2d8e))}
+
+/* Fivefold health-bar thickness makes current chassis condition readable at a glance. */
+#hud .player-panel .health-track{height:70px!important;border-radius:9px!important}

@@ -126,3 +126,6 @@ html.touch-playing #hud .player-panel.pre-fight .player-title{font:700 13px/1.1 
 html.touch-playing #hud .player-panel.pre-fight .hud-stats{font:500 10px/1.25 var(--font-mono)!important;gap:1px 4px}
 html.touch-playing #hud .player-panel.pre-fight .hud-start-rpm{grid-template-rows:9px 36px 12px 8px}
 html.touch-playing #hud .player-panel.pre-fight .hud-start-rpm .rpm-silhouette{width:52px;height:36px}
+
+/* Match the desktop fivefold health treatment while reserving room for the mobile countdown and controls. */
+html.touch-playing #hud .player-panel .health-track{height:35px!important;border-radius:6px!important}

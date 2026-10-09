@@ -72,6 +72,11 @@ Improve the existing Three.js/Rapier combat game without changing its fixed 240 
 - Drive the existing local silhouette fill from the current simulated RPM ratio for each spinner, with a visible label and distinct continuous colour progression: **IDLE** blue/cyan, **SPOOL** cyan, **ENGAGE** green, **COMBAT** yellow, **HIGH** orange, then **REDLINE** red/magenta. The silhouette remains empty at zero RPM and fills from the base as the rotor gains speed.
 - Apply the same ratio and color presentation to the compact weapon gauge without changing target RPMs, motor work, weapon damage, contacts, replay data, or input behavior.
 
+### Fivefold player health-bar thickness
+
+- Increase the live and countdown player-card chassis HP track from **14 px to 70 px** on desktop. Keep the same simulated chassis-health percentage, P1 cyan / P2 pink identity, low-health warning, fill width, accessible progressbar semantics, and transparent HUD treatment.
+- Increase the narrow/mobile HP track from **7 px to 35 px**, allowing the card to grow vertically instead of compressing text, the centre countdown, or the touch-control safe areas. This is a display-only change and must not affect health, damage, simulation, input, or replay data.
+
 ## Design direction
 
 - **Design movement:** Broadcast-grade industrial robot sport — machined steel, warning-light accents, and readable competition telemetry.
