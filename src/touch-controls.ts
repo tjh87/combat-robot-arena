@@ -16,8 +16,18 @@ export function validTouchPrefs(raw:unknown):TouchPrefs{
 const hasWindow=()=>typeof window!=='undefined'&&typeof document!=='undefined'&&typeof window.matchMedia==='function';
 /** Device has a touch screen. */
 export function touchCapable(){return hasWindow()&&((navigator.maxTouchPoints??0)>0||'ontouchstart' in window);}
-/** Touch screen without any mouse/trackpad — phones and tablets. */
-export function touchOnly(){return touchCapable()&&!window.matchMedia('(any-pointer:fine)').matches;}
+type MobileNavigator=Navigator&{userAgentData?:{mobile?:boolean}};
+/** Pure UA predicate: Android, iPhone/iPod, iPad/iPadOS or an explicit browser client hint. */
+export function mobileUserAgent(ua:string,platform='',touchPoints=0,uaMobile?:boolean){
+ if(uaMobile===true)return true;
+ if(/Android|iPhone|iPod|iPad|IEMobile|Windows Phone|Mobile\/|BlackBerry|Opera Mini/i.test(ua))return true;
+ // iPadOS desktop-mode Safari identifies as Macintosh but retains multi-touch support.
+ return platform==='MacIntel'&&touchPoints>1&&/Macintosh/i.test(ua);
+}
+/** A mobile browser, not merely a desktop computer with a touch-capable display. */
+export function mobileBrowser(){if(!hasWindow())return false;const nav=navigator as MobileNavigator;return mobileUserAgent(nav.userAgent??'',nav.platform??'',nav.maxTouchPoints??0,nav.userAgentData?.mobile);}
+/** Kept as the game-facing name: only a touch-capable mobile browser enters mobile mode. */
+export function touchOnly(){return mobileBrowser()&&touchCapable();}
 
 /** Joystick vector (x right, y down, both -1..1) → arcade drive, identical to the gamepad left stick mix. */
 export function joystickDrive(x:number,y:number,deadzone:number){
@@ -69,8 +79,8 @@ class TouchControls{
    btn.addEventListener('click',e=>e.preventDefault());btn.addEventListener('contextmenu',e=>e.preventDefault());
   });
   this.root.addEventListener('contextmenu',e=>e.preventDefault());
-  window.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'&&!this.touchSeen){this.touchSeen=true;this.refresh();}},{capture:true,passive:true});
-  window.addEventListener('keydown',e=>{const t=e.target;if(t instanceof HTMLInputElement||t instanceof HTMLTextAreaElement||t instanceof HTMLSelectElement)return;if(this.touchSeen&&this.prefs.mode==='auto'&&!touchOnly()){this.touchSeen=false;this.refresh();}},{capture:true});
+  window.addEventListener('pointerdown',e=>{if(mobileBrowser()&&e.pointerType==='touch'&&!this.touchSeen){this.touchSeen=true;this.refresh();}},{capture:true,passive:true});
+  window.addEventListener('keydown',e=>{const t=e.target;if(t instanceof HTMLInputElement||t instanceof HTMLTextAreaElement||t instanceof HTMLSelectElement)return;if(!mobileBrowser()&&this.touchSeen){this.touchSeen=false;this.refresh();}},{capture:true});
   window.addEventListener('resize',this.layout);window.addEventListener('orientationchange',this.layout);
   const timer=setInterval(()=>this.refresh(),200) as unknown as {unref?:()=>void};timer.unref?.();
   this.layout();
@@ -78,28 +88,28 @@ class TouchControls{
  register(owner:TouchOwner){this.owners.add(owner);}
  unregister(owner:TouchOwner){this.owners.delete(owner);if(this.owner===owner)this.owner=undefined;}
  apply(prefs:TouchPrefs){this.prefs=validTouchPrefs(prefs);this.layout();this.refresh();}
- enabled(){return this.prefs.mode==='on'||(this.prefs.mode==='auto'&&this.touchSeen);}
- portrait(){return hasWindow()&&touchOnly()&&window.innerHeight>window.innerWidth;}
+ enabled(){return mobileBrowser()&&(this.prefs.mode==='on'||(this.prefs.mode==='auto'&&this.touchSeen));}
+ portrait(){return hasWindow()&&mobileBrowser()&&window.innerHeight>window.innerWidth;}
  layout=()=>{
-  if(!this.root)return;const short=Math.min(window.innerWidth,window.innerHeight),size={s:.85,m:1,l:1.2}[this.prefs.size];
-  const scale=Math.max(.72,Math.min(1.2,short/400))*size,html=document.documentElement;
+  if(!this.root)return;const html=document.documentElement,mobile=mobileBrowser();html.classList.toggle('touch-device',mobile);
+  if(!mobile){html.style.removeProperty('--tc-scale');html.style.removeProperty('--tc-alpha');html.style.removeProperty('--ui-scale');this.root.classList.remove('left-handed');this.refresh();return;}
+  const short=Math.min(window.innerWidth,window.innerHeight),size={s:.85,m:1,l:1.2}[this.prefs.size],scale=Math.max(.72,Math.min(1.2,short/400))*size;
   html.style.setProperty('--tc-scale',scale.toFixed(3));html.style.setProperty('--tc-alpha',String(this.prefs.opacity));
-  html.style.setProperty('--ui-scale',Math.max(.6,Math.min(1,short/560)).toFixed(3));
-  this.root.classList.toggle('left-handed',this.prefs.leftHanded);this.refresh();
+  html.style.setProperty('--ui-scale',Math.max(.6,Math.min(1,short/560)).toFixed(3));this.root.classList.toggle('left-handed',this.prefs.leftHanded);this.refresh();
  };
  refresh(){
   if(!this.root)return;const owner=[...this.owners].find(o=>{try{return o.active();}catch{return false;}});
   if(owner&&this.portrait()){owner.pause('Rotate your phone to landscape.');}
-  const show=!!owner&&this.enabled(),html=document.documentElement;
+  const mobile=mobileBrowser(),show=mobile&&!!owner&&this.enabled(),html=document.documentElement;
   if(show!==this.shown){this.shown=show;this.root.classList.toggle('hidden',!show);if(!show)this.reset();}
-  html.classList.toggle('touch-ui',this.enabled());html.classList.toggle('touch-playing',show);
+  html.classList.toggle('touch-device',mobile);html.classList.toggle('touch-ui',mobile&&this.enabled());html.classList.toggle('touch-playing',show);
   if(!owner)this.fullscreenTried=false;this.owner=owner;
   if(owner){const view=this.root.querySelector<HTMLElement>('.tc-view b');const label=shortView(owner.cameraLabel());if(view&&view.textContent!==label)view.textContent=label;}
  }
  reset(){this.stick={id:-1,x:0,y:0,cx:0,cy:0};this.pending={weapon:false,selfRight:false};const s=this.root?.querySelector<HTMLElement>('.tc-stick');if(s){s.classList.remove('engaged');s.style.removeProperty('left');s.style.removeProperty('top');s.style.setProperty('--kx','0px');s.style.setProperty('--ky','0px');}}
  haptic(ms=10){if(this.prefs.haptics)try{navigator.vibrate?.(ms);}catch{/* unsupported (iOS Safari) */}}
  goFullscreen(){
-  if(this.fullscreenTried||!touchOnly())return;this.fullscreenTried=true;const el=document.documentElement as HTMLElement&{requestFullscreen?:(o?:FullscreenOptions)=>Promise<void>};
+  if(this.fullscreenTried||!mobileBrowser())return;this.fullscreenTried=true;const el=document.documentElement as HTMLElement&{requestFullscreen?:(o?:FullscreenOptions)=>Promise<void>};
   if(document.fullscreenElement||window.matchMedia('(display-mode: standalone),(display-mode: fullscreen)').matches||!el.requestFullscreen)return;
   el.requestFullscreen({navigationUI:'hide'}).then(()=>(screen.orientation as ScreenOrientation&{lock?:(o:string)=>Promise<void>})?.lock?.('landscape')).catch(()=>{/* browser declined */});
  }

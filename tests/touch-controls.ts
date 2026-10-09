@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {joystickDrive,knobVector,shortView,touchDefaults,validTouchPrefs,touchOnly,touchControls} from '../src/touch-controls';
+import {joystickDrive,knobVector,mobileUserAgent,shortView,touchDefaults,validTouchPrefs,touchOnly,touchControls} from '../src/touch-controls';
 import {neutral} from '../src/sim';
 
 const near=(a:number,b:number,msg:string)=>assert.ok(Math.abs(a-b)<1e-6,`${msg}: ${a} vs ${b}`);
@@ -22,6 +22,14 @@ assert.deepEqual(validTouchPrefs(undefined),touchDefaults());
 assert.deepEqual(validTouchPrefs({mode:'on',size:'l',opacity:5,leftHanded:true,haptics:false}),{mode:'on',size:'l',opacity:.8,leftHanded:true,haptics:false});
 assert.equal(validTouchPrefs({mode:'bogus'}).mode,'auto');
 
+// Mobile mode is a browser decision, not a generic touchscreen decision.
+assert.equal(mobileUserAgent('Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36'),true,'Android browser');
+assert.equal(mobileUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)'),true,'iPhone browser');
+assert.equal(mobileUserAgent('Mozilla/5.0 (iPad; CPU OS 17_0 like Mac OS X)'),true,'iPad browser');
+assert.equal(mobileUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)','MacIntel',5),true,'desktop-mode iPadOS browser');
+assert.equal(mobileUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64)','Win32',10),false,'desktop touch display stays desktop');
+assert.equal(mobileUserAgent('Mozilla/5.0 (X11; Linux x86_64)','Linux x86_64',0,true),true,'mobile client hint');
+
 // View labels fit the small button.
 assert.equal(shortView('Third person'),'3RD PERSON');assert.equal(shortView('Robot POV'),'ROBOT POV');assert.equal(shortView('Tactical'),'TACTICAL');
 
@@ -29,10 +37,11 @@ assert.equal(shortView('Third person'),'3RD PERSON');assert.equal(shortView('Rob
 assert.equal(touchOnly(),false);const cmd={...neutral(),left:.3,right:.3,weapon:true};
 assert.deepEqual(touchControls().merge(cmd,.15),cmd,'hidden touch layer leaves keyboard/gamepad input unchanged');
 
-// Wiring: every mode's Input feeds player 1 through the touch layer; Local 2P is unavailable on touch-only devices.
-const input=readFileSync('src/input.ts','utf8'),main=readFileSync('src/main.ts','utf8'),css=readFileSync('src/mobile.css','utf8'),html=readFileSync('index.html','utf8');
+// Wiring: every mode's Input feeds player 1 through the touch layer; Local 2P is unavailable on mobile browsers only.
+const input=readFileSync('src/input.ts','utf8'),touchSource=readFileSync('src/touch-controls.ts','utf8'),main=readFileSync('src/main.ts','utf8'),css=readFileSync('src/mobile.css','utf8'),html=readFileSync('index.html','utf8');
 assert.match(input,/player===0\?this\.touch\.merge\(cmd,this\.prefs\.deadzone\):cmd/);
 assert.match(input,/quality:'medium'/,'phones use the same default graphics quality as desktop');
+assert.match(touchSource,/enabled\(\)\{return mobileBrowser\(\)/,'the overlay is gated by mobile browser detection');
 assert.match(main,/touchOnly\(\)\?'disabled title="Local 2P needs a keyboard or two gamepads"'/);
 assert.match(css,/html\.touch-device \.narrow-message\{display:none!important\}/,'phones are no longer blocked');
 assert.match(css,/@media \(orientation:portrait\)/,'rotate prompt for portrait');

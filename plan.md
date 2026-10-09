@@ -55,6 +55,12 @@ Improve the existing Three.js/Rapier combat game without changing its fixed 240 
 
 - Reviewed [BattleBots video library](https://battlebots.com/videos/), [Run Amok’s spinner FAQ](https://runamok.tech/AskAaron/spinner_FAQ.html), [Division V3 slow-motion weapon reference](https://www.youtube.com/watch?v=boaXAm54SG0), and [combat-robot sound reference](https://www.youtube.com/watch?v=7Adel6_AM1g). These informed presentation only: rising RPM tone, blade-pass/airflow texture, high-speed blur, sharp material impacts, and post-hit RPM decay. They do not supply assets or change game simulation.
 
+### Mobile browser gating and pre-fight RPM cards
+
+- Enable the mobile landscape shell, rotate prompt, touch controls, mobile-only Local 2P restriction, home-screen full-screen request, and touch settings only for a browser that reports Android, iPhone, iPod, iPad/iPadOS, or a positive mobile-UA-data flag. A desktop browser remains on the normal browser path even if it has a touch-capable display: no mobile DOM class, overlay, orientation interception, fullscreen request, graphics cap, or mode restriction.
+- Expand only the two cards shown during the existing pre-fight countdown. Each card retains the locally bundled portrait, player/name, chassis HP bar and existing telemetry, and adds the same reusable robot silhouette treatment already used by the weapon RPM instrument. The fill and colour are driven from that robot's actual simulated RPM ratio; non-spinners remain legible with a dormant silhouette. The regular active-fight cards remain compact.
+- Keep silhouette paths local, deterministic, presentation-only, and free of unique duplicate DOM IDs. No robot model, weapon target RPM, physics, replay frame, input mapping, or visual asset dependency changes.
+
 ## Design direction
 
 - **Design movement:** Broadcast-grade industrial robot sport — machined steel, warning-light accents, and readable competition telemetry.
@@ -85,6 +91,8 @@ Improve the existing Three.js/Rapier combat game without changing its fixed 240 
 | `src/wall-cracks.ts` | One fixed GPU buffer and one draw call for all visible wall damage. |
 | `src/weapon-audio.ts` / `src/audio.ts` | RPM, tooth-pass, acceleration, airflow, and damage-aware procedural sound profiles. |
 | `src/weapon-blur.ts` / weapon exposure modules | Shared speed profile for teeth-readable, partial, and capped full-exposure blur. |
+| `src/touch-controls.ts` / `src/mobile.css` | Mobile-UA browser gate plus mobile-only landscape controls and scaling. |
+| `src/rpm-presentation.ts` / `src/main.ts` / `src/hud-revamp.css` | Reusable silhouette fill and enlarged countdown-only player cards. |
 | `src/main.ts` | Tournament countdown parity, local logo markup, and recorded-damage audio routing. |
 | `public/branding/` | Derived local logo and favicon files from the user-supplied artwork. |
 | `src/damage-debris.ts` / `src/render.ts` | Component-debris presentation policy; physical detached-component simulation remains unmodified. |

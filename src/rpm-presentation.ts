@@ -1,9 +1,11 @@
 import {clamp} from './model';
+
 const STOPS=[[0,116,200,255],[.25,101,238,235],[.5,160,239,133],[.8,255,229,121],[.9,255,177,109],[1,255,112,143]];
 export function rpmPresentation(value:number){
  const ratio=clamp(Number.isFinite(value)?value:0,0,1),next=STOPS.findIndex(s=>s[0]>=ratio),i=Math.max(1,next),a=STOPS[i-1],b=STOPS[i],t=(ratio-a[0])/(b[0]-a[0]),rgb=a.slice(1).map((n,j)=>Math.round(n+(b[j+1]-n)*t)),color='#'+rgb.map(n=>n.toString(16).padStart(2,'0')).join(''),intensity=clamp((ratio-.8)/.2,0,1);
  return{ratio,color,glow:'rgba('+rgb.join(',')+',.24)',shade:'rgba('+rgb.join(',')+',.12)',nearMax:ratio>=.8,intensity,motion:.25+2.25*intensity,period:160-105*intensity};
 }
+
 const SHAPES:Record<string,string>={
  tombstone:'M19 18H69V47H19Z M12 22H19V43H12Z M69 22H76V43H69Z M9 7H88V15H9Z M46 10H52V22H46Z',
  minotaur:'M20 19H80V48H20Z M12 24H20V46H12Z M80 24H88V46H80Z M23 9H77V20H23Z',
@@ -18,4 +20,29 @@ const SHAPES:Record<string,string>={
  quantum:'M24 20H76V49H24Z M15 20H24V31H15Z M76 20H85V31H76Z M15 40H24V52H15Z M76 40H85V52H76Z M33 6L67 6L72 21L59 33H41L28 21Z M33 12H40V39H33Z M60 12H67V39H60Z',
 };
 export function robotSilhouette(profile:string|undefined){return SHAPES[profile??'']??SHAPES.tombstone;}
-export const RPM_SILHOUETTE_MARKUP='<svg id="gauge-silhouette" viewBox="0 0 100 64" aria-hidden="true"><defs><clipPath id="gauge-silhouette-clip"><path id="gauge-silhouette-shape"/></clipPath></defs><path id="gauge-silhouette-base"/><rect id="gauge-silhouette-fill" x="0" y="64" width="100" height="0" clip-path="url(#gauge-silhouette-clip)"/><path id="gauge-silhouette-outline"/></svg>';
+
+let silhouetteSequence=0;
+function silhouetteMarkup(id?:string){
+ const prefix=id?` id="${id}"`:'';
+ const fixed=id?` id="${id}-clip"`:'';
+ const shape=id?` id="${id}-shape"`:'';
+ const base=id?` id="${id}-base"`:'';
+ const fill=id?` id="${id}-fill"`:'';
+ const outline=id?` id="${id}-outline"`:'';
+ return `<svg${prefix} class="rpm-silhouette" data-rpm-silhouette viewBox="0 0 100 64" aria-hidden="true"><defs><clipPath${fixed} data-rpm-clip><path${shape} data-rpm-shape/></clipPath></defs><path${base} data-rpm-base/><rect${fill} data-rpm-fill x="0" y="64" width="100" height="0" data-rpm-clip-ref/><path${outline} data-rpm-outline/></svg>`;
+}
+
+/** Existing gauge markup keeps its stable selectors; countdown cards use the ID-free version twice. */
+export const RPM_SILHOUETTE_MARKUP=silhouetteMarkup('gauge-silhouette');
+export const HUD_RPM_SILHOUETTE_MARKUP=silhouetteMarkup();
+
+/** Hydrate a local silhouette with the compiled chassis profile and presentation-only RPM fill. */
+export function updateRpmSilhouette(root:ParentNode,profile:string|undefined,value:number){
+ const visual=rpmPresentation(value),silhouette=root.querySelector<SVGSVGElement>('[data-rpm-silhouette]');if(!silhouette)return visual;
+ const path=robotSilhouette(profile),profileKey=profile??'standard';
+ if(silhouette.dataset.profile!==profileKey){for(const node of silhouette.querySelectorAll<SVGPathElement>('[data-rpm-shape],[data-rpm-base],[data-rpm-outline]'))node.setAttribute('d',path);silhouette.dataset.profile=profileKey;}
+ const clip=silhouette.querySelector<SVGClipPathElement>('[data-rpm-clip]'),fill=silhouette.querySelector<SVGRectElement>('[data-rpm-fill]');
+ if(clip&&fill&&!silhouette.dataset.clipId){const id='rpm-silhouette-clip-'+(++silhouetteSequence);clip.setAttribute('id',id);fill.setAttribute('clip-path','url(#'+id+')');silhouette.dataset.clipId=id;}
+ if(fill){fill.setAttribute('y',String(64*(1-visual.ratio)));fill.setAttribute('height',String(64*visual.ratio));}
+ return visual;
+}
