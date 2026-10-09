@@ -132,3 +132,10 @@ Improve the existing Three.js/Rapier combat game without changing its fixed 240 
 - Preserve the existing server-authoritative model, input bounds/rate limits, stale-input expiry, reconnect fencing, and room recovery.
 - Preserve local/offline play and all existing robots, modes, saves, builder imports, replays, and physics rules.
 - Validate with TypeScript, focused online/performance tests, build, and package verification. Real internet latency, production WSS behavior, WebGL quality, audible quality, and Windows execution remain target-machine checks.
+
+
+### Approved polycarbonate arena-wall impacts
+
+- Use only approved preview **04 · Polycarbonate heavy thump** and **06 · Polycarbonate flex rebound** for an actual north/south/east/west arena-boundary contact when the robot was struck by its opponent within the existing 1.5-second forced-attribution window. Alternate the two recorded clips so the wall hit and panel rebound both have distinct voices.
+- Tag the authoritative physics contact with its wall and recent opponent attribution; carry that optional effect metadata through recorded/replayed frames and compact online snapshots. Use the same wall-sound routing in local, tournament, replay, and online playback.
+- Keep floor and shelf landings, un-attributed/self-motion wall scrapes, regular robot/weapon contacts, hazards, and all physics/damage unchanged. Only the two explicitly approved generated wall clips enter the game package; the other preview clips remain outside the game.

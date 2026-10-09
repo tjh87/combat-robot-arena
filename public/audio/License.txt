@@ -48,3 +48,9 @@ heavy-armor-impact.mp3: original AI-generated sound-effect preview produced on
 2026-10-09. It is not copied from BattleBots, Robot Wars, or another broadcast.
 The game selects this single generated clip for high-strength metal impacts;
 the other generated preview clips are not included in the game asset folder.
+
+
+ORIGINAL GENERATED POLYCARBONATE ARENA-WALL IMPACTS
+polycarbonate-heavy-thump.mp3: approved standalone preview 04 · Polycarbonate heavy thump.
+polycarbonate-flex-rebound.mp3: approved standalone preview 06 · Polycarbonate flex rebound.
+Both are original AI-generated effects, generated 2026-10-09. Neither contains or reproduces BattleBots, Robot Wars, or other broadcast audio. The game uses them only for an arena-boundary collision shortly after a recorded opponent hit; preview 05 and the earlier metallic wall concepts remain outside the game.

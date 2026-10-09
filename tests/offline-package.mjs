@@ -11,6 +11,8 @@ try{
  assert.equal((await fetch(origin+'/robots/minotaur.png')).status,200);
  assert.equal((await fetch(origin+'/audio/steel_strike_01.mp3')).headers.get('content-type'),'audio/mpeg');
  assert.equal((await fetch(origin+'/audio/heavy-armor-impact.mp3')).headers.get('content-type'),'audio/mpeg');
+ assert.equal((await fetch(origin+'/audio/polycarbonate-heavy-thump.mp3')).headers.get('content-type'),'audio/mpeg');
+ assert.equal((await fetch(origin+'/audio/polycarbonate-flex-rebound.mp3')).headers.get('content-type'),'audio/mpeg');
  assert.equal((await fetch(origin+'/package.json')).status,404);
  assert.equal((await fetch(origin+'/%2e%2e%2fpackage.json')).status,403);
  assert.equal((await fetch(origin+'/.env')).status,403);

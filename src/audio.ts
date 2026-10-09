@@ -6,8 +6,9 @@ import {WEAPON_VOICES,weaponSpinSound,weaponVoiceKey,weaponVoiceSamples} from '.
 export type ImpactSurface='metal'|'plastic'|'rubber';
 export const METAL_IMPACTS={tap:['steel_tap_01','steel_tap_02'],strike:['steel_strike_01','steel_strike_02','steel_strike_03'],crash:['steel_crash_01','steel_crash_02','steel_crash_03']} as const;
 export const LANDING_IMPACTS={landLight:['landing_light_01'],landHeavy:['landing_heavy_01','landing_heavy_02']} as const;
+export const POLYCARBONATE_WALL_IMPACTS={wallHit:['polycarbonate-heavy-thump','polycarbonate-flex-rebound']} as const;
 export const BIG_HIT_IMPACT='heavy-armor-impact';
-type ImpactLibraryKey=keyof typeof METAL_IMPACTS|keyof typeof LANDING_IMPACTS|'bigHit';
+type ImpactLibraryKey=keyof typeof METAL_IMPACTS|keyof typeof LANDING_IMPACTS|keyof typeof POLYCARBONATE_WALL_IMPACTS|'bigHit';
 export function impactSurface(module:string,material?:string):ImpactSurface{return material==='rubber'||!material&&module.startsWith('drive_')?'rubber':material==='uhmw'?'plastic':'metal';}
 export function impactProfile(energy:number,surface:ImpactSurface='metal',damage=0){
  const energyStrength=clamp(Math.log1p(Math.max(0,energy)/80)/Math.log1p(12000/80),0,1),damageStrength=clamp(Math.log1p(Math.max(0,damage))/Math.log1p(250),0,1),strength=clamp(energyStrength+(1-energyStrength)*damageStrength*.33,0,1);
@@ -29,7 +30,7 @@ export function readyImpactSounds(events:ImpactEvent[],tick:number,lastID:number
  for(const e of events){if(e.id<=lastID)continue;if(tick-e.tick<(e.cause==='landing'?24:20))break;cursor=e.id;if(e.target!==null&&e.energy>=1&&e.cause!=='crush'&&e.cause!=='battery fire')ready.push(e);}
  // One mechanical hit can touch several panels. Use its strongest contact,
  // not stacked clangs. Separate robots and landings retain separate sounds.
- const grouped:ImpactEvent[]=[],sameHit=(a:ImpactEvent,b:ImpactEvent)=>a.target===b.target&&a.attacker===b.attacker&&a.cause===b.cause&&b.tick-a.tick>=0&&b.tick-a.tick<(b.cause==='landing'?24:20);
+ const grouped:ImpactEvent[]=[],sameHit=(a:ImpactEvent,b:ImpactEvent)=>a.target===b.target&&a.attacker===b.attacker&&a.cause===b.cause&&a.arenaWallImpact?.wall===b.arenaWallImpact?.wall&&a.arenaWallImpact?.flungBy===b.arenaWallImpact?.flungBy&&b.tick-a.tick>=0&&b.tick-a.tick<(b.cause==='landing'?24:20);
  for(const e of ready){
   if(events.some(old=>old.id<=lastID&&sameHit(old,e)))continue;
   const first=grouped.find(old=>sameHit(old,e));
@@ -87,7 +88,7 @@ export class GameAudio{
   let buffer=this.weaponBuffers.get(profile);if(!buffer){const ctx=this.context!;buffer=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate);buffer.getChannelData(0).set(weaponVoiceSamples(profile,ctx.sampleRate));this.weaponBuffers.set(profile,buffer);}
   voice={...this.loopVoice(buffer,WEAPON_VOICES[profile].band),profile};this.weaponLoops[bot]=voice;return voice;
  }
- impactLibrary:Record<ImpactLibraryKey,AudioBuffer[]>={tap:[],strike:[],crash:[],landLight:[],landHeavy:[],bigHit:[]};impactLoad?:Promise<void>;impactSerial=0;
+ impactLibrary:Record<ImpactLibraryKey,AudioBuffer[]>={tap:[],strike:[],crash:[],landLight:[],landHeavy:[],bigHit:[],wallHit:[]};impactLoad?:Promise<void>;impactSerial=0;wallImpactSerial=0;
  context?:AudioContext;master?:GainNode;sfx?:GainNode;voices=0;tones:{osc:OscillatorNode,gain:GainNode}[]=[];air:{source:AudioBufferSourceNode,filter:BiquadFilterNode,gain:GainNode}[]=[];available=true;private weaponState=[{speed:0,time:0},{speed:0,time:0}];
  start(master:number,sfx:number){this.quiet=false;try{if(!this.context){
  const ctx=this.context=new AudioContext();this.master=ctx.createGain();this.sfx=ctx.createGain();this.sfx.connect(this.master);
@@ -99,7 +100,7 @@ export class GameAudio{
  }this.loadMetalImpacts();this.prepareEngineVoices();this.volume(master,sfx);void this.context.resume().catch(()=>{this.available=false;});}catch{this.available=false;}}
  loadMetalImpacts(){
   const ctx=this.context;if(this.impactLoad||!ctx?.decodeAudioData||typeof fetch==='undefined')return;
-  this.impactLoad=Promise.allSettled(Object.entries({...METAL_IMPACTS,...LANDING_IMPACTS,bigHit:[BIG_HIT_IMPACT]}).flatMap(([style,names])=>names.map(async name=>{
+  this.impactLoad=Promise.allSettled(Object.entries({...METAL_IMPACTS,...LANDING_IMPACTS,...POLYCARBONATE_WALL_IMPACTS,bigHit:[BIG_HIT_IMPACT]}).flatMap(([style,names])=>names.map(async name=>{
    const response=await fetch('/audio/'+name+'.mp3');if(!response.ok)throw Error('Impact sample unavailable');const buffer=await ctx.decodeAudioData(await response.arrayBuffer());
    if(this.context===ctx)this.impactLibrary[style as ImpactLibraryKey].push(buffer);
   }))).then(()=>{});
@@ -114,10 +115,10 @@ export class GameAudio{
   filter.type='highpass';filter.frequency.value=2500;gain.gain.value=.10+level*.065;source.connect(filter);filter.connect(gain);gain.connect(this.sfx);this.voices++;source.start();
   source.onended=()=>{source.disconnect();filter.disconnect();gain.disconnect();this.voices=Math.max(0,this.voices-1);};
  }
- impact(energy:number,surface:ImpactSurface='metal',fallHeight?:number,damage=0){
- if(surface==='metal'&&fallHeight===undefined)this.spark(energy);
+ impact(energy:number,surface:ImpactSurface='metal',fallHeight?:number,damage=0,arenaWallImpact=false){
+ if(surface==='metal'&&fallHeight===undefined&&!arenaWallImpact)this.spark(energy);
  if(energy<=0||this.context?.state!=='running'||!this.sfx||this.voices>=12)return;this.voices++;
- const ctx=this.context,p=impactProfile(energy,surface,damage),serial=this.impactSerial++,landing=fallHeight!==undefined,heavyLanding=landing&&(fallHeight>.65||energy>2500),bigMetalHit=!landing&&surface==='metal'&&p.style==='crash',clips=landing?this.impactLibrary[heavyLanding?'landHeavy':'landLight']:bigMetalHit?this.impactLibrary.bigHit:this.impactLibrary[p.style],recorded=(landing||surface==='metal')&&clips.length>0,buffer=recorded?clips[serial%clips.length]:ctx.createBuffer(1,Math.ceil(ctx.sampleRate*p.duration),ctx.sampleRate),data=recorded?undefined:buffer.getChannelData(0);let seed=73221+serial*7919,low=0;
+ const ctx=this.context,p=impactProfile(energy,surface,damage),serial=this.impactSerial++,landing=fallHeight!==undefined,heavyLanding=landing&&(fallHeight>.65||energy>2500),bigMetalHit=!landing&&surface==='metal'&&p.style==='crash',clips=landing?this.impactLibrary[heavyLanding?'landHeavy':'landLight']:arenaWallImpact?this.impactLibrary.wallHit:bigMetalHit?this.impactLibrary.bigHit:this.impactLibrary[p.style],recorded=(landing||surface==='metal'||arenaWallImpact)&&clips.length>0,buffer=recorded?clips[arenaWallImpact&&!landing?this.wallImpactSerial++%clips.length:serial%clips.length]:ctx.createBuffer(1,Math.ceil(ctx.sampleRate*p.duration),ctx.sampleRate),data=recorded?undefined:buffer.getChannelData(0);let seed=73221+serial*7919,low=0;
  if(data){
  for(let i=0;i<data.length;i++){
   const t=i/ctx.sampleRate;seed=(seed*1664525+1013904223)>>>0;const noise=seed/4294967296*2-1;low=.86*low+.14*noise;
@@ -153,7 +154,7 @@ export class GameAudio{
  }
 
  mute(){if(!this.context||this.quiet)return;this.quiet=true;for(const tone of [...this.tones,...this.air,...this.weaponLoops,...this.fireLoops.filter(Boolean),...this.combustionLoops.flat().filter(Boolean)])tone.gain.gain.setTargetAtTime(0,this.context.currentTime,.025);void this.context.suspend?.().catch(()=>{});}
- dispose(){this.resetEngines();this.pauseCountdown();this.tones.forEach(t=>{t.osc.stop();t.osc.disconnect();t.gain.disconnect();});this.tones=[];[...this.air,...this.weaponLoops,...this.fireLoops.filter(Boolean),...this.combustionLoops.flat().filter(Boolean)].forEach(a=>{a.source.stop();a.source.disconnect();a.filter.disconnect();a.gain.disconnect();});this.air=[];this.weaponLoops=[];this.fireLoops=[];this.weaponBuffers.clear();this.sparkBuffers.clear();this.combustionLoops=[];void this.context?.close();this.context=undefined;this.impactLibrary={tap:[],strike:[],crash:[],landLight:[],landHeavy:[],bigHit:[]};this.impactLoad=undefined;}
+ dispose(){this.resetEngines();this.pauseCountdown();this.tones.forEach(t=>{t.osc.stop();t.osc.disconnect();t.gain.disconnect();});this.tones=[];[...this.air,...this.weaponLoops,...this.fireLoops.filter(Boolean),...this.combustionLoops.flat().filter(Boolean)].forEach(a=>{a.source.stop();a.source.disconnect();a.filter.disconnect();a.gain.disconnect();});this.air=[];this.weaponLoops=[];this.fireLoops=[];this.weaponBuffers.clear();this.sparkBuffers.clear();this.combustionLoops=[];void this.context?.close();this.context=undefined;this.impactLibrary={tap:[],strike:[],crash:[],landLight:[],landHeavy:[],bigHit:[],wallHit:[]};this.impactLoad=undefined;}
 }
 
 export function sparkSoundSamples(sampleRate:number,level:number){
