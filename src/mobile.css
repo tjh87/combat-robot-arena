@@ -108,3 +108,21 @@ html.touch-playing .shell{inset:0!important}
 }
 /* Impact telemetry stays visible but moves under the P1 card so it never covers the joystick. */
 html.touch-playing #hud #travel{zoom:var(--ui-scale);left:calc(var(--sa-l) + 10px)!important;right:auto!important;top:calc((var(--sa-t) + 56px)/var(--ui-scale))!important;bottom:auto!important}
+
+/* Mobile retains the full desktop HUD data but uses a readable fit-safe card scale. */
+html.touch-playing #hud .player-panel{max-width:calc(50vw - 14px)!important;min-height:94px!important;padding:7px 8px!important;grid-template-columns:40px minmax(0,1fr) 52px!important}
+html.touch-playing #hud .player-title{font:700 13px/1.1 var(--hud-head)!important}
+html.touch-playing #hud .health-track{height:7px!important}
+html.touch-playing #hud .hp-pct{font-size:13px!important}
+html.touch-playing #hud .player-panel :is(.hud-stats,.component-readouts,.fault-line){font:500 10px/1.25 var(--font-mono)!important}
+html.touch-playing #hud .player-panel .hud-start-rpm .rpm-silhouette{width:52px;height:36px}
+html.touch-playing #hud .player-panel .hud-start-rpm-label{font-size:7px}
+html.touch-playing #hud .player-panel .hud-start-rpm strong{font-size:11px!important}
+
+/* Countdown uses the same readable treatment, constrained around the centre clock on a phone. */
+html.touch-playing #hud .player-panel,html.touch-playing #hud .player-panel.pre-fight{width:min(41vw,360px)!important;min-width:0!important;max-width:min(41vw,360px)!important;min-height:94px!important;padding:7px 8px!important;grid-template-columns:40px minmax(0,1fr) 52px!important;column-gap:7px;row-gap:3px}
+html.touch-playing #hud .player-panel.pre-fight .player-portrait{width:40px!important;height:28px!important}
+html.touch-playing #hud .player-panel.pre-fight .player-title{font:700 13px/1.1 var(--hud-head)!important;letter-spacing:.07em}
+html.touch-playing #hud .player-panel.pre-fight .hud-stats{font:500 10px/1.25 var(--font-mono)!important;gap:1px 4px}
+html.touch-playing #hud .player-panel.pre-fight .hud-start-rpm{grid-template-rows:9px 36px 12px 8px}
+html.touch-playing #hud .player-panel.pre-fight .hud-start-rpm .rpm-silhouette{width:52px;height:36px}
