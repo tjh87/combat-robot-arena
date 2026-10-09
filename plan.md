@@ -77,6 +77,11 @@ Improve the existing Three.js/Rapier combat game without changing its fixed 240 
 - Set the live and countdown player-card chassis HP track to **42 px** on desktop and **21 px** on narrow/mobile: a 40% reduction from the prior 70 px / 35 px treatment. Keep the same simulated chassis-health percentage, P1 cyan / P2 pink identity, low-health warning, fill width, accessible progressbar semantics, and transparent HUD treatment.
 - Present chassis HP and charge as a clear, high-contrast two-line telemetry block directly below the bar. Keep text inside its player card without covering the centre clock, touch controls, or arena, and do not alter health, damage, simulation, input, or replay data.
 
+### Complete player-card text clarity
+
+- Apply the same high-contrast readable hierarchy to every player-card string: player identity, HP percentage, chassis HP, charge, contact/AI/fouls status, damage warnings, RPM label, RPM value, and RPM band. On desktop, keep main values at 18–24 px and supporting labels at least 13 px; use a smaller fit-safe scale on mobile without hiding existing telemetry.
+- Keep the transparent outlined HUD, existing wording, live colours, accessibility metadata, two-player and countdown geometry, touch controls, simulation, input, damage, and replay behavior unchanged.
+
 ## Design direction
 
 - **Design movement:** Broadcast-grade industrial robot sport — machined steel, warning-light accents, and readable competition telemetry.

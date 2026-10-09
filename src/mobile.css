@@ -133,3 +133,11 @@ html.touch-playing #hud .player-panel .hud-stats{display:grid!important;grid-tem
 
 /* The countdown-specific selector needs the same readable telemetry scale. */
 html.touch-playing #hud .player-panel.pre-fight .hud-stats{display:grid!important;grid-template-columns:minmax(0,1fr);gap:2px;font:700 12px/1.2 var(--font-mono)!important;color:#f4fbff!important;letter-spacing:.01em;text-shadow:0 1px 3px #000e}
+
+/* Fit-safe but complete text clarity for every mobile player-card value. */
+html.touch-playing #hud .player-title,html.touch-playing #hud .player-panel.pre-fight .player-title{font:800 15px/1.1 var(--hud-head)!important;color:#f8fcff!important;text-shadow:0 1px 3px #000e}
+html.touch-playing #hud .hp-pct{font:800 16px/1 var(--font-mono)!important;color:#fff!important;text-shadow:0 1px 3px #000e}
+html.touch-playing #hud .player-panel :is(.hud-stats,.fault-line,.component-readouts),html.touch-playing #hud .player-panel.pre-fight .hud-stats{font:700 13px/1.2 var(--font-mono)!important;color:#f4fbff!important;text-shadow:0 1px 3px #000e}
+html.touch-playing #hud .player-panel .hud-start-rpm-label{font:800 9px/1.1 var(--font-mono)!important;color:#edf8ff!important;text-shadow:0 1px 3px #000e}
+html.touch-playing #hud .player-panel .hud-start-rpm strong{font:800 14px/1 var(--font-mono)!important;text-shadow:0 1px 3px #000e}
+html.touch-playing #hud .player-panel .hud-start-rpm small{font:800 9px/1.1 var(--font-mono)!important;text-shadow:0 1px 3px #000e}

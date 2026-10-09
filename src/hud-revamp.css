@@ -186,3 +186,11 @@
 #hud .player-panel .hud-stats{display:grid!important;grid-template-columns:minmax(0,1fr);gap:3px;font:700 20px/1.25 var(--font-mono)!important;color:#f4fbff!important;letter-spacing:.015em;text-shadow:0 2px 4px #000e,0 0 8px #000b}
 #hud .player-panel .hud-stats #battery-0,#hud .player-panel .hud-stats #battery-1{color:#cfe8f0!important}
 #hud .player-panel.pre-fight .hud-stats{font:700 19px/1.25 var(--font-mono)!important}
+
+/* Every player-card label and value gets the same readable, high-contrast treatment. */
+#hud .player-panel .player-title{color:#f8fcff!important;text-shadow:0 2px 4px #000e,0 0 8px #000b}
+#hud .player-panel .hp-pct{font:800 24px/1 var(--font-mono)!important;color:#fff!important;text-shadow:0 2px 4px #000e}
+#hud .player-panel :is(.fault-line,.component-readouts){font:700 18px/1.25 var(--font-mono)!important;color:#e8f4fa!important;text-shadow:0 2px 4px #000e}
+#hud .player-panel .hud-start-rpm-label{font:800 13px/1.1 var(--font-mono)!important;color:#edf8ff!important;text-shadow:0 2px 4px #000e}
+#hud .player-panel .hud-start-rpm strong{font:800 24px/1 var(--font-mono)!important;color:var(--start-rpm-color,var(--hud-p1));text-shadow:0 2px 4px #000e}
+#hud .player-panel .hud-start-rpm small{font:800 13px/1.1 var(--font-mono)!important;text-shadow:0 2px 4px #000e}
