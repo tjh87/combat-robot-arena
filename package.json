@@ -15,6 +15,7 @@
     "test:wall-audio": "node --import tsx tests/polycarbonate-wall-audio.ts",
     "test:tournament-roster": "node --import tsx tests/tournament-roster-picker.ts",
     "test:tournament-options": "node --import tsx tests/tournament-options.ts",
+    "test:tournament-field": "node --import tsx tests/tournament-field-countout.ts",
     "test:roster": "node --import tsx tests/roster.ts",
     "start": "node scripts/serve.mjs --open",
     "verify": "node scripts/verify.mjs",

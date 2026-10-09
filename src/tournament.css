@@ -35,3 +35,25 @@
 .tournament-difficulty-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:11px}.tournament-difficulty-head p{margin:6px 0 0!important;font-size:11px!important;color:#8faebb!important}
 .tournament-difficulty-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.tournament-difficulty-options button{min-height:42px;padding:8px;border:1px solid #53778a!important;border-radius:8px!important;background:#122b3a!important;color:#bdd0d8!important;font:700 12px var(--font-mono)!important;letter-spacing:.06em;text-transform:uppercase}.tournament-difficulty-options button:is(:hover,:focus-visible){border-color:#8db2c2!important;background:#1c3948!important;outline:0}.tournament-difficulty-options button.active{border-color:#e8cd78!important;background:#3a3925!important;color:#fff0b7!important;box-shadow:inset 0 0 0 1px #f2da8a66,0 0 12px #e6c96c22!important}
 @media(max-width:640px){.tournament-difficulty-head{gap:9px}.tournament-difficulty-head .cup-choice-chip{max-width:120px;font-size:8px}.tournament-difficulty-options{gap:5px}.tournament-difficulty-options button{min-height:38px;font-size:10px!important}}
+
+/* Every contender is visible in the picker: no inner scrolling rail. */
+.cup-entry-picker .tournament-roster-rail{grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:repeat(6,minmax(0,1fr));overflow:visible;scroll-snap-type:none;padding:2px;gap:8px}
+.cup-entry-picker .tournament-roster-tile{grid-template-rows:76px auto;min-height:112px}
+.cup-entry-picker .tournament-roster-copy{padding:6px 7px}
+.cup-entry-picker .tournament-roster-copy strong{font-size:13px}
+.cup-entry-picker .tournament-roster-copy small{font-size:8px}
+.modal.compact.cup-entry-picker{max-height:calc(100dvh - 24px);overflow-y:auto}
+@media(max-width:900px){.cup-entry-picker .tournament-roster-rail{grid-template-columns:repeat(4,minmax(0,1fr))}.cup-entry-picker .tournament-roster-tile{grid-template-rows:62px auto;min-height:98px}}
+@media(orientation:landscape) and (max-height:600px){
+ .modal.compact.cup-entry-picker{padding:12px 16px}
+ .cup-entry-picker>h2{font-size:24px;margin:5px 0}
+ .cup-entry-picker .cup-entry-lede{font-size:11px;margin-bottom:8px!important}
+ .cup-entry-picker .cup-roster-picker{padding:8px}
+ .cup-entry-picker .cup-roster-picker-head{margin-bottom:6px}
+ .cup-entry-picker .cup-roster-picker-head p{display:none}
+ .cup-entry-picker .tournament-roster-tile{grid-template-rows:42px auto;min-height:70px}
+ .cup-entry-picker .tournament-roster-copy{padding:4px 5px;gap:2px}
+ .cup-entry-picker .tournament-roster-copy strong{font-size:11px}
+ .cup-entry-picker .tournament-roster-copy small{font-size:7px}
+ .cup-entry-picker .tournament-roster-number{top:3px;left:3px;height:15px;font-size:7px}
+}
