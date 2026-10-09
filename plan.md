@@ -46,6 +46,11 @@ Improve the existing Three.js/Rapier combat game without changing its fixed 240 
 
 - Present the existing 11 online robot buttons in a scoped, compact three-column grid with local portraits, an active-selection treatment, one-line robot names, lazy images, a bounded scroll area, native button focus, and the same `data-online-robot` controls. Apply the presentation both before room creation and while a lobby is open; do not alter room messages, robot configuration, ready state, saved robots, offline selection, networking, or persistence.
 
+### Tournament contender selection
+
+- Replace the Foundry Cup's single, inherited contender preview with a dedicated horizontal tile rail containing every stock robot and its locally bundled portrait. A player selects exactly one contender before bracket generation; the choice receives an explicit active state, native button focus, `aria-pressed` state, and a live selected-contender summary.
+- When the player enters from a custom build, retain that build as an additional custom contender tile. Starting the cup commits only the chosen contender, while the existing seven distinct AI opponents, bracket seeding, countdown, repairs, damage carry-over, offline tournament simulation, physics, and controls remain unchanged.
+
 ### Online copy hierarchy and Quick Fight centering
 
 - Separate the selected-machine label, robot name, weapon family, mass/build-limit detail, and controls note into visible line-level elements in the online panel. Keep the selected local portrait, exact robot identity, weapon title, 113.398 kg limit, accessibility label, and picker behavior unchanged.
@@ -119,7 +124,8 @@ Improve the existing Three.js/Rapier combat game without changing its fixed 240 
 | `src/weapon-blur.ts` / weapon exposure modules | Shared speed profile for teeth-readable, partial, and capped full-exposure blur. |
 | `src/touch-controls.ts` / `src/mobile.css` | Mobile-UA browser gate plus mobile-only landscape controls and scaling. |
 | `src/rpm-presentation.ts` / `src/main.ts` / `src/hud-revamp.css` | Reusable silhouette fill and enlarged countdown-only player cards. |
-| `src/main.ts` | Tournament countdown parity, local logo markup, and recorded-damage audio routing. |
+| `src/main.ts` | Tournament countdown parity, contender selection entry flow, local logo markup, and recorded-damage audio routing. |
+| `src/robot-selection.ts` / `src/tournament.css` | Reusable accessible tournament tile rail and the responsive foundry-style selection layout. |
 | `public/branding/` | Derived local logo and favicon files from the user-supplied artwork. |
 | `src/damage-debris.ts` / `src/render.ts` | Component-debris presentation policy; physical detached-component simulation remains unmodified. |
 | `tests/online-core.ts` | Binary input round-trip and malformed-packet regression coverage. |
