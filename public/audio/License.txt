@@ -54,3 +54,9 @@ ORIGINAL GENERATED POLYCARBONATE ARENA-WALL IMPACTS
 polycarbonate-heavy-thump.mp3: approved standalone preview 04 · Polycarbonate heavy thump.
 polycarbonate-flex-rebound.mp3: approved standalone preview 06 · Polycarbonate flex rebound.
 Both are original AI-generated effects, generated 2026-10-09. Neither contains or reproduces BattleBots, Robot Wars, or other broadcast audio. The game uses them only for an arena-boundary collision shortly after a recorded opponent hit; preview 05 and the earlier metallic wall concepts remain outside the game.
+ORIGINAL GENERATED MATCH COUNTDOWN EFFECTS
+arena-countdown-pulse.mp3 and arena-fight-horn.mp3: newly generated original effects
+created 2026-10-10 for this game. They contain no spoken words, broadcast audio,
+or sampled BattleBots/Robot Wars material. Three compact warning blasts rise
+slightly in pitch, followed by the distinct fight-start horn. The oscillator
+buzzer remains as the runtime fallback if samples are unavailable.

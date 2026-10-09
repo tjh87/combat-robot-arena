@@ -13,6 +13,8 @@
     "test:review": "node --import tsx tests/review-core.ts && node --import tsx tests/review-ui.ts",
     "test:visuals": "node --import tsx tests/visuals.ts",
     "test:wall-audio": "node --import tsx tests/polycarbonate-wall-audio.ts",
+    "test:countdown-audio": "node --import tsx tests/countdown-audio.ts",
+    "test:mobile-results-browser": "node tests/mobile-results-browser.mjs",
     "test:tournament-roster": "node --import tsx tests/tournament-roster-picker.ts",
     "test:tournament-options": "node --import tsx tests/tournament-options.ts",
     "test:tournament-field": "node --import tsx tests/tournament-field-countout.ts",
