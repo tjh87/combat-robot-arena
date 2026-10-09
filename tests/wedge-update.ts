@@ -73,7 +73,7 @@ await test('Impact playback creates bounded waveforms, obeys the voice limit, an
  const audio=new GameAudio();try{
   audio.start(.7,.8);assert(audio.available);const rows=[];
   for(const energy of[40,1000,12000]){audio.impact(energy);const source=sources.at(-1),data=buffers.at(-1)!,filter=source.connections[0],gain=filter.connections[0];assert(data.every(x=>Number.isFinite(x)&&Math.abs(x)<=1));const rms=Math.sqrt(data.reduce((sum,x)=>sum+x*x,0)/data.length)*gain.gain.value;rows.push({energy,rms,samples:data.length});source.onended();assert(source.disconnected&&filter.disconnected&&gain.disconnected);assert.equal(audio.voices,0);}
-  assert(rows[0].rms<rows[1].rms&&rows[1].rms<rows[2].rms);const first=sources.length;
+  assert(rows[0].rms<rows[1].rms&&rows[1].rms<rows[2].rms);const heavyHit={generatedHeavyHit:true} as unknown as AudioBuffer;audio.impactLibrary.bigHit=[heavyHit];audio.impact(12000,'metal');assert.equal(sources.at(-1).buffer,heavyHit,'large metal hits use the dedicated heavy armor sample');sources.at(-1).onended();audio.impact(1000,'metal');assert.notEqual(sources.at(-1).buffer,heavyHit,'ordinary metal hits do not use the dedicated heavy armor sample');sources.at(-1).onended();const first=sources.length;
   for(let i=0;i<15;i++)audio.impact(1000,['metal','plastic','rubber'][i%3] as any);assert.equal(audio.voices,12);assert.equal(sources.length-first,12);for(const s of sources.slice(first))s.onended();assert.equal(audio.voices,0);
   audio.context!.suspend=()=>Promise.resolve();(audio.context as any).state='suspended';audio.impact(1000);assert.equal(audio.voices,0);return{waveforms:rows,maxConcurrentImpacts:12,releasedNodes:true};
  }finally{audio.dispose();(globalThis as any).AudioContext=old;}

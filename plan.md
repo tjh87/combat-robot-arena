@@ -77,6 +77,11 @@ Improve the existing Three.js/Rapier combat game without changing its fixed 240 
 - Set the live and countdown player-card chassis HP track to **42 px** on desktop and **21 px** on narrow/mobile: a 40% reduction from the prior 70 px / 35 px treatment. Keep the same simulated chassis-health percentage, P1 cyan / P2 pink identity, low-health warning, fill width, accessible progressbar semantics, and transparent HUD treatment.
 - Present chassis HP and charge as a clear, high-contrast two-line telemetry block directly below the bar. Keep text inside its player card without covering the centre clock, touch controls, or arena, and do not alter health, damage, simulation, input, or replay data.
 
+### Heavy armor impact for high-strength metal hits
+
+- Bundle only preview **02 · Heavy armor impact** from the generated preview set as `public/audio/heavy-armor-impact.mp3`. Use it exclusively for high-strength (`crash`-class) metal impacts. Other impact classes, non-metal contacts, and landings retain their existing audio paths.
+- Keep the other generated previews outside the game. Preserve the hit energy/damage mix, 12-voice cap, random variation for legacy samples, offline loading, and existing steel/landing assets; audio selection changes no physics, damage, timing, or replay data.
+
 ### Complete player-card text clarity
 
 - Apply the same high-contrast readable hierarchy to every player-card string: player identity, HP percentage, chassis HP, charge, contact/AI/fouls status, damage warnings, RPM label, RPM value, and RPM band. On desktop, keep main values at 18–24 px and supporting labels at least 13 px; use a smaller fit-safe scale on mobile without hiding existing telemetry.

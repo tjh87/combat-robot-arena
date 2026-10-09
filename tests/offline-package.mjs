@@ -10,6 +10,7 @@ try{
  for(const url of urls){assert(url.startsWith('/')&&!url.startsWith('//'));const r=await fetch(origin+url);assert.equal(r.status,200,url);assert(Number(r.headers.get('content-length'))>0);}
  assert.equal((await fetch(origin+'/robots/minotaur.png')).status,200);
  assert.equal((await fetch(origin+'/audio/steel_strike_01.mp3')).headers.get('content-type'),'audio/mpeg');
+ assert.equal((await fetch(origin+'/audio/heavy-armor-impact.mp3')).headers.get('content-type'),'audio/mpeg');
  assert.equal((await fetch(origin+'/package.json')).status,404);
  assert.equal((await fetch(origin+'/%2e%2e%2fpackage.json')).status,403);
  assert.equal((await fetch(origin+'/.env')).status,403);

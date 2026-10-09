@@ -42,3 +42,9 @@ See docs/steel-audio-assets.json for each clip. Landing clips have the separate 
 ICEwave uses original procedural combustion audio. The user-provided engine
 recordings informed firing rates and throttle timing only. No ICEwave recording
 or excerpt is included, fetched, or played by the game.
+
+ORIGINAL GENERATED HEAVY-HIT EFFECT
+heavy-armor-impact.mp3: original AI-generated sound-effect preview produced on
+2026-10-09. It is not copied from BattleBots, Robot Wars, or another broadcast.
+The game selects this single generated clip for high-strength metal impacts;
+the other generated preview clips are not included in the game asset folder.
