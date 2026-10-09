@@ -168,3 +168,15 @@
 #hud .player-panel.pre-fight .hud-start-rpm{grid-template-rows:15px 72px 22px 12px}
 #hud .player-panel.pre-fight .hud-start-rpm .rpm-silhouette{width:106px;height:72px}
 @media (max-width:760px){#hud .player-panel,#hud .player-panel.pre-fight{width:calc(50vw - 14px)!important;min-width:0!important;max-width:calc(50vw - 14px)!important;min-height:94px;padding:7px 8px!important;grid-template-columns:40px minmax(0,1fr) 52px!important;column-gap:7px;row-gap:3px}#hud .player-panel .player-portrait,#hud .player-panel.pre-fight .player-portrait{width:40px!important;height:28px!important}#hud .player-panel .player-title,#hud .player-panel.pre-fight .player-title{font:700 13px/1.1 var(--hud-head)!important;letter-spacing:.07em}#hud .player-panel .health-track{height:7px!important}#hud .player-panel .hp-pct{min-width:31px;font-size:13px!important}#hud .player-panel :is(.hud-stats,.component-readouts,.fault-line),#hud .player-panel.pre-fight .hud-stats{font:500 10px/1.25 var(--font-mono)!important;gap:1px 4px}#hud .player-panel .hud-start-rpm,#hud .player-panel.pre-fight .hud-start-rpm{grid-template-rows:9px 36px 12px 8px}#hud .player-panel .hud-start-rpm .rpm-silhouette,#hud .player-panel.pre-fight .hud-start-rpm .rpm-silhouette{width:52px;height:36px}#hud .player-panel .hud-start-rpm-label{font-size:7px}#hud .player-panel .hud-start-rpm strong{font-size:11px!important}#hud .player-panel .hud-start-rpm small{font-size:7px}}
+
+/* Actual RPM drives both vertical silhouette fill and its named colour band. */
+#hud .hud-start-rpm [data-rpm-fill]{transition:fill .12s linear;fill:var(--start-rpm-color,var(--hud-p1))}
+#hud .hud-start-rpm [data-rpm-outline]{transition:stroke .12s linear;stroke:var(--start-rpm-color,var(--hud-p1))}
+#hud .hud-start-rpm[data-rpm-band="idle"]{--start-band:#74c8ff}
+#hud .hud-start-rpm[data-rpm-band="spool"]{--start-band:#36d9ff}
+#hud .hud-start-rpm[data-rpm-band="engage"]{--start-band:#45f0a4}
+#hud .hud-start-rpm[data-rpm-band="combat"]{--start-band:#ffe25d}
+#hud .hud-start-rpm[data-rpm-band="high"]{--start-band:#ffad4d}
+#hud .hud-start-rpm[data-rpm-band="redline"]{--start-band:#ff2d8e}
+#hud .hud-start-rpm small{color:var(--start-rpm-color,var(--start-band,var(--hud-muted)))}
+#hud .hud-start-rpm[data-rpm-band="redline"] .rpm-silhouette{filter:drop-shadow(0 0 8px var(--start-rpm-color,#ff2d8e))}

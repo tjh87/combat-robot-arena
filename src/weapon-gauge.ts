@@ -42,7 +42,7 @@ export function updateWeaponGauge(root:HTMLElement,b:Bot,keys:{weapon:string,str
  const ring=root.querySelector<SVGElement>('#gauge-speed');if(ring)ring.style.strokeDashoffset=String(100-ratio*100);
  // The compact bar mirrors the displayed speed, force, or flipper readiness.
  const bar=root.querySelector<HTMLElement>('#gauge-power');if(bar)bar.style.width=ratio*100+'%';
- const visual=rpmPresentation(ratio);root.style.setProperty('--rpm-color',visual.color);root.style.setProperty('--rpm-glow',visual.glow);root.style.setProperty('--rpm-shade',visual.shade);root.style.setProperty('--rpm-tip-motion',visual.motion+'px');root.style.setProperty('--rpm-tip-cycle',visual.period+'ms');root.dataset.rpmRatio=String(ratio);root.dataset.rpmNearMax=String(spin&&visual.nearMax&&!keys.reduced);root.dataset.gaugeReduced=String(!!keys.reduced);
+ const visual=rpmPresentation(ratio);root.style.setProperty('--rpm-color',visual.color);root.style.setProperty('--rpm-glow',visual.glow);root.style.setProperty('--rpm-shade',visual.shade);root.style.setProperty('--rpm-tip-motion',visual.motion+'px');root.style.setProperty('--rpm-tip-cycle',visual.period+'ms');root.dataset.rpmRatio=String(ratio);root.dataset.rpmNearMax=String(spin&&visual.nearMax&&!keys.reduced);root.dataset.rpmBand=visual.band;root.dataset.gaugeReduced=String(!!keys.reduced);
  updateRpmSilhouette(root,c.chassis.profile,ratio);
  if(hydra){root.setAttribute('role','group');root.setAttribute('aria-label','Hydra flip assist');for(const attr of ['aria-valuenow','aria-valuemin','aria-valuemax','aria-valuetext'])root.removeAttribute(attr);}
  root.querySelector('#gauge-primary')!.classList.toggle('hidden',w.type==='none');root.querySelector('#gauge-secondary')!.classList.toggle('hidden',w.type!=='hammer_saw');

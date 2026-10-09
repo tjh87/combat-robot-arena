@@ -67,6 +67,11 @@ Improve the existing Three.js/Rapier combat game without changing its fixed 240 
 - Keep the transparent outlined HUD treatment and all live player data. Avoid changing physical state, robot geometry, RPM values, input controls, playback, or arena camera; the change is confined to the presentation card layout.
 - At narrow/mobile widths, use a smaller fit-safe override that is still materially larger and clearer than the prior six-to-ten-pixel labels, keeping both player cards and touch controls visible.
 
+### RPM silhouette fill and colour bands
+
+- Drive the existing local silhouette fill from the current simulated RPM ratio for each spinner, with a visible label and distinct continuous colour progression: **IDLE** blue/cyan, **SPOOL** cyan, **ENGAGE** green, **COMBAT** yellow, **HIGH** orange, then **REDLINE** red/magenta. The silhouette remains empty at zero RPM and fills from the base as the rotor gains speed.
+- Apply the same ratio and color presentation to the compact weapon gauge without changing target RPMs, motor work, weapon damage, contacts, replay data, or input behavior.
+
 ## Design direction
 
 - **Design movement:** Broadcast-grade industrial robot sport — machined steel, warning-light accents, and readable competition telemetry.

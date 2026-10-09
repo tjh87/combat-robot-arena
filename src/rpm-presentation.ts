@@ -1,9 +1,12 @@
 import {clamp} from './model';
 
-const STOPS=[[0,116,200,255],[.25,101,238,235],[.5,160,239,133],[.8,255,229,121],[.9,255,177,109],[1,255,112,143]];
+const STOPS=[[0,116,200,255],[.18,54,217,255],[.4,69,240,164],[.65,255,226,93],[.82,255,173,77],[.93,255,93,99],[1,255,45,142]];
+export type RpmBand='idle'|'spool'|'engage'|'combat'|'high'|'redline';
+const BAND_LABELS:Record<RpmBand,string>={idle:'IDLE',spool:'SPOOL',engage:'ENGAGE',combat:'COMBAT',high:'HIGH',redline:'REDLINE'};
+function rpmBand(ratio:number):RpmBand{return ratio<.03?'idle':ratio<.18?'spool':ratio<.4?'engage':ratio<.65?'combat':ratio<.82?'high':'redline';}
 export function rpmPresentation(value:number){
- const ratio=clamp(Number.isFinite(value)?value:0,0,1),next=STOPS.findIndex(s=>s[0]>=ratio),i=Math.max(1,next),a=STOPS[i-1],b=STOPS[i],t=(ratio-a[0])/(b[0]-a[0]),rgb=a.slice(1).map((n,j)=>Math.round(n+(b[j+1]-n)*t)),color='#'+rgb.map(n=>n.toString(16).padStart(2,'0')).join(''),intensity=clamp((ratio-.8)/.2,0,1);
- return{ratio,color,glow:'rgba('+rgb.join(',')+',.24)',shade:'rgba('+rgb.join(',')+',.12)',nearMax:ratio>=.8,intensity,motion:.25+2.25*intensity,period:160-105*intensity};
+ const ratio=clamp(Number.isFinite(value)?value:0,0,1),next=STOPS.findIndex(s=>s[0]>=ratio),i=Math.max(1,next),a=STOPS[i-1],b=STOPS[i],t=(ratio-a[0])/(b[0]-a[0]),rgb=a.slice(1).map((n,j)=>Math.round(n+(b[j+1]-n)*t)),color='#'+rgb.map(n=>n.toString(16).padStart(2,'0')).join(''),intensity=clamp((ratio-.8)/.2,0,1),band=rpmBand(ratio);
+ return{ratio,band,label:BAND_LABELS[band],color,glow:'rgba('+rgb.join(',')+',.32)',shade:'rgba('+rgb.join(',')+',.16)',nearMax:ratio>=.8,intensity,motion:.25+2.25*intensity,period:160-105*intensity};
 }
 
 const SHAPES:Record<string,string>={
@@ -43,6 +46,7 @@ export function updateRpmSilhouette(root:ParentNode,profile:string|undefined,val
  if(silhouette.dataset.profile!==profileKey){for(const node of silhouette.querySelectorAll<SVGPathElement>('[data-rpm-shape],[data-rpm-base],[data-rpm-outline]'))node.setAttribute('d',path);silhouette.dataset.profile=profileKey;}
  const clip=silhouette.querySelector<SVGClipPathElement>('[data-rpm-clip]'),fill=silhouette.querySelector<SVGRectElement>('[data-rpm-fill]');
  if(clip&&fill&&!silhouette.dataset.clipId){const id='rpm-silhouette-clip-'+(++silhouetteSequence);clip.setAttribute('id',id);fill.setAttribute('clip-path','url(#'+id+')');silhouette.dataset.clipId=id;}
+ silhouette.dataset.rpmBand=visual.band;silhouette.dataset.rpmRatio=String(visual.ratio);
  if(fill){fill.setAttribute('y',String(64*(1-visual.ratio)));fill.setAttribute('height',String(64*visual.ratio));}
  return visual;
 }
