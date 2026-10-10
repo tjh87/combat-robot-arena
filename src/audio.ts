@@ -7,8 +7,7 @@ export type ImpactSurface='metal'|'plastic'|'rubber';
 export const METAL_IMPACTS={tap:['steel_tap_01','steel_tap_02'],strike:['steel_strike_01','steel_strike_02','steel_strike_03'],crash:['steel_crash_01','steel_crash_02','steel_crash_03']} as const;
 export const LANDING_IMPACTS={landLight:['landing_light_01'],landHeavy:['landing_heavy_01','landing_heavy_02']} as const;
 export const POLYCARBONATE_WALL_IMPACTS={wallHit:['polycarbonate-heavy-thump','polycarbonate-flex-rebound']} as const;
-export const BIG_HIT_IMPACT='heavy-armor-impact';
-type ImpactLibraryKey=keyof typeof METAL_IMPACTS|keyof typeof LANDING_IMPACTS|keyof typeof POLYCARBONATE_WALL_IMPACTS|'bigHit';
+type ImpactLibraryKey=keyof typeof METAL_IMPACTS|keyof typeof LANDING_IMPACTS|keyof typeof POLYCARBONATE_WALL_IMPACTS;
 export function impactSurface(module:string,material?:string):ImpactSurface{return material==='rubber'||!material&&module.startsWith('drive_')?'rubber':material==='uhmw'?'plastic':'metal';}
 export function impactProfile(energy:number,surface:ImpactSurface='metal',damage=0){
  const energyStrength=clamp(Math.log1p(Math.max(0,energy)/80)/Math.log1p(12000/80),0,1),damageStrength=clamp(Math.log1p(Math.max(0,damage))/Math.log1p(250),0,1),strength=clamp(energyStrength+(1-energyStrength)*damageStrength*.33,0,1);
@@ -45,7 +44,7 @@ export class GameAudio{
  sparkBuffers=new Map<number,AudioBuffer>();
  fireLoops:LoopVoice[]=[];
  weaponLoops:(LoopVoice&{profile:string})[]=[];weaponBuffers=new Map<string,AudioBuffer>();combustionLoops:LoopVoice[][]=[];
- countdownStep=0;countdownVoices:{source:AudioBufferSourceNode|OscillatorNode,gain:GainNode}[]=[];countdownBuffers:{pulse?:AudioBuffer,fight?:AudioBuffer}={};countdownLoad?:Promise<void>;
+ countdownStep=0;countdownVoices:{osc:OscillatorNode,gain:GainNode}[]=[];
  prepareEngineVoices(){
   const ctx=this.context;if(this.combustionLoops.length||!ctx)return;
   for(const [index,mode] of (['idle','mid','full'] as const).entries()){
@@ -55,32 +54,23 @@ export class GameAudio{
  }
  resetEngines(){this.weaponState=[{speed:0,time:0},{speed:0,time:0}];if(this.context)for(const voice of this.combustionLoops.flat().concat(this.fireLoops).filter(Boolean))voice.gain.gain.setTargetAtTime(0,this.context.currentTime,.02);}
  resetCountdown(){this.pauseCountdown();this.countdownStep=0;}
- pauseCountdown(){for(const voice of this.countdownVoices){voice.source.onended=null;try{voice.source.stop();}catch{}voice.source.disconnect();voice.gain.disconnect();}this.countdownVoices=[];}
+ pauseCountdown(){for(const voice of this.countdownVoices){voice.osc.onended=null;voice.osc.stop();voice.osc.disconnect();voice.gain.disconnect();}this.countdownVoices=[];}
  updateCountdown(elapsed:number){
   const cues=[.17,1.17,2.17,3.15];
   while(this.countdownStep<cues.length&&elapsed>=cues[this.countdownStep]){
-   if(!this.countdownCue(this.countdownStep===3,this.countdownStep))return;
+   if(!this.countdownCue(this.countdownStep===3))return;
    this.countdownStep++;
   }
  }
- countdownCue(fight:boolean,step=0){
+ countdownCue(fight:boolean){
   const ctx=this.context;if(!ctx||ctx.state!=='running'||!this.sfx)return false;
-  // Start signals bypass the ordinary impact voice limit; generated samples
-  // are optional so the original oscillator buzzer still covers slow/offline loads.
-  const sample=this.countdownBuffers[fight?'fight':'pulse'],duration=sample?.duration??(fight?.30:.24);
-  const addVoice=(harmonic=1)=>{
-   const source:AudioBufferSourceNode|OscillatorNode=sample?ctx.createBufferSource():ctx.createOscillator(),gain=ctx.createGain();
-   if(sample){const bufferSource=source as AudioBufferSourceNode;bufferSource.buffer=sample;bufferSource.playbackRate.value=fight?1:.92+Math.min(2,step)*.055;}else{const oscillator=source as OscillatorNode;oscillator.type=fight?'sawtooth':'square';oscillator.frequency.setValueAtTime((fight?620:360+step*55)*harmonic,ctx.currentTime);}
-   const level=sample?(fight?.62:.44):(fight?.18:.14)/harmonic;
-   gain.gain.setValueAtTime(.0001,ctx.currentTime);gain.gain.linearRampToValueAtTime(level,ctx.currentTime+.008);gain.gain.setValueAtTime(level,ctx.currentTime+Math.max(.02,duration-.035));gain.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+duration);
-   source.connect(gain);gain.connect(this.sfx!);const voice={source,gain};this.countdownVoices.push(voice);source.onended=()=>{source.disconnect();gain.disconnect();this.countdownVoices=this.countdownVoices.filter(v=>v!==voice);};source.start();source.stop(ctx.currentTime+duration);
-  };
-  if(sample)addVoice();else for(const harmonic of[1,2])addVoice(harmonic);
+  const duration=fight?.30:.24,frequency=fight?950:480;
+  for(const harmonic of[1,2]){
+   const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(frequency*harmonic,ctx.currentTime);
+   gain.gain.setValueAtTime(.0001,ctx.currentTime);gain.gain.linearRampToValueAtTime((fight?.18:.14)/harmonic,ctx.currentTime+.008);gain.gain.setValueAtTime((fight?.18:.14)/harmonic,ctx.currentTime+duration-.035);gain.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+duration);
+   osc.connect(gain);gain.connect(this.sfx);const voice={osc,gain};this.countdownVoices.push(voice);osc.onended=()=>{osc.disconnect();gain.disconnect();this.countdownVoices=this.countdownVoices.filter(v=>v!==voice);};osc.start();osc.stop(ctx.currentTime+duration);
+  }
   return true;
- }
- private loadCountdownSounds(){
-  const ctx=this.context;if(!ctx||this.countdownLoad||typeof fetch==='undefined'||!ctx.decodeAudioData)return;
-  this.countdownLoad=Promise.allSettled((['pulse','fight'] as const).map(async kind=>{const response=await fetch('/audio/arena-'+(kind==='pulse'?'countdown-pulse':'fight-horn')+'.mp3');if(!response.ok)throw Error('Countdown audio unavailable');const decoded=await ctx.decodeAudioData(await response.arrayBuffer());if(this.context===ctx)this.countdownBuffers[kind]=decoded;})).then(()=>{});
  }
  private loopVoice(buffer:AudioBuffer,band:number):LoopVoice{
   const ctx=this.context!,source=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),gain=ctx.createGain();source.buffer=buffer;source.loop=true;filter.type='lowpass';filter.frequency.value=band;gain.gain.value=0;source.connect(filter);filter.connect(gain);gain.connect(this.sfx!);source.start();return{source,filter,gain};
@@ -96,7 +86,7 @@ export class GameAudio{
   let buffer=this.weaponBuffers.get(profile);if(!buffer){const ctx=this.context!;buffer=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate);buffer.getChannelData(0).set(weaponVoiceSamples(profile,ctx.sampleRate));this.weaponBuffers.set(profile,buffer);}
   voice={...this.loopVoice(buffer,WEAPON_VOICES[profile].band),profile};this.weaponLoops[bot]=voice;return voice;
  }
- impactLibrary:Record<ImpactLibraryKey,AudioBuffer[]>={tap:[],strike:[],crash:[],landLight:[],landHeavy:[],bigHit:[],wallHit:[]};impactLoad?:Promise<void>;impactSerial=0;wallImpactSerial=0;
+ impactLibrary:Record<ImpactLibraryKey,AudioBuffer[]>={tap:[],strike:[],crash:[],landLight:[],landHeavy:[],wallHit:[]};impactLoad?:Promise<void>;impactSerial=0;wallImpactSerial=0;
  context?:AudioContext;master?:GainNode;sfx?:GainNode;voices=0;tones:{osc:OscillatorNode,gain:GainNode}[]=[];air:{source:AudioBufferSourceNode,filter:BiquadFilterNode,gain:GainNode}[]=[];available=true;private weaponState=[{speed:0,time:0},{speed:0,time:0}];
  start(master:number,sfx:number){this.quiet=false;try{if(!this.context){
  const ctx=this.context=new AudioContext();this.master=ctx.createGain();this.sfx=ctx.createGain();this.sfx.connect(this.master);
@@ -105,10 +95,10 @@ export class GameAudio{
  for(let i=0;i<8;i++){const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type=i<2?'triangle':i<4?'sine':i<6?'sawtooth':'triangle';gain.gain.value=0;osc.connect(gain);gain.connect(this.sfx);osc.start();this.tones.push({osc,gain});}
  const buffer=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate),data=buffer.getChannelData(0);let seed=98131,last=0;for(let i=0;i<data.length;i++){seed=(seed*1664525+1013904223)>>>0;last=.7*last+.3*(seed/4294967296*2-1);data[i]=last;}
  for(let i=0;i<2;i++){const source=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),gain=ctx.createGain();source.buffer=buffer;source.loop=true;filter.type='bandpass';filter.Q.value=.6;gain.gain.value=0;source.connect(filter);filter.connect(gain);gain.connect(this.sfx);source.start();this.air.push({source,filter,gain});}
- }this.loadMetalImpacts();this.loadCountdownSounds();this.prepareEngineVoices();this.volume(master,sfx);void this.context.resume().catch(()=>{this.available=false;});}catch{this.available=false;}}
+ }this.loadMetalImpacts();this.prepareEngineVoices();this.volume(master,sfx);void this.context.resume().catch(()=>{this.available=false;});}catch{this.available=false;}}
  loadMetalImpacts(){
   const ctx=this.context;if(this.impactLoad||!ctx?.decodeAudioData||typeof fetch==='undefined')return;
-  this.impactLoad=Promise.allSettled(Object.entries({...METAL_IMPACTS,...LANDING_IMPACTS,...POLYCARBONATE_WALL_IMPACTS,bigHit:[BIG_HIT_IMPACT]}).flatMap(([style,names])=>names.map(async name=>{
+  this.impactLoad=Promise.allSettled(Object.entries({...METAL_IMPACTS,...LANDING_IMPACTS,...POLYCARBONATE_WALL_IMPACTS}).flatMap(([style,names])=>names.map(async name=>{
    const response=await fetch('/audio/'+name+'.mp3');if(!response.ok)throw Error('Impact sample unavailable');const buffer=await ctx.decodeAudioData(await response.arrayBuffer());
    if(this.context===ctx)this.impactLibrary[style as ImpactLibraryKey].push(buffer);
   }))).then(()=>{});
@@ -126,7 +116,7 @@ export class GameAudio{
  impact(energy:number,surface:ImpactSurface='metal',fallHeight?:number,damage=0,arenaWallImpact=false){
  if(surface==='metal'&&fallHeight===undefined&&!arenaWallImpact)this.spark(energy);
  if(energy<=0||this.context?.state!=='running'||!this.sfx||this.voices>=12)return;this.voices++;
- const ctx=this.context,p=impactProfile(energy,surface,damage),serial=this.impactSerial++,landing=fallHeight!==undefined,heavyLanding=landing&&(fallHeight>.65||energy>2500),bigMetalHit=!landing&&surface==='metal'&&p.style==='crash',clips=landing?this.impactLibrary[heavyLanding?'landHeavy':'landLight']:arenaWallImpact?this.impactLibrary.wallHit:bigMetalHit?this.impactLibrary.bigHit:this.impactLibrary[p.style],recorded=(landing||surface==='metal'||arenaWallImpact)&&clips.length>0,buffer=recorded?clips[arenaWallImpact&&!landing?this.wallImpactSerial++%clips.length:serial%clips.length]:ctx.createBuffer(1,Math.ceil(ctx.sampleRate*p.duration),ctx.sampleRate),data=recorded?undefined:buffer.getChannelData(0);let seed=73221+serial*7919,low=0;
+ const ctx=this.context,p=impactProfile(energy,surface,damage),serial=this.impactSerial++,landing=fallHeight!==undefined,heavyLanding=landing&&(fallHeight>.65||energy>2500),clips=landing?this.impactLibrary[heavyLanding?'landHeavy':'landLight']:arenaWallImpact?this.impactLibrary.wallHit:this.impactLibrary[p.style],recorded=(landing||surface==='metal'||arenaWallImpact)&&clips.length>0,buffer=recorded?clips[arenaWallImpact&&!landing?this.wallImpactSerial++%clips.length:serial%clips.length]:ctx.createBuffer(1,Math.ceil(ctx.sampleRate*p.duration),ctx.sampleRate),data=recorded?undefined:buffer.getChannelData(0);let seed=73221+serial*7919,low=0;
  if(data){
  for(let i=0;i<data.length;i++){
   const t=i/ctx.sampleRate;seed=(seed*1664525+1013904223)>>>0;const noise=seed/4294967296*2-1;low=.86*low+.14*noise;
@@ -162,7 +152,7 @@ export class GameAudio{
  }
 
  mute(){if(!this.context||this.quiet)return;this.quiet=true;for(const tone of [...this.tones,...this.air,...this.weaponLoops,...this.fireLoops.filter(Boolean),...this.combustionLoops.flat().filter(Boolean)])tone.gain.gain.setTargetAtTime(0,this.context.currentTime,.025);void this.context.suspend?.().catch(()=>{});}
- dispose(){this.resetEngines();this.pauseCountdown();this.tones.forEach(t=>{t.osc.stop();t.osc.disconnect();t.gain.disconnect();});this.tones=[];[...this.air,...this.weaponLoops,...this.fireLoops.filter(Boolean),...this.combustionLoops.flat().filter(Boolean)].forEach(a=>{a.source.stop();a.source.disconnect();a.filter.disconnect();a.gain.disconnect();});this.air=[];this.weaponLoops=[];this.fireLoops=[];this.weaponBuffers.clear();this.sparkBuffers.clear();this.combustionLoops=[];void this.context?.close();this.context=undefined;this.countdownBuffers={};this.countdownLoad=undefined;this.impactLibrary={tap:[],strike:[],crash:[],landLight:[],landHeavy:[],bigHit:[],wallHit:[]};this.impactLoad=undefined;}
+ dispose(){this.resetEngines();this.pauseCountdown();this.tones.forEach(t=>{t.osc.stop();t.osc.disconnect();t.gain.disconnect();});this.tones=[];[...this.air,...this.weaponLoops,...this.fireLoops.filter(Boolean),...this.combustionLoops.flat().filter(Boolean)].forEach(a=>{a.source.stop();a.source.disconnect();a.filter.disconnect();a.gain.disconnect();});this.air=[];this.weaponLoops=[];this.fireLoops=[];this.weaponBuffers.clear();this.sparkBuffers.clear();this.combustionLoops=[];void this.context?.close();this.context=undefined;this.impactLibrary={tap:[],strike:[],crash:[],landLight:[],landHeavy:[],wallHit:[]};this.impactLoad=undefined;}
 }
 
 export function sparkSoundSamples(sampleRate:number,level:number){

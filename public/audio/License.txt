@@ -43,20 +43,7 @@ ICEwave uses original procedural combustion audio. The user-provided engine
 recordings informed firing rates and throttle timing only. No ICEwave recording
 or excerpt is included, fetched, or played by the game.
 
-ORIGINAL GENERATED HEAVY-HIT EFFECT
-heavy-armor-impact.mp3: original AI-generated sound-effect preview produced on
-2026-10-09. It is not copied from BattleBots, Robot Wars, or another broadcast.
-The game selects this single generated clip for high-strength metal impacts;
-the other generated preview clips are not included in the game asset folder.
-
-
 ORIGINAL GENERATED POLYCARBONATE ARENA-WALL IMPACTS
 polycarbonate-heavy-thump.mp3: approved standalone preview 04 · Polycarbonate heavy thump.
 polycarbonate-flex-rebound.mp3: approved standalone preview 06 · Polycarbonate flex rebound.
 Both are original AI-generated effects, generated 2026-10-09. Neither contains or reproduces BattleBots, Robot Wars, or other broadcast audio. The game uses them only for an arena-boundary collision shortly after a recorded opponent hit; preview 05 and the earlier metallic wall concepts remain outside the game.
-ORIGINAL GENERATED MATCH COUNTDOWN EFFECTS
-arena-countdown-pulse.mp3 and arena-fight-horn.mp3: newly generated original effects
-created 2026-10-10 for this game. They contain no spoken words, broadcast audio,
-or sampled BattleBots/Robot Wars material. Three compact warning blasts rise
-slightly in pitch, followed by the distinct fight-start horn. The oscillator
-buzzer remains as the runtime fallback if samples are unavailable.

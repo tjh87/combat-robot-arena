@@ -163,10 +163,9 @@ Improve the existing Three.js/Rapier combat game without changing its fixed 240 
 
 Keep desktop results unchanged. For browsers already detected as mobile, fit the landscape result modal to the dynamic viewport and safe-area insets rather than the desktop arena offsets. Reduce podium portraits, names, telemetry spacing and scoreboard typography to a legible mobile scale. Give the result content its own vertical scroll region while keeping replay/menu/rematch/continue buttons outside that scroll region with at least 40 px tap targets. Preserve every score, HP/highlight value, expandable evidence table, result action and tournament transition. Apply fit-safe sizing to online result cards and tournament victory/champion banners as well; do not alter gameplay or detection.
 
-### Original match countdown audio
+### Restored countdown and weapon-hit audio
 
-Use two newly generated original non-speech effects: a short mono electronic/mechanical buzzer pulse for the 3–2–1 cues and a separate stronger buzzy horn for the final Fight signal. Load both asynchronously through the existing game AudioContext and SFX gain, varying pulse playback rate slightly across cues. Preserve the non-blocking oscillator buzzer when samples are unavailable/slow; countdown timing, cut-off, mute handling, volume, voices, rules and gameplay remain unchanged. Record asset provenance in the audio license notes and bundle allowlist.
-
+Keep the previous local synthesized countdown cues: paired 480/960 Hz tones for 3-2-1 and paired 950/1900 Hz tones for FIGHT at the existing timing. Route large crash-class metal weapon hits back to the existing steel crash recordings instead of the generated heavy-armor clip. Preserve the independently approved alternating polycarbonate wall-impact clips, impact timing, material/landing handling, gain and voice limits, and all combat physics. Do not load or ship the generated countdown or heavy-armor samples.
 ### Mobile results confirmation
 
 The results dialog is now structurally split into a compact action footer and a separate scroll area so standings and judging evidence cannot displace menu, replay, rematch or next-round actions. Mobile-only landscape CSS handles safe-area padding, podium and score density; online result cards and tournament champion/round banners get a compact viewport-bound treatment while desktop stays unchanged.

@@ -9,9 +9,11 @@ try{
  const urls=[...html.matchAll(/(?:src|href)="([^"]+)"/g)].map(m=>m[1]);assert(urls.length>=3);
  for(const url of urls){assert(url.startsWith('/')&&!url.startsWith('//'));const r=await fetch(origin+url);assert.equal(r.status,200,url);assert(Number(r.headers.get('content-length'))>0);}
  assert.equal((await fetch(origin+'/robots/minotaur.png')).status,200);
- assert.equal((await fetch(origin+'/audio/steel_strike_01.mp3')).headers.get('content-type'),'audio/mpeg');
- assert.equal((await fetch(origin+'/audio/heavy-armor-impact.mp3')).headers.get('content-type'),'audio/mpeg');
- assert.equal((await fetch(origin+'/audio/polycarbonate-heavy-thump.mp3')).headers.get('content-type'),'audio/mpeg');
+	 assert.equal((await fetch(origin+'/audio/steel_strike_01.mp3')).headers.get('content-type'),'audio/mpeg');
+	 assert.equal((await fetch(origin+'/audio/heavy-armor-impact.mp3')).status,404);
+	 assert.equal((await fetch(origin+'/audio/arena-countdown-pulse.mp3')).status,404);
+	 assert.equal((await fetch(origin+'/audio/arena-fight-horn.mp3')).status,404);
+	 assert.equal((await fetch(origin+'/audio/polycarbonate-heavy-thump.mp3')).headers.get('content-type'),'audio/mpeg');
  assert.equal((await fetch(origin+'/audio/polycarbonate-flex-rebound.mp3')).headers.get('content-type'),'audio/mpeg');
  assert.equal((await fetch(origin+'/package.json')).status,404);
  assert.equal((await fetch(origin+'/%2e%2e%2fpackage.json')).status,403);
