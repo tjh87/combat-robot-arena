@@ -15,7 +15,7 @@ try{
 	 assert.equal((await fetch(origin+'/audio/arena-fight-horn.mp3')).status,404);
 	 assert.equal((await fetch(origin+'/audio/polycarbonate-heavy-thump.mp3')).headers.get('content-type'),'audio/mpeg');
  assert.equal((await fetch(origin+'/audio/polycarbonate-flex-rebound.mp3')).headers.get('content-type'),'audio/mpeg');
- for(const name of['magnetar-spin-up-v4','magnetar-high-speed-v4','magnetar-rpm-change-v4']){const r=await fetch(origin+'/audio/'+name+'.mp3');assert.equal(r.status,200,name);assert.equal(r.headers.get('content-type'),'audio/mpeg',name);}
+	 for(const name of['magnetar-spin-up-v4','magnetar-high-speed-v4','magnetar-rpm-change-v4','deep-six-spin-up-v1','deep-six-full-speed-v1','deep-six-coast-down-v1']){const r=await fetch(origin+'/audio/'+name+'.mp3');assert.equal(r.status,200,name);assert.equal(r.headers.get('content-type'),'audio/mpeg',name);}
  assert.equal((await fetch(origin+'/package.json')).status,404);
  assert.equal((await fetch(origin+'/%2e%2e%2fpackage.json')).status,403);
  assert.equal((await fetch(origin+'/.env')).status,403);

@@ -4,8 +4,8 @@ import {join} from 'node:path';
 import {createHash} from 'node:crypto';
 
 const files=readdirSync('dist',{recursive:true}).filter(file=>statSync(join('dist',file)).isFile());
-assert(files.every(file=>file==='index.html'||file==='favicon.svg'||file==='audio/License.txt'||file==='audio/match-start.mp3'||file==='audio/polycarbonate-heavy-thump.mp3'||file==='audio/polycarbonate-flex-rebound.mp3'||/^audio\/magnetar-(spin-up|high-speed|rpm-change)-v4\.mp3$/.test(file)||/^audio\/landing_(light_01|heavy_0[1-2])\.mp3$/.test(file)||/^audio\/steel_(crash_0[1-3]|strike_0[1-3]|tap_0[1-2])\.mp3$/.test(file)||/^robots\/(tombstone|minotaur|hydra|icewave|hypershock|gigabyte|whyachi|huge|sawblaze|deep_six|quantum)\.png$/.test(file)||/^branding\/arena-logo-(64|96|192|256|512)\.png$/.test(file)||file==='manifest.webmanifest'||/^assets\/(index|physics|graphics|predictor|tournament-worker|build-fit-worker)-[\w-]+\.(js|css)$/.test(file)));
-assert.equal(files.filter(file=>file.endsWith('.mp3')).length,17);
+assert(files.every(file=>file==='index.html'||file==='favicon.svg'||file==='audio/License.txt'||file==='audio/match-start.mp3'||file==='audio/polycarbonate-heavy-thump.mp3'||file==='audio/polycarbonate-flex-rebound.mp3'||/^audio\/magnetar-(spin-up|high-speed|rpm-change)-v4\.mp3$/.test(file)||/^audio\/deep-six-(spin-up|full-speed|coast-down)-v1\.mp3$/.test(file)||/^audio\/landing_(light_01|heavy_0[1-2])\.mp3$/.test(file)||/^audio\/steel_(crash_0[1-3]|strike_0[1-3]|tap_0[1-2])\.mp3$/.test(file)||/^robots\/(tombstone|minotaur|hydra|icewave|hypershock|gigabyte|whyachi|huge|sawblaze|deep_six|quantum)\.png$/.test(file)||/^branding\/arena-logo-(64|96|192|256|512)\.png$/.test(file)||file==='manifest.webmanifest'||/^assets\/(index|physics|graphics|predictor|tournament-worker|build-fit-worker)-[\w-]+\.(js|css)$/.test(file)));
+assert.equal(files.filter(file=>file.endsWith('.mp3')).length,20);
 assert(readFileSync('dist/audio/License.txt','utf8').includes('CC0'));
 assert.equal(files.filter(file=>file.startsWith('robots/')).length,11);
 assert.equal(files.filter(file=>file.startsWith('branding/')).length,5);

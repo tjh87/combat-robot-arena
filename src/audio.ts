@@ -45,7 +45,7 @@ export class GameAudio{
  private quiet=false;
  sparkBuffers=new Map<number,AudioBuffer>();
  fireLoops:LoopVoice[]=[];
- weaponLoops:WeaponLoopVoice[]=[];weaponFadingLoops:WeaponLoopVoice[]=[];weaponBuffers=new Map<string,AudioBuffer>();weaponSampleBuffers=new Map<string,AudioBuffer>();weaponSampleLoad?:Promise<void>;weaponSpinUpVoices:(OneShotVoice|undefined)[]=[undefined,undefined];combustionLoops:LoopVoice[][]=[];
+ weaponLoops:WeaponLoopVoice[]=[];weaponFadingLoops:WeaponLoopVoice[]=[];weaponBuffers=new Map<string,AudioBuffer>();weaponSampleBuffers=new Map<string,AudioBuffer>();weaponSampleLoad?:Promise<void>;weaponSpinUpVoices:(OneShotVoice|undefined)[]=[undefined,undefined];weaponCoastDownVoices:(OneShotVoice|undefined)[]=[undefined,undefined];combustionLoops:LoopVoice[][]=[];
  countdownStep=0;countdownVoices:{osc:OscillatorNode,gain:GainNode}[]=[];
  prepareEngineVoices(){
   const ctx=this.context;if(this.combustionLoops.length||!ctx)return;
@@ -54,7 +54,7 @@ export class GameAudio{
    for(let bot=0;bot<2;bot++)(this.combustionLoops[bot]??=[])[index]=this.loopVoice(buffer,7000);
   }
  }
- resetEngines(){this.weaponState=[{speed:0,time:0},{speed:0,time:0}];if(this.context)for(const voice of this.combustionLoops.flat().concat(this.fireLoops).filter(Boolean))voice.gain.gain.setTargetAtTime(0,this.context.currentTime,.02);}
+ resetEngines(){this.weaponState=[{speed:0,time:0,enabled:false},{speed:0,time:0,enabled:false}];if(this.context)for(const voice of this.combustionLoops.flat().concat(this.fireLoops).filter(Boolean))voice.gain.gain.setTargetAtTime(0,this.context.currentTime,.02);}
  resetCountdown(){this.pauseCountdown();this.countdownStep=0;}
  pauseCountdown(){for(const voice of this.countdownVoices){voice.osc.onended=null;voice.osc.stop();voice.osc.disconnect();voice.gain.disconnect();}this.countdownVoices=[];}
  updateCountdown(elapsed:number){
@@ -93,15 +93,17 @@ export class GameAudio{
  }
  loadWeaponSamples(){
   const ctx=this.context;if(this.weaponSampleLoad||!ctx?.decodeAudioData||typeof fetch==='undefined')return;
-  const files=[['magnetar-spinup','magnetar-spin-up-v4'],['magnetar-high','magnetar-high-speed-v4'],['magnetar-load','magnetar-rpm-change-v4']] as const;
-  this.weaponSampleLoad=Promise.allSettled(files.map(async([key,name])=>{const response=await fetch('/audio/'+name+'.mp3');if(!response.ok)throw Error('Weapon sample unavailable');const decoded=await ctx.decodeAudioData(await response.arrayBuffer());if(this.context===ctx)this.weaponSampleBuffers.set(key,key==='magnetar-spinup'?decoded:this.seamlessLoop(decoded));})).then(()=>{});
+  const files=[['magnetar-spinup','magnetar-spin-up-v4'],['magnetar-high','magnetar-high-speed-v4'],['magnetar-load','magnetar-rpm-change-v4'],['deep-six-spinup','deep-six-spin-up-v1'],['deep-six-high','deep-six-full-speed-v1'],['deep-six-coastdown','deep-six-coast-down-v1']] as const;
+  this.weaponSampleLoad=Promise.allSettled(files.map(async([key,name])=>{const response=await fetch('/audio/'+name+'.mp3');if(!response.ok)throw Error('Weapon sample unavailable');const decoded=await ctx.decodeAudioData(await response.arrayBuffer());if(this.context===ctx)this.weaponSampleBuffers.set(key,key.endsWith('spinup')||key==='deep-six-coastdown'?decoded:this.seamlessLoop(decoded));})).then(()=>{});
  }
- private playWeaponSpinUp(bot:number){
-  const ctx=this.context,buffer=this.weaponSampleBuffers.get('magnetar-spinup');if(!ctx||ctx.state!=='running'||!this.sfx||!buffer)return;
-  const previous=this.weaponSpinUpVoices[bot];if(previous){previous.source.onended=null;previous.source.stop();previous.source.disconnect();previous.gain.disconnect();}
-  const source=ctx.createBufferSource(),gain=ctx.createGain();source.buffer=buffer;gain.gain.value=bot===0?.085:.052;source.connect(gain);gain.connect(this.sfx);
-  const voice={source,gain};this.weaponSpinUpVoices[bot]=voice;source.onended=()=>{source.disconnect();gain.disconnect();if(this.weaponSpinUpVoices[bot]===voice)this.weaponSpinUpVoices[bot]=undefined;};source.start();
+ private stopWeaponCue(voices:(OneShotVoice|undefined)[],bot:number){const previous=voices[bot];if(!previous)return;previous.source.onended=null;previous.source.stop();previous.source.disconnect();previous.gain.disconnect();voices[bot]=undefined;}
+ private playWeaponCue(bot:number,key:string,voices:(OneShotVoice|undefined)[]){
+  const ctx=this.context,buffer=this.weaponSampleBuffers.get(key);if(!ctx||ctx.state!=='running'||!this.sfx||!buffer)return;
+  this.stopWeaponCue(voices,bot);const source=ctx.createBufferSource(),gain=ctx.createGain();source.buffer=buffer;gain.gain.value=bot===0?.085:.052;source.connect(gain);gain.connect(this.sfx);
+  const voice={source,gain};voices[bot]=voice;source.onended=()=>{source.disconnect();gain.disconnect();if(voices[bot]===voice)voices[bot]=undefined;};source.start();
  }
+ private playWeaponSpinUp(bot:number,key='magnetar-spinup'){this.stopWeaponCue(this.weaponCoastDownVoices,bot);this.playWeaponCue(bot,key,this.weaponSpinUpVoices);}
+ private playWeaponCoastDown(bot:number){this.stopWeaponCue(this.weaponSpinUpVoices,bot);this.playWeaponCue(bot,'deep-six-coastdown',this.weaponCoastDownVoices);}
  private weaponVoice(bot:number,profile:string,sampleKey?:string){
   const ctx=this.context!,recorded=sampleKey?this.weaponSampleBuffers.get(sampleKey):undefined,variant=recorded?sampleKey!:'procedural';let buffer=recorded??this.weaponBuffers.get(profile);
   if(!buffer){buffer=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate);buffer.getChannelData(0).set(weaponVoiceSamples(profile,ctx.sampleRate));this.weaponBuffers.set(profile,buffer);}
@@ -113,7 +115,7 @@ export class GameAudio{
   voice={...this.loopVoice(buffer,WEAPON_VOICES[profile].band),profile,variant,buffer};this.weaponLoops[bot]=voice;return voice;
  }
  impactLibrary:Record<ImpactLibraryKey,AudioBuffer[]>={tap:[],strike:[],crash:[],landLight:[],landHeavy:[],wallHit:[]};impactLoad?:Promise<void>;impactSerial=0;wallImpactSerial=0;
- context?:AudioContext;master?:GainNode;sfx?:GainNode;voices=0;tones:{osc:OscillatorNode,gain:GainNode}[]=[];air:{source:AudioBufferSourceNode,filter:BiquadFilterNode,gain:GainNode}[]=[];available=true;private weaponState=[{speed:0,time:0},{speed:0,time:0}];
+ context?:AudioContext;master?:GainNode;sfx?:GainNode;voices=0;tones:{osc:OscillatorNode,gain:GainNode}[]=[];air:{source:AudioBufferSourceNode,filter:BiquadFilterNode,gain:GainNode}[]=[];available=true;private weaponState=[{speed:0,time:0,enabled:false},{speed:0,time:0,enabled:false}];
  start(master:number,sfx:number){this.quiet=false;try{if(!this.context){
  const ctx=this.context=new AudioContext();this.master=ctx.createGain();this.sfx=ctx.createGain();this.sfx.connect(this.master);
  if(ctx.createDynamicsCompressor){const limiter=ctx.createDynamicsCompressor();limiter.threshold.value=-5;limiter.knee.value=3;limiter.ratio.value=16;limiter.attack.value=.002;limiter.release.value=.12;this.master.connect(limiter);limiter.connect(ctx.destination);}else this.master.connect(ctx.destination);
@@ -159,10 +161,12 @@ export class GameAudio{
  if(!this.context)return;const now=this.context.currentTime;
  for(let bot=0;bot<2;bot++){
   const fire=burning[bot]>0?this.fireVoice(bot):this.fireLoops[bot];if(fire)fire.gain.gain.setTargetAtTime(active&&burning[bot]>0?(bot===0?.16:.11):0,now,.06);
-  const c=configs[bot],profile=weaponVoiceKey(c),timbre=WEAPON_VOICES[profile],w=c?.weapon,rpm=Math.max(0,rpms[bot]??0),spin=!!w&&isSpinner(w),previous=this.weaponState[bot]??{speed:0,time:0},speed=spin?clamp(rpm/Math.max(1,w!.rpm),0,1):0,elapsed=previous.time?clamp(now-previous.time,.025,.25):.1,acceleration=previous.time&&spin?clamp((speed-previous.speed)/elapsed,-2.5,2.5):0,spinSound=weaponSpinSound(c,rpm,watts[bot]??0,acceleration);this.weaponState[bot]={speed,time:now};
-  const gas=!!c&&componentProfile(c,'weapon')==='icewave',shell=w?.type==='shell_spinner',drum=w?.type==='drum',disc=w?.type==='vertical_disc'||w?.type==='hammer_saw',cage=w?.type==='horizontal_cage',big=c?.chassis.profile==='deep_six',load=clamp((watts[bot]??0)/8640,0,1),attenuation=bot===0?1:.62,actuator=clamp(Math.abs(actuatorSpeeds[bot]??0)/4,0,1),running=enabled[bot]??rpm>30;
+  const c=configs[bot],profile=weaponVoiceKey(c),timbre=WEAPON_VOICES[profile],w=c?.weapon,rpm=Math.max(0,rpms[bot]??0),spin=!!w&&isSpinner(w),previous=this.weaponState[bot]??{speed:0,time:0,enabled:false},speed=spin?clamp(rpm/Math.max(1,w!.rpm),0,1):0,elapsed=previous.time?clamp(now-previous.time,.025,.25):.1,acceleration=previous.time&&spin?clamp((speed-previous.speed)/elapsed,-2.5,2.5):0,spinSound=weaponSpinSound(c,rpm,watts[bot]??0,acceleration);
+  const gas=!!c&&componentProfile(c,'weapon')==='icewave',shell=w?.type==='shell_spinner',drum=w?.type==='drum',disc=w?.type==='vertical_disc'||w?.type==='hammer_saw',cage=w?.type==='horizontal_cage',big=c?.chassis.profile==='deep_six',load=clamp((watts[bot]??0)/8640,0,1),attenuation=bot===0?1:.62,actuator=clamp(Math.abs(actuatorSpeeds[bot]??0)/4,0,1),running=enabled[bot]??rpm>30;this.weaponState[bot]={speed,time:now,enabled:running};
   if(active&&profile==='hypershock'&&running&&previous.speed<.03&&speed>=.08)this.playWeaponSpinUp(bot);
-  const sampleKey=profile==='hypershock'&&speed>=.22?(load>=.55?'magnetar-load':'magnetar-high'):undefined,loop=this.weaponVoice(bot,profile,sampleKey),pump=spin?0:clamp(actuator*.75+load*.55,0,1);loop.source.playbackRate.setTargetAtTime(spin?spinSound.loopRate:.72+pump*.44,now,.10);loop.filter.frequency.setTargetAtTime(spin?Math.max(timbre.band*.36,spinSound.filterHz):timbre.band*(.45+pump*.4),now,.1);loop.gain.gain.setTargetAtTime(active&&!gas?(spin?spinSound.loopGain:pump)*timbre.gain*attenuation:0,now,.07);
+  if(active&&profile==='deep_six'&&running&&previous.speed<.03&&speed>=.08)this.playWeaponSpinUp(bot,'deep-six-spinup');
+  if(active&&profile==='deep_six'&&previous.enabled&&!running&&previous.speed>=.08)this.playWeaponCoastDown(bot);
+  const sampleKey=profile==='hypershock'&&speed>=.22?(load>=.55?'magnetar-load':'magnetar-high'):profile==='deep_six'&&running&&speed>=.22?'deep-six-high':undefined,loop=this.weaponVoice(bot,profile,sampleKey),pump=spin?0:clamp(actuator*.75+load*.55,0,1);loop.source.playbackRate.setTargetAtTime(spin?spinSound.loopRate:.72+pump*.44,now,.10);loop.filter.frequency.setTargetAtTime(spin?Math.max(timbre.band*.36,spinSound.filterHz):timbre.band*(.45+pump*.4),now,.1);loop.gain.gain.setTargetAtTime(active&&!gas?(spin?spinSound.loopGain:pump)*timbre.gain*attenuation:0,now,.07);
   const frequencies=[35+(speeds[bot]??0)*24,spin?spinSound.bladePass:Math.max(18,rpm/60*2),gas?90+speed*80:spin?spinSound.motorHz:Math.max(40,rpm/60*2),gas?45+speed*40:Math.max(20,rpm/60*(shell?1.5:cage?1:2))+actuator*80];
   const gains=[Math.min(.018,(speeds[bot]??0)*.007),spin?spinSound.bladeGain*(drum?.040:big?.038:cage?.032:.026):0,spin?spinSound.motorGain*(gas?.007:disc?.015:.010):0,spin?speed*(shell?.034:big?.028:.016)+actuator*.023:actuator*.023];
   if(!spin){frequencies[2]=220+actuator*360;gains[2]=actuator*.025;}
@@ -178,8 +182,8 @@ export class GameAudio{
  }
  }
 
- mute(){if(!this.context||this.quiet)return;this.quiet=true;for(const tone of [...this.tones,...this.air,...this.weaponLoops,...this.weaponFadingLoops,...this.fireLoops.filter(Boolean),...this.combustionLoops.flat().filter(Boolean)])tone.gain.gain.setTargetAtTime(0,this.context.currentTime,.025);for(const voice of this.weaponSpinUpVoices)voice?.gain.gain.setTargetAtTime(0,this.context.currentTime,.025);void this.context.suspend?.().catch(()=>{});}
- dispose(){this.resetEngines();this.pauseCountdown();this.weaponSpinUpVoices.forEach(voice=>{if(voice){voice.source.onended=null;voice.source.stop();voice.source.disconnect();voice.gain.disconnect();}});this.weaponSpinUpVoices=[undefined,undefined];this.tones.forEach(t=>{t.osc.stop();t.osc.disconnect();t.gain.disconnect();});this.tones=[];[...this.air,...this.weaponLoops,...this.weaponFadingLoops,...this.fireLoops.filter(Boolean),...this.combustionLoops.flat().filter(Boolean)].forEach(a=>{a.source.stop();a.source.disconnect();a.filter.disconnect();a.gain.disconnect();});this.air=[];this.weaponLoops=[];this.weaponFadingLoops=[];this.fireLoops=[];this.weaponBuffers.clear();this.weaponSampleBuffers.clear();this.weaponSampleLoad=undefined;this.sparkBuffers.clear();this.combustionLoops=[];void this.context?.close();this.context=undefined;this.impactLibrary={tap:[],strike:[],crash:[],landLight:[],landHeavy:[],wallHit:[]};this.impactLoad=undefined;}
+ mute(){if(!this.context||this.quiet)return;this.quiet=true;for(const tone of [...this.tones,...this.air,...this.weaponLoops,...this.weaponFadingLoops,...this.fireLoops.filter(Boolean),...this.combustionLoops.flat().filter(Boolean)])tone.gain.gain.setTargetAtTime(0,this.context.currentTime,.025);for(const voice of [...this.weaponSpinUpVoices,...this.weaponCoastDownVoices])voice?.gain.gain.setTargetAtTime(0,this.context.currentTime,.025);void this.context.suspend?.().catch(()=>{});}
+ dispose(){this.resetEngines();this.pauseCountdown();for(const voices of[this.weaponSpinUpVoices,this.weaponCoastDownVoices])voices.forEach(voice=>{if(voice){voice.source.onended=null;voice.source.stop();voice.source.disconnect();voice.gain.disconnect();}});this.weaponSpinUpVoices=[undefined,undefined];this.weaponCoastDownVoices=[undefined,undefined];this.tones.forEach(t=>{t.osc.stop();t.osc.disconnect();t.gain.disconnect();});this.tones=[];[...this.air,...this.weaponLoops,...this.weaponFadingLoops,...this.fireLoops.filter(Boolean),...this.combustionLoops.flat().filter(Boolean)].forEach(a=>{a.source.stop();a.source.disconnect();a.filter.disconnect();a.gain.disconnect();});this.air=[];this.weaponLoops=[];this.weaponFadingLoops=[];this.fireLoops=[];this.weaponBuffers.clear();this.weaponSampleBuffers.clear();this.weaponSampleLoad=undefined;this.sparkBuffers.clear();this.combustionLoops=[];void this.context?.close();this.context=undefined;this.impactLibrary={tap:[],strike:[],crash:[],landLight:[],landHeavy:[],wallHit:[]};this.impactLoad=undefined;}
 }
 
 export function sparkSoundSamples(sampleRate:number,level:number){

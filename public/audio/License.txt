@@ -55,3 +55,11 @@ magnetar-spin-up-v4: source range 0:05–0:08; Magnetar v4 final three seconds o
 magnetar-high-speed-v4: source range 0:08–0:13; steady high-speed rotation.
 magnetar-rpm-change-v4: source range 0:13–0:19; recorded RPM variation.
 These short, noise-reduced clips were selected by the user for in-game use. They are used only by Hypershock's vertical-disc weapon profile; the high-speed and variable-RPM recordings are crossfaded into loops in memory. Source footage and excerpts remain attributable to their creator; this attribution is not a representation of a separate third-party license.
+
+USER-APPROVED DEEP SIX LARGE VERTICAL-BAR RECORDINGS
+Source: Triton / Team Overboard, “Deep Six First Spinner Test Full Speed” (Facebook)
+https://www.facebook.com/Tritonbattlebot/videos/deep-six-first-spinner-test-full-speed/466047744138592/
+deep-six-spin-up-v1: the first 3 seconds removed from the preview cut; source range 0:07–0:11.
+deep-six-full-speed-v1: source range 0:15–0:20; high-speed loop, crossfaded in memory and playback-rate-tracked to simulated weapon RPM.
+deep-six-coast-down-v1: source range 0:23–0:28; one-shot when the Deep Six weapon is stopped.
+The clips use the source-attributed, noise-reduced test recording; the first clip has an 8 ms edge fade after trimming. The source recording and excerpts remain attributable to their creator; this attribution is not a representation of a separate third-party license.

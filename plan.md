@@ -171,3 +171,8 @@ Keep the previous local synthesized countdown cues: paired 480/960 Hz tones for 
 ### Mobile results confirmation
 
 The results dialog is now structurally split into a compact action footer and a separate scroll area so standings and judging evidence cannot displace menu, replay, rematch or next-round actions. Mobile-only landscape CSS handles safe-area padding, podium and score density; online result cards and tournament champion/round banners get a compact viewport-bound treatment while desktop stays unchanged.
+
+
+### Deep Six recorded weapon sounds
+
+User requested removal of the first three seconds from Deep Six clip 05 and implementation of the full set. The trimmed 00:07–00:11 source excerpt is the Deep Six weapon-start cue, clip 06 is a seamless playback-rate-scaled loop above the existing RPM threshold, and clip 07 is a coast-down one-shot on weapon-off; starting again cancels the coast-down cue. Deep Six source attribution is in `public/audio/License.txt`; the clips ship in the offline package and fall back to the existing procedural Deep Six voice if unavailable. The Magnetar sounds remain exclusive to Hypershock.
