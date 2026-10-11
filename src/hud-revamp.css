@@ -260,3 +260,14 @@
  #hud .weapon-gauge .gauge-actions{padding:6px 8px!important;font-size:10px!important}
  #hud .weapon-gauge .gauge-actions kbd{font-size:10px!important}
 }
+
+
+/* Keep the two start-card RPM readouts on a common centre line. Later broadcast typography
+   overrides were widening the small mobile column and pushing long band labels off-centre. */
+#hud .player-panel .hud-start-rpm :is(.hud-start-rpm-label,strong,small){display:block!important;width:100%;min-width:0;box-sizing:border-box;text-align:center;justify-self:stretch;white-space:nowrap}
+#hud .player-panel .hud-start-rpm small{letter-spacing:0!important}
+@media (max-width:760px){
+ #hud .player-panel .hud-start-rpm-label{font:800 7px/1 var(--font-mono)!important}
+ #hud .player-panel .hud-start-rpm strong{font:800 11px/1 var(--font-mono)!important;letter-spacing:-.04em!important}
+ #hud .player-panel .hud-start-rpm small{font:800 6px/1 var(--font-mono)!important;letter-spacing:0!important}
+}
