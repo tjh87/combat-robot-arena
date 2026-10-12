@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import {weaponAxis,type BotConfig} from './model';
 
-const STEPS=72,RINGS=5,MAX_SWEEP=Math.PI*4/3;
+const STEPS=72,RINGS=5,MAX_SWEEP=Math.PI*5/3;
 const RING_RADII=[0,.07,.28,.96,1.005];
-const RING_ALPHA=[0,.24,.40,.22,0];
+const RING_ALPHA=[0,.28,.50,.28,0];
 const RING_COLORS=['#a95639','#b96442','#d18a5e','#efbf8c','#d88b62'].map(color=>new THREE.Color(color));
 
 function sweepGeometry(radius:number,inner:number,phase:number){
@@ -40,7 +40,7 @@ export function updateDeepSixBlur(root:THREE.Object3D,rpm:number,reduced:boolean
  root.userData.strength=strength;root.userData.exposureAngle=span;root.userData.direction=spin;root.visible=strength>.005;
  for(const plane of root.children)for(const object of plane.children){
   const mesh=object as THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>,g=mesh.geometry,d=g.userData;
-  mesh.material.opacity=.44*strength;
+  mesh.material.opacity=.54*strength;
   if(Math.abs((d.span??-1)-span)<.001&&d.direction===spin)continue;
   d.span=span;d.direction=spin;d.exposureAngle=span;
   const positions=g.getAttribute('position') as THREE.BufferAttribute,inner=d.inner,radius=d.radius,phase=d.phase;
