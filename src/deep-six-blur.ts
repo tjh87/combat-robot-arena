@@ -5,6 +5,7 @@ const STEPS=72,RINGS=5,MAX_SWEEP=Math.PI*5/3;
 const RING_RADII=[0,.07,.28,.96,1.005];
 const RING_ALPHA=[0,.28,.50,.28,0];
 const RING_COLORS=['#a95639','#b96442','#d18a5e','#efbf8c','#d88b62'].map(color=>new THREE.Color(color));
+const SWEEP_AXIS=new THREE.Vector3(0,0,1),SWEEP_PHASE=new THREE.Quaternion();
 
 function sweepGeometry(radius:number,inner:number,phase:number){
  const count=(STEPS+1)*RINGS,g=new THREE.BufferGeometry(),positions=new Float32Array(count*3),colors=new Float32Array(count*4),indices:number[]=[];
@@ -28,17 +29,20 @@ export function deepSixBlur(config:BotConfig){
  root.userData={deepSixBlur:true,targetRPM:w.rpm,direction:w.direction,exposureAngle:0,strength:0};
  const axis=weaponAxis(w),orientation=new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,1),new THREE.Vector3(axis.x,axis.y,axis.z)),inner=w.radius*.13,offset=w.thickness/2+.0015;
  for(const side of[-1,1]){
-  const plane=new THREE.Group();plane.quaternion.copy(orientation);plane.position.set(axis.x*offset*side,axis.y*offset*side,axis.z*offset*side);
+  const plane=new THREE.Group();plane.quaternion.copy(orientation);plane.userData.baseQuaternion=[orientation.x,orientation.y,orientation.z,orientation.w];plane.position.set(axis.x*offset*side,axis.y*offset*side,axis.z*offset*side);
   const mesh=new THREE.Mesh(sweepGeometry(w.radius,inner,Math.PI/2),new THREE.MeshBasicMaterial({vertexColors:true,transparent:true,opacity:0,depthWrite:false,side:THREE.DoubleSide,forceSinglePass:true,toneMapped:false,blending:THREE.NormalBlending}));
   mesh.name='deep-six-copper-sweep';plane.add(mesh);root.add(plane);
  }
  return root;
 }
 
-export function updateDeepSixBlur(root:THREE.Object3D,rpm:number,reduced:boolean,direction:number){
- const speed=Number.isFinite(rpm)?Math.abs(rpm):0,target=Math.max(1,Math.abs(root.userData.targetRPM??1)),ratio=Math.max(0,Math.min(1,speed/target)),ramp=Math.max(0,Math.min(1,(ratio-.035)/.965)),strength=reduced?0:Math.pow(ramp,.72),span=MAX_SWEEP*strength,spin=Math.sign(direction)||1;
- root.userData.strength=strength;root.userData.exposureAngle=span;root.userData.direction=spin;root.visible=strength>.005;
- for(const plane of root.children)for(const object of plane.children){
+export function updateDeepSixBlur(root:THREE.Object3D,rpm:number,reduced:boolean,direction:number,time=0){
+ const speed=Number.isFinite(rpm)?Math.abs(rpm):0,target=Math.max(1,Math.abs(root.userData.targetRPM??1)),ratio=Math.max(0,Math.min(1,speed/target)),ramp=Math.max(0,Math.min(1,(ratio-.035)/.965)),strength=reduced?0:Math.pow(ramp,.72),span=MAX_SWEEP*strength,spin=Math.sign(direction)||1,rate=1.4+6.6*ramp,phase=(Number.isFinite(time)?time:0)*rate*spin;
+ root.userData.strength=strength;root.userData.exposureAngle=span;root.userData.direction=spin;root.userData.blurPhase=phase;root.userData.blurRate=rate;root.visible=strength>.005;
+ SWEEP_PHASE.setFromAxisAngle(SWEEP_AXIS,phase);
+ for(const plane of root.children){
+  const base=plane.userData.baseQuaternion as [number,number,number,number];plane.quaternion.set(base[0],base[1],base[2],base[3]).multiply(SWEEP_PHASE);
+  for(const object of plane.children){
   const mesh=object as THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>,g=mesh.geometry,d=g.userData;
   mesh.material.opacity=.54*strength;
   if(Math.abs((d.span??-1)-span)<.001&&d.direction===spin)continue;
@@ -51,5 +55,6 @@ export function updateDeepSixBlur(root:THREE.Object3D,rpm:number,reduced:boolean
    }
   }
   positions.needsUpdate=true;
+  }
  }
 }

@@ -82,7 +82,7 @@ export function rotorMotion(config:BotConfig){config=componentConfig(config,'wea
 export function updateRotorMotion(rotor:THREE.Object3D|undefined,rpm:number,time:number,reduced=false,direction?:number,referenceFrame?:THREE.Object3D){
  const root=rotor?.getObjectByName('rotor-motion');if(!root)return;
  if(root.userData.sawbladeExposure){updateSawbladeExposure(rotor!,root,rpm,reduced,Math.sign(direction??root.userData.direction??1)||1);return;}
- if(root.userData.deepSixBlur){if(referenceFrame)root.quaternion.copy(rotor!.quaternion).invert().multiply(referenceFrame.quaternion);updateDeepSixBlur(root,rpm,reduced,Math.sign(direction??root.userData.direction??1)||1);return;}
+ if(root.userData.deepSixBlur){if(referenceFrame)root.quaternion.copy(rotor!.quaternion).invert().multiply(referenceFrame.quaternion);updateDeepSixBlur(root,rpm,reduced,Math.sign(direction??root.userData.direction??1)||1,time);return;}
  if(root.userData.enhancedExposure){updateEnhancedExposure(root,rpm,reduced,direction);return;}
 	 const speed=Number.isFinite(rpm)?Math.abs(rpm):0,profile=weaponBlurProfile(speed,root.userData.targetRPM,1,reduced);root.visible=profile.strength>.01;
 	 if(!root.visible)return;
