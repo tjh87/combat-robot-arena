@@ -1,5 +1,6 @@
 import {componentConfig,componentProfile} from './model';
 import {enhancedRotorExposure,updateEnhancedExposure} from './weapon-exposure';
+import {deepSixBlur,updateDeepSixBlur} from './deep-six-blur';
 import {sawbladeExposure,updateSawbladeExposure} from './sawblaze-blur';
 import {weaponBlurProfile} from './weapon-blur';
 import * as THREE from 'three';
@@ -49,6 +50,7 @@ function updateHorizontalSweep(mesh:THREE.Mesh<THREE.BufferGeometry,THREE.MeshBa
 /** Exposure trails supplement, but never replace, the physical rotor pose. */
 export function rotorMotion(config:BotConfig){config=componentConfig(config,'weapon');
  if(config.chassis.profile==='sawblaze'&&config.weapon.type==='hammer_saw')return sawbladeExposure(config);
+ if(config.chassis.profile==='deep_six'&&config.weapon.type==='vertical_bar')return deepSixBlur(config);
  if(!usesLegacyExposure(config))return enhancedRotorExposure(config);
  const w=config.weapon,root=new THREE.Group();root.name='rotor-motion';
  if(!isSpinner(w))return root;
@@ -77,9 +79,10 @@ export function rotorMotion(config:BotConfig){config=componentConfig(config,'wea
  return root;
 }
 
-export function updateRotorMotion(rotor:THREE.Object3D|undefined,rpm:number,time:number,reduced=false,direction?:number){
+export function updateRotorMotion(rotor:THREE.Object3D|undefined,rpm:number,time:number,reduced=false,direction?:number,referenceFrame?:THREE.Object3D){
  const root=rotor?.getObjectByName('rotor-motion');if(!root)return;
  if(root.userData.sawbladeExposure){updateSawbladeExposure(rotor!,root,rpm,reduced,Math.sign(direction??root.userData.direction??1)||1);return;}
+ if(root.userData.deepSixBlur){if(referenceFrame)root.quaternion.copy(rotor!.quaternion).invert().multiply(referenceFrame.quaternion);updateDeepSixBlur(root,rpm,reduced,Math.sign(direction??root.userData.direction??1)||1);return;}
  if(root.userData.enhancedExposure){updateEnhancedExposure(root,rpm,reduced,direction);return;}
 	 const speed=Number.isFinite(rpm)?Math.abs(rpm):0,profile=weaponBlurProfile(speed,root.userData.targetRPM,1,reduced);root.visible=profile.strength>.01;
 	 if(!root.visible)return;
