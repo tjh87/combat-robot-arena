@@ -61,5 +61,5 @@ Source: Triton / Team Overboard, “Deep Six First Spinner Test Full Speed” (F
 https://www.facebook.com/Tritonbattlebot/videos/deep-six-first-spinner-test-full-speed/466047744138592/
 deep-six-spin-up-v1: the first 3 seconds removed from the preview cut; source range 0:07–0:11.
 deep-six-full-speed-v1: source range 0:15–0:20; high-speed loop, crossfaded in memory and playback-rate-tracked to simulated weapon RPM.
-deep-six-coast-down-v1: source range 0:23–0:28; one-shot when the Deep Six weapon is stopped.
-The clips use the source-attributed, noise-reduced test recording; the first clip has an 8 ms edge fade after trimming. The source recording and excerpts remain attributable to their creator; this attribution is not a representation of a separate third-party license.
+deep-six-coast-down-v1: source range 0:23–0:28; one-shot when the Deep Six or Minotaur weapon is stopped.
+The clips use the source-attributed, noise-reduced test recording; the first clip has an 8 ms edge fade after trimming. The start, full-speed and coast-down set is used by Deep Six and Minotaur; Hypershock retains its Magnetar set. The source recording and excerpts remain attributable to their creator; this attribution is not a representation of a separate third-party license.
