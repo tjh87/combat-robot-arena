@@ -42,3 +42,11 @@ Treat older `docs/` updates and reports as history. Do not restore old settings 
 Use `runtime/windows-x64/node.exe` if Node is not installed. A Linux runtime is included only in the optional combined package.
 Read `WINDOWS_SETUP.md` before installing anything. Keep `tjh87/combat-robot-arena` private.
 
+
+## Project-local game-development skills
+
+For work on this Combat Robot Arena repository, read `.agents/PROJECT_SKILLS.md` before planning physics, impact/game-feel, AI, steering or utility-decision changes. Then read the relevant `.agents/skills/<name>/SKILL.md` and any referenced material needed for that change. Available names: `physics-tuning`, `game-feel`, `game-ai`, and `ai-behavior-trees-utility-ai`.
+
+These are repository-local guidance, not globally enabled Manus skills. Do not apply them to unrelated projects, modify account-wide skill settings or assume a native Manus Project binding. Keep the current 240 Hz Rapier simulation and approved mechanics; adapt upstream engine examples to TypeScript/Three.js/Rapier rather than copying engine-specific APIs.
+
+The current user's local-only/no-push instruction takes priority over older deployment rules above. Adding skills does not authorize gameplay changes, hit-stop/camera shake, remote pushes or publication.

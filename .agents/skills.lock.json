@@ -1,0 +1,85 @@
+{
+  "scope": "combat-robot-arena-repository-only",
+  "native_manus_project_registration": false,
+  "source_repository": "https://github.com/gamedev-skills/awesome-gamedev-agent-skills",
+  "source_commit": "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd",
+  "license": "Apache-2.0",
+  "skills": [
+    {
+      "name": "physics-tuning",
+      "path": ".agents/skills/physics-tuning",
+      "source": "https://github.com/gamedev-skills/awesome-gamedev-agent-skills/blob/main/skills/disciplines/physics-tuning/SKILL.md",
+      "files": [
+        {
+          "path": ".agents/skills/physics-tuning/SKILL.md",
+          "sha256": "faa9a50d465c16d0060af8c8e20533efb829e07616ec01de4cbdb8d536a7d986"
+        },
+        {
+          "path": ".agents/skills/physics-tuning/references/timestep-and-ccd.md",
+          "sha256": "8091f77b848fa2e9e0eaa267f7b3ad06c1af6e8af5965d6d9c1a66076f9380ef"
+        }
+      ]
+    },
+    {
+      "name": "game-feel",
+      "path": ".agents/skills/game-feel",
+      "source": "https://github.com/gamedev-skills/awesome-gamedev-agent-skills/blob/main/skills/disciplines/game-feel/SKILL.md",
+      "files": [
+        {
+          "path": ".agents/skills/game-feel/SKILL.md",
+          "sha256": "68fc818ad939151be2db9e358e4295a71830c19d61f3aff849f1599307f39f9d"
+        },
+        {
+          "path": ".agents/skills/game-feel/references/feedback-recipes.md",
+          "sha256": "c1d0c4d9480bf4cd729ca99f2b36ebc1f3f264a873b408f2145898841e5d6685"
+        }
+      ]
+    },
+    {
+      "name": "game-ai",
+      "path": ".agents/skills/game-ai",
+      "source": "https://github.com/gamedev-skills/awesome-gamedev-agent-skills/blob/main/skills/disciplines/game-ai/SKILL.md",
+      "files": [
+        {
+          "path": ".agents/skills/game-ai/SKILL.md",
+          "sha256": "ef23a6440743b3583d1072c92f6b0b45f3d11df33b3b77db53bce8b82c2f8940"
+        },
+        {
+          "path": ".agents/skills/game-ai/references/behavior-trees.md",
+          "sha256": "2b69a6ae71a1034c049889fb4b0ccbc8697db9ad9f177f07c1053379cb0ef1fc"
+        },
+        {
+          "path": ".agents/skills/game-ai/references/pathfinding.md",
+          "sha256": "3f1ce44462b4d1789245758b72d0b20e8053df458df1f743455dcd5d7319bba3"
+        }
+      ]
+    },
+    {
+      "name": "ai-behavior-trees-utility-ai",
+      "path": ".agents/skills/ai-behavior-trees-utility-ai",
+      "source": "https://github.com/gamedev-skills/awesome-gamedev-agent-skills/blob/main/skills/disciplines/ai-behavior-trees-utility-ai/SKILL.md",
+      "files": [
+        {
+          "path": ".agents/skills/ai-behavior-trees-utility-ai/SKILL.md",
+          "sha256": "185960eddb169cb81490e0d01efb9240663b8a465ca34ec34e0f015a727f06e4"
+        },
+        {
+          "path": ".agents/skills/ai-behavior-trees-utility-ai/references/behavior-tree-core.md",
+          "sha256": "df96b3faf1b7107240ed9c5f3bed793733dd9bdd25c05577abb7a69edd95521b"
+        },
+        {
+          "path": ".agents/skills/ai-behavior-trees-utility-ai/references/best-practices-and-pitfalls.md",
+          "sha256": "8ff83984ad998bc949d7524bae38c4d5b1acec34ff24587fdc9a9e9952c23c53"
+        },
+        {
+          "path": ".agents/skills/ai-behavior-trees-utility-ai/references/practical-examples.md",
+          "sha256": "9be856be9e5375fa218e927125dfca3f4f1c7b2ecd9089e5fa8b86d76b07cf1e"
+        },
+        {
+          "path": ".agents/skills/ai-behavior-trees-utility-ai/references/utility-ai-system.md",
+          "sha256": "a414ecd074e467d598664cde01305be054387fd3dc3e0045525ea3673d33309b"
+        }
+      ]
+    }
+  ]
+}
