@@ -22,6 +22,7 @@ try{
  assert.equal(sim.bots.length,5);
  assert.equal(sim.options.ai?.filter(Boolean).length,4);
  assert.equal(sim.highlights.robots.length,5);
+ sim.bots[0].unstick={active:true,since:sim.tick,attempt:1};sim.command(0,{left:1,right:.7,weapon:false,selfRight:false});sim.step();assert.equal(sim.bots[0].command.left,1,'Player steering must override automatic recovery in Brawl.');assert.equal(sim.bots[0].command.right,.7);assert.equal(sim.bots[0].unstick.active,false);
  for(let i=0;i<360;i++)sim.step(sim.bots.map(()=>neutral()));
  assert.equal(sim.fault,undefined,'Five-robot physics and AI run without a simulation fault.');
  assert.equal((brawlHUDMarkup(sim).match(/data-brawl-card=/g)??[]).length,4,'The live roster includes every AI opponent.');
@@ -49,6 +50,7 @@ try{
  assert.equal(sim.result?.reason,'Last robot standing');
  assert.equal(sim.result?.winner,0);
  assert(sim.bots.slice(1).every(bot=>bot.eliminatedReason==='Count-out'));
+ assert.equal(sim.manualRecoveryReady(sim.bots[1]),false,'A genuine count-out must not be resurrected by Unstick.');
 }finally{sim.dispose();}
 
 for(const opponentCount of [1,2,3,4]){

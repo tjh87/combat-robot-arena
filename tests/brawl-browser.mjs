@@ -7,6 +7,7 @@ const exposed=`globalThis.__brawlFixture={
  get ready(){return ready},get count(){return sim?.bots.length},get ffa(){return sim?.options.freeForAll},
  get names(){return sim.bots.map(b=>b.compiled.config.identity.name)},
  result(){sim.finish('Judges’ decision');showResult()},
+ recoverHeld(){setState('fighting');sim.tick=1300;sim.bots[0].count=RULES.hz;input.held.add(prefs.controls[0].forward);recoverRobots();const cmd=input.sampleDevice(0);return{left:cmd.left,right:cmd.right,recovered:sim.bots[0].lastManualRecovery===sim.tick,aiMoved:sim.bots.slice(1).some(b=>b.lastManualRecovery===sim.tick)}},
  dispose(){input.dispose();audio.dispose();renderer?.dispose();sim?.dispose()}
 };`;
 const bundle=await build({entryPoints:['src/main.ts'],bundle:true,format:'iife',write:false,loader:{'.css':'empty'},plugins:[{name:'brawl-layout',setup(builder){
@@ -43,6 +44,8 @@ try{
    await wait(`__brawlFixture.count===${n+1}&&document.querySelectorAll('[data-brawl-card]').length===${n}`,'Brawl field');
    assert(await evaluate('__brawlFixture.ffa'));
    assert.equal(await evaluate('new Set(__brawlFixture.names).size'),n+1);
+   const recovery=await evaluate('__brawlFixture.recoverHeld()');
+   assert(recovery.recovered,'Player Unstick must find safe space');assert(recovery.left>0&&recovery.right>0,'Unstick must preserve held drive input');assert.equal(recovery.aiMoved,false,'Player Unstick must not teleport AI opponents');
    await evaluate('document.fonts.ready');
    if(device.mobile){
     const layout=await evaluate(`(()=>{const p=document.querySelector('.player-panel').getBoundingClientRect(),t=document.querySelector('.timer').getBoundingClientRect(),r=document.querySelector('#brawl-opponents').getBoundingClientRect();return{separated:p.right<=t.left+1&&t.right<=r.left+1,cards:[...document.querySelectorAll('[data-brawl-card]')].every(e=>{const b=e.getBoundingClientRect();return b.left>=0&&b.right<=innerWidth&&b.top>=0&&b.bottom<=innerHeight}),controls:!!document.querySelector('.touch-controls:not(.hidden)')}})()`);

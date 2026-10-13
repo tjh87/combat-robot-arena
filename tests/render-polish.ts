@@ -4,6 +4,7 @@ import {brawlOverviewDistance,BRAWL_COMBAT_ZOOM_LIMIT} from '../src/brawl-camera
 import {cameraWallVisible} from '../src/render-stability';
 import {writeSparkTrail,sparkHeadColor} from '../src/impact-sparks';
 import {v,preset,RULES} from '../src/model';
+import {StableTrackingPose,BRAWL_CAMERA_STABILITY} from '../src/follow-camera';
 import {ArenaRenderer} from '../src/render';
 import {Simulation,initializePhysics} from '../src/sim';
 
@@ -25,6 +26,10 @@ for(let n=0;n<100;n++){
  writeSparkTrail(p,c,0,x,y,z,vx,vy,vz,trail,fade,branch,tint);assert.deepEqual(p,oldP);assert.deepEqual(c,oldC);
  const scratch=v();assert.equal(sparkHeadColor(tint,fade,scratch),scratch);assert.deepEqual(scratch,hot);
 }
+const tracking=new StableTrackingPose(),config=preset(0),position=new THREE.Vector3();
+tracking.update(position,new THREE.Quaternion(),config,'brawl',1/60,BRAWL_CAMERA_STABILITY);
+const turn=tracking.update(position,new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI),config,'brawl',1/60,BRAWL_CAMERA_STABILITY);
+assert(Math.abs(turn.yaw)<=BRAWL_CAMERA_STABILITY.maxYawRate/60+1e-10,'Brawl chase yaw has a strict slower turning limit.');
 await initializePhysics();
 const sim=new Simulation([preset(0),preset(1),preset(2),preset(4),preset(9)],{freeForAll:true,hazards:false});
 const makeRenderer=()=>{
@@ -32,11 +37,14 @@ const makeRenderer=()=>{
  Object.assign(renderer,{time:0,mode:'match',cameraMode:'tactical',viewerBotId:0,width:1280,height:720,quality:'medium',camera:new THREE.PerspectiveCamera(42,1280/720,.1,100),cameraTarget:new THREE.Vector3(),bodyGroups:new Map(),replayGroups:new Map(),arena:new THREE.Group(),bots:new THREE.Group(),preview:new THREE.Group(),effects:new THREE.Group(),scene:new THREE.Scene(),damageDebris:{root:new THREE.Group()},batteryFireVisual:{update(){},visible:false},followCamera:{reset(){}},povTracking:{reset(){}},inset:false,renderer:{shadowMap:{enabled:false},info:{render:{triangles:0,calls:0}},setViewport(){},setScissorTest(){},render(){}}});return renderer;
 };
 try{
- const brawl=makeRenderer(),duel=makeRenderer();
- const duelView=Object.create(sim) as Simulation;const own=sim.bots[0].chassis.translation(),rival=sim.bots.slice(1).sort((a,b)=>{const p=a.chassis.translation(),q=b.chassis.translation();return Math.hypot(p.x-own.x,p.z-own.z)-Math.hypot(q.x-own.x,q.z-own.z)})[0];duelView.bots=[sim.bots[0],rival];duelView.options={...sim.options,freeForAll:false};
- brawl.draw(sim,RULES.dt);duel.draw(duelView,RULES.dt);
- assert.deepEqual(brawl.camera.position.toArray(),duel.camera.position.toArray(),'Brawl uses normal close-up framing around the player and nearest rival.');
- assert.deepEqual(brawl.camera.quaternion.toArray(),duel.camera.quaternion.toArray());
+ const brawl=makeRenderer();for(let i=0;i<600;i++)brawl.draw(sim,1/60);
+ const fixed=brawl.camera.position.clone(),target=brawl.cameraTarget.clone();
+ for(const bot of sim.bots.slice(1))bot.chassis.setTranslation({x:bot.id*30,y:.1,z:-bot.id*30},true);
+ for(let i=0;i<30;i++)brawl.draw(sim,1/60);
+ assert(brawl.camera.position.distanceTo(fixed)<.001,'Moving rivals must not change Brawl camera zoom or focus.');
+ assert(brawl.cameraTarget.distanceTo(target)<.001,'Camera must not switch targets as rivals move.');
+ // Restore spawn positions before checking the full opening shot.
+ for(const bot of sim.bots.slice(1)){const angle=Math.PI+2*Math.PI*bot.id/sim.bots.length;bot.chassis.setTranslation({x:4.2*Math.cos(angle),y:.15,z:4.2*Math.sin(angle)},true);}
  for(const aspect of [1280/720,844/390,640/360]){
   const intro=makeRenderer();intro.camera.aspect=aspect;intro.camera.updateProjectionMatrix();intro.preMatch=true;intro.cameraMode='chase';intro.draw(sim,RULES.dt);intro.camera.updateMatrixWorld();
   const points=sim.bots.map(bot=>new THREE.Vector3().copy(bot.chassis.translation()));

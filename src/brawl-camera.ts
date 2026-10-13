@@ -8,3 +8,5 @@ export function brawlOverviewDistance(floor:number,aspect:number,fov=42){
  return distance;
 }
 export const BRAWL_COMBAT_ZOOM_LIMIT=10.5;
+
+export const BRAWL_COMBAT_DISTANCE=8;

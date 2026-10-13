@@ -134,7 +134,7 @@ export class Simulation{
  get time(){return this.tick/RULES.hz;}
  get remaining(){return Math.max(0,180-(this.result?.tick??this.tick)/RULES.hz);}
  manualRecoveryReady(b:Bot){
-  if(this.result||this.fault||!this.powered(b)||!b.modules.drive_left.functional&&!b.modules.drive_right.functional||this.tick-b.lastManualRecovery<5*RULES.hz)return false;
+  if(b.eliminatedReason||b.modules.chassis.hp<=0||this.result||this.fault||!this.powered(b)||!b.modules.drive_left.functional&&!b.modules.drive_right.functional||this.tick-b.lastManualRecovery<5*RULES.hz)return false;
   if(length(b.chassis.linvel())>.8)return false;
   const first=b.history[0],settled=first&&this.tick-first.tick>=.8*RULES.hz&&Math.abs(first.p.y-b.chassis.translation().y)<.06;
   return !!(b.count>0||settled&&(this.axis(b,v(0,1,0)).y<.65||b.pinVictim||b.wall&&horizontal(first.p,b.chassis.translation())<.08));
@@ -147,7 +147,7 @@ export class Simulation{
    // walls, hazards and the other robot after the manual reset.
    const radius=Math.max(c.chassis.length,c.chassis.width)/2+(isSpinner(c.weapon)?c.weapon.radius:0)+.30,edge=RULES.floor/2-radius-.25,candidates:Vec[]=[];
    for(const d of[.65,1.3,2.1,3.1])for(let j=0;j<12;j++){const a=j*Math.PI/6;candidates.push(v(clamp(old.x+Math.cos(a)*d,-edge,edge),y,clamp(old.z+Math.sin(a)*d,-edge,edge)));}
-   candidates.push(v(b.id?3:-3,y,0),v(0,y,2.5),v(0,y,-2.5));candidates.sort((a,z)=>horizontal(a,old)-horizontal(z,old));
+   candidates.push(v(b.id?3:-3,y,0),v(0,y,2.5),v(0,y,-2.5));if(this.options.freeForAll)for(let x=-edge;x<=edge;x+=1.2)for(let z=-edge;z<=edge;z+=1.2)candidates.push(v(x,y,z));candidates.sort((a,z)=>horizontal(a,old)-horizontal(z,old));
    const others=this.bots.filter(other=>other.id!==b.id&&!other.eliminatedReason),shape=new RAPIER.Cylinder(Math.max(.45,b.compiled.envelope.y)/2,radius),spot=candidates.find(p=>others.every(other=>horizontal(p,other.chassis.translation())>radius+Math.max(other.compiled.envelope.x,other.compiled.envelope.z)/2+.35)&&!this.hazards.some(h=>horizontal(p,h.base)<radius+.6)&&!this.world.intersectionWithShape(v(p.x,Math.max(.45,b.compiled.envelope.y)/2+.025,p.z),identity,shape,undefined,undefined,undefined,undefined,col=>{const m=this.meta.get(col.handle);return !col.isSensor()&&m?.bot!==b.id&&this.bodyIds.get(col.parent()!.handle)!=='floor';}));
    if(!spot)continue;
    this.closeTravel(b.id,'Manual recovery');this.falls.delete(b.id);this.floorSupport.delete(b.id);
@@ -722,6 +722,7 @@ const batteryBefore=b.modules.battery.hp,crusher=event?.cause==='crush'&&event.a
  else if(t.ticks>=(t.airborne?10:2)*RULES.hz)this.closeTravel(id,t.airborne?'Flight ended':'Ground movement');
  }}
  private recoverStuck(b:Bot){
+ if(this.options.freeForAll&&!this.options.ai[b.id]&&(Math.abs(b.command.left)+Math.abs(b.command.right)>.2)){b.unstick.active=false;return;}
  if(b.command.selfRight||b.rollStart>=0||b.gripRelease||b.compiled.config.weapon.type==='crusher'&&b.weaponOn||this.tick-b.lastSelfRight<3*RULES.hz||b.compiled.config.weapon.type==='flipper'&&b.flipStart>=0){b.unstick.active=false;return;}
  if(!this.options.autoUnstick||!this.powered(b)||!b.modules.drive_left.functional&&!b.modules.drive_right.functional||b.pinVictim){b.unstick.active=false;return;}
  const history=b.history,first=history[0],p=b.chassis.translation(),trying=Math.abs(b.command.left)+Math.abs(b.command.right)>.2;

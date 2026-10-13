@@ -51,3 +51,5 @@
 - [x] Restore Brawl camera framing to the default match view; stabilize camera-side wall visibility against flicker, remove avoidable live-spark allocations, and make every post-fight row plus opponent HP/status text larger and more readable on desktop and mobile without changing physics, rules or controls.
 
 - [x] Show all robots and the arena at Brawl start, then keep combat closer without excessive zoom-out; preserve the selected chase/POV camera after countdown and cap tactical Brawl zoom while leaving normal matches and physics unchanged.
+
+- [x] Fix Brawl responsiveness after Unstick by preserving held drive inputs, giving player steering priority and recovering P1 only with broader safe-space search and clear disabled/eliminated feedback. Keep genuine knockout/damage rules. Stabilize Brawl tactical framing with fixed zoom and no rival target switches, plus slower chase-camera smoothing; retain the full-arena opening overview.
