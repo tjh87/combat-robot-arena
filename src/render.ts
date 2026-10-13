@@ -1,3 +1,4 @@
+import {cameraWallVisible} from './render-stability';
 import {COMPONENT_DEBRIS_VISIBLE,DamageDebris} from './damage-debris';
 import {FollowCamera,StableTrackingPose} from './follow-camera';
 import {componentConfig} from './model';
@@ -28,6 +29,7 @@ const vec=(p:Vec)=>new THREE.Vector3(p.x,p.y,p.z);
 export function impactLightProfile(energy:number,damage=0){const force=Math.max(0,Math.min(1,(Math.log10(Math.max(1,energy))-2.4)/2));return force?{intensity:.8+force*3.6,distance:1.35+force*3.1,color:damage>=250?0xff9b55:0xa6d9ff}:{intensity:0,distance:0,color:0x000000};}
 export class ArenaRenderer{
  adaptive=true;resolution=new AdaptiveResolution();needsRender=true;private shadowDirty=true;private lastShadowTime=-Infinity;private lastShadowTick=-1;private lastShadowMode='';private lastVisualTick=-1;
+ private sparkTintScratch=v();private sparkHeadScratch=v();
  wallCracks=new WallCrackVisual();
  batteryFireVisual=new BatteryFireVisual();replayFireFrame?:VisualFrame;
  tireEffects=new TireEffects();
@@ -160,9 +162,9 @@ export class ArenaRenderer{
    const drag=Math.exp(-.55*dt);this.particleVelocity[j]*=drag;this.particleVelocity[j+2]*=drag;
    for(let k=0;k<3;k++)this.particlePositions[j+k]+=this.particleVelocity[j+k]*dt;
    if(this.particlePositions[j+1]<.012){this.particlePositions[j+1]=.012;this.particleVelocity[j+1]=Math.abs(this.particleVelocity[j+1])*.22;this.particleVelocity[j]*=.78;this.particleVelocity[j+2]*=.78;}
-   const fade=Math.max(0,this.particleAges[i]/this.sparkLifetimes[i]),tint=v(this.sparkTints[j],this.sparkTints[j+1],this.sparkTints[j+2]);
+   const fade=Math.max(0,this.particleAges[i]/this.sparkLifetimes[i]),tint=this.sparkTintScratch;tint.x=this.sparkTints[j];tint.y=this.sparkTints[j+1];tint.z=this.sparkTints[j+2];
    writeSparkTrail(this.sparkTrailPositions,this.sparkColors,i,this.particlePositions[j],this.particlePositions[j+1],this.particlePositions[j+2],this.particleVelocity[j],this.particleVelocity[j+1],this.particleVelocity[j+2],this.sparkLengths[i],fade,!!this.sparkBranches[i],tint);
-   const color=sparkHeadColor(tint,fade);this.sparkHeadColors.set([color.x,color.y,color.z],j);
+   const color=sparkHeadColor(tint,fade,this.sparkHeadScratch);this.sparkHeadColors[j]=color.x;this.sparkHeadColors[j+1]=color.y;this.sparkHeadColors[j+2]=color.z;
   }
   this.particles.visible=!this.reduced;if(this.sparkTrails){this.sparkTrails.visible=!this.reduced;this.sparkTrails.geometry.getAttribute('position').needsUpdate=true;this.sparkTrails.geometry.getAttribute('color').needsUpdate=true;}
   this.particles.geometry.getAttribute('position').needsUpdate=true;this.particles.geometry.getAttribute('color').needsUpdate=true;
@@ -227,10 +229,9 @@ export class ArenaRenderer{
  else if(follow&&sim){const side=this.viewerBotId,body=(this.replay?this.replayGroups:this.bodyGroups).get('b'+side+':chassis'),p=body?.position??vec(sim.bots[side].chassis.translation()),rotation=sim.bots[side].chassis.rotation(),q=body?.quaternion??new THREE.Quaternion(rotation.x,rotation.y,rotation.z,rotation.w);this.followCamera.update(this.camera,p,q,sim.bots[side].compiled.config,sim.bots[side].compiled.envelope,this.followGeneration+'/'+side+'/'+this.replay,dt,this.reduced);}
  else if(this.mode==='builder'){const group=this.preview.children[0],centre=(group?.userData.centre as THREE.Vector3|undefined)??new THREE.Vector3(0,.01,-.13),scale=Math.max(1,(group?.userData.span??1.5)/1.55)*Math.max(1,1.1/this.camera.aspect);this.camera.position.copy(centre).add(new THREE.Vector3(this.previewConfig?.chassis.profile==='sawblaze'?-1.30:1.30,.84,-1.55).multiplyScalar(scale));this.camera.lookAt(centre);if(group)group.rotation.y=this.reduced?.25:(this.time-(group.userData.createdAt??this.time))*.15-.25;}
  else if(this.mode==='menu'){const t=this.reduced?0:Math.sin(this.time*.045)*.45;this.camera.position.set(10.4+t,9.7,12.6-t);this.camera.lookAt(0,.25,-.7);}
- else if(sim?.options.freeForAll&&sim.bots.length>2){const points=sim.bots.map(b=>(this.replay?this.replayGroups.get('b'+b.id+':chassis')?.position:vec(b.chassis.translation()))??new THREE.Vector3()),centre=points.reduce((sum,p)=>sum.add(p),new THREE.Vector3()).multiplyScalar(1/points.length),spread=Math.max(...points.map(p=>Math.hypot(p.x-centre.x,p.z-centre.z))),fit=Math.max(1,1.3/this.camera.aspect),distance=Math.max(17,spread*1.45+10)*fit,blend=1-Math.exp(-4*Math.max(0,Math.min(.1,dt))),target=new THREE.Vector3(centre.x,Math.max(.1,centre.y),centre.z),eye=target.clone().add(new THREE.Vector3(.6,distance*.88,distance));this.camera.position.lerp(eye,blend);this.cameraTarget.lerp(target,blend);this.camera.lookAt(this.cameraTarget);}
  else{const p0=(this.replay?this.replayGroups.get('b0:chassis')?.position:sim?.bots[0].chassis.translation())??v(-2,0,0),p1=(this.replay?this.replayGroups.get('b1:chassis')?.position:sim?.bots[1].chassis.translation())??v(2,0,0),cx=(p0.x+p1.x)/2,cz=(p0.z+p1.z)/2,dist=Math.hypot(p0.x-p1.x,p0.z-p1.z);const fit=Math.max(1,1.35/this.camera.aspect),distance=Math.max(4.2,dist*.78+2.9,Math.abs(p0.y-p1.y)*1.8+3)*fit;const elevation=sim?.bots.some(b=>b.compiled.config.chassis.profile==='icewave')?1.125:.90;const cy=Math.max(.08,(p0.y+p1.y)*.5),blend=1-Math.exp(-4*Math.max(0,Math.min(.1,dt))),desired=new THREE.Vector3(cx+.8,cy+distance*elevation,cz+distance);this.camera.position.lerp(desired,blend);this.cameraTarget.lerp(new THREE.Vector3(cx,cy,cz),blend);this.camera.lookAt(this.cameraTarget);}
  // The tall camera-side wall can fill the view during countdown or from outside.
- if(this.cameraSideWall){const show=this.mode==='match'&&!this.preMatch&&this.camera.position.z<RULES.floor/2-.15;if(this.cameraSideWall.visible!==show){this.cameraSideWall.visible=show;this.shadowDirty=true;}}
+ if(this.cameraSideWall){const show=cameraWallVisible(this.cameraSideWall.visible,this.camera.position.z,RULES.floor/2-.15,this.mode==='match',this.preMatch);if(this.cameraSideWall.visible!==show){this.cameraSideWall.visible=show;this.shadowDirty=true;}}
  this.damageDebris.root.visible=this.mode==='match'&&COMPONENT_DEBRIS_VISIBLE;this.batteryFireVisual.visible=this.mode==='match';
  if(sim&&this.mode==='match'){const frame=this.replay?this.replayFireFrame:undefined;
   this.batteryFireVisual.update(sim.bots.map(b=>{const group=(this.replay?this.replayGroups:this.bodyGroups).get('b'+b.id+':chassis'),position=vec((frame?frame.firePoints?.[b.id]:b.batteryFire?.localPoint)??batteryPosition(b.compiled.config));if(group)position.applyQuaternion(group.quaternion).add(group.position);position.y+=.09;return{position,active:(frame?frame.fires?.[b.id]??0:sim.batteryFireSeconds(b))>0};}),(frame?.tick??sim.tick)/RULES.hz,this.reduced);

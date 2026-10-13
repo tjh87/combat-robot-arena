@@ -3,6 +3,23 @@
 #hud[data-mode="brawl"] .player-title{font-size:20px!important;letter-spacing:.02em!important}
 #hud[data-mode="brawl"] .player-portrait{width:64px!important;height:46px!important}
 #hud[data-mode="brawl"] .hud-start-rpm .rpm-silhouette{max-width:80px}
+#brawl-opponents .brawl-hud-card{padding:8px 10px;background:#101820f0}
+#brawl-opponents .brawl-hud-heading strong{font-size:16px;line-height:1.25;color:#fff}
+#brawl-opponents .brawl-hud-heading span,#brawl-opponents .brawl-hud-foot{font-size:12px;line-height:1.3;font-weight:700;color:#f1f6f9}
+#brawl-opponents .brawl-hp-track{height:10px;margin:5px 0}
+#brawl-opponents .brawl-hud-foot{flex-wrap:wrap;gap:3px 6px}
+/* Avoid the duel podium's generic .winner rules on table rows. */
+.results .brawl-results{background:#101820;color:#f4f8fb}
+.results .brawl-result-heading{font-size:12px;line-height:1.3;color:#d4e1e8;letter-spacing:.03em}
+.results .brawl-result-row{font-size:18px;line-height:1.35;margin:0;padding:11px 8px;letter-spacing:0;font-weight:700;background:#101820}
+.results .brawl-result-row.brawl-winner{background:#202b35;box-shadow:inset 3px 0 var(--brawl-accent)}
+.results .brawl-result-machine strong{font-size:18px;white-space:normal;overflow-wrap:anywhere}
+.results .brawl-result-machine>b{font-size:20px}
+.results .brawl-result-machine small,.results .brawl-damage-value small,.results .brawl-points small{font-size:12px;color:#d1dde5}
+.results .brawl-result-status{font-size:13px;line-height:1.35;color:#edf4f8;overflow-wrap:anywhere}
+.results .brawl-rules-note{font-size:13px;line-height:1.5;color:#cedde5}
+/* A solid, unblurred backdrop prevents the frozen WebGL canvas bleeding through. */
+html[data-menu-theme="revamp"] .result-backdrop[data-format="brawl"],.result-backdrop[data-format="brawl"]{background:#070d14f5;backdrop-filter:none;-webkit-backdrop-filter:none}
 html.touch-playing #hud[data-mode="brawl"] .hud-top{grid-template-columns:minmax(0,1fr) 112px minmax(0,1fr)!important;gap:6px!important}
 html.touch-playing #hud[data-mode="brawl"] .player-panel,html.touch-playing #hud[data-mode="brawl"] .player-panel.pre-fight{width:100%!important;max-width:100%!important;grid-template-columns:32px minmax(0,1fr) 44px!important;padding:5px!important;column-gap:4px!important}
 html.touch-playing #hud[data-mode="brawl"] .player-title{font-size:12px!important;letter-spacing:.02em!important}
@@ -10,9 +27,18 @@ html.touch-playing #hud[data-mode="brawl"] .player-portrait{width:32px!important
 html.touch-playing #hud[data-mode="brawl"] .timer{width:112px!important;min-width:0!important;padding:6px!important;box-sizing:border-box}
 html.touch-playing #hud[data-mode="brawl"] .timer .digits{font-size:40px!important;letter-spacing:0!important;white-space:nowrap}
 html.touch-playing #hud[data-mode="brawl"] #brawl-opponents{width:100%!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
-html.touch-device .brawl-result-heading,html.touch-device .brawl-result-row{grid-template-columns:minmax(0,1.4fr) minmax(0,.85fr) minmax(0,.65fr) minmax(0,.9fr);gap:5px}
-html.touch-device .brawl-result-heading{font-size:8px;letter-spacing:0}
-html.touch-device .brawl-result-row{font-size:10px;padding:5px 4px}
-html.touch-device .brawl-result-machine{gap:4px}
-html.touch-device .brawl-result-machine>b{font-size:12px}
-html.touch-device .brawl-result-status{font-size:8px;overflow-wrap:anywhere}
+html.touch-playing #brawl-opponents .brawl-hud-card{padding:5px 6px}
+html.touch-playing #brawl-opponents .brawl-hud-heading strong{font-size:12px}
+html.touch-playing #brawl-opponents .brawl-hud-heading span,html.touch-playing #brawl-opponents .brawl-hud-foot{font-size:10px}
+html.touch-playing #brawl-opponents .brawl-hp-track{height:7px;margin:3px 0}
+html.touch-device .results .brawl-result-heading,html.touch-device .results .brawl-result-row{grid-template-columns:minmax(0,1.4fr) minmax(0,.85fr) minmax(0,.7fr) minmax(0,1fr);gap:6px}
+html.touch-device .results .brawl-result-heading{font-size:10px;letter-spacing:0}
+html.touch-device .results .brawl-result-row{font-size:14px;padding:8px 4px;line-height:1.35}
+html.touch-device .results .brawl-result-machine{gap:4px;flex-wrap:wrap}
+html.touch-device .results .brawl-result-machine strong{font-size:14px}
+html.touch-device .results .brawl-result-machine>b{font-size:16px}
+html.touch-device .results .brawl-result-machine small,html.touch-device .results .brawl-damage-value small,html.touch-device .results .brawl-points small{font-size:10px}
+html.touch-device .results .brawl-result-status{font-size:11px}
+html.touch-device .results .brawl-rules-note{font-size:11px}
+
+html.touch-device:has(.result-backdrop[data-format="brawl"]) .touch-controls{display:none!important}

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync,writeFileSync} from 'node:fs';
 import {build} from 'esbuild';
 
 // Run real menu, simulator, results and production CSS; stub WebGL only for deterministic layout.
@@ -50,7 +50,16 @@ try{
     assert(layout.cards);await wait("document.querySelector('.touch-controls:not(.hidden)')",'touch controls');
    }
    await evaluate('__brawlFixture.result()');
+   if(device.mobile)await wait("getComputedStyle(document.querySelector('.touch-controls')).display==='none'",'touch controls hidden for results');
    assert.equal(await evaluate("document.querySelectorAll('.brawl-result-row').length"),n+1);
+   const readability=await evaluate(`(()=>{const rows=[...document.querySelectorAll('.brawl-result-row')];return{rowSizes:rows.map(e=>parseFloat(getComputedStyle(e).fontSize)),nameSizes:rows.map(e=>parseFloat(getComputedStyle(e.querySelector('.brawl-result-machine strong')).fontSize)),hudName:parseFloat(getComputedStyle(document.querySelector('.brawl-hud-heading strong')).fontSize),hudHealth:parseFloat(getComputedStyle(document.querySelector('.brawl-hud-foot')).fontSize),blur:getComputedStyle(document.querySelector('.result-backdrop')).backdropFilter}})()`);
+   assert(readability.rowSizes.every(size=>size>=14),'All result rows must be readable');
+   assert.equal(new Set(readability.rowSizes).size,1,'Winner and opponent row typography must match');
+   assert(readability.nameSizes.every(size=>size>=14));
+   assert(readability.hudName>=(device.mobile?12:16));
+   assert(readability.hudHealth>=(device.mobile?10:12));
+   assert.equal(readability.blur,'none','Brawl results avoid live-canvas backdrop blur');
+   if(process.env.CRA_CAPTURE_BRAWL&&n===4){const screenshot=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});writeFileSync('/home/ubuntu/screenshots/brawl-results-'+device.name.replaceAll(' ','-')+'.png',Buffer.from(screenshot.data,'base64'));}
    if(device.mobile)assert(await evaluate(`(()=>{const r=document.querySelector('.results').getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.top>=0&&r.bottom<=innerHeight+1&&[...document.querySelectorAll('.modal-actions button')].every(e=>{const b=e.getBoundingClientRect();return b.bottom<=innerHeight+1})})()`),'Mobile results/actions fit');
    await evaluate("document.querySelector('#rematch').click()");
    await wait(`__brawlFixture.count===${n+1}&&document.querySelector('.results')===null`,'rematch');

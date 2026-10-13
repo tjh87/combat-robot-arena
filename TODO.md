@@ -47,3 +47,5 @@
 - [x] For Deep Six only, replace the generic thin streak blur with the approved concept 1 soft copper/amber partial sweep around a crisp hub. Scale the arc and opacity with actual weapon RPM, cap angular coverage at 300 degrees, smoothly rotate the blur about the weapon axis in the correct spin direction at an RPM-paced rate, keep the overlay anchored to the robot frame, and preserve other robots, reduced-motion behavior, physics, rotor transforms, and hit timing.
 
 - [x] Add a separate Brawl mode where the user can choose 1–4 AI opponents fighting in the arena at the same time in a free-for-all. Keep the usual match rules, controls and physics; show every AI opponent's live HP/status and rank all participants with damage dealt and judging points at match end. Do not change Quick Fight, Local 2P, tournaments or online rooms.
+
+- [x] Restore Brawl camera framing to the default match view; stabilize camera-side wall visibility against flicker, remove avoidable live-spark allocations, and make every post-fight row plus opponent HP/status text larger and more readable on desktop and mobile without changing physics, rules or controls.
