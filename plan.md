@@ -19,6 +19,7 @@ Improve the existing Three.js/Rapier combat game without changing its fixed 240 
 ### Graphics and combat presentation
 
 - Add a short, pooled, non-shadow-casting impact light to the existing spark path. It creates a steel-reflection pulse at the authoritative contact point, scales only from recorded impact energy, and fades in the normal render update.
+- Keep sparks presentation-only and energy-tiered: 2.5–<12 kJ impacts use a tighter spray with a subset of upward-launched particles that curve under gravity; impacts at 12 kJ and above use a broader directionally biased fan with only occasional arcs; weaker hits retain the restrained baseline effect.
 - Keep the existing color management, adaptive resolution, 60 FPS gameplay presentation cap, reduced-motion behavior, and 240 Hz physics untouched. The new light does not add a post-processing pass or create physics behavior.
 - Preserve the industrial broadcast-arena look rather than adding unrelated art or external assets.
 

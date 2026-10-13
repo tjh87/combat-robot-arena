@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import {preset,ROSTER,RULES,isSpinner,weaponAxis,rotate,add,mul,v,length,sub,dot} from '../src/model';
 import {Simulation,initializePhysics,neutral,gyroInertialTorque} from '../src/sim';
 import {WEAPON_VOICES,weaponVoiceKey,weaponVoiceSamples} from '../src/weapon-audio';
-import {roundParticleMaterial,sparkProfile} from '../src/impact-sparks';
+import {roundParticleMaterial,sparkParticle,sparkProfile} from '../src/impact-sparks';
 import {damageStatus} from '../src/combat-damage';
 import {startSignal} from '../src/start-sequence';
 const results:any[]=[];
@@ -50,8 +50,11 @@ await test('Eleven weapon timbres produce distinct bounded waveforms',()=>{
  for(let i=0;i<ROSTER.length;i++){const c=preset(i),key=weaponVoiceKey(c),data=weaponVoiceSamples(key,16000);assert(WEAPON_VOICES[key]);assert.equal(data.length,32000);let peak=0,square=0;for(const x of data){assert(Number.isFinite(x));peak=Math.max(peak,Math.abs(x));square+=x*x;}assert(peak<1&&square/data.length>.001);const hash=createHash('sha256').update(new Uint8Array(data.buffer)).digest('hex');hashes.add(hash);rows.push({name:c.identity.name,timbre:WEAPON_VOICES[key].label,peak,rms:Math.sqrt(square/data.length)});}
  assert.equal(hashes.size,11);return rows;
 });
-await test('Spark shaders clip corners and stronger impacts create more molten trails',()=>{
- const material=roundParticleMaterial({size:.036,transparent:true}),shader={fragmentShader:THREE.ShaderLib.points.fragmentShader};material.onBeforeCompile(shader as any,{} as any);assert(shader.fragmentShader.includes('gl_PointCoord'));assert(shader.fragmentShader.includes('discard'));assert(shader.fragmentShader.includes('smoothstep'));assert(!shader.fragmentShader.includes('NaN'));assert(sparkProfile(50000).count>sparkProfile(500).count*3);material.dispose();return{small:sparkProfile(500),big:sparkProfile(50000),squareCornersDiscarded:true};
+await test('Big hits use a varied directional fan; strong smaller hits use visible gravity arcs',()=>{
+ const material=roundParticleMaterial({size:.036,transparent:true}),shader={fragmentShader:THREE.ShaderLib.points.fragmentShader};material.onBeforeCompile(shader as any,{} as any);assert(shader.fragmentShader.includes('gl_PointCoord'));assert(shader.fragmentShader.includes('discard'));assert(shader.fragmentShader.includes('smoothstep'));assert(!shader.fragmentShader.includes('NaN'));
+ const small=sparkProfile(500),medium=sparkProfile(5000),big=sparkProfile(50000);assert.equal(small.pattern,'subtle');assert.equal(sparkProfile(2500).pattern,'arcs');assert.equal(sparkProfile(12000).pattern,'fan');assert(big.count>small.count*3);
+ const smallParticles=Array.from({length:90},(_,i)=>sparkParticle(500,v(0,0,1),i,27)),mediumParticles=Array.from({length:90},(_,i)=>sparkParticle(5000,v(0,0,1),i,27)),bigParticles=Array.from({length:90},(_,i)=>sparkParticle(20000,v(0,0,1),i,27));assert.equal(smallParticles.filter(p=>p.arc).length,0);assert.equal(mediumParticles.filter(p=>p.arc).length,30);assert(mediumParticles.filter(p=>p.arc).every(p=>p.velocity.y>=1.7),'Medium-hit arcs should launch upward before gravity curves them down');assert.equal(bigParticles.filter(p=>p.arc).length,9);
+ const angularSpan=(particles:typeof bigParticles)=>{const angles=particles.map(p=>Math.atan2(p.velocity.x,p.velocity.z));return Math.max(...angles)-Math.min(...angles);};assert(angularSpan(bigParticles)>angularSpan(mediumParticles),'Big-hit fan should be directionally broader than the strong-hit arc profile');material.dispose();return{small,medium,big,mediumArcSparks:mediumParticles.filter(p=>p.arc).length,bigFanArcSparks:bigParticles.filter(p=>p.arc).length,fanAngularSpan:angularSpan(bigParticles),arcAngularSpan:angularSpan(mediumParticles),squareCornersDiscarded:true};
 });
 await test('Start signals match three amber flashes followed by green',()=>{
  for(const t of[.25,1.25,2.25]){assert(startSignal(t).lit);assert(!startSignal(t).fight);}for(const t of[.85,1.85,2.85])assert(!startSignal(t).lit);assert(startSignal(3.25).fight);assert(startSignal(3.25).lit);return{amberFlashes:3,greenSeconds:3.15};
