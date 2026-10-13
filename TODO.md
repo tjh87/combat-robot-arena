@@ -49,3 +49,5 @@
 - [x] Add a separate Brawl mode where the user can choose 1–4 AI opponents fighting in the arena at the same time in a free-for-all. Keep the usual match rules, controls and physics; show every AI opponent's live HP/status and rank all participants with damage dealt and judging points at match end. Do not change Quick Fight, Local 2P, tournaments or online rooms.
 
 - [x] Restore Brawl camera framing to the default match view; stabilize camera-side wall visibility against flicker, remove avoidable live-spark allocations, and make every post-fight row plus opponent HP/status text larger and more readable on desktop and mobile without changing physics, rules or controls.
+
+- [x] Show all robots and the arena at Brawl start, then keep combat closer without excessive zoom-out; preserve the selected chase/POV camera after countdown and cap tactical Brawl zoom while leaving normal matches and physics unchanged.
