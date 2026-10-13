@@ -177,3 +177,10 @@ The results dialog is now structurally split into a compact action footer and a 
 ### Deep Six recorded weapon sounds
 
 User requested removal of the first three seconds from Deep Six clip 05 and implementation of the full set. The trimmed 00:07–00:11 source excerpt is the Deep Six weapon-start cue, clip 06 is a seamless playback-rate-scaled loop above the existing RPM threshold, and clip 07 is a coast-down one-shot on weapon-off; starting again cancels the coast-down cue. Deep Six source attribution is in `public/audio/License.txt`; the clips ship in the offline package and fall back to the existing procedural Deep Six voice if unavailable. The Magnetar sounds remain exclusive to Hypershock.
+
+
+### Expanded Foundry Cup and cumulative damage
+
+- Extend only the local Foundry Cup opponent selector to 1, 3, 7, or 10 distinct AI opponents (seven remains the default); online room capacity and its protocol remain unchanged.
+- For 10 opponents, seed the 11 total entrants into a 16-slot elimination bracket: five top seeds receive explicit opening-round byes, the remaining six entrants play three preliminary bouts, then the eight qualifiers proceed through quarterfinals, semifinals, and final. Display all four stages and keep byes distinct from match wins/losses.
+- Accumulate actual HP lost by the opposing robot as damage dealt for each real player bout and background AI bout, including worker and synchronous simulation paths. Display cumulative damage in HP beside each entrant’s W/L record; exclude carry-over HP damage, automatic byes, and quick-resolved fixtures from match damage.

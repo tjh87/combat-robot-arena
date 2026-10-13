@@ -1,4 +1,5 @@
 import type {Tournament} from './sim';
+
 export class TournamentRunner {
  worker?:Worker;active='';progress=0;private jobId=0;
  constructor(readonly tournament:Tournament,readonly changed:()=>void){this.createWorker();this.update();}
@@ -8,17 +9,21 @@ export class TournamentRunner {
   worker.onmessage=event=>{
    const data=event.data,key=data.round+'/'+data.index;
    if(this.worker!==worker||data.jobId!==this.jobId||key!==this.active)return;
-   const match=this.tournament.matches[data.round]?.[data.index];if(!match)return;
+   const match=this.tournament.matches[data.round]?.[data.index];if(!match?.b)return;
    if(data.type==='progress'){this.progress=data.tick/240;this.changed();}
    else if(data.type==='fault'){this.tournament.fault='Computer fight paused: '+data.message;this.tournament.busy=false;this.active='';this.changed();}
-   else if(data.type==='result'){match.winner=data.winner===0?match.a:match.b;match.reason=data.reason;this.active='';this.tournament.busy=false;this.progress=0;this.changed();this.update();}
+   else if(data.type==='result'){
+    match.winner=data.winner===0?match.a:match.b;match.reason=data.reason;
+    if(Array.isArray(data.damageDealt)&&data.damageDealt.length===2)match.damageDealt=[Math.max(0,Number(data.damageDealt[0])||0),Math.max(0,Number(data.damageDealt[1])||0)];
+    this.active='';this.tournament.busy=false;this.progress=0;this.changed();this.update();
+   }
   };
  }
  update(){
   if(!this.worker||this.active||this.tournament.fault||this.tournament.champion)return;
-  const round=this.tournament.matches[this.tournament.round],index=round.findIndex(m=>!m.a.player&&!m.b.player&&!m.winner);
+  const round=this.tournament.matches[this.tournament.round],index=round.findIndex(m=>!!m.b&&!m.a.player&&!m.b!.player&&!m.winner);
   if(index<0){this.tournament.busy=false;return;}
-  const m=round[index];this.active=this.tournament.round+'/'+index;this.tournament.busy=true;
+  const m=round[index];if(!m.b)return;this.active=this.tournament.round+'/'+index;this.tournament.busy=true;
   this.worker.postMessage({type:'match',jobId:++this.jobId,round:this.tournament.round,index,configs:[m.a.config,m.b.config],hazards:this.tournament.hazards,difficulty:this.tournament.difficulty,seed:this.tournament.seed+this.tournament.round*31+index});
  }
  skipRemaining(){

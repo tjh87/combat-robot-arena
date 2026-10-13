@@ -8,6 +8,7 @@ export type {Hazard} from './arena-hazards';
 import RAPIER from '@dimforge/rapier3d-compat';
 import {HitReadouts,type HitReadout} from './hit-readouts';
 import {contactSparkDirection} from './impact-sparks';
+import {totalHPLost} from './tournament-damage';
 import {MatchHighlights} from './match-highlights';
 import {toothBite,remainingSpin} from './weapon-impact';
 import {colliderBounds,previousColliderPose,cacheColliderGeometry} from './arena-wall';
@@ -799,20 +800,49 @@ export function refitQuote(config:BotConfig,modules:Record<Slot,Module>,orders:R
 }
 
 export type Entry={name:string,config:BotConfig,player:boolean};
+export type TournamentMatch={a:Entry,b?:Entry,winner?:Entry,reason?:string,damageDealt?:[number,number]};
 export class Tournament{
- entries:Entry[];round=0;matches:{a:Entry,b:Entry,winner?:Entry,reason?:string}[][]=[];condition?:Record<Slot,number>;repairModules?:Record<Slot,Module>;champion?:Entry;eliminated=false;seed:number;hazards:boolean;difficulty:Difficulty;pending?:Simulation;pendingIndex=-1;busy=false;fault?:string;
- constructor(player:BotConfig,hazards=true,seed=freshTournamentSeed(),difficulty:Difficulty='medium',opponents=7){if(![1,3,7].includes(opponents))throw Error('Choose 1, 3, or 7 tournament opponents.');this.seed=seed;this.hazards=hazards;this.difficulty=difficulty;this.entries=[{name:player.identity.name,config:copy(player),player:true}];const random=rng(seed),templates=tournamentTemplates(random,[player.chassis.profile??'']);const counts=new Map<string,number>();for(let i=0;i<opponents;i++){const c=preset(templates[i]);const seen=(counts.get(c.identity.name)??0)+1;counts.set(c.identity.name,seen);if(seen>1)c.identity.name+=' '+seen;c.identity.primary=['#eb794b','#af9fed','#e8c869','#82b3c8','#d4a48b','#9fbf72','#dc737e'][i];if(isSpinner(c.weapon))c.weapon.rpm*=.90+random()*.09;const x=compile(c);if(x.errors.length)throw Error('Illegal tournament entry: '+c.identity.name);this.entries.push({name:c.identity.name,config:c,player:false});}this.matches=[this.pair(this.entries)];}
- pair(entries:Entry[]){const out=[];for(let i=0;i<entries.length;i+=2)out.push({a:entries[i],b:entries[i+1],winner:undefined as Entry|undefined,reason:undefined as string|undefined});return out;}
- get totalRounds(){return Math.log2(this.entries.length);}
+ entries:Entry[];round=0;matches:TournamentMatch[][]=[];condition?:Record<Slot,number>;repairModules?:Record<Slot,Module>;champion?:Entry;eliminated=false;seed:number;hazards:boolean;difficulty:Difficulty;pending?:Simulation;pendingIndex=-1;busy=false;fault?:string;
+ constructor(player:BotConfig,hazards=true,seed=freshTournamentSeed(),difficulty:Difficulty='medium',opponents=7){
+  if(![1,3,7,10].includes(opponents))throw Error('Choose 1, 3, 7, or 10 tournament opponents.');
+  this.seed=seed;this.hazards=hazards;this.difficulty=difficulty;this.entries=[{name:player.identity.name,config:copy(player),player:true}];
+  const random=rng(seed),templates=tournamentTemplates(random,[player.chassis.profile??'']),counts=new Map<string,number>(),colors=['#eb794b','#af9fed','#e8c869','#82b3c8','#d4a48b','#9fbf72','#dc737e','#79c4a8','#bd8fc9','#f19a5d'];
+  for(let i=0;i<opponents;i++){
+   if(templates[i]===undefined)throw Error('Not enough distinct robot templates for this tournament.');
+   const c=preset(templates[i]),seen=(counts.get(c.identity.name)??0)+1;counts.set(c.identity.name,seen);if(seen>1)c.identity.name+=' '+seen;c.identity.primary=colors[i%colors.length];
+   if(isSpinner(c.weapon))c.weapon.rpm*=.90+random()*.09;const x=compile(c);if(x.errors.length)throw Error('Illegal tournament entry: '+c.identity.name);this.entries.push({name:c.identity.name,config:c,player:false});
+  }
+  this.matches=[this.openingRound(this.entries)];
+ }
+ pair(entries:Entry[]):TournamentMatch[]{const out:TournamentMatch[]=[];for(let i=0;i<entries.length;i+=2)out.push({a:entries[i],b:entries[i+1],winner:undefined,reason:undefined});return out;}
+ openingRound(entries:Entry[]):TournamentMatch[]{
+  if(entries.length!==11)return this.pair(entries);
+  const seedOrder=[1,16,8,9,5,12,4,13,6,11,3,14,7,10,2,15],slots=seedOrder.map(seed=>seed<=entries.length?entries[seed-1]:undefined),matches:TournamentMatch[]=[];
+  for(let i=0;i<slots.length;i+=2){const a=slots[i],b=slots[i+1];if(a&&b)matches.push({a,b});else if(a||b){const entry=a??b!;matches.push({a:entry,b:undefined,winner:entry,reason:'Bye'});}}
+  return matches;
+ }
+ get bracketSize(){return Math.max(2,2**Math.ceil(Math.log2(this.entries.length)));}
+ get totalRounds(){return Math.log2(this.bracketSize);}
  get finalRound(){return this.totalRounds-1;}
- get playerMatch(){return this.matches[this.round]?.find(m=>(m.a.player||m.b.player)&&!m.winner);}
- playerConfigs():[BotConfig,BotConfig]{const m=this.playerMatch;if(!m)throw Error('No player match');return[m.a.player?m.a.config:m.b.config,m.a.player?m.b.config:m.a.config];}
- recordPlayer(result:Result,modules:Record<Slot,Module>){const m=this.playerMatch;if(!m)throw Error('No match to record');m.winner=result.winner===0?(m.a.player?m.a:m.b):(m.a.player?m.b:m.a);m.reason=result.reason;this.condition=Object.fromEntries(SLOTS.map(s=>[s,modules[s].hp])) as Record<Slot,number>;this.repairModules=copy(modules);if(!m.winner.player)this.eliminated=true;if(this.round===this.finalRound)this.champion=m.winner;}
- stepOffscreen(maxTicks=160,budgetMs=Infinity){const deadline=performance.now()+budgetMs;if(this.fault)return false;const round=this.matches[this.round];let m=round.find(x=>!x.a.player&&!x.b.player&&!x.winner);if(!m){this.busy=false;return false;}this.busy=true;if(!this.pending){this.pendingIndex=round.indexOf(m);this.pending=new Simulation([m.a.config,m.b.config],{seed:this.seed+this.round*31+this.pendingIndex,hazards:this.hazards,ai:[true,true],difficulty:this.difficulty,recordVisuals:false});}const sim=this.pending;for(let i=0;i<maxTicks&&!sim.result&&!sim.fault;i++){if(i>0&&performance.now()>=deadline)break;sim.step();}if(sim.fault){this.fault='Computer match paused: '+sim.fault;sim.dispose();this.pending=undefined;this.busy=false;throw Error(this.fault);}if(sim.result){m=round[this.pendingIndex];m.winner=sim.result.winner===0?m.a:m.b;m.reason=sim.result.reason;sim.dispose();this.pending=undefined;}return true;}
+ get playerMatch(){return this.matches[this.round]?.find(m=>(m.a.player||m.b?.player)&&!m.winner);}
+ playerConfigs():[BotConfig,BotConfig]{const m=this.playerMatch;if(!m?.b)throw Error('No player match');return[m.a.player?m.a.config:m.b.config,m.a.player?m.b.config:m.a.config];}
+ recordPlayer(result:Result,modules:Record<Slot,Module>,damageTaken?:[number,number]){
+  const m=this.playerMatch;if(!m?.b)throw Error('No match to record');m.winner=result.winner===0?(m.a.player?m.a:m.b):(m.a.player?m.b:m.a);m.reason=result.reason;
+  if(damageTaken){const playerTaken=Number.isFinite(damageTaken[0])?Math.max(0,damageTaken[0]):0,opponentTaken=Number.isFinite(damageTaken[1])?Math.max(0,damageTaken[1]):0;m.damageDealt=m.a.player?[opponentTaken,playerTaken]:[playerTaken,opponentTaken];}
+  this.condition=Object.fromEntries(SLOTS.map(s=>[s,modules[s].hp])) as Record<Slot,number>;this.repairModules=copy(modules);if(!m.winner.player)this.eliminated=true;if(this.round===this.finalRound)this.champion=m.winner;
+ }
+ stepOffscreen(maxTicks=160,budgetMs=Infinity){
+  const deadline=performance.now()+budgetMs;if(this.fault)return false;const round=this.matches[this.round];let m=round.find(x=>x.b&&!x.winner&&!x.a.player&&!x.b.player);if(!m){this.busy=false;return false;}this.busy=true;
+  if(!this.pending){this.pendingIndex=round.indexOf(m);this.pending=new Simulation([m.a.config,m.b!.config],{seed:this.seed+this.round*31+this.pendingIndex,hazards:this.hazards,ai:[true,true],difficulty:this.difficulty,recordVisuals:false});}
+  const sim=this.pending;for(let i=0;i<maxTicks&&!sim.result&&!sim.fault;i++){if(i>0&&performance.now()>=deadline)break;sim.step();}
+  if(sim.fault){this.fault='Computer match paused: '+sim.fault;sim.dispose();this.pending=undefined;this.busy=false;throw Error(this.fault);}
+  if(sim.result){m=round[this.pendingIndex];m.winner=sim.result.winner===0?m.a:m.b!;m.reason=sim.result.reason;m.damageDealt=[totalHPLost(sim.bots[1]),totalHPLost(sim.bots[0])];sim.dispose();this.pending=undefined;}
+  return true;
+ }
  quickResolveComputerMatches(){
   if(this.playerMatch)throw Error('Finish your fight before preparing the next round.');
   this.pending?.dispose();this.pending=undefined;this.pendingIndex=-1;this.busy=false;this.fault=undefined;let resolved=0;
-  for(const [index,match]of this.matches[this.round].entries())if(!match.winner&&!match.a.player&&!match.b.player){const random=rng(this.seed+this.round*31+index);match.winner=random()<.5?match.a:match.b;match.reason='Quick bracket result';resolved++;}return resolved;
+  for(const [index,match]of this.matches[this.round].entries())if(match.b&&!match.winner&&!match.a.player&&!match.b.player){const random=rng(this.seed+this.round*31+index);match.winner=random()<.5?match.a:match.b;match.reason='Quick bracket result';resolved++;}return resolved;
  }
  retryOffscreen(){this.fault=undefined;}
  advance(){if(this.matches[this.round].some(m=>!m.winner))throw Error('Round is still running');const winners=this.matches[this.round].map(m=>m.winner!);if(winners.length===1){this.champion=winners[0];return;}this.round++;this.matches.push(this.pair(winners));}

@@ -3,44 +3,112 @@ import {victoryConfetti} from './result-view';
 import type {Tournament,Entry} from './sim';
 import type {OnlineRoom} from './online/protocol';
 import type {BotConfig} from './model';
+
 export type CupEntry={key:string,name:string,config:BotConfig,player:boolean};
-export type CupMatch={a:string,b:string,winner?:string,reason?:string};
-export type CupModel={entries:CupEntry[],rounds:CupMatch[][],round:number,hazards:boolean,champion?:string};
+export type CupMatch={a:string,b?:string,winner?:string,reason?:string,damageDealt?:[number,number]};
+export type CupModel={entries:CupEntry[],rounds:CupMatch[][],round:number,hazards:boolean,bracketSize:number,trackDamage:boolean,champion?:string};
 export const cupEscape=(v:unknown)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
 export const CUP_TROPHY='<svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M20 10h24v13c0 12-6 19-12 19S20 35 20 23V10Z" stroke="currentColor" stroke-width="3"/><path d="M20 15H9v7c0 8 6 12 15 12m20-19h11v7c0 8-6 12-15 12M32 42v11m-11 3h22M23 10l4-6 5 5 5-5 4 6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="m32 18 2.5 5 5.5.8-4 4 .9 5.4-4.9-2.6-4.9 2.6.9-5.4-4-4 5.5-.8 2.5-5Z" fill="currentColor"/></svg>';
 export function cupPortrait(config:BotConfig){const fallback:Record<string,string>={drum:'minotaur',flipper:'hydra',crusher:'quantum',vertical_disc:'hypershock',shell_spinner:'gigabyte',horizontal_cage:'whyachi',hammer_saw:'sawblaze',vertical_bar:'deep_six'};return ROBOT_PORTRAITS[config.chassis.profile??'']??ROBOT_PORTRAITS[fallback[config.weapon.type]??'tombstone'];}
-export function offlineCup(t:Tournament):CupModel{const key=(e:Entry)=>'e'+t.entries.indexOf(e);return{entries:t.entries.map(e=>({key:key(e),name:e.name,config:e.config,player:e.player})),rounds:t.matches.map(r=>r.map(m=>({a:key(m.a),b:key(m.b),winner:m.winner?key(m.winner):undefined,reason:m.reason}))),round:t.round,hazards:t.hazards,champion:t.champion?key(t.champion):undefined};}
-export function onlineCup(room:OnlineRoom,guest:string):CupModel{return{entries:room.entrants.map(e=>({key:e.id,name:e.config.identity.name,config:e.config,player:e.id===guest})),rounds:room.rounds.map(r=>r.map(m=>({a:m.a,b:m.b,winner:m.winner,reason:m.result?.reason}))),round:room.round,hazards:room.hazards,champion:room.champion};}
-export function cupRecords(model:CupModel){const records=new Map(model.entries.map(e=>[e.key,{wins:0,losses:0}]));for(const round of model.rounds)for(const match of round)if(match.winner){const winner=records.get(match.winner),loser=records.get(match.winner===match.a?match.b:match.a);if(winner)winner.wins++;if(loser)loser.losses++;}return records;}
-const recordMarkup=(wins:number,losses:number)=>'<span class="cup-record" aria-label="'+wins+' wins and '+losses+' losses"><b>'+wins+' W</b><i>'+losses+' L</i></span>';
-export const cupRoundNames=(entries:number)=>['Quarterfinals','Semifinals','Final'].slice(-Math.log2(entries));
-export function cupChampion(model:CupModel,reduced:boolean,key=model.champion){const entry=model.entries.find(e=>e.key===key);if(!entry)return '';const record=cupRecords(model).get(entry.key)!;return '<section class="cup-champion" data-champion="'+cupEscape(entry.key)+'"><div class="cup-champion-rays" aria-hidden="true"></div><div class="cup-champion-emblem">'+CUP_TROPHY+'</div><div class="cup-champion-copy"><span class="cup-eyebrow">THE FOUNDRY CROWN</span><h2>Overall champion</h2><strong>'+cupEscape(entry.name)+'</strong>'+recordMarkup(record.wins,record.losses)+'<p>'+Math.log2(model.entries.length)+' round'+(model.entries.length===2?'':'s')+'. One machine at the summit.</p></div><div class="cup-champion-photo"><img src="'+cupPortrait(entry.config)+'" alt="'+cupEscape(entry.name)+'" width="240" height="160">'+victoryConfetti(reduced)+'</div></section>';}
-export function cupRoundVictory(t:Tournament,reduced:boolean){const model=offlineCup(t),match=t.matches[t.round].find(m=>m.a.player||m.b.player);if(!match?.winner?.player)return '';if(t.round===t.finalRound)return cupChampion(model,reduced,'e'+t.entries.indexOf(match.winner));const entry=model.entries[0],record=cupRecords(model).get(entry.key)!;return '<section class="cup-victory-banner"><span class="cup-medal">'+CUP_TROPHY+'</span><div><span class="cup-eyebrow">ROUND '+(t.round+1)+' CONQUERED</span><strong>'+cupEscape(entry.name)+' advances</strong><small>900 repair points · Your next challenge is ready</small></div>'+recordMarkup(record.wins,record.losses)+victoryConfetti(reduced)+'</section>';}
-export function cupIntro(config:BotConfig,entrants=8){return '<div class="cup-intro-art"><div class="cup-intro-trophy">'+CUP_TROPHY+'</div><img src="'+cupPortrait(config)+'" alt="'+cupEscape(config.identity.name)+'" width="250" height="160"><span>YOUR CONTENDER</span><strong>'+cupEscape(config.identity.name)+'</strong></div><div class="cup-intro-facts"><span><b>'+entrants+'</b> contenders</span><span><b>'+Math.log2(entrants)+'</b> wins to the crown</span><span><b>900</b> repair points per win</span></div>';}
+
+export function offlineCup(t:Tournament):CupModel{
+ const key=(e:Entry)=>'e'+t.entries.indexOf(e);
+ return{
+  entries:t.entries.map(e=>({key:key(e),name:e.name,config:e.config,player:e.player})),
+  rounds:t.matches.map(r=>r.map(m=>({a:key(m.a),b:m.b?key(m.b):undefined,winner:m.winner?key(m.winner):undefined,reason:m.reason,damageDealt:m.damageDealt}))),
+  round:t.round,hazards:t.hazards,bracketSize:t.bracketSize,trackDamage:true,champion:t.champion?key(t.champion):undefined
+ };
+}
+export function onlineCup(room:OnlineRoom,guest:string):CupModel{
+ return{
+  entries:room.entrants.map(e=>({key:e.id,name:e.config.identity.name,config:e.config,player:e.id===guest})),
+  rounds:room.rounds.map(r=>r.map(m=>({a:m.a,b:m.b,winner:m.winner,reason:m.result?.reason}))),
+  round:room.round,hazards:room.hazards,bracketSize:Math.max(2,2**Math.ceil(Math.log2(room.entrants.length))),trackDamage:false,champion:room.champion
+ };
+}
+export function cupRecords(model:CupModel){
+ const records=new Map(model.entries.map(e=>[e.key,{wins:0,losses:0,damageDealt:0}]));
+ for(const round of model.rounds)for(const match of round){
+  if(match.winner&&match.b){const winner=records.get(match.winner),loser=records.get(match.winner===match.a?match.b:match.a);if(winner)winner.wins++;if(loser)loser.losses++;}
+  if(match.damageDealt&&match.b){const a=records.get(match.a),b=records.get(match.b);if(a)a.damageDealt+=Math.max(0,Number(match.damageDealt[0])||0);if(b)b.damageDealt+=Math.max(0,Number(match.damageDealt[1])||0);}
+ }
+ return records;
+}
+const recordMarkup=(wins:number,losses:number,damageDealt?:number)=>'<span class="cup-record" aria-label="'+wins+' wins and '+losses+' losses"><b>'+wins+' W</b><i>'+losses+' L</i>'+(damageDealt===undefined?'':'<small class="cup-damage" aria-label="Total damage dealt: '+Math.round(damageDealt)+' HP">DMG '+Math.round(damageDealt)+' HP</small>')+'</span>';
+export const cupRoundNames=(entrants:number)=>entrants===11?['Opening Round','Quarterfinals','Semifinals','Final']:['Quarterfinals','Semifinals','Final'].slice(-Math.ceil(Math.log2(entrants)));
+
+export function cupChampion(model:CupModel,reduced:boolean,key=model.champion){
+ const entry=model.entries.find(e=>e.key===key);if(!entry)return '';
+ const record=cupRecords(model).get(entry.key)!;
+ return '<section class="cup-champion" data-champion="'+cupEscape(entry.key)+'"><div class="cup-champion-rays" aria-hidden="true"></div><div class="cup-champion-emblem">'+CUP_TROPHY+'</div><div class="cup-champion-copy"><span class="cup-eyebrow">THE FOUNDRY CROWN</span><h2>Overall champion</h2><strong>'+cupEscape(entry.name)+'</strong>'+recordMarkup(record.wins,record.losses,model.trackDamage?record.damageDealt:undefined)+'<p>'+cupRoundNames(model.entries.length).length+' bracket stages. Byes advance automatically; one machine at the summit.</p></div><div class="cup-champion-photo"><img src="'+cupPortrait(entry.config)+'" alt="'+cupEscape(entry.name)+'" width="240" height="160">'+victoryConfetti(reduced)+'</div></section>';
+}
+export function cupRoundVictory(t:Tournament,reduced:boolean){
+ const model=offlineCup(t),match=t.matches[t.round].find(m=>m.a.player||m.b?.player);if(!match?.winner?.player)return '';
+ if(t.round===t.finalRound)return cupChampion(model,reduced,'e'+t.entries.indexOf(match.winner));
+ const entry=model.entries[0],record=cupRecords(model).get(entry.key)!;
+ return '<section class="cup-victory-banner"><span class="cup-medal">'+CUP_TROPHY+'</span><div><span class="cup-eyebrow">ROUND '+(t.round+1)+' CONQUERED</span><strong>'+cupEscape(entry.name)+' advances</strong><small>900 repair points · Your next challenge is ready</small></div>'+recordMarkup(record.wins,record.losses,model.trackDamage?record.damageDealt:undefined)+victoryConfetti(reduced)+'</section>';
+}
+export function cupIntro(config:BotConfig,entrants=8){
+ const stages=Math.ceil(Math.log2(entrants));
+ return '<div class="cup-intro-art"><div class="cup-intro-trophy">'+CUP_TROPHY+'</div><img src="'+cupPortrait(config)+'" alt="'+cupEscape(config.identity.name)+'" width="250" height="160"><span>YOUR CONTENDER</span><strong>'+cupEscape(config.identity.name)+'</strong></div><div class="cup-intro-facts"><span><b>'+entrants+'</b> contenders</span><span><b>'+stages+'</b> bracket stage'+(stages===1?'':'s')+'</span><span><b>900</b> repair points per win</span></div>';
+}
+
 export type CupBox={left:number,right:number,top:number,height:number};
 export type CupLinkState='win'|'loss'|'pending';
 /** Advancing and pending links end on the target box edge; eliminated entrants stop beside their own card. */
 export function cupConnector(source:CupBox,target:CupBox,state:CupLinkState){const x=source.right+3,y=source.top+source.height/2;if(state==='loss'){const ox=x+16;return{d:'M '+x+' '+y+' L '+ox+' '+y,arrow:false,out:{x:ox+6,y}};}const tx=target.left-3,ty=target.top+target.height/2,mx=(x+tx)/2;return{d:'M '+x+' '+y+' C '+mx+' '+y+' '+mx+' '+ty+' '+tx+' '+ty,arrow:true,out:undefined as undefined|{x:number,y:number}};}
-function crownStage(model:CupModel){const entry=model.entries.find(e=>e.key===model.champion);return '<section class="cup-crown-stage" aria-label="Champion"><header><span>★</span><h3>Champion</h3><small>The Foundry Crown</small></header><div class="cup-stage-matches" style="grid-template-rows:repeat('+model.entries.length+',minmax(68px,auto))"><article class="cup-crown" data-r="'+Math.log2(model.entries.length)+'" data-m="0" data-slot="0"'+(entry?' data-entry="'+cupEscape(entry.key)+'"':'')+' data-state="'+(entry?'complete':'future')+'" style="grid-row:'+model.entries.length/2+' / span 2"><div class="cup-crown-icon">'+CUP_TROPHY+'</div><div class="cup-crown-body"><small>'+(entry?'CHAMPION':'AWAITING')+'</small><strong>'+(entry?cupEscape(entry.name):'To be decided')+'</strong></div></article></div></section>';}
+function crownStage(model:CupModel){const entry=model.entries.find(e=>e.key===model.champion);return '<section class="cup-crown-stage" aria-label="Champion"><header><span>★</span><h3>Champion</h3><small>The Foundry Crown</small></header><div class="cup-stage-matches" style="grid-template-rows:repeat('+model.bracketSize+',minmax(68px,auto))"><article class="cup-crown" data-r="'+Math.log2(model.bracketSize)+'" data-m="0" data-slot="0"'+(entry?' data-entry="'+cupEscape(entry.key)+'"':'')+' data-state="'+(entry?'complete':'future')+'" style="grid-row:'+model.bracketSize/2+' / span 2"><div class="cup-crown-icon">'+CUP_TROPHY+'</div><div class="cup-crown-body"><small>'+(entry?'CHAMPION':'AWAITING')+'</small><strong>'+(entry?cupEscape(entry.name):'To be decided')+'</strong></div></article></div></section>';}
 export function renderCupBracket(host:HTMLElement,model:CupModel,reduced:boolean){
- const signature=JSON.stringify({entries:model.entries.map(e=>[e.key,e.name,e.config.chassis.profile]),rounds:model.rounds,round:model.round,champion:model.champion,reduced});
- if(host.dataset.cupSignature!==signature){host.dataset.cupSignature=signature;host.dataset.reduced=String(reduced);const records=cupRecords(model);
-  const entryRow=(key:string|undefined,r:number,m:number,slot:number,match?:CupMatch)=>{const entry=model.entries.find(e=>e.key===key),record=key?records.get(key):undefined,state=match?.winner?(match.winner===key?'won':'lost'):'pending';if(!entry)return '<div class="cup-entry cup-empty" data-r="'+r+'" data-m="'+m+'" data-slot="'+slot+'"><span class="cup-empty-icon">◇</span><span>Awaiting contender</span></div>';return '<div class="cup-entry '+state+(entry.player?' is-player':'')+'" data-r="'+r+'" data-m="'+m+'" data-slot="'+slot+'" data-entry="'+cupEscape(entry.key)+'"><div class="cup-entry-photo"><img src="'+cupPortrait(entry.config)+'" alt="" width="56" height="44"></div><div class="cup-entry-body"><strong>'+cupEscape(entry.name)+'</strong>'+recordMarkup(record?.wins??0,record?.losses??0)+'</div><span class="cup-result-badge" aria-label="'+(state==='won'?'Winner':state==='lost'?'Eliminated':entry.player?'Your robot':'Pending')+'">'+(entry.player?'YOU '+(state==='won'?'★':state==='lost'?'×':''):state==='won'?'★':state==='lost'?'×':'·')+'</span></div>';};
-  host.innerHTML='<div class="cup-map" style="grid-template-columns:repeat('+Math.log2(model.entries.length)+',minmax(0,1fr)) minmax(0,.8fr);min-width:'+Math.max(480,(Math.log2(model.entries.length)+1)*250)+'px"><svg class="cup-connectors" preserveAspectRatio="none" aria-hidden="true"></svg>'+cupRoundNames(model.entries.length).map((name,r)=>'<section class="cup-stage"><header><span>0'+(r+1)+'</span><h3>'+name+'</h3><small>'+(r===Math.log2(model.entries.length)-1?'The crown':model.entries.length/2**r+' contenders')+'</small></header><div class="cup-stage-matches" style="grid-template-rows:repeat('+model.entries.length+',minmax(68px,auto))">'+Array.from({length:model.entries.length/2**(r+1)},(_,index)=>{const match=model.rounds[r]?.[index],row=index*2**(r+1)+2**r;return '<article class="cup-match" data-match-r="'+r+'" data-match-i="'+index+'" style="grid-row:'+row+' / span 2" data-state="'+(match?.winner?'complete':r===model.round?'active':'future')+'">'+entryRow(match?.a,r,index,0,match)+entryRow(match?.b,r,index,1,match)+'<div class="cup-match-footer">'+(match?.reason==='Quick bracket result'?'QUICK RESULT':match?.winner?cupEscape(match.reason??'COMPLETE'):r===model.round?'ROUND '+(r+1):'NEXT STAGE')+'</div></article>';}).join('')+'</div></section>').join('')+crownStage(model)+'</div>';
+ const signature=JSON.stringify({entries:model.entries.map(e=>[e.key,e.name,e.config.chassis.profile]),rounds:model.rounds,round:model.round,bracketSize:model.bracketSize,trackDamage:model.trackDamage,champion:model.champion,reduced});
+ if(host.dataset.cupSignature!==signature){
+  host.dataset.cupSignature=signature;host.dataset.reduced=String(reduced);const records=cupRecords(model),columns=cupRoundNames(model.entries.length).length;
+  const entryRow=(key:string|undefined,r:number,m:number,slot:number,match?:CupMatch)=>{
+   const entry=model.entries.find(e=>e.key===key),record=key?records.get(key):undefined;
+   if(!entry){if(match?.reason==='Bye')return '<div class="cup-entry cup-bye" data-r="'+r+'" data-m="'+m+'" data-slot="'+slot+'"><strong>BYE</strong><small>Auto-advance</small></div>';return '<div class="cup-entry cup-empty" data-r="'+r+'" data-m="'+m+'" data-slot="'+slot+'"><span class="cup-empty-icon">◇</span><span>Awaiting contender</span></div>';}
+   const state=match?.reason==='Bye'?'advanced':match?.winner?(match.winner===key?'won':'lost'):'pending';
+   return '<div class="cup-entry '+state+(entry.player?' is-player':'')+'" data-r="'+r+'" data-m="'+m+'" data-slot="'+slot+'" data-entry="'+cupEscape(entry.key)+'"><div class="cup-entry-photo"><img src="'+cupPortrait(entry.config)+'" alt="" width="56" height="44"></div><div class="cup-entry-body"><strong>'+cupEscape(entry.name)+'</strong>'+recordMarkup(record?.wins??0,record?.losses??0,model.trackDamage?(record?.damageDealt??0):undefined)+'</div><span class="cup-result-badge" aria-label="'+(state==='advanced'?'Bye — advances automatically':state==='won'?'Winner':state==='lost'?'Eliminated':entry.player?'Your robot':'Pending')+'">'+(state==='advanced'?'BYE':entry.player?'YOU '+(state==='won'?'★':state==='lost'?'×':''):state==='won'?'★':state==='lost'?'×':'·')+'</span></div>';
+  };
+  const stages=cupRoundNames(model.entries.length).map((name,r)=>{
+   const detail=r===0&&model.bracketSize>model.entries.length?model.entries.length+' entrants · '+(model.bracketSize-model.entries.length)+' byes':model.bracketSize/2**r+' contenders';
+   const matchCount=model.bracketSize/2**(r+1);
+   const matches=Array.from({length:matchCount},(_,index)=>{
+    const match=model.rounds[r]?.[index],row=index*2**(r+1)+2**r;
+    const footer=match?.reason==='Bye'?'BYE · AUTO-ADVANCE':match?.reason==='Quick bracket result'?'QUICK RESULT':match?.winner?cupEscape(match.reason??'COMPLETE'):r===model.round?'ROUND '+(r+1):'NEXT STAGE';
+    return '<article class="cup-match" data-match-r="'+r+'" data-match-i="'+index+'" style="grid-row:'+row+' / span 2" data-state="'+(match?.winner?'complete':r===model.round?'active':'future')+'">'+entryRow(match?.a,r,index,0,match)+entryRow(match?.b,r,index,1,match)+'<div class="cup-match-footer">'+footer+'</div></article>';
+   }).join('');
+   return '<section class="cup-stage"><header><span>0'+(r+1)+'</span><h3>'+name+'</h3><small>'+detail+'</small></header><div class="cup-stage-matches" style="grid-template-rows:repeat('+model.bracketSize+',minmax(68px,auto))">'+matches+'</div></section>';
+  }).join('');
+  host.innerHTML='<div class="cup-map" style="grid-template-columns:repeat('+columns+',minmax(0,1fr)) minmax(0,.8fr);min-width:'+Math.max(480,(columns+1)*250)+'px"><svg class="cup-connectors" preserveAspectRatio="none" aria-hidden="true"></svg>'+stages+crownStage(model)+'</div>';
  }
  watchCupLayout(host,model);drawCupConnections(host,model);
 }
-export function drawCupConnections(host:HTMLElement,model:CupModel){const map=host.querySelector<HTMLElement>('.cup-map'),svg=host.querySelector<SVGSVGElement>('.cup-connectors');if(!map||!svg)return;const rect=svg.getBoundingClientRect(),style=getComputedStyle(svg),width=parseFloat(style.width),height=parseFloat(style.height);if(!width||!height||!rect.width||!rect.height)return;const sx=rect.width/width,sy=rect.height/height,paths:string[]=[];const local=(b:DOMRect):CupBox=>({left:(b.left-rect.left)/sx,right:(b.right-rect.left)/sx,top:(b.top-rect.top)/sy,height:b.height/sy});
- for(let r=0;r<Math.log2(model.entries.length);r++)for(let index=0;index<model.entries.length/2**(r+1);index++){const match=model.rounds[r]?.[index],winnerTarget=match?.winner?Array.from(map.querySelectorAll<HTMLElement>('[data-r="'+(r+1)+'"][data-entry]')).find(row=>row.dataset.entry===match.winner):undefined,target=winnerTarget??map.querySelector<HTMLElement>('[data-r="'+(r+1)+'"][data-m="'+Math.floor(index/2)+'"][data-slot="'+index%2+'"]');if(!target)continue;const to=local(target.getBoundingClientRect());
-  for(const slot of[0,1]){const row=map.querySelector<HTMLElement>('[data-r="'+r+'"][data-m="'+index+'"][data-slot="'+slot+'"]');if(!row)continue;const key=slot===0?match?.a:match?.b,state:CupLinkState=match?.winner?(match.winner===key?'win':'loss'):'pending',link=cupConnector(local(row.getBoundingClientRect()),to,state);paths.push('<path data-source="'+r+'/'+index+'/'+slot+'" data-target="'+(state==='loss'?'out':target.dataset.r+'/'+target.dataset.m+'/'+target.dataset.slot)+'" class="cup-path '+state+'" d="'+link.d+'"'+(link.arrow?' marker-end="url(#cup-'+state+'-arrow)"':'')+'/>'+(link.out?'<g class="cup-out-mark" transform="translate('+link.out.x+' '+link.out.y+')"><circle r="6"/><path d="M -2.6 -2.6 L 2.6 2.6 M 2.6 -2.6 L -2.6 2.6"/></g>':''));}
+export function drawCupConnections(host:HTMLElement,model:CupModel){
+ const map=host.querySelector<HTMLElement>('.cup-map'),svg=host.querySelector<SVGSVGElement>('.cup-connectors');if(!map||!svg)return;
+ const rect=svg.getBoundingClientRect(),style=getComputedStyle(svg),width=parseFloat(style.width),height=parseFloat(style.height);if(!width||!height||!rect.width||!rect.height)return;
+ const sx=rect.width/width,sy=rect.height/height,paths:string[]=[],local=(b:DOMRect):CupBox=>({left:(b.left-rect.left)/sx,right:(b.right-rect.left)/sx,top:(b.top-rect.top)/sy,height:b.height/sy});
+ for(let r=0;r<cupRoundNames(model.entries.length).length;r++)for(let index=0;index<model.bracketSize/2**(r+1);index++){
+  const match=model.rounds[r]?.[index],winnerTarget=match?.winner?Array.from(map.querySelectorAll<HTMLElement>('[data-r="'+(r+1)+'"][data-entry]')).find(row=>row.dataset.entry===match.winner):undefined,target=winnerTarget??map.querySelector<HTMLElement>('[data-r="'+(r+1)+'"][data-m="'+Math.floor(index/2)+'"][data-slot="'+index%2+'"]');if(!target)continue;
+  const to=local(target.getBoundingClientRect());
+  for(const slot of[0,1]){
+   const key=slot===0?match?.a:match?.b;if(!key)continue;
+   const row=map.querySelector<HTMLElement>('[data-r="'+r+'"][data-m="'+index+'"][data-slot="'+slot+'"]');if(!row)continue;
+   const state:CupLinkState=match?.winner?(match.winner===key?'win':'loss'):'pending',link=cupConnector(local(row.getBoundingClientRect()),to,state);
+   paths.push('<path data-source="'+r+'/'+index+'/'+slot+'" data-target="'+(state==='loss'?'out':target.dataset.r+'/'+target.dataset.m+'/'+target.dataset.slot)+'" class="cup-path '+state+'" d="'+link.d+'"'+(link.arrow?' marker-end="url(#cup-'+state+'-arrow)"':'')+'/>'+(link.out?'<g class="cup-out-mark" transform="translate('+link.out.x+' '+link.out.y+')"><circle r="6"/><path d="M -2.6 -2.6 L 2.6 2.6 M 2.6 -2.6 L -2.6 2.6"/></g>':''));
+  }
  }
- const content='<defs>'+[['win','#65e7b4'],['loss','#ff7189'],['pending','#50778b']].map(([key,color])=>'<marker id="cup-'+key+'-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="'+color+'" stroke-width="2"/></marker>').join('')+'</defs>'+paths.join('');const signature=width+'/'+height+'/'+content;if(svg.dataset.layout!==signature){svg.dataset.layout=signature;svg.setAttribute('viewBox','0 0 '+width+' '+height);svg.innerHTML=content;}
+ const content='<defs>'+[['win','#65e7b4'],['loss','#ff7189'],['pending','#50778b']].map(([key,color])=>'<marker id="cup-'+key+'-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="'+color+'" stroke-width="2"/></marker>').join('')+'</defs>'+paths.join('');
+ const signature=width+'/'+height+'/'+content;if(svg.dataset.layout!==signature){svg.dataset.layout=signature;svg.setAttribute('viewBox','0 0 '+width+' '+height);svg.innerHTML=content;}
 }
-export function compactCup(model:CupModel){const records=cupRecords(model);return '<div class="cup-compact-rounds">'+model.rounds.map((round,r)=>'<section><h3>'+(model.entries.length===2?'Duel':cupRoundNames(model.entries.length)[r])+'</h3>'+round.map(match=>'<div class="cup-compact-match">'+[match.a,match.b].map(key=>{const e=model.entries.find(v=>v.key===key),rec=records.get(key),state=match.winner?(match.winner===key?'won':'lost'):'pending';return '<div class="'+state+(e?.player?' is-player':'')+'"><img src="'+(e?cupPortrait(e.config):'')+'" alt="" width="40" height="30"><span>'+cupEscape(e?.name)+'</span>'+recordMarkup(rec?.wins??0,rec?.losses??0)+'</div>';}).join('')+'</div>').join('')+'</section>').join('')+'</div>';}
+export function compactCup(model:CupModel){
+ const records=cupRecords(model);
+ return '<div class="cup-compact-rounds">'+model.rounds.map((round,r)=>'<section><h3>'+(model.entries.length===2?'Duel':cupRoundNames(model.entries.length)[r])+'</h3>'+round.map(match=>'<div class="cup-compact-match">'+[match.a,match.b].filter((key):key is string=>!!key).map(key=>{const e=model.entries.find(v=>v.key===key),rec=records.get(key),state=match.winner?(match.winner===key?'won':'lost'):'pending';return '<div class="'+state+(e?.player?' is-player':'')+'"><img src="'+(e?cupPortrait(e.config):'')+'" alt="" width="40" height="30"><span>'+cupEscape(e?.name)+'</span>'+recordMarkup(rec?.wins??0,rec?.losses??0,model.trackDamage?(rec?.damageDealt??0):undefined)+'</div>';}).join('')+(!match.b?'<small class="cup-compact-bye">BYE · AUTO-ADVANCE</small>':'')+'</div>').join('')+'</section>').join('')+'</div>';
+}
 
 const cupLayouts=new WeakMap<HTMLElement,{map:HTMLElement,model:CupModel,observer:ResizeObserver,frame:number,life:number,refresh:()=>void}>();
 function watchCupLayout(host:HTMLElement,model:CupModel){
- const map=host.querySelector<HTMLElement>('.cup-map');if(!map)return;const previous=cupLayouts.get(host);if(previous?.map===map){previous.model=model;return;}if(previous){previous.observer.disconnect();cancelAnimationFrame(previous.frame);cancelAnimationFrame(previous.life);window.removeEventListener('resize',previous.refresh);}
+ const map=host.querySelector<HTMLElement>('.cup-map');if(!map)return;
+ const previous=cupLayouts.get(host);if(previous?.map===map){previous.model=model;return;}
+ if(previous){previous.observer.disconnect();cancelAnimationFrame(previous.frame);cancelAnimationFrame(previous.life);window.removeEventListener('resize',previous.refresh);}
  const state={map,model,observer:undefined as unknown as ResizeObserver,frame:0,life:0,refresh:()=>{if(host.isConnected&&cupLayouts.get(host)===state&&map.isConnected)drawCupConnections(host,state.model);}};
  state.observer=new ResizeObserver(state.refresh);state.observer.observe(map);map.querySelectorAll('.cup-entry,.cup-crown').forEach(row=>state.observer.observe(row));window.addEventListener('resize',state.refresh);
  const alive=()=>{if(!host.isConnected||cupLayouts.get(host)!==state||!map.isConnected){state.observer.disconnect();window.removeEventListener('resize',state.refresh);cancelAnimationFrame(state.frame);if(cupLayouts.get(host)===state)cupLayouts.delete(host);return;}state.life=requestAnimationFrame(alive);};state.life=requestAnimationFrame(alive);document.fonts?.ready.then(state.refresh);cupLayouts.set(host,state);state.refresh();

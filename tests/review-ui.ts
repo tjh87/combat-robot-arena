@@ -122,7 +122,7 @@ await test('Practice reset, share/import, result, and tournament menu flows rema
  f.$('#test-build').click();await Promise.resolve();assert.equal(f.api.refs.state,'practice');const old=f.api.refs.sim;
  f.$('#practice-reset').click();await Promise.resolve();assert(f.api.refs.sim!==old,'Reset must create a fresh simulation');assert.equal(f.api.refs.sim.tick,0);
  f.api.refs.sim.finish('Fixture result',0);f.api.showResult();assert.equal(f.api.refs.state,'result');
- f.api.showMenu();f.$('[data-nav="bracket"]').click();assert(f.$('#start-tournament'));f.$('#start-tournament').click();
+ f.api.showMenu();f.$('[data-nav="bracket"]').click();assert(f.$('#start-tournament'));assert(f.$('[data-tournament-opponents="10"]'),'The selector exposes ten AI opponents.');f.$('#start-tournament').click();
  assert.equal(f.api.refs.tournament.entries.length,8);assert(f.$('#bracket-next'));return{flows:6};
 });
 await test('Agent menu actions cannot replace a competitive match through Settings',async f=>{
