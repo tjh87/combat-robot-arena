@@ -25,7 +25,9 @@
     "test:performance": "node --import tsx tests/performance.ts",
     "online:build": "node scripts/online-build.mjs",
     "online:test": "node --import tsx tests/online-core.ts",
-    "online:serve": "node --import tsx server/local.ts"
+    "online:serve": "node --import tsx server/local.ts",
+    "test:brawl": "node --import tsx tests/brawl-mode.ts",
+    "test:brawl-browser": "node tests/brawl-browser.mjs"
   },
   "dependencies": {
     "@dimforge/rapier3d-compat": "0.19.0",

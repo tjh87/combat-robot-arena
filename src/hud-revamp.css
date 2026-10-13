@@ -271,3 +271,24 @@
  #hud .player-panel .hud-start-rpm strong{font:800 11px/1 var(--font-mono)!important;letter-spacing:-.04em!important}
  #hud .player-panel .hud-start-rpm small{font:800 6px/1 var(--font-mono)!important;letter-spacing:0!important}
 }
+
+/* Brawl replaces the rival's full-width player card with a compact live roster. */
+#hud[data-mode="brawl"] .hud-top{grid-template-columns:minmax(210px,1fr) auto minmax(230px,1.15fr)!important;gap:12px!important;align-items:start}
+#hud[data-mode="brawl"] .player-panel{width:min(30vw,390px)!important;min-width:0!important;max-width:min(30vw,390px)!important}
+#brawl-opponents{display:grid;grid-template-columns:repeat(2,minmax(110px,1fr));gap:6px;width:min(38vw,440px);align-self:start}
+.brawl-hud-card{min-width:0;padding:6px 8px;border:1px solid color-mix(in srgb,var(--brawl-accent) 70%,transparent);border-radius:6px;background:#101820d9;color:#eaf4f7;box-shadow:0 2px 8px #0006}
+.brawl-hud-heading,.brawl-hud-foot{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.brawl-hud-heading strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 11px/1.2 var(--hud-head);color:var(--brawl-accent)}
+.brawl-hud-heading span,.brawl-hud-foot{font:600 9px/1.2 var(--font-mono);color:#c3d0d6}
+.brawl-hp-track{height:6px;margin:4px 0 3px;overflow:hidden;border-radius:4px;background:#28343c}
+.brawl-hp-track i{display:block;height:100%;background:var(--brawl-accent);transition:width .12s linear}
+.brawl-hud-foot span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.brawl-hud-card.eliminated{opacity:.57;border-style:dashed}.brawl-hud-card.eliminated .brawl-hp-track i{background:#879199}
+.brawl-results{margin:12px 0;padding:10px;border:1px solid #4a5e67;border-radius:8px;background:#0b1218aa}
+.brawl-result-heading,.brawl-result-row{display:grid;grid-template-columns:minmax(130px,1.7fr) minmax(90px,.9fr) minmax(90px,.8fr) minmax(120px,1fr);align-items:center;gap:8px}
+.brawl-result-heading{padding:4px 8px 7px;color:#96aab4;font:700 9px/1.2 var(--font-mono);letter-spacing:.09em}
+.brawl-result-row{padding:7px 8px;border-top:1px solid #ffffff16;font:600 12px/1.25 var(--font-mono);color:#dce8ed}
+.brawl-result-row.winner{background:linear-gradient(90deg,#b47aea20,transparent);box-shadow:inset 2px 0 var(--brawl-accent)}
+.brawl-result-machine{display:flex;align-items:center;gap:8px;min-width:0}.brawl-result-machine>b{color:var(--brawl-accent);font-size:15px}.brawl-result-machine strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#f1f7f9}.brawl-result-machine small,.brawl-damage-value small,.brawl-points small{font-size:9px;color:#98acb5;white-space:nowrap}
+.brawl-damage-value{color:#ffd28b}.brawl-points{color:#7ce3d7}.brawl-result-status{font-size:10px;letter-spacing:.04em;color:#afc1c9}.brawl-result-row.winner .brawl-result-status{color:#f3d39d}.brawl-rules-note{margin:8px 0 0;font-size:10px;line-height:1.4;color:#9cafb8}.brawl-evidence .scroll-table{max-width:100%;overflow:auto}
+@media(max-width:760px){#hud[data-mode="brawl"] .hud-top{grid-template-columns:minmax(0,1fr) auto minmax(0,1.12fr)!important;gap:4px!important}#hud[data-mode="brawl"] .player-panel{width:100%!important;min-width:0!important;max-width:38vw!important;grid-template-columns:32px minmax(0,1fr) 42px!important;padding:5px!important}#brawl-opponents{width:42vw;gap:3px}.brawl-hud-card{padding:3px 4px}.brawl-hud-heading strong{font-size:8px}.brawl-hud-heading span,.brawl-hud-foot{font-size:7px}.brawl-hp-track{height:4px;margin:2px 0}.brawl-result-heading,.brawl-result-row{grid-template-columns:minmax(100px,1.4fr) minmax(68px,.85fr) minmax(60px,.65fr) minmax(94px,.9fr);gap:5px}.brawl-result-heading{font-size:8px}.brawl-result-row{padding:6px 4px;font-size:9px}.brawl-result-machine{gap:4px}.brawl-result-machine>b{font-size:12px}.brawl-result-status{font-size:8px}.brawl-rules-note{font-size:9px}}

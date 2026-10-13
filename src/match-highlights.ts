@@ -2,7 +2,8 @@ import type {ImpactEvent,Travel} from './sim';
 export type RobotHighlights={furthestTravel:number,maxHeight:number,hardestHit:number,hardestReceived:number};
 // These maxima live for the whole match, independently of capped replay logs.
 export class MatchHighlights{
- robots:RobotHighlights[]=[{furthestTravel:0,maxHeight:0,hardestHit:0,hardestReceived:0},{furthestTravel:0,maxHeight:0,hardestHit:0,hardestReceived:0}];
+ robots:RobotHighlights[];
+ constructor(count=2){this.robots=Array.from({length:count},()=>({furthestTravel:0,maxHeight:0,hardestHit:0,hardestReceived:0}));}
  hit(event:ImpactEvent){
   if(event.attacker===null||event.target===null||event.attacker===event.target||!['weapon','ram','crush'].includes(event.cause))return;
   const stats=this.robots[event.attacker];

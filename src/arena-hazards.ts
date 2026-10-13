@@ -1,5 +1,6 @@
 import RAPIER from '@dimforge/rapier3d-compat';
 import {RULES,v,add,mul,sub,cross,dot,length,horizontal,rotate,axisQ,clamp,identity,type Vec,type Quat} from './model';
+import {HAZARD_GROUP,robotGroupMask} from './collision-groups';
 
 // The 50 lb head is user specified. Speeds, motor power and timing are game
 // settings. Shared geometry dimensions keep visible and physical surfaces aligned.
@@ -9,14 +10,14 @@ export const ARENA_HAZARDS={headKg:50*.45359237,armKg:3,armLength:1.18,hammerJ:3
  jamSeconds:1.25,reverseSeconds:1.8} as const;
 export type Hazard={id:number,name:string,kind:'hammer'|'blade'|'auger',body:RAPIER.RigidBody,anchor:RAPIER.RigidBody,axis:Vec,baseRotation:Quat,base:Vec,phase:'idle'|'warning'|'active'|'return',cycle:number,budget:number,spent:number,stroke:number,direction:number,reverseUntil:number,jamTicks:number,jamBot?:number,jamOrigin?:Vec,jamContactTick?:number,deck:boolean};
 type Register=(col:RAPIER.Collider,id:number)=>void;
-export function createHazards(world:RAPIER.World,register:Register){
+export function createHazards(world:RAPIER.World,register:Register,robotCount=2){
  const result:Hazard[]=[],C=ARENA_HAZARDS;
  const create=(kind:Hazard['kind'],base:Vec,name:string,direction=1,deck=false,baseRotation:Quat=identity)=>{
   const id=result.length,anchor=world.createRigidBody((kind==='blade'?RAPIER.RigidBodyDesc.kinematicPositionBased():RAPIER.RigidBodyDesc.fixed()).setTranslation(base.x,base.y,base.z).setRotation(baseRotation));
   const body=world.createRigidBody(RAPIER.RigidBodyDesc.dynamic().setTranslation(base.x,base.y,base.z).setRotation(baseRotation).setGravityScale(0).setCcdEnabled(true).setCanSleep(false));
   const joint=world.createImpulseJoint(RAPIER.JointData.revolute(v(),v(),v(1,0,0)),anchor,body,true) as RAPIER.RevoluteImpulseJoint;
   joint.setContactsEnabled(false);if(kind==='hammer')joint.setLimits(0,Math.PI/2);
-  const collider=(desc:RAPIER.ColliderDesc)=>{const col=world.createCollider(desc.setCollisionGroups((16<<16)|6).setFriction(kind==='auger'?1.3:.7).setRestitution(.02),body);register(col,id);};
+  const collider=(desc:RAPIER.ColliderDesc)=>{const col=world.createCollider(desc.setCollisionGroups((HAZARD_GROUP<<16)|robotGroupMask(robotCount)).setFriction(kind==='auger'?1.3:.7).setRestitution(.02),body);register(col,id);};
   if(kind==='hammer'){
    collider(RAPIER.ColliderDesc.cuboid(.21,.14,.16).setTranslation(0,C.armLength,0).setMass(C.headKg));
    collider(RAPIER.ColliderDesc.cuboid(.035,C.armLength/2,.045).setTranslation(0,C.armLength/2,0).setMass(C.armKg));

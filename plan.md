@@ -184,3 +184,19 @@ User requested removal of the first three seconds from Deep Six clip 05 and impl
 - Extend only the local Foundry Cup opponent selector to 1, 3, 7, or 10 distinct AI opponents (seven remains the default); online room capacity and its protocol remain unchanged.
 - For 10 opponents, seed the 11 total entrants into a 16-slot elimination bracket: five top seeds receive explicit opening-round byes, the remaining six entrants play three preliminary bouts, then the eight qualifiers proceed through quarterfinals, semifinals, and final. Display all four stages and keep byes distinct from match wins/losses.
 - Accumulate actual HP lost by the opposing robot as damage dealt for each real player bout and background AI bout, including worker and synchronous simulation paths. Display cumulative damage in HP beside each entrant’s W/L record; exclude carry-over HP damage, automatic byes, and quick-resolved fixtures from match damage.
+
+
+## Brawl mode — free-for-all
+
+- Add a separate **Brawl** mode alongside VS Computer and Local 2P; the player selects 1–4 simultaneous AI opponents. Default to three opponents, with the count immediately adjustable in the menu. Keep Online and tournament formats unchanged.
+- Reuse the regular match setup, countdown, fixed-step simulation, controls, hazards, 180-second clock, recovery, damage, ring-out, structural-KO, foul, count-out, and 5/3/3 judging rules. Only the match topology changes.
+- Represent the roster as a variable-length participant list. The player controls entrant 0; each AI targets its nearest non-eliminated rival, so AI robots can engage one another. A robot that is eliminated stops driving/using its weapon; the match ends when one entrant remains, or when the clock expires and the 5/3/3 score totals decide the winner.
+- Preserve the duel collision groups and hazard group; allocate non-overlapping extra robot groups for participants 3–5 and add them to arena/hazard masks. Keep visual frames, hit attribution, damage accounting, replay, and arena framing indexed by participant ID.
+- Keep the player's existing detailed HUD panel. Replace the opposing-player card and duel-only indicator with compact, live HP/status cards for each AI. Use a centered, spread-aware camera for 3–5 participants. In the result modal, show ranked standings, per-robot HP damage dealt, judge points and elimination/winner status; make judging and module evidence columns participant-aware.
+- Brawl is local-only in this change; no online room or tournament protocol behavior is altered.
+
+### Brawl completion evidence
+
+Brawl is implemented for 1–4 AI opponents, including the one-opponent free-for-all lifecycle. Whole-match per-attacker/module HP-loss totals use a bounded participant ledger rather than capped replay events. Multi-robot hit/travel highlights and P3–P5 replay damage/rotor visuals are handled by participant ID. Scoped mobile styles reserve the clock column and keep results and actions within landscape bounds.
+
+TypeScript, the focused Brawl simulation/replay regression, visual regressions, tournament field/count-out checks, production build and offline verification pass. A real Chromium WebGL launch rendered all five robots and four live opponent cards without errors from the current bundle. The repeatable browser fixture exercises every opponent count on desktop (1280×720), Android landscape (844×390) and small Android landscape (640×360), including menu selection, distinct robots, HUD, clock separation, touch controls, results, rematch and the unchanged standard duel path; WebGL is stubbed only in that deterministic layout fixture. Online core tests passed against local Redis database 15. The broader review/roster suites retain their previously recorded unrelated geometry and mock-renderer failures; no full-suite-clean or real-device GPU-performance claim is made. Changes are committed locally only; no push or publication is authorized.

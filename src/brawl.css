@@ -1,0 +1,18 @@
+/* Dedicated Brawl adjustments preserve the usual two-player HUD. */
+#hud[data-mode="brawl"] .player-panel{grid-template-columns:64px minmax(0,1fr) 80px!important}
+#hud[data-mode="brawl"] .player-title{font-size:20px!important;letter-spacing:.02em!important}
+#hud[data-mode="brawl"] .player-portrait{width:64px!important;height:46px!important}
+#hud[data-mode="brawl"] .hud-start-rpm .rpm-silhouette{max-width:80px}
+html.touch-playing #hud[data-mode="brawl"] .hud-top{grid-template-columns:minmax(0,1fr) 112px minmax(0,1fr)!important;gap:6px!important}
+html.touch-playing #hud[data-mode="brawl"] .player-panel,html.touch-playing #hud[data-mode="brawl"] .player-panel.pre-fight{width:100%!important;max-width:100%!important;grid-template-columns:32px minmax(0,1fr) 44px!important;padding:5px!important;column-gap:4px!important}
+html.touch-playing #hud[data-mode="brawl"] .player-title{font-size:12px!important;letter-spacing:.02em!important}
+html.touch-playing #hud[data-mode="brawl"] .player-portrait{width:32px!important;height:24px!important}
+html.touch-playing #hud[data-mode="brawl"] .timer{width:112px!important;min-width:0!important;padding:6px!important;box-sizing:border-box}
+html.touch-playing #hud[data-mode="brawl"] .timer .digits{font-size:40px!important;letter-spacing:0!important;white-space:nowrap}
+html.touch-playing #hud[data-mode="brawl"] #brawl-opponents{width:100%!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+html.touch-device .brawl-result-heading,html.touch-device .brawl-result-row{grid-template-columns:minmax(0,1.4fr) minmax(0,.85fr) minmax(0,.65fr) minmax(0,.9fr);gap:5px}
+html.touch-device .brawl-result-heading{font-size:8px;letter-spacing:0}
+html.touch-device .brawl-result-row{font-size:10px;padding:5px 4px}
+html.touch-device .brawl-result-machine{gap:4px}
+html.touch-device .brawl-result-machine>b{font-size:12px}
+html.touch-device .brawl-result-status{font-size:8px;overflow-wrap:anywhere}
