@@ -229,3 +229,8 @@ Vendored physics-tuning, game-feel, game-ai and ai-behavior-trees-utility-ai wit
 - Begin the countdown with the existing full-arena Brawl overview and retain the close, fixed, player-anchored combat framing. The existing wall-visibility hysteresis keeps the near arena side from repeatedly flashing.
 - Profile-driven CPU-only changes reuse pre-step per-body state records rather than clearing/reallocating the map each tick, and replace per-body array/callback finite checks with explicit component checks. Preserve the 240 Hz timestep, Rapier contact/solver behavior, forces, AI decision cadence, collision outcomes, damage, and usual match rules.
 - Latest diagnostic: Node 22, seeded stock robots, Medium AI, hazards and visual-frame recording, 120 warm-up plus 840 measured steps at 1–4 AI. P95 step times: 5.54 / 11.62 / 17.65 / 16.04 ms; the 4.17 ms budget was exceeded in 121/840 samples at one AI and 840/840 samples at 2–4 AI; no physics faults. The safe allocations were reduced, but the multi-AI lag is not claimed fixed. Device-level browser/GPU timing remains unmeasured; any further optimization must be profiled and must preserve the game rules.
+
+
+### Match-opening film treatment
+
+During the match introduction/countdown only, apply a restrained static grain texture, a soft edge vignette and a very small contrast/saturation lift to the arena canvas. Keep the HUD and text unaffected, use no animated grain or flashes, and remove the class as soon as active fighting starts. This is presentation-only: physics, network timing, controls, exposure outside the intro and camera behavior remain unchanged. The browser regression verifies visibility during the intro and removal at fight start.

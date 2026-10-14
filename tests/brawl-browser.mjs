@@ -4,7 +4,7 @@ import {build} from 'esbuild';
 
 // Run real menu, simulator, results and production CSS; stub WebGL only for deterministic layout.
 const exposed=`globalThis.__brawlFixture={
- get ready(){return ready},get count(){return sim?.bots.length},get ffa(){return sim?.options.freeForAll},
+ get ready(){return ready},get count(){return sim?.bots.length},get ffa(){return sim?.options.freeForAll}, openingFilm(){const prior=state;setState('introduction');const scene=document.querySelector('#scene'),canvas=scene.querySelector('canvas'),grain=getComputedStyle(scene,'::after'),vignette=getComputedStyle(scene,'::before'),active=scene.classList.contains('opening-film'),result={active,grain:grain.backgroundImage.includes('data:image/svg+xml'),grainOpacity:grain.opacity,vignette:vignette.backgroundImage.includes('radial-gradient'),canvasFilter:getComputedStyle(canvas).filter};setState(prior);result.removed=!scene.classList.contains('opening-film')&&getComputedStyle(canvas).filter==='none';return result},
  get names(){return sim.bots.map(b=>b.compiled.config.identity.name)},
  randomDraws(){const original=Math.random;try{Math.random=()=>0;const first=brawlConfigs().slice(1).map(c=>c.identity.name);Math.random=()=>.9;const second=brawlConfigs().slice(1).map(c=>c.identity.name);return{first,second,player:build.identity.name}}finally{Math.random=original}},
  zeroHp(id=1){sim.bots[id].modules.chassis.hp=0;updateBrawlCard(sim.bots[id]);const card=document.querySelector('[data-brawl-card="'+id+'"]');return{zero:card.dataset.zeroHp,status:card.querySelector('[data-brawl-status]').textContent,health:card.querySelector('[data-brawl-health]').textContent}},
@@ -16,12 +16,12 @@ const exposed=`globalThis.__brawlFixture={
 const bundle=await build({entryPoints:['src/main.ts'],bundle:true,format:'iife',write:false,loader:{'.css':'empty'},plugins:[{name:'brawl-layout',setup(builder){
  builder.onLoad({filter:/src\/main\.ts$/},args=>({contents:readFileSync(args.path,'utf8')+exposed,loader:'ts',resolveDir:process.cwd()+'/src'}));
  builder.onResolve({filter:/^\.\/render$/},()=>({path:'layout-renderer',namespace:'fixture'}));
- builder.onLoad({filter:/layout-renderer/,namespace:'fixture'},()=>({contents:`export class ArenaRenderer{constructor(){this.quality='low';this.triangleCount=0;this.drawCalls=0;this.renderMs=0}attach(sim){this.sim=sim}setQuality(){}setAdaptive(){}showBuilder(){}startReplay(){}endReplay(){}replayFrame(){}update(){}draw(){}dispose(){}opponentIndicator(){return{visible:false}}projectCombatPoint(){return{visible:false}}robotWarningPosition(sim,id){const x=innerWidth*(.13+.74*(id/Math.max(1,sim.bots.length-1))),y=innerHeight*(.42+(id%2)*.16);return{x:x/innerWidth*100,y:y/innerHeight*100,visible:true,bounds:{left:x-42,top:y-34,right:x+42,bottom:y+34}}}}`}));
+ builder.onLoad({filter:/layout-renderer/,namespace:'fixture'},()=>({contents:`export class ArenaRenderer{constructor(container){this.container=container;this.canvas=document.createElement('canvas');container.appendChild(this.canvas);this.quality='low';this.triangleCount=0;this.drawCalls=0;this.renderMs=0}attach(sim){this.sim=sim}setQuality(){}setAdaptive(){}showBuilder(){}startReplay(){}endReplay(){}replayFrame(){}update(){}draw(){}dispose(){}opponentIndicator(){return{visible:false}}projectCombatPoint(){return{visible:false}}robotWarningPosition(sim,id){const x=innerWidth*(.13+.74*(id/Math.max(1,sim.bots.length-1))),y=innerHeight*(.42+(id%2)*.16);return{x:x/innerWidth*100,y:y/innerHeight*100,visible:true,bounds:{left:x-42,top:y-34,right:x+42,bottom:y+34}}}}`}));
 }}]});
 const origin=process.env.CRA_PREVIEW_URL??'http://127.0.0.1:4173/';
 const html=await(await fetch(origin)).text();
 const css=[...html.matchAll(/href="([^\"]+\.css)"/g)].map(m=>new URL(m[1],origin).href);
-assert(css.length);
+if(!css.length){const main=await(await fetch(new URL('/src/main.ts',origin))).text();for(const match of main.matchAll(/import\s+["']([^"']+\.css(?:\?[^"']*)?)["']/g))css.push(new URL(match[1],origin).href);}assert(css.length);
 const page=(await(await fetch('http://127.0.0.1:9224/json/list')).json()).find(p=>p.type==='page');
 const socket=new WebSocket(page.webSocketDebuggerUrl);
 await new Promise((resolve,reject)=>{socket.addEventListener('open',resolve,{once:true});socket.addEventListener('error',reject,{once:true})});
@@ -42,6 +42,7 @@ try{
   await wait('document.styleSheets.length>0','CSS');
   await evaluate(bundle.outputFiles[0].text);
   await wait('window.__brawlFixture?.ready','physics/menu');
+  const film=await evaluate('__brawlFixture.openingFilm()');assert(film.active&&film.grain&&film.vignette&&film.canvasFilter!=='none'&&film.removed,'Match-intro grain/vignette is static, visible, and removed before combat');assert(Number(film.grainOpacity)<=.08,'Opening grain remains subtle');
   for(const n of [1,2,3,4]){
    await evaluate(`document.querySelector('[data-mode="brawl"]').click();document.querySelector('[data-brawl-count="${n}"]').click();document.querySelector('#start').click()`);
    await wait(`__brawlFixture.count===${n+1}&&document.querySelectorAll('[data-brawl-card]').length===${n}`,'Brawl field');
