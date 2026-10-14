@@ -1,0 +1,5 @@
+scenario,frames,buffer_min_ms,buffer_mean_ms,buffer_p50_ms,buffer_p95_ms,buffer_max_ms,buffer_final_ms,jitter_mean_ms,jitter_p95_ms,jitter_max_ms,jitter_final_ms,recovery_ms
+"Stable 30 Hz delivery","240","42","42","42","42","42","42","0","0","0","0",""
+"Low consumer jitter","240","42","54.7","55","56","56","55","4.23","4.65","4.65","4.21",""
+"Moderate jitter burst","240","42","53.99","42","72","117","42","3.99","9.86","25.05","0","666.7"
+"Severe ordered stall","240","42","61.49","43","88","140","42","6.67","15.34","42.67","0","833.3"

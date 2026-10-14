@@ -1,0 +1,6843 @@
+{
+  "generatedAt": "2026-10-08T00:48:57.845Z",
+  "methodology": {
+    "source": "Deterministic simulation against the production SnapshotTiming implementation. Synthetic arrival patterns are controlled test inputs, not measured internet latency.",
+    "snapshotRateHz": 30,
+    "framesPerScenario": 240,
+    "oldFixedBufferMs": 60,
+    "newFloorBufferMs": 42,
+    "maximumBufferMs": 140
+  },
+  "inputTransport": {
+    "binaryIdleBytes": 27,
+    "binaryActionBytes": 37,
+    "jsonIdleBytes": 105,
+    "jsonActionBytes": 164,
+    "idleReductionPct": 74.3,
+    "actionReductionPct": 77.4
+  },
+  "scenarios": [
+    {
+      "name": "Stable 30 Hz delivery",
+      "description": "Fixed 55 ms one-way model; no arrival variation.",
+      "frames": 240,
+      "snapshotRateHz": 30,
+      "baseOneWayModelMs": 55,
+      "buffer": {
+        "minimumMs": 42,
+        "meanMs": 42,
+        "p50Ms": 42,
+        "p95Ms": 42,
+        "maximumMs": 42,
+        "finalMs": 42
+      },
+      "jitter": {
+        "meanMs": 0,
+        "p95Ms": 0,
+        "maximumMs": 0,
+        "finalMs": 0
+      },
+      "recovery": null,
+      "samples": [
+        {
+          "frame": 0,
+          "serverTime": 0,
+          "arrivalTime": 55,
+          "bufferMs": 42,
+          "jitterMs": 0
+        },
+        {
+          "frame": 1,
+          "serverTime": 33.333,
+          "arrivalTime": 88.333,
+          "bufferMs": 42,
+          "jitterMs": 0
+        },
+        {
+          "frame": 2,
+          "serverTime": 66.667,
+          "arrivalTime": 121.667,
+          "bufferMs": 42,
+          "jitterMs": 0
+        },
+        {
+          "frame": 3,
+          "serverTime": 100,
+          "arrivalTime": 155,
+          "bufferMs": 42,
+          "jitterMs": 0
+        },
+        {
+          "frame": 4,
+          "serverTime": 133.333,
+          "arrivalTime": 188.333,
+          "bufferMs": 42,
+          "jitterMs": 0
+        },
+        {
+          "frame": 5,
+          "serverTime": 166.667,
+          "arrivalTime": 221.667,
+          "bufferMs": 42,
+          "jitterMs": 0
+        },
+        {
+          "frame": 6,
+          "serverTime": 200,
+          "arrivalTime": 255,
+          "bufferMs": 42,
+          "jitterMs": 0
+        },
+        {
+          "frame": 7,
+          "serverTime": 233.333,
+          "arrivalTime": 288.333,
+          "bufferMs": 42,
+          "jitterMs": 5.115907697472721e-15
+        },
+        {
+          "frame": 8,
+          "serverTime": 266.667,
+          "arrivalTime": 321.667,
+          "bufferMs": 42,
+          "jitterMs": 9.310952009400353e-15
+        },
+        {
+          "frame": 9,
+          "serverTime": 300,
+          "arrivalTime": 355,
+          "bufferMs": 42,
+          "jitterMs": 7.634980647708289e-15
+        },
+        {
+          "frame": 10,
+          "serverTime": 333.333,
+          "arrivalTime": 388.333,
+          "bufferMs": 42,
+          "jitterMs": 6.260684131120796e-15
+        },
+        {
+          "frame": 11,
+          "serverTime": 366.667,
+          "arrivalTime": 421.667,
+          "bufferMs": 42,
+          "jitterMs": 5.133760987519053e-15
+        },
+        {
+          "frame": 12,
+          "serverTime": 400,
+          "arrivalTime": 455,
+          "bufferMs": 42,
+          "jitterMs": 4.209684009765623e-15
+        },
+        {
+          "frame": 13,
+          "serverTime": 433.333,
+          "arrivalTime": 488.333,
+          "bufferMs": 42,
+          "jitterMs": 3.451940888007811e-15
+        },
+        {
+          "frame": 14,
+          "serverTime": 466.667,
+          "arrivalTime": 521.667,
+          "bufferMs": 42,
+          "jitterMs": 1.3062406923111847e-14
+        },
+        {
+          "frame": 15,
+          "serverTime": 500,
+          "arrivalTime": 555,
+          "bufferMs": 42,
+          "jitterMs": 2.0942989071897157e-14
+        },
+        {
+          "frame": 16,
+          "serverTime": 533.333,
+          "arrivalTime": 588.333,
+          "bufferMs": 42,
+          "jitterMs": 1.7173251038955667e-14
+        },
+        {
+          "frame": 17,
+          "serverTime": 566.667,
+          "arrivalTime": 621.667,
+          "bufferMs": 42,
+          "jitterMs": 1.4082065851943646e-14
+        },
+        {
+          "frame": 18,
+          "serverTime": 600,
+          "arrivalTime": 655,
+          "bufferMs": 42,
+          "jitterMs": 1.1547293998593789e-14
+        },
+        {
+          "frame": 19,
+          "serverTime": 633.333,
+          "arrivalTime": 688.333,
+          "bufferMs": 42,
+          "jitterMs": 9.468781078846906e-15
+        },
+        {
+          "frame": 20,
+          "serverTime": 666.667,
+          "arrivalTime": 721.667,
+          "bufferMs": 42,
+          "jitterMs": 7.764400484654462e-15
+        },
+        {
+          "frame": 21,
+          "serverTime": 700,
+          "arrivalTime": 755,
+          "bufferMs": 42,
+          "jitterMs": 6.366808397416658e-15
+        },
+        {
+          "frame": 22,
+          "serverTime": 733.333,
+          "arrivalTime": 788.333,
+          "bufferMs": 42,
+          "jitterMs": 5.220782885881659e-15
+        },
+        {
+          "frame": 23,
+          "serverTime": 766.667,
+          "arrivalTime": 821.667,
+          "bufferMs": 42,
+          "jitterMs": 4.28104196642296e-15
+        },
+        {
+          "frame": 24,
+          "serverTime": 800,
+          "arrivalTime": 855,
+          "bufferMs": 42,
+          "jitterMs": 3.5104544124668273e-15
+        },
+        {
+          "frame": 25,
+          "serverTime": 833.333,
+          "arrivalTime": 888.333,
+          "bufferMs": 42,
+          "jitterMs": 2.8785726182227982e-15
+        },
+        {
+          "frame": 26,
+          "serverTime": 866.667,
+          "arrivalTime": 921.667,
+          "bufferMs": 42,
+          "jitterMs": 2.3604295469426943e-15
+        },
+        {
+          "frame": 27,
+          "serverTime": 900,
+          "arrivalTime": 955,
+          "bufferMs": 42,
+          "jitterMs": 1.935552228493009e-15
+        },
+        {
+          "frame": 28,
+          "serverTime": 933.333,
+          "arrivalTime": 988.333,
+          "bufferMs": 42,
+          "jitterMs": 1.5871528273642675e-15
+        },
+        {
+          "frame": 29,
+          "serverTime": 966.667,
+          "arrivalTime": 1021.667,
+          "bufferMs": 42,
+          "jitterMs": 1.3014653184386992e-15
+        },
+        {
+          "frame": 30,
+          "serverTime": 1000,
+          "arrivalTime": 1055,
+          "bufferMs": 42,
+          "jitterMs": 1.0672015611197332e-15
+        },
+        {
+          "frame": 31,
+          "serverTime": 1033.333,
+          "arrivalTime": 1088.333,
+          "bufferMs": 42,
+          "jitterMs": 8.751052801181812e-16
+        },
+        {
+          "frame": 32,
+          "serverTime": 1066.667,
+          "arrivalTime": 1121.667,
+          "bufferMs": 42,
+          "jitterMs": 7.175863296969086e-16
+        },
+        {
+          "frame": 33,
+          "serverTime": 1100,
+          "arrivalTime": 1155,
+          "bufferMs": 42,
+          "jitterMs": 5.88420790351465e-16
+        },
+        {
+          "frame": 34,
+          "serverTime": 1133.333,
+          "arrivalTime": 1188.333,
+          "bufferMs": 42,
+          "jitterMs": 4.825050480882012e-16
+        },
+        {
+          "frame": 35,
+          "serverTime": 1166.667,
+          "arrivalTime": 1221.667,
+          "bufferMs": 42,
+          "jitterMs": 3.95654139432325e-16
+        },
+        {
+          "frame": 36,
+          "serverTime": 1200,
+          "arrivalTime": 1255,
+          "bufferMs": 42,
+          "jitterMs": 3.244363943345065e-16
+        },
+        {
+          "frame": 37,
+          "serverTime": 1233.333,
+          "arrivalTime": 1288.333,
+          "bufferMs": 42,
+          "jitterMs": 2.660378433542953e-16
+        },
+        {
+          "frame": 38,
+          "serverTime": 1266.667,
+          "arrivalTime": 1321.667,
+          "bufferMs": 42,
+          "jitterMs": 2.1815103155052215e-16
+        },
+        {
+          "frame": 39,
+          "serverTime": 1300,
+          "arrivalTime": 1355,
+          "bufferMs": 42,
+          "jitterMs": 1.7888384587142815e-16
+        },
+        {
+          "frame": 40,
+          "serverTime": 1333.333,
+          "arrivalTime": 1388.333,
+          "bufferMs": 42,
+          "jitterMs": 1.4668475361457108e-16
+        },
+        {
+          "frame": 41,
+          "serverTime": 1366.667,
+          "arrivalTime": 1421.667,
+          "bufferMs": 42,
+          "jitterMs": 1.2028149796394828e-16
+        },
+        {
+          "frame": 42,
+          "serverTime": 1400,
+          "arrivalTime": 1455,
+          "bufferMs": 42,
+          "jitterMs": 9.863082833043758e-17
+        },
+        {
+          "frame": 43,
+          "serverTime": 1433.333,
+          "arrivalTime": 1488.333,
+          "bufferMs": 42,
+          "jitterMs": 8.087727923095881e-17
+        },
+        {
+          "frame": 44,
+          "serverTime": 1466.667,
+          "arrivalTime": 1521.667,
+          "bufferMs": 42,
+          "jitterMs": 6.631936896938622e-17
+        },
+        {
+          "frame": 45,
+          "serverTime": 1500,
+          "arrivalTime": 1555,
+          "bufferMs": 42,
+          "jitterMs": 5.43818825548967e-17
+        },
+        {
+          "frame": 46,
+          "serverTime": 1533.333,
+          "arrivalTime": 1588.333,
+          "bufferMs": 42,
+          "jitterMs": 4.4593143695015294e-17
+        },
+        {
+          "frame": 47,
+          "serverTime": 1566.667,
+          "arrivalTime": 1621.667,
+          "bufferMs": 42,
+          "jitterMs": 3.656637782991254e-17
+        },
+        {
+          "frame": 48,
+          "serverTime": 1600,
+          "arrivalTime": 1655,
+          "bufferMs": 42,
+          "jitterMs": 2.998442982052828e-17
+        },
+        {
+          "frame": 49,
+          "serverTime": 1633.333,
+          "arrivalTime": 1688.333,
+          "bufferMs": 42,
+          "jitterMs": 2.458723245283319e-17
+        },
+        {
+          "frame": 50,
+          "serverTime": 1666.667,
+          "arrivalTime": 1721.667,
+          "bufferMs": 42,
+          "jitterMs": 2.0161530611323216e-17
+        },
+        {
+          "frame": 51,
+          "serverTime": 1700,
+          "arrivalTime": 1755,
+          "bufferMs": 42,
+          "jitterMs": 1.6532455101285037e-17
+        },
+        {
+          "frame": 52,
+          "serverTime": 1733.333,
+          "arrivalTime": 1788.333,
+          "bufferMs": 42,
+          "jitterMs": 1.355661318305373e-17
+        },
+        {
+          "frame": 53,
+          "serverTime": 1766.667,
+          "arrivalTime": 1821.667,
+          "bufferMs": 42,
+          "jitterMs": 1.1116422810104058e-17
+        },
+        {
+          "frame": 54,
+          "serverTime": 1800,
+          "arrivalTime": 1855,
+          "bufferMs": 42,
+          "jitterMs": 9.115466704285327e-18
+        },
+        {
+          "frame": 55,
+          "serverTime": 1833.333,
+          "arrivalTime": 1888.333,
+          "bufferMs": 42,
+          "jitterMs": 7.474682697513968e-18
+        },
+        {
+          "frame": 56,
+          "serverTime": 1866.667,
+          "arrivalTime": 1921.667,
+          "bufferMs": 42,
+          "jitterMs": 6.129239811961453e-18
+        },
+        {
+          "frame": 57,
+          "serverTime": 1900,
+          "arrivalTime": 1955,
+          "bufferMs": 42,
+          "jitterMs": 5.025976645808391e-18
+        },
+        {
+          "frame": 58,
+          "serverTime": 1933.333,
+          "arrivalTime": 1988.333,
+          "bufferMs": 42,
+          "jitterMs": 4.12130084956288e-18
+        },
+        {
+          "frame": 59,
+          "serverTime": 1966.667,
+          "arrivalTime": 2021.667,
+          "bufferMs": 42,
+          "jitterMs": 3.3794666966415617e-18
+        },
+        {
+          "frame": 60,
+          "serverTime": 2000,
+          "arrivalTime": 2055,
+          "bufferMs": 42,
+          "jitterMs": 2.7711626912460805e-18
+        },
+        {
+          "frame": 61,
+          "serverTime": 2033.333,
+          "arrivalTime": 2088.333,
+          "bufferMs": 42,
+          "jitterMs": 2.272353406821786e-18
+        },
+        {
+          "frame": 62,
+          "serverTime": 2066.667,
+          "arrivalTime": 2121.667,
+          "bufferMs": 42,
+          "jitterMs": 1.8633297935938642e-18
+        },
+        {
+          "frame": 63,
+          "serverTime": 2100,
+          "arrivalTime": 2155,
+          "bufferMs": 42,
+          "jitterMs": 1.5279304307469686e-18
+        },
+        {
+          "frame": 64,
+          "serverTime": 2133.333,
+          "arrivalTime": 2188.333,
+          "bufferMs": 42,
+          "jitterMs": 1.252902953212514e-18
+        },
+        {
+          "frame": 65,
+          "serverTime": 2166.667,
+          "arrivalTime": 2221.667,
+          "bufferMs": 42,
+          "jitterMs": 1.0273804216342616e-18
+        },
+        {
+          "frame": 66,
+          "serverTime": 2200,
+          "arrivalTime": 2255,
+          "bufferMs": 42,
+          "jitterMs": 8.424519457400945e-19
+        },
+        {
+          "frame": 67,
+          "serverTime": 2233.333,
+          "arrivalTime": 2288.333,
+          "bufferMs": 42,
+          "jitterMs": 6.908105955068774e-19
+        },
+        {
+          "frame": 68,
+          "serverTime": 2266.667,
+          "arrivalTime": 2321.667,
+          "bufferMs": 42,
+          "jitterMs": 5.6646468831563945e-19
+        },
+        {
+          "frame": 69,
+          "serverTime": 2300,
+          "arrivalTime": 2355,
+          "bufferMs": 42,
+          "jitterMs": 4.645010444188243e-19
+        },
+        {
+          "frame": 70,
+          "serverTime": 2333.333,
+          "arrivalTime": 2388.333,
+          "bufferMs": 42,
+          "jitterMs": 3.8089085642343594e-19
+        },
+        {
+          "frame": 71,
+          "serverTime": 2366.667,
+          "arrivalTime": 2421.667,
+          "bufferMs": 42,
+          "jitterMs": 3.1233050226721745e-19
+        },
+        {
+          "frame": 72,
+          "serverTime": 2400,
+          "arrivalTime": 2455,
+          "bufferMs": 42,
+          "jitterMs": 2.561110118591183e-19
+        },
+        {
+          "frame": 73,
+          "serverTime": 2433.333,
+          "arrivalTime": 2488.333,
+          "bufferMs": 42,
+          "jitterMs": 2.10011029724477e-19
+        },
+        {
+          "frame": 74,
+          "serverTime": 2466.667,
+          "arrivalTime": 2521.667,
+          "bufferMs": 42,
+          "jitterMs": 1.7220904437407113e-19
+        },
+        {
+          "frame": 75,
+          "serverTime": 2500,
+          "arrivalTime": 2555,
+          "bufferMs": 42,
+          "jitterMs": 1.4121141638673832e-19
+        },
+        {
+          "frame": 76,
+          "serverTime": 2533.333,
+          "arrivalTime": 2588.333,
+          "bufferMs": 42,
+          "jitterMs": 1.157933614371254e-19
+        },
+        {
+          "frame": 77,
+          "serverTime": 2566.667,
+          "arrivalTime": 2621.667,
+          "bufferMs": 42,
+          "jitterMs": 9.495055637844283e-20
+        },
+        {
+          "frame": 78,
+          "serverTime": 2600,
+          "arrivalTime": 2655,
+          "bufferMs": 42,
+          "jitterMs": 7.785945623032312e-20
+        },
+        {
+          "frame": 79,
+          "serverTime": 2633.333,
+          "arrivalTime": 2688.333,
+          "bufferMs": 42,
+          "jitterMs": 6.384475410886495e-20
+        },
+        {
+          "frame": 80,
+          "serverTime": 2666.667,
+          "arrivalTime": 2721.667,
+          "bufferMs": 42,
+          "jitterMs": 5.2352698369269257e-20
+        },
+        {
+          "frame": 81,
+          "serverTime": 2700,
+          "arrivalTime": 2755,
+          "bufferMs": 42,
+          "jitterMs": 4.2929212662800786e-20
+        },
+        {
+          "frame": 82,
+          "serverTime": 2733.333,
+          "arrivalTime": 2788.333,
+          "bufferMs": 42,
+          "jitterMs": 3.520195438349664e-20
+        },
+        {
+          "frame": 83,
+          "serverTime": 2766.667,
+          "arrivalTime": 2821.667,
+          "bufferMs": 42,
+          "jitterMs": 2.886560259446724e-20
+        },
+        {
+          "frame": 84,
+          "serverTime": 2800,
+          "arrivalTime": 2855,
+          "bufferMs": 42,
+          "jitterMs": 2.3669794127463136e-20
+        },
+        {
+          "frame": 85,
+          "serverTime": 2833.333,
+          "arrivalTime": 2888.333,
+          "bufferMs": 42,
+          "jitterMs": 1.940923118451977e-20
+        },
+        {
+          "frame": 86,
+          "serverTime": 2866.667,
+          "arrivalTime": 2921.667,
+          "bufferMs": 42,
+          "jitterMs": 1.591556957130621e-20
+        },
+        {
+          "frame": 87,
+          "serverTime": 2900,
+          "arrivalTime": 2955,
+          "bufferMs": 42,
+          "jitterMs": 1.3050767048471092e-20
+        },
+        {
+          "frame": 88,
+          "serverTime": 2933.333,
+          "arrivalTime": 2988.333,
+          "bufferMs": 42,
+          "jitterMs": 1.0701628979746295e-20
+        },
+        {
+          "frame": 89,
+          "serverTime": 2966.667,
+          "arrivalTime": 3021.667,
+          "bufferMs": 42,
+          "jitterMs": 8.775335763391962e-21
+        },
+        {
+          "frame": 90,
+          "serverTime": 3000,
+          "arrivalTime": 3055,
+          "bufferMs": 42,
+          "jitterMs": 7.195775325981408e-21
+        },
+        {
+          "frame": 91,
+          "serverTime": 3033.333,
+          "arrivalTime": 3088.333,
+          "bufferMs": 42,
+          "jitterMs": 5.900535767304754e-21
+        },
+        {
+          "frame": 92,
+          "serverTime": 3066.667,
+          "arrivalTime": 3121.667,
+          "bufferMs": 42,
+          "jitterMs": 4.838439329189898e-21
+        },
+        {
+          "frame": 93,
+          "serverTime": 3100,
+          "arrivalTime": 3155,
+          "bufferMs": 42,
+          "jitterMs": 3.9675202499357165e-21
+        },
+        {
+          "frame": 94,
+          "serverTime": 3133.333,
+          "arrivalTime": 3188.333,
+          "bufferMs": 42,
+          "jitterMs": 3.2533666049472874e-21
+        },
+        {
+          "frame": 95,
+          "serverTime": 3166.667,
+          "arrivalTime": 3221.667,
+          "bufferMs": 42,
+          "jitterMs": 2.6677606160567754e-21
+        },
+        {
+          "frame": 96,
+          "serverTime": 3200,
+          "arrivalTime": 3255,
+          "bufferMs": 42,
+          "jitterMs": 2.1875637051665557e-21
+        },
+        {
+          "frame": 97,
+          "serverTime": 3233.333,
+          "arrivalTime": 3288.333,
+          "bufferMs": 42,
+          "jitterMs": 1.7938022382365755e-21
+        },
+        {
+          "frame": 98,
+          "serverTime": 3266.667,
+          "arrivalTime": 3321.667,
+          "bufferMs": 42,
+          "jitterMs": 1.4709178353539919e-21
+        },
+        {
+          "frame": 99,
+          "serverTime": 3300,
+          "arrivalTime": 3355,
+          "bufferMs": 42,
+          "jitterMs": 1.2061526249902733e-21
+        },
+        {
+          "frame": 100,
+          "serverTime": 3333.333,
+          "arrivalTime": 3388.333,
+          "bufferMs": 42,
+          "jitterMs": 9.890451524920241e-22
+        },
+        {
+          "frame": 101,
+          "serverTime": 3366.667,
+          "arrivalTime": 3421.667,
+          "bufferMs": 42,
+          "jitterMs": 8.110170250434597e-22
+        },
+        {
+          "frame": 102,
+          "serverTime": 3400,
+          "arrivalTime": 3455,
+          "bufferMs": 42,
+          "jitterMs": 6.650339605356369e-22
+        },
+        {
+          "frame": 103,
+          "serverTime": 3433.333,
+          "arrivalTime": 3488.333,
+          "bufferMs": 42,
+          "jitterMs": 5.453278476392223e-22
+        },
+        {
+          "frame": 104,
+          "serverTime": 3466.667,
+          "arrivalTime": 3521.667,
+          "bufferMs": 42,
+          "jitterMs": 4.4716883506416225e-22
+        },
+        {
+          "frame": 105,
+          "serverTime": 3500,
+          "arrivalTime": 3555,
+          "bufferMs": 42,
+          "jitterMs": 3.6667844475261302e-22
+        },
+        {
+          "frame": 106,
+          "serverTime": 3533.333,
+          "arrivalTime": 3588.333,
+          "bufferMs": 42,
+          "jitterMs": 3.006763246971427e-22
+        },
+        {
+          "frame": 107,
+          "serverTime": 3566.667,
+          "arrivalTime": 3621.667,
+          "bufferMs": 42,
+          "jitterMs": 2.46554586251657e-22
+        },
+        {
+          "frame": 108,
+          "serverTime": 3600,
+          "arrivalTime": 3655,
+          "bufferMs": 42,
+          "jitterMs": 2.0217476072635872e-22
+        },
+        {
+          "frame": 109,
+          "serverTime": 3633.333,
+          "arrivalTime": 3688.333,
+          "bufferMs": 42,
+          "jitterMs": 1.6578330379561415e-22
+        },
+        {
+          "frame": 110,
+          "serverTime": 3666.667,
+          "arrivalTime": 3721.667,
+          "bufferMs": 42,
+          "jitterMs": 1.359423091124036e-22
+        },
+        {
+          "frame": 111,
+          "serverTime": 3700,
+          "arrivalTime": 3755,
+          "bufferMs": 42,
+          "jitterMs": 1.1147269347217095e-22
+        },
+        {
+          "frame": 112,
+          "serverTime": 3733.333,
+          "arrivalTime": 3788.333,
+          "bufferMs": 42,
+          "jitterMs": 9.140760864718018e-23
+        },
+        {
+          "frame": 113,
+          "serverTime": 3766.667,
+          "arrivalTime": 3821.667,
+          "bufferMs": 42,
+          "jitterMs": 7.495423909068774e-23
+        },
+        {
+          "frame": 114,
+          "serverTime": 3800,
+          "arrivalTime": 3855,
+          "bufferMs": 42,
+          "jitterMs": 6.146247605436395e-23
+        },
+        {
+          "frame": 115,
+          "serverTime": 3833.333,
+          "arrivalTime": 3888.333,
+          "bufferMs": 42,
+          "jitterMs": 5.0399230364578434e-23
+        },
+        {
+          "frame": 116,
+          "serverTime": 3866.667,
+          "arrivalTime": 3921.667,
+          "bufferMs": 42,
+          "jitterMs": 4.132736889895431e-23
+        },
+        {
+          "frame": 117,
+          "serverTime": 3900,
+          "arrivalTime": 3955,
+          "bufferMs": 42,
+          "jitterMs": 3.3888442497142534e-23
+        },
+        {
+          "frame": 118,
+          "serverTime": 3933.333,
+          "arrivalTime": 3988.333,
+          "bufferMs": 42,
+          "jitterMs": 2.778852284765688e-23
+        },
+        {
+          "frame": 119,
+          "serverTime": 3966.667,
+          "arrivalTime": 4021.667,
+          "bufferMs": 42,
+          "jitterMs": 2.278658873507864e-23
+        },
+        {
+          "frame": 120,
+          "serverTime": 4000,
+          "arrivalTime": 4055,
+          "bufferMs": 42,
+          "jitterMs": 1.8685002762764484e-23
+        },
+        {
+          "frame": 121,
+          "serverTime": 4033.333,
+          "arrivalTime": 4088.333,
+          "bufferMs": 42,
+          "jitterMs": 1.5321702265466877e-23
+        },
+        {
+          "frame": 122,
+          "serverTime": 4066.667,
+          "arrivalTime": 4121.667,
+          "bufferMs": 42,
+          "jitterMs": 8.185452317212733e-14
+        },
+        {
+          "frame": 123,
+          "serverTime": 4100,
+          "arrivalTime": 4155,
+          "bufferMs": 42,
+          "jitterMs": 1.4897523216070794e-13
+        },
+        {
+          "frame": 124,
+          "serverTime": 4133.333,
+          "arrivalTime": 4188.333,
+          "bufferMs": 42,
+          "jitterMs": 1.221596903717805e-13
+        },
+        {
+          "frame": 125,
+          "serverTime": 4166.667,
+          "arrivalTime": 4221.667,
+          "bufferMs": 42,
+          "jitterMs": 1.0017094610486001e-13
+        },
+        {
+          "frame": 126,
+          "serverTime": 4200,
+          "arrivalTime": 4255,
+          "bufferMs": 42,
+          "jitterMs": 8.21401758059852e-14
+        },
+        {
+          "frame": 127,
+          "serverTime": 4233.333,
+          "arrivalTime": 4288.333,
+          "bufferMs": 42,
+          "jitterMs": 6.735494416090786e-14
+        },
+        {
+          "frame": 128,
+          "serverTime": 4266.667,
+          "arrivalTime": 4321.667,
+          "bufferMs": 42,
+          "jitterMs": 5.523105421194445e-14
+        },
+        {
+          "frame": 129,
+          "serverTime": 4300,
+          "arrivalTime": 4355,
+          "bufferMs": 42,
+          "jitterMs": 4.528946445379444e-14
+        },
+        {
+          "frame": 130,
+          "serverTime": 4333.333,
+          "arrivalTime": 4388.333,
+          "bufferMs": 42,
+          "jitterMs": 3.713736085211144e-14
+        },
+        {
+          "frame": 131,
+          "serverTime": 4366.667,
+          "arrivalTime": 4421.667,
+          "bufferMs": 42,
+          "jitterMs": 3.045263589873138e-14
+        },
+        {
+          "frame": 132,
+          "serverTime": 4400,
+          "arrivalTime": 4455,
+          "bufferMs": 42,
+          "jitterMs": 2.497116143695973e-14
+        },
+        {
+          "frame": 133,
+          "serverTime": 4433.333,
+          "arrivalTime": 4488.333,
+          "bufferMs": 42,
+          "jitterMs": 2.0476352378306977e-14
+        },
+        {
+          "frame": 134,
+          "serverTime": 4466.667,
+          "arrivalTime": 4521.667,
+          "bufferMs": 42,
+          "jitterMs": 1.679060895021172e-14
+        },
+        {
+          "frame": 135,
+          "serverTime": 4500,
+          "arrivalTime": 4555,
+          "bufferMs": 42,
+          "jitterMs": 1.376829933917361e-14
+        },
+        {
+          "frame": 136,
+          "serverTime": 4533.333,
+          "arrivalTime": 4588.333,
+          "bufferMs": 42,
+          "jitterMs": 1.1290005458122359e-14
+        },
+        {
+          "frame": 137,
+          "serverTime": 4566.667,
+          "arrivalTime": 4621.667,
+          "bufferMs": 42,
+          "jitterMs": 9.257804475660333e-15
+        },
+        {
+          "frame": 138,
+          "serverTime": 4600,
+          "arrivalTime": 4655,
+          "bufferMs": 42,
+          "jitterMs": 7.591399670041473e-15
+        },
+        {
+          "frame": 139,
+          "serverTime": 4633.333,
+          "arrivalTime": 4688.333,
+          "bufferMs": 42,
+          "jitterMs": 6.224947729434007e-15
+        },
+        {
+          "frame": 140,
+          "serverTime": 4666.667,
+          "arrivalTime": 4721.667,
+          "bufferMs": 42,
+          "jitterMs": 5.104457138135885e-15
+        },
+        {
+          "frame": 141,
+          "serverTime": 4700,
+          "arrivalTime": 4755,
+          "bufferMs": 42,
+          "jitterMs": 4.1856548532714255e-15
+        },
+        {
+          "frame": 142,
+          "serverTime": 4733.333,
+          "arrivalTime": 4788.333,
+          "bufferMs": 42,
+          "jitterMs": 3.4322369796825688e-15
+        },
+        {
+          "frame": 143,
+          "serverTime": 4766.667,
+          "arrivalTime": 4821.667,
+          "bufferMs": 42,
+          "jitterMs": 2.8144343233397064e-15
+        },
+        {
+          "frame": 144,
+          "serverTime": 4800,
+          "arrivalTime": 4855,
+          "bufferMs": 42,
+          "jitterMs": 2.307836145138559e-15
+        },
+        {
+          "frame": 145,
+          "serverTime": 4833.333,
+          "arrivalTime": 4888.333,
+          "bufferMs": 42,
+          "jitterMs": 1.8924256390136184e-15
+        },
+        {
+          "frame": 146,
+          "serverTime": 4866.667,
+          "arrivalTime": 4921.667,
+          "bufferMs": 42,
+          "jitterMs": 1.5517890239911671e-15
+        },
+        {
+          "frame": 147,
+          "serverTime": 4900,
+          "arrivalTime": 4955,
+          "bufferMs": 42,
+          "jitterMs": 1.272466999672757e-15
+        },
+        {
+          "frame": 148,
+          "serverTime": 4933.333,
+          "arrivalTime": 4988.333,
+          "bufferMs": 42,
+          "jitterMs": 1.0434229397316606e-15
+        },
+        {
+          "frame": 149,
+          "serverTime": 4966.667,
+          "arrivalTime": 5021.667,
+          "bufferMs": 42,
+          "jitterMs": 8.556068105799617e-16
+        },
+        {
+          "frame": 150,
+          "serverTime": 5000,
+          "arrivalTime": 5055,
+          "bufferMs": 42,
+          "jitterMs": 7.015975846755685e-16
+        },
+        {
+          "frame": 151,
+          "serverTime": 5033.333,
+          "arrivalTime": 5088.333,
+          "bufferMs": 42,
+          "jitterMs": 5.753100194339661e-16
+        },
+        {
+          "frame": 152,
+          "serverTime": 5066.667,
+          "arrivalTime": 5121.667,
+          "bufferMs": 42,
+          "jitterMs": 4.717542159358522e-16
+        },
+        {
+          "frame": 153,
+          "serverTime": 5100,
+          "arrivalTime": 5155,
+          "bufferMs": 42,
+          "jitterMs": 3.8683845706739876e-16
+        },
+        {
+          "frame": 154,
+          "serverTime": 5133.333,
+          "arrivalTime": 5188.333,
+          "bufferMs": 42,
+          "jitterMs": 3.1720753479526696e-16
+        },
+        {
+          "frame": 155,
+          "serverTime": 5166.667,
+          "arrivalTime": 5221.667,
+          "bufferMs": 42,
+          "jitterMs": 2.601101785321189e-16
+        },
+        {
+          "frame": 156,
+          "serverTime": 5200,
+          "arrivalTime": 5255,
+          "bufferMs": 42,
+          "jitterMs": 2.132903463963375e-16
+        },
+        {
+          "frame": 157,
+          "serverTime": 5233.333,
+          "arrivalTime": 5288.333,
+          "bufferMs": 42,
+          "jitterMs": 1.7489808404499672e-16
+        },
+        {
+          "frame": 158,
+          "serverTime": 5266.667,
+          "arrivalTime": 5321.667,
+          "bufferMs": 42,
+          "jitterMs": 1.434164289168973e-16
+        },
+        {
+          "frame": 159,
+          "serverTime": 5300,
+          "arrivalTime": 5355,
+          "bufferMs": 42,
+          "jitterMs": 1.1760147171185578e-16
+        },
+        {
+          "frame": 160,
+          "serverTime": 5333.333,
+          "arrivalTime": 5388.333,
+          "bufferMs": 42,
+          "jitterMs": 9.643320680372173e-17
+        },
+        {
+          "frame": 161,
+          "serverTime": 5366.667,
+          "arrivalTime": 5421.667,
+          "bufferMs": 42,
+          "jitterMs": 7.907522957905182e-17
+        },
+        {
+          "frame": 162,
+          "serverTime": 5400,
+          "arrivalTime": 5455,
+          "bufferMs": 42,
+          "jitterMs": 6.484168825482248e-17
+        },
+        {
+          "frame": 163,
+          "serverTime": 5433.333,
+          "arrivalTime": 5488.333,
+          "bufferMs": 42,
+          "jitterMs": 5.3170184368954436e-17
+        },
+        {
+          "frame": 164,
+          "serverTime": 5466.667,
+          "arrivalTime": 5521.667,
+          "bufferMs": 42,
+          "jitterMs": 4.3599551182542633e-17
+        },
+        {
+          "frame": 165,
+          "serverTime": 5500,
+          "arrivalTime": 5555,
+          "bufferMs": 42,
+          "jitterMs": 3.5751631969684957e-17
+        },
+        {
+          "frame": 166,
+          "serverTime": 5533.333,
+          "arrivalTime": 5588.333,
+          "bufferMs": 42,
+          "jitterMs": 2.9316338215141664e-17
+        },
+        {
+          "frame": 167,
+          "serverTime": 5566.667,
+          "arrivalTime": 5621.667,
+          "bufferMs": 42,
+          "jitterMs": 2.4039397336416163e-17
+        },
+        {
+          "frame": 168,
+          "serverTime": 5600,
+          "arrivalTime": 5655,
+          "bufferMs": 42,
+          "jitterMs": 1.9712305815861252e-17
+        },
+        {
+          "frame": 169,
+          "serverTime": 5633.333,
+          "arrivalTime": 5688.333,
+          "bufferMs": 42,
+          "jitterMs": 1.6164090769006226e-17
+        },
+        {
+          "frame": 170,
+          "serverTime": 5666.667,
+          "arrivalTime": 5721.667,
+          "bufferMs": 42,
+          "jitterMs": 1.3254554430585105e-17
+        },
+        {
+          "frame": 171,
+          "serverTime": 5700,
+          "arrivalTime": 5755,
+          "bufferMs": 42,
+          "jitterMs": 1.0868734633079785e-17
+        },
+        {
+          "frame": 172,
+          "serverTime": 5733.333,
+          "arrivalTime": 5788.333,
+          "bufferMs": 42,
+          "jitterMs": 8.912362399125423e-18
+        },
+        {
+          "frame": 173,
+          "serverTime": 5766.667,
+          "arrivalTime": 5821.667,
+          "bufferMs": 42,
+          "jitterMs": 7.308137167282846e-18
+        },
+        {
+          "frame": 174,
+          "serverTime": 5800,
+          "arrivalTime": 5855,
+          "bufferMs": 42,
+          "jitterMs": 5.992672477171933e-18
+        },
+        {
+          "frame": 175,
+          "serverTime": 5833.333,
+          "arrivalTime": 5888.333,
+          "bufferMs": 42,
+          "jitterMs": 4.913991431280985e-18
+        },
+        {
+          "frame": 176,
+          "serverTime": 5866.667,
+          "arrivalTime": 5921.667,
+          "bufferMs": 42,
+          "jitterMs": 4.029472973650407e-18
+        },
+        {
+          "frame": 177,
+          "serverTime": 5900,
+          "arrivalTime": 5955,
+          "bufferMs": 42,
+          "jitterMs": 3.3041678383933336e-18
+        },
+        {
+          "frame": 178,
+          "serverTime": 5933.333,
+          "arrivalTime": 5988.333,
+          "bufferMs": 42,
+          "jitterMs": 2.7094176274825334e-18
+        },
+        {
+          "frame": 179,
+          "serverTime": 5966.667,
+          "arrivalTime": 6021.667,
+          "bufferMs": 42,
+          "jitterMs": 2.2217224545356774e-18
+        },
+        {
+          "frame": 180,
+          "serverTime": 6000,
+          "arrivalTime": 6055,
+          "bufferMs": 42,
+          "jitterMs": 1.8218124127192553e-18
+        },
+        {
+          "frame": 181,
+          "serverTime": 6033.333,
+          "arrivalTime": 6088.333,
+          "bufferMs": 42,
+          "jitterMs": 1.4938861784297893e-18
+        },
+        {
+          "frame": 182,
+          "serverTime": 6066.667,
+          "arrivalTime": 6121.667,
+          "bufferMs": 42,
+          "jitterMs": 1.2249866663124272e-18
+        },
+        {
+          "frame": 183,
+          "serverTime": 6100,
+          "arrivalTime": 6155,
+          "bufferMs": 42,
+          "jitterMs": 1.0044890663761903e-18
+        },
+        {
+          "frame": 184,
+          "serverTime": 6133.333,
+          "arrivalTime": 6188.333,
+          "bufferMs": 42,
+          "jitterMs": 8.23681034428476e-19
+        },
+        {
+          "frame": 185,
+          "serverTime": 6166.667,
+          "arrivalTime": 6221.667,
+          "bufferMs": 42,
+          "jitterMs": 6.7541844823135025e-19
+        },
+        {
+          "frame": 186,
+          "serverTime": 6200,
+          "arrivalTime": 6255,
+          "bufferMs": 42,
+          "jitterMs": 5.538431275497072e-19
+        },
+        {
+          "frame": 187,
+          "serverTime": 6233.333,
+          "arrivalTime": 6288.333,
+          "bufferMs": 42,
+          "jitterMs": 4.541513645907598e-19
+        },
+        {
+          "frame": 188,
+          "serverTime": 6266.667,
+          "arrivalTime": 6321.667,
+          "bufferMs": 42,
+          "jitterMs": 3.7240411896442304e-19
+        },
+        {
+          "frame": 189,
+          "serverTime": 6300,
+          "arrivalTime": 6355,
+          "bufferMs": 42,
+          "jitterMs": 3.053713775508269e-19
+        },
+        {
+          "frame": 190,
+          "serverTime": 6333.333,
+          "arrivalTime": 6388.333,
+          "bufferMs": 42,
+          "jitterMs": 2.5040452959167806e-19
+        },
+        {
+          "frame": 191,
+          "serverTime": 6366.667,
+          "arrivalTime": 6421.667,
+          "bufferMs": 42,
+          "jitterMs": 2.0533171426517599e-19
+        },
+        {
+          "frame": 192,
+          "serverTime": 6400,
+          "arrivalTime": 6455,
+          "bufferMs": 42,
+          "jitterMs": 1.683720056974443e-19
+        },
+        {
+          "frame": 193,
+          "serverTime": 6433.333,
+          "arrivalTime": 6488.333,
+          "bufferMs": 42,
+          "jitterMs": 1.380650446719043e-19
+        },
+        {
+          "frame": 194,
+          "serverTime": 6466.667,
+          "arrivalTime": 6521.667,
+          "bufferMs": 42,
+          "jitterMs": 1.1321333663096153e-19
+        },
+        {
+          "frame": 195,
+          "serverTime": 6500,
+          "arrivalTime": 6555,
+          "bufferMs": 42,
+          "jitterMs": 9.283493603738846e-20
+        },
+        {
+          "frame": 196,
+          "serverTime": 6533.333,
+          "arrivalTime": 6588.333,
+          "bufferMs": 42,
+          "jitterMs": 7.612464755065853e-20
+        },
+        {
+          "frame": 197,
+          "serverTime": 6566.667,
+          "arrivalTime": 6621.667,
+          "bufferMs": 42,
+          "jitterMs": 6.242221099154e-20
+        },
+        {
+          "frame": 198,
+          "serverTime": 6600,
+          "arrivalTime": 6655,
+          "bufferMs": 42,
+          "jitterMs": 5.1186213013062796e-20
+        },
+        {
+          "frame": 199,
+          "serverTime": 6633.333,
+          "arrivalTime": 6688.333,
+          "bufferMs": 42,
+          "jitterMs": 4.197269467071149e-20
+        },
+        {
+          "frame": 200,
+          "serverTime": 6666.667,
+          "arrivalTime": 6721.667,
+          "bufferMs": 42,
+          "jitterMs": 3.441760962998342e-20
+        },
+        {
+          "frame": 201,
+          "serverTime": 6700,
+          "arrivalTime": 6755,
+          "bufferMs": 42,
+          "jitterMs": 2.82224398965864e-20
+        },
+        {
+          "frame": 202,
+          "serverTime": 6733.333,
+          "arrivalTime": 6788.333,
+          "bufferMs": 42,
+          "jitterMs": 2.314240071520085e-20
+        },
+        {
+          "frame": 203,
+          "serverTime": 6766.667,
+          "arrivalTime": 6821.667,
+          "bufferMs": 42,
+          "jitterMs": 1.8976768586464694e-20
+        },
+        {
+          "frame": 204,
+          "serverTime": 6800,
+          "arrivalTime": 6855,
+          "bufferMs": 42,
+          "jitterMs": 1.5560950240901048e-20
+        },
+        {
+          "frame": 205,
+          "serverTime": 6833.333,
+          "arrivalTime": 6888.333,
+          "bufferMs": 42,
+          "jitterMs": 1.2759979197538858e-20
+        },
+        {
+          "frame": 206,
+          "serverTime": 6866.667,
+          "arrivalTime": 6921.667,
+          "bufferMs": 42,
+          "jitterMs": 1.0463182941981863e-20
+        },
+        {
+          "frame": 207,
+          "serverTime": 6900,
+          "arrivalTime": 6955,
+          "bufferMs": 42,
+          "jitterMs": 8.579810012425127e-21
+        },
+        {
+          "frame": 208,
+          "serverTime": 6933.333,
+          "arrivalTime": 6988.333,
+          "bufferMs": 42,
+          "jitterMs": 7.035444210188604e-21
+        },
+        {
+          "frame": 209,
+          "serverTime": 6966.667,
+          "arrivalTime": 7021.667,
+          "bufferMs": 42,
+          "jitterMs": 5.769064252354655e-21
+        },
+        {
+          "frame": 210,
+          "serverTime": 7000,
+          "arrivalTime": 7055,
+          "bufferMs": 42,
+          "jitterMs": 4.730632686930817e-21
+        },
+        {
+          "frame": 211,
+          "serverTime": 7033.333,
+          "arrivalTime": 7088.333,
+          "bufferMs": 42,
+          "jitterMs": 3.87911880328327e-21
+        },
+        {
+          "frame": 212,
+          "serverTime": 7066.667,
+          "arrivalTime": 7121.667,
+          "bufferMs": 42,
+          "jitterMs": 3.180877418692281e-21
+        },
+        {
+          "frame": 213,
+          "serverTime": 7100,
+          "arrivalTime": 7155,
+          "bufferMs": 42,
+          "jitterMs": 2.6083194833276703e-21
+        },
+        {
+          "frame": 214,
+          "serverTime": 7133.333,
+          "arrivalTime": 7188.333,
+          "bufferMs": 42,
+          "jitterMs": 2.1388219763286897e-21
+        },
+        {
+          "frame": 215,
+          "serverTime": 7166.667,
+          "arrivalTime": 7221.667,
+          "bufferMs": 42,
+          "jitterMs": 1.7538340205895256e-21
+        },
+        {
+          "frame": 216,
+          "serverTime": 7200,
+          "arrivalTime": 7255,
+          "bufferMs": 42,
+          "jitterMs": 1.438143896883411e-21
+        },
+        {
+          "frame": 217,
+          "serverTime": 7233.333,
+          "arrivalTime": 7288.333,
+          "bufferMs": 42,
+          "jitterMs": 1.1792779954443968e-21
+        },
+        {
+          "frame": 218,
+          "serverTime": 7266.667,
+          "arrivalTime": 7321.667,
+          "bufferMs": 42,
+          "jitterMs": 9.670079562644053e-22
+        },
+        {
+          "frame": 219,
+          "serverTime": 7300,
+          "arrivalTime": 7355,
+          "bufferMs": 42,
+          "jitterMs": 7.929465241368123e-22
+        },
+        {
+          "frame": 220,
+          "serverTime": 7333.333,
+          "arrivalTime": 7388.333,
+          "bufferMs": 42,
+          "jitterMs": 6.50216149792186e-22
+        },
+        {
+          "frame": 221,
+          "serverTime": 7366.667,
+          "arrivalTime": 7421.667,
+          "bufferMs": 42,
+          "jitterMs": 5.331772428295925e-22
+        },
+        {
+          "frame": 222,
+          "serverTime": 7400,
+          "arrivalTime": 7455,
+          "bufferMs": 42,
+          "jitterMs": 4.372053391202658e-22
+        },
+        {
+          "frame": 223,
+          "serverTime": 7433.333,
+          "arrivalTime": 7488.333,
+          "bufferMs": 42,
+          "jitterMs": 3.5850837807861794e-22
+        },
+        {
+          "frame": 224,
+          "serverTime": 7466.667,
+          "arrivalTime": 7521.667,
+          "bufferMs": 42,
+          "jitterMs": 2.939768700244667e-22
+        },
+        {
+          "frame": 225,
+          "serverTime": 7500,
+          "arrivalTime": 7555,
+          "bufferMs": 42,
+          "jitterMs": 2.4106103342006265e-22
+        },
+        {
+          "frame": 226,
+          "serverTime": 7533.333,
+          "arrivalTime": 7588.333,
+          "bufferMs": 42,
+          "jitterMs": 1.9767004740445136e-22
+        },
+        {
+          "frame": 227,
+          "serverTime": 7566.667,
+          "arrivalTime": 7621.667,
+          "bufferMs": 42,
+          "jitterMs": 1.620894388716501e-22
+        },
+        {
+          "frame": 228,
+          "serverTime": 7600,
+          "arrivalTime": 7655,
+          "bufferMs": 42,
+          "jitterMs": 1.3291333987475308e-22
+        },
+        {
+          "frame": 229,
+          "serverTime": 7633.333,
+          "arrivalTime": 7688.333,
+          "bufferMs": 42,
+          "jitterMs": 1.0898893869729752e-22
+        },
+        {
+          "frame": 230,
+          "serverTime": 7666.667,
+          "arrivalTime": 7721.667,
+          "bufferMs": 42,
+          "jitterMs": 8.937092973178397e-23
+        },
+        {
+          "frame": 231,
+          "serverTime": 7700,
+          "arrivalTime": 7755,
+          "bufferMs": 42,
+          "jitterMs": 7.328416238006284e-23
+        },
+        {
+          "frame": 232,
+          "serverTime": 7733.333,
+          "arrivalTime": 7788.333,
+          "bufferMs": 42,
+          "jitterMs": 6.009301315165153e-23
+        },
+        {
+          "frame": 233,
+          "serverTime": 7766.667,
+          "arrivalTime": 7821.667,
+          "bufferMs": 42,
+          "jitterMs": 4.927627078435425e-23
+        },
+        {
+          "frame": 234,
+          "serverTime": 7800,
+          "arrivalTime": 7855,
+          "bufferMs": 42,
+          "jitterMs": 4.0406542043170486e-23
+        },
+        {
+          "frame": 235,
+          "serverTime": 7833.333,
+          "arrivalTime": 7888.333,
+          "bufferMs": 42,
+          "jitterMs": 3.31333644753998e-23
+        },
+        {
+          "frame": 236,
+          "serverTime": 7866.667,
+          "arrivalTime": 7921.667,
+          "bufferMs": 42,
+          "jitterMs": 2.716935886982783e-23
+        },
+        {
+          "frame": 237,
+          "serverTime": 7900,
+          "arrivalTime": 7955,
+          "bufferMs": 42,
+          "jitterMs": 2.227887427325882e-23
+        },
+        {
+          "frame": 238,
+          "serverTime": 7933.333,
+          "arrivalTime": 7988.333,
+          "bufferMs": 42,
+          "jitterMs": 1.826867690407223e-23
+        },
+        {
+          "frame": 239,
+          "serverTime": 7966.667,
+          "arrivalTime": 8021.667,
+          "bufferMs": 42,
+          "jitterMs": 1.4980315061339228e-23
+        }
+      ]
+    },
+    {
+      "name": "Low consumer jitter",
+      "description": "Deterministic ±4 ms arrival variation around the same 55 ms one-way model.",
+      "frames": 240,
+      "snapshotRateHz": 30,
+      "baseOneWayModelMs": 55,
+      "buffer": {
+        "minimumMs": 42,
+        "meanMs": 54.7,
+        "p50Ms": 55,
+        "p95Ms": 56,
+        "maximumMs": 56,
+        "finalMs": 55
+      },
+      "jitter": {
+        "meanMs": 4.23,
+        "p95Ms": 4.65,
+        "maximumMs": 4.65,
+        "finalMs": 4.21
+      },
+      "recovery": null,
+      "samples": [
+        {
+          "frame": 0,
+          "serverTime": 0,
+          "arrivalTime": 51,
+          "bufferMs": 42,
+          "jitterMs": 0
+        },
+        {
+          "frame": 1,
+          "serverTime": 33.333,
+          "arrivalTime": 90.333,
+          "bufferMs": 45,
+          "jitterMs": 1.08
+        },
+        {
+          "frame": 2,
+          "serverTime": 66.667,
+          "arrivalTime": 121.667,
+          "bufferMs": 46,
+          "jitterMs": 1.2456
+        },
+        {
+          "frame": 3,
+          "serverTime": 100,
+          "arrivalTime": 159,
+          "bufferMs": 47,
+          "jitterMs": 1.741392
+        },
+        {
+          "frame": 4,
+          "serverTime": 133.333,
+          "arrivalTime": 186.333,
+          "bufferMs": 50,
+          "jitterMs": 2.5079414399999997
+        },
+        {
+          "frame": 5,
+          "serverTime": 166.667,
+          "arrivalTime": 222.667,
+          "bufferMs": 50,
+          "jitterMs": 2.5965119808
+        },
+        {
+          "frame": 6,
+          "serverTime": 200,
+          "arrivalTime": 251,
+          "bufferMs": 51,
+          "jitterMs": 3.0291398242559997
+        },
+        {
+          "frame": 7,
+          "serverTime": 233.333,
+          "arrivalTime": 290.333,
+          "bufferMs": 53,
+          "jitterMs": 3.563894655889925
+        },
+        {
+          "frame": 8,
+          "serverTime": 266.667,
+          "arrivalTime": 321.667,
+          "bufferMs": 52,
+          "jitterMs": 3.2823936178297433
+        },
+        {
+          "frame": 9,
+          "serverTime": 300,
+          "arrivalTime": 359,
+          "bufferMs": 52,
+          "jitterMs": 3.4115627666203894
+        },
+        {
+          "frame": 10,
+          "serverTime": 333.333,
+          "arrivalTime": 386.333,
+          "bufferMs": 54,
+          "jitterMs": 3.8774814686287193
+        },
+        {
+          "frame": 11,
+          "serverTime": 366.667,
+          "arrivalTime": 422.667,
+          "bufferMs": 53,
+          "jitterMs": 3.7195348042755496
+        },
+        {
+          "frame": 12,
+          "serverTime": 400,
+          "arrivalTime": 451,
+          "bufferMs": 54,
+          "jitterMs": 3.9500185395059506
+        },
+        {
+          "frame": 13,
+          "serverTime": 433.333,
+          "arrivalTime": 490.333,
+          "bufferMs": 55,
+          "jitterMs": 4.31901520239488
+        },
+        {
+          "frame": 14,
+          "serverTime": 466.667,
+          "arrivalTime": 521.667,
+          "bufferMs": 54,
+          "jitterMs": 3.901592465963791
+        },
+        {
+          "frame": 15,
+          "serverTime": 500,
+          "arrivalTime": 559,
+          "bufferMs": 54,
+          "jitterMs": 3.9193058220902985
+        },
+        {
+          "frame": 16,
+          "serverTime": 533.333,
+          "arrivalTime": 586.333,
+          "bufferMs": 55,
+          "jitterMs": 4.293830774114045
+        },
+        {
+          "frame": 17,
+          "serverTime": 566.667,
+          "arrivalTime": 622.667,
+          "bufferMs": 54,
+          "jitterMs": 4.060941234773516
+        },
+        {
+          "frame": 18,
+          "serverTime": 600,
+          "arrivalTime": 651,
+          "bufferMs": 55,
+          "jitterMs": 4.2299718125142824
+        },
+        {
+          "frame": 19,
+          "serverTime": 633.333,
+          "arrivalTime": 690.333,
+          "bufferMs": 56,
+          "jitterMs": 4.548576886261712
+        },
+        {
+          "frame": 20,
+          "serverTime": 666.667,
+          "arrivalTime": 721.667,
+          "bufferMs": 54,
+          "jitterMs": 4.089833046734603
+        },
+        {
+          "frame": 21,
+          "serverTime": 700,
+          "arrivalTime": 759,
+          "bufferMs": 54,
+          "jitterMs": 4.073663098322375
+        },
+        {
+          "frame": 22,
+          "serverTime": 733.333,
+          "arrivalTime": 786.333,
+          "bufferMs": 55,
+          "jitterMs": 4.420403740624348
+        },
+        {
+          "frame": 23,
+          "serverTime": 766.667,
+          "arrivalTime": 822.667,
+          "bufferMs": 54,
+          "jitterMs": 4.1647310673119655
+        },
+        {
+          "frame": 24,
+          "serverTime": 800,
+          "arrivalTime": 851,
+          "bufferMs": 55,
+          "jitterMs": 4.3150794751958115
+        },
+        {
+          "frame": 25,
+          "serverTime": 833.333,
+          "arrivalTime": 890.333,
+          "bufferMs": 56,
+          "jitterMs": 4.618365169660565
+        },
+        {
+          "frame": 26,
+          "serverTime": 866.667,
+          "arrivalTime": 921.667,
+          "bufferMs": 54,
+          "jitterMs": 4.147059439121663
+        },
+        {
+          "frame": 27,
+          "serverTime": 900,
+          "arrivalTime": 959,
+          "bufferMs": 54,
+          "jitterMs": 4.120588740079763
+        },
+        {
+          "frame": 28,
+          "serverTime": 933.333,
+          "arrivalTime": 986.333,
+          "bufferMs": 55,
+          "jitterMs": 4.458882766865406
+        },
+        {
+          "frame": 29,
+          "serverTime": 966.667,
+          "arrivalTime": 1022.667,
+          "bufferMs": 55,
+          "jitterMs": 4.1962838688296324
+        },
+        {
+          "frame": 30,
+          "serverTime": 1000,
+          "arrivalTime": 1051,
+          "bufferMs": 55,
+          "jitterMs": 4.340952772440298
+        },
+        {
+          "frame": 31,
+          "serverTime": 1033.333,
+          "arrivalTime": 1090.333,
+          "bufferMs": 56,
+          "jitterMs": 4.639581273401044
+        },
+        {
+          "frame": 32,
+          "serverTime": 1066.667,
+          "arrivalTime": 1121.667,
+          "bufferMs": 54,
+          "jitterMs": 4.1644566441888555
+        },
+        {
+          "frame": 33,
+          "serverTime": 1100,
+          "arrivalTime": 1159,
+          "bufferMs": 54,
+          "jitterMs": 4.1348544482348615
+        },
+        {
+          "frame": 34,
+          "serverTime": 1133.333,
+          "arrivalTime": 1186.333,
+          "bufferMs": 55,
+          "jitterMs": 4.470580647552586
+        },
+        {
+          "frame": 35,
+          "serverTime": 1166.667,
+          "arrivalTime": 1222.667,
+          "bufferMs": 55,
+          "jitterMs": 4.20587613099312
+        },
+        {
+          "frame": 36,
+          "serverTime": 1200,
+          "arrivalTime": 1251,
+          "bufferMs": 55,
+          "jitterMs": 4.348818427414358
+        },
+        {
+          "frame": 37,
+          "serverTime": 1233.333,
+          "arrivalTime": 1290.333,
+          "bufferMs": 56,
+          "jitterMs": 4.646031110479774
+        },
+        {
+          "frame": 38,
+          "serverTime": 1266.667,
+          "arrivalTime": 1321.667,
+          "bufferMs": 55,
+          "jitterMs": 4.1697455105934145
+        },
+        {
+          "frame": 39,
+          "serverTime": 1300,
+          "arrivalTime": 1359,
+          "bufferMs": 54,
+          "jitterMs": 4.1391913186866
+        },
+        {
+          "frame": 40,
+          "serverTime": 1333.333,
+          "arrivalTime": 1386.333,
+          "bufferMs": 55,
+          "jitterMs": 4.4741368813230125
+        },
+        {
+          "frame": 41,
+          "serverTime": 1366.667,
+          "arrivalTime": 1422.667,
+          "bufferMs": 55,
+          "jitterMs": 4.20879224268487
+        },
+        {
+          "frame": 42,
+          "serverTime": 1400,
+          "arrivalTime": 1451,
+          "bufferMs": 55,
+          "jitterMs": 4.351209639001594
+        },
+        {
+          "frame": 43,
+          "serverTime": 1433.333,
+          "arrivalTime": 1490.333,
+          "bufferMs": 56,
+          "jitterMs": 4.647991903981307
+        },
+        {
+          "frame": 44,
+          "serverTime": 1466.667,
+          "arrivalTime": 1521.667,
+          "bufferMs": 55,
+          "jitterMs": 4.171353361264671
+        },
+        {
+          "frame": 45,
+          "serverTime": 1500,
+          "arrivalTime": 1559,
+          "bufferMs": 54,
+          "jitterMs": 4.14050975623703
+        },
+        {
+          "frame": 46,
+          "serverTime": 1533.333,
+          "arrivalTime": 1586.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475218000114364
+        },
+        {
+          "frame": 47,
+          "serverTime": 1566.667,
+          "arrivalTime": 1622.667,
+          "bufferMs": 55,
+          "jitterMs": 4.209678760093778
+        },
+        {
+          "frame": 48,
+          "serverTime": 1600,
+          "arrivalTime": 1651,
+          "bufferMs": 55,
+          "jitterMs": 4.351936583276898
+        },
+        {
+          "frame": 49,
+          "serverTime": 1633.333,
+          "arrivalTime": 1690.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648587998287056
+        },
+        {
+          "frame": 50,
+          "serverTime": 1666.667,
+          "arrivalTime": 1721.667,
+          "bufferMs": 55,
+          "jitterMs": 4.1718421585953855
+        },
+        {
+          "frame": 51,
+          "serverTime": 1700,
+          "arrivalTime": 1759,
+          "bufferMs": 54,
+          "jitterMs": 4.140910570048216
+        },
+        {
+          "frame": 52,
+          "serverTime": 1733.333,
+          "arrivalTime": 1786.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475546667439536
+        },
+        {
+          "frame": 53,
+          "serverTime": 1766.667,
+          "arrivalTime": 1822.667,
+          "bufferMs": 55,
+          "jitterMs": 4.209948267300419
+        },
+        {
+          "frame": 54,
+          "serverTime": 1800,
+          "arrivalTime": 1851,
+          "bufferMs": 55,
+          "jitterMs": 4.352157579186343
+        },
+        {
+          "frame": 55,
+          "serverTime": 1833.333,
+          "arrivalTime": 1890.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648769214932802
+        },
+        {
+          "frame": 56,
+          "serverTime": 1866.667,
+          "arrivalTime": 1921.667,
+          "bufferMs": 55,
+          "jitterMs": 4.171990756244897
+        },
+        {
+          "frame": 57,
+          "serverTime": 1900,
+          "arrivalTime": 1959,
+          "bufferMs": 54,
+          "jitterMs": 4.1410324201208155
+        },
+        {
+          "frame": 58,
+          "serverTime": 1933.333,
+          "arrivalTime": 1986.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475646584499069
+        },
+        {
+          "frame": 59,
+          "serverTime": 1966.667,
+          "arrivalTime": 2022.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210030199289236
+        },
+        {
+          "frame": 60,
+          "serverTime": 2000,
+          "arrivalTime": 2051,
+          "bufferMs": 55,
+          "jitterMs": 4.352224763417174
+        },
+        {
+          "frame": 61,
+          "serverTime": 2033.333,
+          "arrivalTime": 2090.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648824306002082
+        },
+        {
+          "frame": 62,
+          "serverTime": 2066.667,
+          "arrivalTime": 2121.667,
+          "bufferMs": 55,
+          "jitterMs": 4.172035930921707
+        },
+        {
+          "frame": 63,
+          "serverTime": 2100,
+          "arrivalTime": 2159,
+          "bufferMs": 54,
+          "jitterMs": 4.1410694633558
+        },
+        {
+          "frame": 64,
+          "serverTime": 2133.333,
+          "arrivalTime": 2186.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475676959951755
+        },
+        {
+          "frame": 65,
+          "serverTime": 2166.667,
+          "arrivalTime": 2222.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210055107160439
+        },
+        {
+          "frame": 66,
+          "serverTime": 2200,
+          "arrivalTime": 2251,
+          "bufferMs": 55,
+          "jitterMs": 4.35224518787156
+        },
+        {
+          "frame": 67,
+          "serverTime": 2233.333,
+          "arrivalTime": 2290.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648841054054679
+        },
+        {
+          "frame": 68,
+          "serverTime": 2266.667,
+          "arrivalTime": 2321.667,
+          "bufferMs": 55,
+          "jitterMs": 4.172049664324836
+        },
+        {
+          "frame": 69,
+          "serverTime": 2300,
+          "arrivalTime": 2359,
+          "bufferMs": 54,
+          "jitterMs": 4.141080724746366
+        },
+        {
+          "frame": 70,
+          "serverTime": 2333.333,
+          "arrivalTime": 2386.333,
+          "bufferMs": 55,
+          "jitterMs": 4.47568619429202
+        },
+        {
+          "frame": 71,
+          "serverTime": 2366.667,
+          "arrivalTime": 2422.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210062679319456
+        },
+        {
+          "frame": 72,
+          "serverTime": 2400,
+          "arrivalTime": 2451,
+          "bufferMs": 55,
+          "jitterMs": 4.352251397041954
+        },
+        {
+          "frame": 73,
+          "serverTime": 2433.333,
+          "arrivalTime": 2490.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648846145574402
+        },
+        {
+          "frame": 74,
+          "serverTime": 2466.667,
+          "arrivalTime": 2521.667,
+          "bufferMs": 55,
+          "jitterMs": 4.17205383937101
+        },
+        {
+          "frame": 75,
+          "serverTime": 2500,
+          "arrivalTime": 2559,
+          "bufferMs": 54,
+          "jitterMs": 4.141084148284228
+        },
+        {
+          "frame": 76,
+          "serverTime": 2533.333,
+          "arrivalTime": 2586.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475689001593066
+        },
+        {
+          "frame": 77,
+          "serverTime": 2566.667,
+          "arrivalTime": 2622.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210064981306314
+        },
+        {
+          "frame": 78,
+          "serverTime": 2600,
+          "arrivalTime": 2651,
+          "bufferMs": 55,
+          "jitterMs": 4.352253284671177
+        },
+        {
+          "frame": 79,
+          "serverTime": 2633.333,
+          "arrivalTime": 2690.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648847693430365
+        },
+        {
+          "frame": 80,
+          "serverTime": 2666.667,
+          "arrivalTime": 2721.667,
+          "bufferMs": 55,
+          "jitterMs": 4.1720551086128985
+        },
+        {
+          "frame": 81,
+          "serverTime": 2700,
+          "arrivalTime": 2759,
+          "bufferMs": 54,
+          "jitterMs": 4.141085189062577
+        },
+        {
+          "frame": 82,
+          "serverTime": 2733.333,
+          "arrivalTime": 2786.333,
+          "bufferMs": 55,
+          "jitterMs": 4.4756898550313124
+        },
+        {
+          "frame": 83,
+          "serverTime": 2766.667,
+          "arrivalTime": 2822.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065681125676
+        },
+        {
+          "frame": 84,
+          "serverTime": 2800,
+          "arrivalTime": 2851,
+          "bufferMs": 55,
+          "jitterMs": 4.352253858523055
+        },
+        {
+          "frame": 85,
+          "serverTime": 2833.333,
+          "arrivalTime": 2890.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848163988905
+        },
+        {
+          "frame": 86,
+          "serverTime": 2866.667,
+          "arrivalTime": 2921.667,
+          "bufferMs": 55,
+          "jitterMs": 4.172055494470902
+        },
+        {
+          "frame": 87,
+          "serverTime": 2900,
+          "arrivalTime": 2959,
+          "bufferMs": 54,
+          "jitterMs": 4.1410855054661395
+        },
+        {
+          "frame": 88,
+          "serverTime": 2933.333,
+          "arrivalTime": 2986.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690114482234
+        },
+        {
+          "frame": 89,
+          "serverTime": 2966.667,
+          "arrivalTime": 3022.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065893875432
+        },
+        {
+          "frame": 90,
+          "serverTime": 3000,
+          "arrivalTime": 3051,
+          "bufferMs": 55,
+          "jitterMs": 4.352254032977854
+        },
+        {
+          "frame": 91,
+          "serverTime": 3033.333,
+          "arrivalTime": 3090.333,
+          "bufferMs": 56,
+          "jitterMs": 4.64884830704184
+        },
+        {
+          "frame": 92,
+          "serverTime": 3066.667,
+          "arrivalTime": 3121.667,
+          "bufferMs": 55,
+          "jitterMs": 4.172055611774309
+        },
+        {
+          "frame": 93,
+          "serverTime": 3100,
+          "arrivalTime": 3159,
+          "bufferMs": 54,
+          "jitterMs": 4.141085601654933
+        },
+        {
+          "frame": 94,
+          "serverTime": 3133.333,
+          "arrivalTime": 3186.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690193357045
+        },
+        {
+          "frame": 95,
+          "serverTime": 3166.667,
+          "arrivalTime": 3222.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065958552777
+        },
+        {
+          "frame": 96,
+          "serverTime": 3200,
+          "arrivalTime": 3251,
+          "bufferMs": 55,
+          "jitterMs": 4.352254086013277
+        },
+        {
+          "frame": 97,
+          "serverTime": 3233.333,
+          "arrivalTime": 3290.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848350530887
+        },
+        {
+          "frame": 98,
+          "serverTime": 3266.667,
+          "arrivalTime": 3321.667,
+          "bufferMs": 55,
+          "jitterMs": 4.172055647435327
+        },
+        {
+          "frame": 99,
+          "serverTime": 3300,
+          "arrivalTime": 3359,
+          "bufferMs": 54,
+          "jitterMs": 4.141085630896968
+        },
+        {
+          "frame": 100,
+          "serverTime": 3333.333,
+          "arrivalTime": 3386.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690217335513
+        },
+        {
+          "frame": 101,
+          "serverTime": 3366.667,
+          "arrivalTime": 3422.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065978215121
+        },
+        {
+          "frame": 102,
+          "serverTime": 3400,
+          "arrivalTime": 3451,
+          "bufferMs": 55,
+          "jitterMs": 4.352254102136399
+        },
+        {
+          "frame": 103,
+          "serverTime": 3433.333,
+          "arrivalTime": 3490.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848363751847
+        },
+        {
+          "frame": 104,
+          "serverTime": 3466.667,
+          "arrivalTime": 3521.667,
+          "bufferMs": 55,
+          "jitterMs": 4.1720556582765145
+        },
+        {
+          "frame": 105,
+          "serverTime": 3500,
+          "arrivalTime": 3559,
+          "bufferMs": 54,
+          "jitterMs": 4.141085639786741
+        },
+        {
+          "frame": 106,
+          "serverTime": 3533.333,
+          "arrivalTime": 3586.333,
+          "bufferMs": 55,
+          "jitterMs": 4.4756902246251276
+        },
+        {
+          "frame": 107,
+          "serverTime": 3566.667,
+          "arrivalTime": 3622.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065984192605
+        },
+        {
+          "frame": 108,
+          "serverTime": 3600,
+          "arrivalTime": 3651,
+          "bufferMs": 55,
+          "jitterMs": 4.352254107037936
+        },
+        {
+          "frame": 109,
+          "serverTime": 3633.333,
+          "arrivalTime": 3690.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848367771107
+        },
+        {
+          "frame": 110,
+          "serverTime": 3666.667,
+          "arrivalTime": 3721.667,
+          "bufferMs": 55,
+          "jitterMs": 4.1720556615723075
+        },
+        {
+          "frame": 111,
+          "serverTime": 3700,
+          "arrivalTime": 3759,
+          "bufferMs": 54,
+          "jitterMs": 4.1410856424892915
+        },
+        {
+          "frame": 112,
+          "serverTime": 3733.333,
+          "arrivalTime": 3786.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690226841219
+        },
+        {
+          "frame": 113,
+          "serverTime": 3766.667,
+          "arrivalTime": 3822.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065986009799
+        },
+        {
+          "frame": 114,
+          "serverTime": 3800,
+          "arrivalTime": 3851,
+          "bufferMs": 55,
+          "jitterMs": 4.352254108528035
+        },
+        {
+          "frame": 115,
+          "serverTime": 3833.333,
+          "arrivalTime": 3890.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848368992988
+        },
+        {
+          "frame": 116,
+          "serverTime": 3866.667,
+          "arrivalTime": 3921.667,
+          "bufferMs": 55,
+          "jitterMs": 4.17205566257425
+        },
+        {
+          "frame": 117,
+          "serverTime": 3900,
+          "arrivalTime": 3959,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643310885
+        },
+        {
+          "frame": 118,
+          "serverTime": 3933.333,
+          "arrivalTime": 3986.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227514925
+        },
+        {
+          "frame": 119,
+          "serverTime": 3966.667,
+          "arrivalTime": 4022.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065986562238
+        },
+        {
+          "frame": 120,
+          "serverTime": 4000,
+          "arrivalTime": 4051,
+          "bufferMs": 55,
+          "jitterMs": 4.352254108981035
+        },
+        {
+          "frame": 121,
+          "serverTime": 4033.333,
+          "arrivalTime": 4090.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848369364449
+        },
+        {
+          "frame": 122,
+          "serverTime": 4066.667,
+          "arrivalTime": 4121.667,
+          "bufferMs": 55,
+          "jitterMs": 4.172055662878766
+        },
+        {
+          "frame": 123,
+          "serverTime": 4100,
+          "arrivalTime": 4159,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643560507
+        },
+        {
+          "frame": 124,
+          "serverTime": 4133.333,
+          "arrivalTime": 4186.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227719616
+        },
+        {
+          "frame": 125,
+          "serverTime": 4166.667,
+          "arrivalTime": 4222.667,
+          "bufferMs": 55,
+          "jitterMs": 4.2100659867300845
+        },
+        {
+          "frame": 126,
+          "serverTime": 4200,
+          "arrivalTime": 4251,
+          "bufferMs": 55,
+          "jitterMs": 4.352254109118669
+        },
+        {
+          "frame": 127,
+          "serverTime": 4233.333,
+          "arrivalTime": 4290.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848369477308
+        },
+        {
+          "frame": 128,
+          "serverTime": 4266.667,
+          "arrivalTime": 4321.667,
+          "bufferMs": 55,
+          "jitterMs": 4.172055662971393
+        },
+        {
+          "frame": 129,
+          "serverTime": 4300,
+          "arrivalTime": 4359,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643636542
+        },
+        {
+          "frame": 130,
+          "serverTime": 4333.333,
+          "arrivalTime": 4386.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227781964
+        },
+        {
+          "frame": 131,
+          "serverTime": 4366.667,
+          "arrivalTime": 4422.667,
+          "bufferMs": 55,
+          "jitterMs": 4.21006598678121
+        },
+        {
+          "frame": 132,
+          "serverTime": 4400,
+          "arrivalTime": 4451,
+          "bufferMs": 55,
+          "jitterMs": 4.352254109160592
+        },
+        {
+          "frame": 133,
+          "serverTime": 4433.333,
+          "arrivalTime": 4490.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848369511685
+        },
+        {
+          "frame": 134,
+          "serverTime": 4466.667,
+          "arrivalTime": 4521.667,
+          "bufferMs": 55,
+          "jitterMs": 4.172055662999582
+        },
+        {
+          "frame": 135,
+          "serverTime": 4500,
+          "arrivalTime": 4559,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643659657
+        },
+        {
+          "frame": 136,
+          "serverTime": 4533.333,
+          "arrivalTime": 4586.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227800918
+        },
+        {
+          "frame": 137,
+          "serverTime": 4566.667,
+          "arrivalTime": 4622.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065986796753
+        },
+        {
+          "frame": 138,
+          "serverTime": 4600,
+          "arrivalTime": 4651,
+          "bufferMs": 55,
+          "jitterMs": 4.352254109173337
+        },
+        {
+          "frame": 139,
+          "serverTime": 4633.333,
+          "arrivalTime": 4690.333,
+          "bufferMs": 56,
+          "jitterMs": 4.6488483695221365
+        },
+        {
+          "frame": 140,
+          "serverTime": 4666.667,
+          "arrivalTime": 4721.667,
+          "bufferMs": 55,
+          "jitterMs": 4.172055663008152
+        },
+        {
+          "frame": 141,
+          "serverTime": 4700,
+          "arrivalTime": 4759,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643666684
+        },
+        {
+          "frame": 142,
+          "serverTime": 4733.333,
+          "arrivalTime": 4786.333,
+          "bufferMs": 55,
+          "jitterMs": 4.47569022780668
+        },
+        {
+          "frame": 143,
+          "serverTime": 4766.667,
+          "arrivalTime": 4822.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065986801478
+        },
+        {
+          "frame": 144,
+          "serverTime": 4800,
+          "arrivalTime": 4851,
+          "bufferMs": 55,
+          "jitterMs": 4.352254109177212
+        },
+        {
+          "frame": 145,
+          "serverTime": 4833.333,
+          "arrivalTime": 4890.333,
+          "bufferMs": 56,
+          "jitterMs": 4.6488483695253136
+        },
+        {
+          "frame": 146,
+          "serverTime": 4866.667,
+          "arrivalTime": 4921.667,
+          "bufferMs": 55,
+          "jitterMs": 4.172055663010757
+        },
+        {
+          "frame": 147,
+          "serverTime": 4900,
+          "arrivalTime": 4959,
+          "bufferMs": 54,
+          "jitterMs": 4.14108564366882
+        },
+        {
+          "frame": 148,
+          "serverTime": 4933.333,
+          "arrivalTime": 4986.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227808432
+        },
+        {
+          "frame": 149,
+          "serverTime": 4966.667,
+          "arrivalTime": 5022.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065986802913
+        },
+        {
+          "frame": 150,
+          "serverTime": 5000,
+          "arrivalTime": 5051,
+          "bufferMs": 55,
+          "jitterMs": 4.352254109178389
+        },
+        {
+          "frame": 151,
+          "serverTime": 5033.333,
+          "arrivalTime": 5090.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848369526279
+        },
+        {
+          "frame": 152,
+          "serverTime": 5066.667,
+          "arrivalTime": 5121.667,
+          "bufferMs": 55,
+          "jitterMs": 4.172055663011549
+        },
+        {
+          "frame": 153,
+          "serverTime": 5100,
+          "arrivalTime": 5159,
+          "bufferMs": 54,
+          "jitterMs": 4.14108564366947
+        },
+        {
+          "frame": 154,
+          "serverTime": 5133.333,
+          "arrivalTime": 5186.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227808965
+        },
+        {
+          "frame": 155,
+          "serverTime": 5166.667,
+          "arrivalTime": 5222.667,
+          "bufferMs": 55,
+          "jitterMs": 4.21006598680335
+        },
+        {
+          "frame": 156,
+          "serverTime": 5200,
+          "arrivalTime": 5251,
+          "bufferMs": 55,
+          "jitterMs": 4.352254109178746
+        },
+        {
+          "frame": 157,
+          "serverTime": 5233.333,
+          "arrivalTime": 5290.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848369526572
+        },
+        {
+          "frame": 158,
+          "serverTime": 5266.667,
+          "arrivalTime": 5321.667,
+          "bufferMs": 55,
+          "jitterMs": 4.172055663011789
+        },
+        {
+          "frame": 159,
+          "serverTime": 5300,
+          "arrivalTime": 5359,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643669666
+        },
+        {
+          "frame": 160,
+          "serverTime": 5333.333,
+          "arrivalTime": 5386.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227809126
+        },
+        {
+          "frame": 161,
+          "serverTime": 5366.667,
+          "arrivalTime": 5422.667,
+          "bufferMs": 55,
+          "jitterMs": 4.2100659868034835
+        },
+        {
+          "frame": 162,
+          "serverTime": 5400,
+          "arrivalTime": 5451,
+          "bufferMs": 55,
+          "jitterMs": 4.3522541091788565
+        },
+        {
+          "frame": 163,
+          "serverTime": 5433.333,
+          "arrivalTime": 5490.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848369526663
+        },
+        {
+          "frame": 164,
+          "serverTime": 5466.667,
+          "arrivalTime": 5521.667,
+          "bufferMs": 55,
+          "jitterMs": 4.1720556630118635
+        },
+        {
+          "frame": 165,
+          "serverTime": 5500,
+          "arrivalTime": 5559,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643669728
+        },
+        {
+          "frame": 166,
+          "serverTime": 5533.333,
+          "arrivalTime": 5586.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227809176
+        },
+        {
+          "frame": 167,
+          "serverTime": 5566.667,
+          "arrivalTime": 5622.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065986803524
+        },
+        {
+          "frame": 168,
+          "serverTime": 5600,
+          "arrivalTime": 5651,
+          "bufferMs": 55,
+          "jitterMs": 4.35225410917889
+        },
+        {
+          "frame": 169,
+          "serverTime": 5633.333,
+          "arrivalTime": 5690.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848369526689
+        },
+        {
+          "frame": 170,
+          "serverTime": 5666.667,
+          "arrivalTime": 5721.667,
+          "bufferMs": 55,
+          "jitterMs": 4.172055663011885
+        },
+        {
+          "frame": 171,
+          "serverTime": 5700,
+          "arrivalTime": 5759,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643669745
+        },
+        {
+          "frame": 172,
+          "serverTime": 5733.333,
+          "arrivalTime": 5786.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227809191
+        },
+        {
+          "frame": 173,
+          "serverTime": 5766.667,
+          "arrivalTime": 5822.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065986803537
+        },
+        {
+          "frame": 174,
+          "serverTime": 5800,
+          "arrivalTime": 5851,
+          "bufferMs": 55,
+          "jitterMs": 4.3522541091789
+        },
+        {
+          "frame": 175,
+          "serverTime": 5833.333,
+          "arrivalTime": 5890.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848369526698
+        },
+        {
+          "frame": 176,
+          "serverTime": 5866.667,
+          "arrivalTime": 5921.667,
+          "bufferMs": 55,
+          "jitterMs": 4.172055663011893
+        },
+        {
+          "frame": 177,
+          "serverTime": 5900,
+          "arrivalTime": 5959,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643669752
+        },
+        {
+          "frame": 178,
+          "serverTime": 5933.333,
+          "arrivalTime": 5986.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227809196
+        },
+        {
+          "frame": 179,
+          "serverTime": 5966.667,
+          "arrivalTime": 6022.667,
+          "bufferMs": 55,
+          "jitterMs": 4.21006598680354
+        },
+        {
+          "frame": 180,
+          "serverTime": 6000,
+          "arrivalTime": 6051,
+          "bufferMs": 55,
+          "jitterMs": 4.352254109178903
+        },
+        {
+          "frame": 181,
+          "serverTime": 6033.333,
+          "arrivalTime": 6090.333,
+          "bufferMs": 56,
+          "jitterMs": 4.6488483695267
+        },
+        {
+          "frame": 182,
+          "serverTime": 6066.667,
+          "arrivalTime": 6121.667,
+          "bufferMs": 55,
+          "jitterMs": 4.172055663011894
+        },
+        {
+          "frame": 183,
+          "serverTime": 6100,
+          "arrivalTime": 6159,
+          "bufferMs": 54,
+          "jitterMs": 4.1410856436697525
+        },
+        {
+          "frame": 184,
+          "serverTime": 6133.333,
+          "arrivalTime": 6186.333,
+          "bufferMs": 55,
+          "jitterMs": 4.4756902278091975
+        },
+        {
+          "frame": 185,
+          "serverTime": 6166.667,
+          "arrivalTime": 6222.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065986803542
+        },
+        {
+          "frame": 186,
+          "serverTime": 6200,
+          "arrivalTime": 6251,
+          "bufferMs": 55,
+          "jitterMs": 4.352254109178904
+        },
+        {
+          "frame": 187,
+          "serverTime": 6233.333,
+          "arrivalTime": 6290.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848369526702
+        },
+        {
+          "frame": 188,
+          "serverTime": 6266.667,
+          "arrivalTime": 6321.667,
+          "bufferMs": 55,
+          "jitterMs": 4.1720556630118955
+        },
+        {
+          "frame": 189,
+          "serverTime": 6300,
+          "arrivalTime": 6359,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643669754
+        },
+        {
+          "frame": 190,
+          "serverTime": 6333.333,
+          "arrivalTime": 6386.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227809198
+        },
+        {
+          "frame": 191,
+          "serverTime": 6366.667,
+          "arrivalTime": 6422.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065986803542
+        },
+        {
+          "frame": 192,
+          "serverTime": 6400,
+          "arrivalTime": 6451,
+          "bufferMs": 55,
+          "jitterMs": 4.352254109178904
+        },
+        {
+          "frame": 193,
+          "serverTime": 6433.333,
+          "arrivalTime": 6490.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848369526702
+        },
+        {
+          "frame": 194,
+          "serverTime": 6466.667,
+          "arrivalTime": 6521.667,
+          "bufferMs": 55,
+          "jitterMs": 4.1720556630118955
+        },
+        {
+          "frame": 195,
+          "serverTime": 6500,
+          "arrivalTime": 6559,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643669754
+        },
+        {
+          "frame": 196,
+          "serverTime": 6533.333,
+          "arrivalTime": 6586.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227809198
+        },
+        {
+          "frame": 197,
+          "serverTime": 6566.667,
+          "arrivalTime": 6622.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065986803542
+        },
+        {
+          "frame": 198,
+          "serverTime": 6600,
+          "arrivalTime": 6651,
+          "bufferMs": 55,
+          "jitterMs": 4.352254109178904
+        },
+        {
+          "frame": 199,
+          "serverTime": 6633.333,
+          "arrivalTime": 6690.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848369526702
+        },
+        {
+          "frame": 200,
+          "serverTime": 6666.667,
+          "arrivalTime": 6721.667,
+          "bufferMs": 55,
+          "jitterMs": 4.1720556630118955
+        },
+        {
+          "frame": 201,
+          "serverTime": 6700,
+          "arrivalTime": 6759,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643669754
+        },
+        {
+          "frame": 202,
+          "serverTime": 6733.333,
+          "arrivalTime": 6786.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227809198
+        },
+        {
+          "frame": 203,
+          "serverTime": 6766.667,
+          "arrivalTime": 6822.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065986803542
+        },
+        {
+          "frame": 204,
+          "serverTime": 6800,
+          "arrivalTime": 6851,
+          "bufferMs": 55,
+          "jitterMs": 4.352254109178904
+        },
+        {
+          "frame": 205,
+          "serverTime": 6833.333,
+          "arrivalTime": 6890.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848369526702
+        },
+        {
+          "frame": 206,
+          "serverTime": 6866.667,
+          "arrivalTime": 6921.667,
+          "bufferMs": 55,
+          "jitterMs": 4.1720556630118955
+        },
+        {
+          "frame": 207,
+          "serverTime": 6900,
+          "arrivalTime": 6959,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643669754
+        },
+        {
+          "frame": 208,
+          "serverTime": 6933.333,
+          "arrivalTime": 6986.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227809198
+        },
+        {
+          "frame": 209,
+          "serverTime": 6966.667,
+          "arrivalTime": 7022.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065986803542
+        },
+        {
+          "frame": 210,
+          "serverTime": 7000,
+          "arrivalTime": 7051,
+          "bufferMs": 55,
+          "jitterMs": 4.352254109178904
+        },
+        {
+          "frame": 211,
+          "serverTime": 7033.333,
+          "arrivalTime": 7090.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848369526702
+        },
+        {
+          "frame": 212,
+          "serverTime": 7066.667,
+          "arrivalTime": 7121.667,
+          "bufferMs": 55,
+          "jitterMs": 4.1720556630118955
+        },
+        {
+          "frame": 213,
+          "serverTime": 7100,
+          "arrivalTime": 7159,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643669754
+        },
+        {
+          "frame": 214,
+          "serverTime": 7133.333,
+          "arrivalTime": 7186.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227809198
+        },
+        {
+          "frame": 215,
+          "serverTime": 7166.667,
+          "arrivalTime": 7222.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065986803542
+        },
+        {
+          "frame": 216,
+          "serverTime": 7200,
+          "arrivalTime": 7251,
+          "bufferMs": 55,
+          "jitterMs": 4.352254109178904
+        },
+        {
+          "frame": 217,
+          "serverTime": 7233.333,
+          "arrivalTime": 7290.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848369526702
+        },
+        {
+          "frame": 218,
+          "serverTime": 7266.667,
+          "arrivalTime": 7321.667,
+          "bufferMs": 55,
+          "jitterMs": 4.1720556630118955
+        },
+        {
+          "frame": 219,
+          "serverTime": 7300,
+          "arrivalTime": 7359,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643669754
+        },
+        {
+          "frame": 220,
+          "serverTime": 7333.333,
+          "arrivalTime": 7386.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227809198
+        },
+        {
+          "frame": 221,
+          "serverTime": 7366.667,
+          "arrivalTime": 7422.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065986803542
+        },
+        {
+          "frame": 222,
+          "serverTime": 7400,
+          "arrivalTime": 7451,
+          "bufferMs": 55,
+          "jitterMs": 4.352254109178904
+        },
+        {
+          "frame": 223,
+          "serverTime": 7433.333,
+          "arrivalTime": 7490.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848369526702
+        },
+        {
+          "frame": 224,
+          "serverTime": 7466.667,
+          "arrivalTime": 7521.667,
+          "bufferMs": 55,
+          "jitterMs": 4.1720556630118955
+        },
+        {
+          "frame": 225,
+          "serverTime": 7500,
+          "arrivalTime": 7559,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643669754
+        },
+        {
+          "frame": 226,
+          "serverTime": 7533.333,
+          "arrivalTime": 7586.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227809198
+        },
+        {
+          "frame": 227,
+          "serverTime": 7566.667,
+          "arrivalTime": 7622.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065986803542
+        },
+        {
+          "frame": 228,
+          "serverTime": 7600,
+          "arrivalTime": 7651,
+          "bufferMs": 55,
+          "jitterMs": 4.352254109178904
+        },
+        {
+          "frame": 229,
+          "serverTime": 7633.333,
+          "arrivalTime": 7690.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848369526702
+        },
+        {
+          "frame": 230,
+          "serverTime": 7666.667,
+          "arrivalTime": 7721.667,
+          "bufferMs": 55,
+          "jitterMs": 4.1720556630118955
+        },
+        {
+          "frame": 231,
+          "serverTime": 7700,
+          "arrivalTime": 7759,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643669754
+        },
+        {
+          "frame": 232,
+          "serverTime": 7733.333,
+          "arrivalTime": 7786.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227809198
+        },
+        {
+          "frame": 233,
+          "serverTime": 7766.667,
+          "arrivalTime": 7822.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065986803542
+        },
+        {
+          "frame": 234,
+          "serverTime": 7800,
+          "arrivalTime": 7851,
+          "bufferMs": 55,
+          "jitterMs": 4.352254109178904
+        },
+        {
+          "frame": 235,
+          "serverTime": 7833.333,
+          "arrivalTime": 7890.333,
+          "bufferMs": 56,
+          "jitterMs": 4.648848369526702
+        },
+        {
+          "frame": 236,
+          "serverTime": 7866.667,
+          "arrivalTime": 7921.667,
+          "bufferMs": 55,
+          "jitterMs": 4.1720556630118955
+        },
+        {
+          "frame": 237,
+          "serverTime": 7900,
+          "arrivalTime": 7959,
+          "bufferMs": 54,
+          "jitterMs": 4.141085643669754
+        },
+        {
+          "frame": 238,
+          "serverTime": 7933.333,
+          "arrivalTime": 7986.333,
+          "bufferMs": 55,
+          "jitterMs": 4.475690227809198
+        },
+        {
+          "frame": 239,
+          "serverTime": 7966.667,
+          "arrivalTime": 8022.667,
+          "bufferMs": 55,
+          "jitterMs": 4.210065986803542
+        }
+      ]
+    },
+    {
+      "name": "Moderate jitter burst",
+      "description": "Steady stream with an 80 ms ordered-delivery stall at frame 90; queued snapshots then arrive as an ordered batch.",
+      "frames": 240,
+      "snapshotRateHz": 30,
+      "baseOneWayModelMs": 55,
+      "buffer": {
+        "minimumMs": 42,
+        "meanMs": 53.99,
+        "p50Ms": 42,
+        "p95Ms": 72,
+        "maximumMs": 117,
+        "finalMs": 42
+      },
+      "jitter": {
+        "meanMs": 3.99,
+        "p95Ms": 9.86,
+        "maximumMs": 25.05,
+        "finalMs": 0
+      },
+      "recovery": {
+        "frame": 110,
+        "msSinceStall": 666.7
+      },
+      "samples": [
+        {
+          "frame": 0,
+          "serverTime": 0,
+          "arrivalTime": 46,
+          "bufferMs": 42,
+          "jitterMs": 0
+        },
+        {
+          "frame": 1,
+          "serverTime": 33.333,
+          "arrivalTime": 93.333,
+          "bufferMs": 50,
+          "jitterMs": 2.52
+        },
+        {
+          "frame": 2,
+          "serverTime": 66.667,
+          "arrivalTime": 121.667,
+          "bufferMs": 51,
+          "jitterMs": 2.9663999999999997
+        },
+        {
+          "frame": 3,
+          "serverTime": 100,
+          "arrivalTime": 162,
+          "bufferMs": 53,
+          "jitterMs": 3.6924479999999997
+        },
+        {
+          "frame": 4,
+          "serverTime": 133.333,
+          "arrivalTime": 184.333,
+          "bufferMs": 57,
+          "jitterMs": 5.007807359999999
+        },
+        {
+          "frame": 5,
+          "serverTime": 166.667,
+          "arrivalTime": 223.667,
+          "bufferMs": 58,
+          "jitterMs": 5.1864020351999995
+        },
+        {
+          "frame": 6,
+          "serverTime": 200,
+          "arrivalTime": 246,
+          "bufferMs": 61,
+          "jitterMs": 6.232849668863999
+        },
+        {
+          "frame": 7,
+          "serverTime": 233.333,
+          "arrivalTime": 293.333,
+          "bufferMs": 65,
+          "jitterMs": 7.630936728468484
+        },
+        {
+          "frame": 8,
+          "serverTime": 266.667,
+          "arrivalTime": 321.667,
+          "bufferMs": 63,
+          "jitterMs": 7.157368117344161
+        },
+        {
+          "frame": 9,
+          "serverTime": 300,
+          "arrivalTime": 362,
+          "bufferMs": 63,
+          "jitterMs": 7.129041856222211
+        },
+        {
+          "frame": 10,
+          "serverTime": 333.333,
+          "arrivalTime": 384.333,
+          "bufferMs": 65,
+          "jitterMs": 7.825814322102213
+        },
+        {
+          "frame": 11,
+          "serverTime": 366.667,
+          "arrivalTime": 423.667,
+          "bufferMs": 64,
+          "jitterMs": 7.497167744123814
+        },
+        {
+          "frame": 12,
+          "serverTime": 400,
+          "arrivalTime": 446,
+          "bufferMs": 66,
+          "jitterMs": 8.127677550181527
+        },
+        {
+          "frame": 13,
+          "serverTime": 433.333,
+          "arrivalTime": 493.333,
+          "bufferMs": 70,
+          "jitterMs": 9.184695591148852
+        },
+        {
+          "frame": 14,
+          "serverTime": 466.667,
+          "arrivalTime": 521.667,
+          "bufferMs": 67,
+          "jitterMs": 8.431450384742048
+        },
+        {
+          "frame": 15,
+          "serverTime": 500,
+          "arrivalTime": 562,
+          "bufferMs": 67,
+          "jitterMs": 8.173789315488468
+        },
+        {
+          "frame": 16,
+          "serverTime": 533.333,
+          "arrivalTime": 584.333,
+          "bufferMs": 68,
+          "jitterMs": 8.682507238700543
+        },
+        {
+          "frame": 17,
+          "serverTime": 566.667,
+          "arrivalTime": 623.667,
+          "bufferMs": 67,
+          "jitterMs": 8.199655935734445
+        },
+        {
+          "frame": 18,
+          "serverTime": 600,
+          "arrivalTime": 646,
+          "bufferMs": 68,
+          "jitterMs": 8.703717867302244
+        },
+        {
+          "frame": 19,
+          "serverTime": 633.333,
+          "arrivalTime": 693.333,
+          "bufferMs": 71,
+          "jitterMs": 9.65704865118784
+        },
+        {
+          "frame": 20,
+          "serverTime": 666.667,
+          "arrivalTime": 721.667,
+          "bufferMs": 68,
+          "jitterMs": 8.818779893974028
+        },
+        {
+          "frame": 21,
+          "serverTime": 700,
+          "arrivalTime": 762,
+          "bufferMs": 67,
+          "jitterMs": 8.491399513058703
+        },
+        {
+          "frame": 22,
+          "serverTime": 733.333,
+          "arrivalTime": 784.333,
+          "bufferMs": 69,
+          "jitterMs": 8.942947600708136
+        },
+        {
+          "frame": 23,
+          "serverTime": 766.667,
+          "arrivalTime": 823.667,
+          "bufferMs": 67,
+          "jitterMs": 8.413217032580672
+        },
+        {
+          "frame": 24,
+          "serverTime": 800,
+          "arrivalTime": 846,
+          "bufferMs": 69,
+          "jitterMs": 8.87883796671615
+        },
+        {
+          "frame": 25,
+          "serverTime": 833.333,
+          "arrivalTime": 893.333,
+          "bufferMs": 71,
+          "jitterMs": 9.800647132707242
+        },
+        {
+          "frame": 26,
+          "serverTime": 866.667,
+          "arrivalTime": 921.667,
+          "bufferMs": 69,
+          "jitterMs": 8.936530648819938
+        },
+        {
+          "frame": 27,
+          "serverTime": 900,
+          "arrivalTime": 962,
+          "bufferMs": 68,
+          "jitterMs": 8.587955132032349
+        },
+        {
+          "frame": 28,
+          "serverTime": 933.333,
+          "arrivalTime": 984.333,
+          "bufferMs": 69,
+          "jitterMs": 9.022123208266525
+        },
+        {
+          "frame": 29,
+          "serverTime": 966.667,
+          "arrivalTime": 1023.667,
+          "bufferMs": 67,
+          "jitterMs": 8.478141030778549
+        },
+        {
+          "frame": 30,
+          "serverTime": 1000,
+          "arrivalTime": 1046,
+          "bufferMs": 69,
+          "jitterMs": 8.93207564523841
+        },
+        {
+          "frame": 31,
+          "serverTime": 1033.333,
+          "arrivalTime": 1093.333,
+          "bufferMs": 72,
+          "jitterMs": 9.844302029095495
+        },
+        {
+          "frame": 32,
+          "serverTime": 1066.667,
+          "arrivalTime": 1121.667,
+          "bufferMs": 69,
+          "jitterMs": 8.972327663858305
+        },
+        {
+          "frame": 33,
+          "serverTime": 1100,
+          "arrivalTime": 1162,
+          "bufferMs": 68,
+          "jitterMs": 8.61730868436381
+        },
+        {
+          "frame": 34,
+          "serverTime": 1133.333,
+          "arrivalTime": 1184.333,
+          "bufferMs": 69,
+          "jitterMs": 9.046193121178323
+        },
+        {
+          "frame": 35,
+          "serverTime": 1166.667,
+          "arrivalTime": 1223.667,
+          "bufferMs": 67,
+          "jitterMs": 8.497878359366226
+        },
+        {
+          "frame": 36,
+          "serverTime": 1200,
+          "arrivalTime": 1246,
+          "bufferMs": 69,
+          "jitterMs": 8.948260254680305
+        },
+        {
+          "frame": 37,
+          "serverTime": 1233.333,
+          "arrivalTime": 1293.333,
+          "bufferMs": 72,
+          "jitterMs": 9.85757340883785
+        },
+        {
+          "frame": 38,
+          "serverTime": 1266.667,
+          "arrivalTime": 1321.667,
+          "bufferMs": 69,
+          "jitterMs": 8.983210195247036
+        },
+        {
+          "frame": 39,
+          "serverTime": 1300,
+          "arrivalTime": 1362,
+          "bufferMs": 68,
+          "jitterMs": 8.62623236010257
+        },
+        {
+          "frame": 40,
+          "serverTime": 1333.333,
+          "arrivalTime": 1384.333,
+          "bufferMs": 69,
+          "jitterMs": 9.053510535284106
+        },
+        {
+          "frame": 41,
+          "serverTime": 1366.667,
+          "arrivalTime": 1423.667,
+          "bufferMs": 68,
+          "jitterMs": 8.503878638932967
+        },
+        {
+          "frame": 42,
+          "serverTime": 1400,
+          "arrivalTime": 1446,
+          "bufferMs": 69,
+          "jitterMs": 8.953180483925033
+        },
+        {
+          "frame": 43,
+          "serverTime": 1433.333,
+          "arrivalTime": 1493.333,
+          "bufferMs": 72,
+          "jitterMs": 9.861607996818528
+        },
+        {
+          "frame": 44,
+          "serverTime": 1466.667,
+          "arrivalTime": 1521.667,
+          "bufferMs": 69,
+          "jitterMs": 8.986518557391193
+        },
+        {
+          "frame": 45,
+          "serverTime": 1500,
+          "arrivalTime": 1562,
+          "bufferMs": 68,
+          "jitterMs": 8.628945217060778
+        },
+        {
+          "frame": 46,
+          "serverTime": 1533.333,
+          "arrivalTime": 1584.333,
+          "bufferMs": 69,
+          "jitterMs": 9.055735077989837
+        },
+        {
+          "frame": 47,
+          "serverTime": 1566.667,
+          "arrivalTime": 1623.667,
+          "bufferMs": 68,
+          "jitterMs": 8.505702763951666
+        },
+        {
+          "frame": 48,
+          "serverTime": 1600,
+          "arrivalTime": 1646,
+          "bufferMs": 69,
+          "jitterMs": 8.954676266440366
+        },
+        {
+          "frame": 49,
+          "serverTime": 1633.333,
+          "arrivalTime": 1693.333,
+          "bufferMs": 72,
+          "jitterMs": 9.8628345384811
+        },
+        {
+          "frame": 50,
+          "serverTime": 1666.667,
+          "arrivalTime": 1721.667,
+          "bufferMs": 69,
+          "jitterMs": 8.9875243215545
+        },
+        {
+          "frame": 51,
+          "serverTime": 1700,
+          "arrivalTime": 1762,
+          "bufferMs": 68,
+          "jitterMs": 8.62976994367469
+        },
+        {
+          "frame": 52,
+          "serverTime": 1733.333,
+          "arrivalTime": 1784.333,
+          "bufferMs": 69,
+          "jitterMs": 9.056411353813246
+        },
+        {
+          "frame": 53,
+          "serverTime": 1766.667,
+          "arrivalTime": 1823.667,
+          "bufferMs": 68,
+          "jitterMs": 8.506257310126863
+        },
+        {
+          "frame": 54,
+          "serverTime": 1800,
+          "arrivalTime": 1846,
+          "bufferMs": 69,
+          "jitterMs": 8.955130994304026
+        },
+        {
+          "frame": 55,
+          "serverTime": 1833.333,
+          "arrivalTime": 1893.333,
+          "bufferMs": 72,
+          "jitterMs": 9.8632074153293
+        },
+        {
+          "frame": 56,
+          "serverTime": 1866.667,
+          "arrivalTime": 1921.667,
+          "bufferMs": 69,
+          "jitterMs": 8.987830080570026
+        },
+        {
+          "frame": 57,
+          "serverTime": 1900,
+          "arrivalTime": 1962,
+          "bufferMs": 68,
+          "jitterMs": 8.630020666067422
+        },
+        {
+          "frame": 58,
+          "serverTime": 1933.333,
+          "arrivalTime": 1984.333,
+          "bufferMs": 69,
+          "jitterMs": 9.056616946175286
+        },
+        {
+          "frame": 59,
+          "serverTime": 1966.667,
+          "arrivalTime": 2023.667,
+          "bufferMs": 68,
+          "jitterMs": 8.506425895863734
+        },
+        {
+          "frame": 60,
+          "serverTime": 2000,
+          "arrivalTime": 2046,
+          "bufferMs": 69,
+          "jitterMs": 8.955269234608261
+        },
+        {
+          "frame": 61,
+          "serverTime": 2033.333,
+          "arrivalTime": 2093.333,
+          "bufferMs": 72,
+          "jitterMs": 9.863320772378774
+        },
+        {
+          "frame": 62,
+          "serverTime": 2066.667,
+          "arrivalTime": 2121.667,
+          "bufferMs": 69,
+          "jitterMs": 8.987923033350596
+        },
+        {
+          "frame": 63,
+          "serverTime": 2100,
+          "arrivalTime": 2162,
+          "bufferMs": 68,
+          "jitterMs": 8.630096887347488
+        },
+        {
+          "frame": 64,
+          "serverTime": 2133.333,
+          "arrivalTime": 2184.333,
+          "bufferMs": 69,
+          "jitterMs": 9.056679447624939
+        },
+        {
+          "frame": 65,
+          "serverTime": 2166.667,
+          "arrivalTime": 2223.667,
+          "bufferMs": 68,
+          "jitterMs": 8.50647714705245
+        },
+        {
+          "frame": 66,
+          "serverTime": 2200,
+          "arrivalTime": 2246,
+          "bufferMs": 69,
+          "jitterMs": 8.95531126058301
+        },
+        {
+          "frame": 67,
+          "serverTime": 2233.333,
+          "arrivalTime": 2293.333,
+          "bufferMs": 72,
+          "jitterMs": 9.863355233678067
+        },
+        {
+          "frame": 68,
+          "serverTime": 2266.667,
+          "arrivalTime": 2321.667,
+          "bufferMs": 69,
+          "jitterMs": 8.987951291616016
+        },
+        {
+          "frame": 69,
+          "serverTime": 2300,
+          "arrivalTime": 2362,
+          "bufferMs": 68,
+          "jitterMs": 8.630120059125133
+        },
+        {
+          "frame": 70,
+          "serverTime": 2333.333,
+          "arrivalTime": 2384.333,
+          "bufferMs": 69,
+          "jitterMs": 9.056698448482608
+        },
+        {
+          "frame": 71,
+          "serverTime": 2366.667,
+          "arrivalTime": 2423.667,
+          "bufferMs": 68,
+          "jitterMs": 8.506492727755738
+        },
+        {
+          "frame": 72,
+          "serverTime": 2400,
+          "arrivalTime": 2446,
+          "bufferMs": 69,
+          "jitterMs": 8.955324036759706
+        },
+        {
+          "frame": 73,
+          "serverTime": 2433.333,
+          "arrivalTime": 2493.333,
+          "bufferMs": 72,
+          "jitterMs": 9.863365710142958
+        },
+        {
+          "frame": 74,
+          "serverTime": 2466.667,
+          "arrivalTime": 2521.667,
+          "bufferMs": 69,
+          "jitterMs": 8.987959882317226
+        },
+        {
+          "frame": 75,
+          "serverTime": 2500,
+          "arrivalTime": 2562,
+          "bufferMs": 68,
+          "jitterMs": 8.630127103500124
+        },
+        {
+          "frame": 76,
+          "serverTime": 2533.333,
+          "arrivalTime": 2584.333,
+          "bufferMs": 69,
+          "jitterMs": 9.056704224870101
+        },
+        {
+          "frame": 77,
+          "serverTime": 2566.667,
+          "arrivalTime": 2623.667,
+          "bufferMs": 68,
+          "jitterMs": 8.506497464393483
+        },
+        {
+          "frame": 78,
+          "serverTime": 2600,
+          "arrivalTime": 2646,
+          "bufferMs": 69,
+          "jitterMs": 8.955327920802656
+        },
+        {
+          "frame": 79,
+          "serverTime": 2633.333,
+          "arrivalTime": 2693.333,
+          "bufferMs": 72,
+          "jitterMs": 9.863368895058178
+        },
+        {
+          "frame": 80,
+          "serverTime": 2666.667,
+          "arrivalTime": 2721.667,
+          "bufferMs": 69,
+          "jitterMs": 8.987962493947705
+        },
+        {
+          "frame": 81,
+          "serverTime": 2700,
+          "arrivalTime": 2762,
+          "bufferMs": 68,
+          "jitterMs": 8.630129245037118
+        },
+        {
+          "frame": 82,
+          "serverTime": 2733.333,
+          "arrivalTime": 2784.333,
+          "bufferMs": 69,
+          "jitterMs": 9.056705980930436
+        },
+        {
+          "frame": 83,
+          "serverTime": 2766.667,
+          "arrivalTime": 2823.667,
+          "bufferMs": 68,
+          "jitterMs": 8.506498904362957
+        },
+        {
+          "frame": 84,
+          "serverTime": 2800,
+          "arrivalTime": 2846,
+          "bufferMs": 69,
+          "jitterMs": 8.955329101577624
+        },
+        {
+          "frame": 85,
+          "serverTime": 2833.333,
+          "arrivalTime": 2893.333,
+          "bufferMs": 72,
+          "jitterMs": 9.86336986329365
+        },
+        {
+          "frame": 86,
+          "serverTime": 2866.667,
+          "arrivalTime": 2921.667,
+          "bufferMs": 69,
+          "jitterMs": 8.987963287900794
+        },
+        {
+          "frame": 87,
+          "serverTime": 2900,
+          "arrivalTime": 2962,
+          "bufferMs": 68,
+          "jitterMs": 8.63012989607865
+        },
+        {
+          "frame": 88,
+          "serverTime": 2933.333,
+          "arrivalTime": 2984.333,
+          "bufferMs": 69,
+          "jitterMs": 9.056706514784493
+        },
+        {
+          "frame": 89,
+          "serverTime": 2966.667,
+          "arrivalTime": 3023.667,
+          "bufferMs": 68,
+          "jitterMs": 8.506499342123284
+        },
+        {
+          "frame": 90,
+          "serverTime": 3000,
+          "arrivalTime": 3135,
+          "bufferMs": 105,
+          "jitterMs": 21.015329460541093
+        },
+        {
+          "frame": 91,
+          "serverTime": 3033.333,
+          "arrivalTime": 3135,
+          "bufferMs": 112,
+          "jitterMs": 23.23251015764371
+        },
+        {
+          "frame": 92,
+          "serverTime": 3066.667,
+          "arrivalTime": 3135,
+          "bufferMs": 117,
+          "jitterMs": 25.05077832926781
+        },
+        {
+          "frame": 93,
+          "serverTime": 3100,
+          "arrivalTime": 3155,
+          "bufferMs": 111,
+          "jitterMs": 22.941578229999617
+        },
+        {
+          "frame": 94,
+          "serverTime": 3133.333,
+          "arrivalTime": 3188.333,
+          "bufferMs": 98,
+          "jitterMs": 18.812094148599684
+        },
+        {
+          "frame": 95,
+          "serverTime": 3166.667,
+          "arrivalTime": 3221.667,
+          "bufferMs": 88,
+          "jitterMs": 15.425917201851739
+        },
+        {
+          "frame": 96,
+          "serverTime": 3200,
+          "arrivalTime": 3255,
+          "bufferMs": 80,
+          "jitterMs": 12.649252105518425
+        },
+        {
+          "frame": 97,
+          "serverTime": 3233.333,
+          "arrivalTime": 3288.333,
+          "bufferMs": 73,
+          "jitterMs": 10.372386726525107
+        },
+        {
+          "frame": 98,
+          "serverTime": 3266.667,
+          "arrivalTime": 3321.667,
+          "bufferMs": 68,
+          "jitterMs": 8.505357115750588
+        },
+        {
+          "frame": 99,
+          "serverTime": 3300,
+          "arrivalTime": 3355,
+          "bufferMs": 63,
+          "jitterMs": 6.974392834915482
+        },
+        {
+          "frame": 100,
+          "serverTime": 3333.333,
+          "arrivalTime": 3388.333,
+          "bufferMs": 59,
+          "jitterMs": 5.719002124630695
+        },
+        {
+          "frame": 101,
+          "serverTime": 3366.667,
+          "arrivalTime": 3421.667,
+          "bufferMs": 56,
+          "jitterMs": 4.689581742197169
+        },
+        {
+          "frame": 102,
+          "serverTime": 3400,
+          "arrivalTime": 3455,
+          "bufferMs": 54,
+          "jitterMs": 3.8454570286016785
+        },
+        {
+          "frame": 103,
+          "serverTime": 3433.333,
+          "arrivalTime": 3488.333,
+          "bufferMs": 51,
+          "jitterMs": 3.153274763453376
+        },
+        {
+          "frame": 104,
+          "serverTime": 3466.667,
+          "arrivalTime": 3521.667,
+          "bufferMs": 50,
+          "jitterMs": 2.585685306031768
+        },
+        {
+          "frame": 105,
+          "serverTime": 3500,
+          "arrivalTime": 3555,
+          "bufferMs": 48,
+          "jitterMs": 2.1202619509460496
+        },
+        {
+          "frame": 106,
+          "serverTime": 3533.333,
+          "arrivalTime": 3588.333,
+          "bufferMs": 47,
+          "jitterMs": 1.7386147997757606
+        },
+        {
+          "frame": 107,
+          "serverTime": 3566.667,
+          "arrivalTime": 3621.667,
+          "bufferMs": 46,
+          "jitterMs": 1.4256641358161237
+        },
+        {
+          "frame": 108,
+          "serverTime": 3600,
+          "arrivalTime": 3655,
+          "bufferMs": 46,
+          "jitterMs": 1.1690445913692213
+        },
+        {
+          "frame": 109,
+          "serverTime": 3633.333,
+          "arrivalTime": 3688.333,
+          "bufferMs": 45,
+          "jitterMs": 0.9586165649227615
+        },
+        {
+          "frame": 110,
+          "serverTime": 3666.667,
+          "arrivalTime": 3721.667,
+          "bufferMs": 44,
+          "jitterMs": 0.7860655832366644
+        },
+        {
+          "frame": 111,
+          "serverTime": 3700,
+          "arrivalTime": 3755,
+          "bufferMs": 44,
+          "jitterMs": 0.6445737782540648
+        },
+        {
+          "frame": 112,
+          "serverTime": 3733.333,
+          "arrivalTime": 3788.333,
+          "bufferMs": 44,
+          "jitterMs": 0.5285504981683331
+        },
+        {
+          "frame": 113,
+          "serverTime": 3766.667,
+          "arrivalTime": 3821.667,
+          "bufferMs": 43,
+          "jitterMs": 0.4334114084980331
+        },
+        {
+          "frame": 114,
+          "serverTime": 3800,
+          "arrivalTime": 3855,
+          "bufferMs": 43,
+          "jitterMs": 0.35539735496838715
+        },
+        {
+          "frame": 115,
+          "serverTime": 3833.333,
+          "arrivalTime": 3888.333,
+          "bufferMs": 43,
+          "jitterMs": 0.29142583107407743
+        },
+        {
+          "frame": 116,
+          "serverTime": 3866.667,
+          "arrivalTime": 3921.667,
+          "bufferMs": 43,
+          "jitterMs": 0.23896918148074348
+        },
+        {
+          "frame": 117,
+          "serverTime": 3900,
+          "arrivalTime": 3955,
+          "bufferMs": 43,
+          "jitterMs": 0.19595472881420964
+        },
+        {
+          "frame": 118,
+          "serverTime": 3933.333,
+          "arrivalTime": 3988.333,
+          "bufferMs": 42,
+          "jitterMs": 0.1606828776276519
+        },
+        {
+          "frame": 119,
+          "serverTime": 3966.667,
+          "arrivalTime": 4021.667,
+          "bufferMs": 42,
+          "jitterMs": 0.13175995965467455
+        },
+        {
+          "frame": 120,
+          "serverTime": 4000,
+          "arrivalTime": 4055,
+          "bufferMs": 42,
+          "jitterMs": 0.10804316691683312
+        },
+        {
+          "frame": 121,
+          "serverTime": 4033.333,
+          "arrivalTime": 4088.333,
+          "bufferMs": 42,
+          "jitterMs": 0.08859539687180315
+        },
+        {
+          "frame": 122,
+          "serverTime": 4066.667,
+          "arrivalTime": 4121.667,
+          "bufferMs": 42,
+          "jitterMs": 0.07264822543496043
+        },
+        {
+          "frame": 123,
+          "serverTime": 4100,
+          "arrivalTime": 4155,
+          "bufferMs": 42,
+          "jitterMs": 0.0595715448567494
+        },
+        {
+          "frame": 124,
+          "serverTime": 4133.333,
+          "arrivalTime": 4188.333,
+          "bufferMs": 42,
+          "jitterMs": 0.0488486667825345
+        },
+        {
+          "frame": 125,
+          "serverTime": 4166.667,
+          "arrivalTime": 4221.667,
+          "bufferMs": 42,
+          "jitterMs": 0.04005590676167829
+        },
+        {
+          "frame": 126,
+          "serverTime": 4200,
+          "arrivalTime": 4255,
+          "bufferMs": 42,
+          "jitterMs": 0.032845843544576196
+        },
+        {
+          "frame": 127,
+          "serverTime": 4233.333,
+          "arrivalTime": 4288.333,
+          "bufferMs": 42,
+          "jitterMs": 0.02693359170655248
+        },
+        {
+          "frame": 128,
+          "serverTime": 4266.667,
+          "arrivalTime": 4321.667,
+          "bufferMs": 42,
+          "jitterMs": 0.022085545199373034
+        },
+        {
+          "frame": 129,
+          "serverTime": 4300,
+          "arrivalTime": 4355,
+          "bufferMs": 42,
+          "jitterMs": 0.018110147063485887
+        },
+        {
+          "frame": 130,
+          "serverTime": 4333.333,
+          "arrivalTime": 4388.333,
+          "bufferMs": 42,
+          "jitterMs": 0.014850320592058427
+        },
+        {
+          "frame": 131,
+          "serverTime": 4366.667,
+          "arrivalTime": 4421.667,
+          "bufferMs": 42,
+          "jitterMs": 0.01217726288548791
+        },
+        {
+          "frame": 132,
+          "serverTime": 4400,
+          "arrivalTime": 4455,
+          "bufferMs": 42,
+          "jitterMs": 0.009985355566100085
+        },
+        {
+          "frame": 133,
+          "serverTime": 4433.333,
+          "arrivalTime": 4488.333,
+          "bufferMs": 42,
+          "jitterMs": 0.008187991564202069
+        },
+        {
+          "frame": 134,
+          "serverTime": 4466.667,
+          "arrivalTime": 4521.667,
+          "bufferMs": 42,
+          "jitterMs": 0.006714153082645696
+        },
+        {
+          "frame": 135,
+          "serverTime": 4500,
+          "arrivalTime": 4555,
+          "bufferMs": 42,
+          "jitterMs": 0.005505605527769471
+        },
+        {
+          "frame": 136,
+          "serverTime": 4533.333,
+          "arrivalTime": 4588.333,
+          "bufferMs": 42,
+          "jitterMs": 0.004514596532770965
+        },
+        {
+          "frame": 137,
+          "serverTime": 4566.667,
+          "arrivalTime": 4621.667,
+          "bufferMs": 42,
+          "jitterMs": 0.0037019691568721913
+        },
+        {
+          "frame": 138,
+          "serverTime": 4600,
+          "arrivalTime": 4655,
+          "bufferMs": 42,
+          "jitterMs": 0.003035614708635197
+        },
+        {
+          "frame": 139,
+          "serverTime": 4633.333,
+          "arrivalTime": 4688.333,
+          "bufferMs": 42,
+          "jitterMs": 0.0024892040610808614
+        },
+        {
+          "frame": 140,
+          "serverTime": 4666.667,
+          "arrivalTime": 4721.667,
+          "bufferMs": 42,
+          "jitterMs": 0.002041147330086306
+        },
+        {
+          "frame": 141,
+          "serverTime": 4700,
+          "arrivalTime": 4755,
+          "bufferMs": 42,
+          "jitterMs": 0.001673740810670771
+        },
+        {
+          "frame": 142,
+          "serverTime": 4733.333,
+          "arrivalTime": 4788.333,
+          "bufferMs": 42,
+          "jitterMs": 0.0013724674647500321
+        },
+        {
+          "frame": 143,
+          "serverTime": 4766.667,
+          "arrivalTime": 4821.667,
+          "bufferMs": 42,
+          "jitterMs": 0.0011254233210950262
+        },
+        {
+          "frame": 144,
+          "serverTime": 4800,
+          "arrivalTime": 4855,
+          "bufferMs": 42,
+          "jitterMs": 0.0009228471232979214
+        },
+        {
+          "frame": 145,
+          "serverTime": 4833.333,
+          "arrivalTime": 4888.333,
+          "bufferMs": 42,
+          "jitterMs": 0.0007567346411042955
+        },
+        {
+          "frame": 146,
+          "serverTime": 4866.667,
+          "arrivalTime": 4921.667,
+          "bufferMs": 42,
+          "jitterMs": 0.0006205224057055223
+        },
+        {
+          "frame": 147,
+          "serverTime": 4900,
+          "arrivalTime": 4955,
+          "bufferMs": 42,
+          "jitterMs": 0.0005088283726785282
+        },
+        {
+          "frame": 148,
+          "serverTime": 4933.333,
+          "arrivalTime": 4988.333,
+          "bufferMs": 42,
+          "jitterMs": 0.00041723926559639315
+        },
+        {
+          "frame": 149,
+          "serverTime": 4966.667,
+          "arrivalTime": 5021.667,
+          "bufferMs": 42,
+          "jitterMs": 0.00034213619778904235
+        },
+        {
+          "frame": 150,
+          "serverTime": 5000,
+          "arrivalTime": 5055,
+          "bufferMs": 42,
+          "jitterMs": 0.0002805516821870147
+        },
+        {
+          "frame": 151,
+          "serverTime": 5033.333,
+          "arrivalTime": 5088.333,
+          "bufferMs": 42,
+          "jitterMs": 0.00023005237939335203
+        },
+        {
+          "frame": 152,
+          "serverTime": 5066.667,
+          "arrivalTime": 5121.667,
+          "bufferMs": 42,
+          "jitterMs": 0.00018864295110254865
+        },
+        {
+          "frame": 153,
+          "serverTime": 5100,
+          "arrivalTime": 5155,
+          "bufferMs": 42,
+          "jitterMs": 0.00015468721990408987
+        },
+        {
+          "frame": 154,
+          "serverTime": 5133.333,
+          "arrivalTime": 5188.333,
+          "bufferMs": 42,
+          "jitterMs": 0.00012684352032135368
+        },
+        {
+          "frame": 155,
+          "serverTime": 5166.667,
+          "arrivalTime": 5221.667,
+          "bufferMs": 42,
+          "jitterMs": 0.00010401168666351
+        },
+        {
+          "frame": 156,
+          "serverTime": 5200,
+          "arrivalTime": 5255,
+          "bufferMs": 42,
+          "jitterMs": 0.0000852895830640782
+        },
+        {
+          "frame": 157,
+          "serverTime": 5233.333,
+          "arrivalTime": 5288.333,
+          "bufferMs": 42,
+          "jitterMs": 0.00006993745811254412
+        },
+        {
+          "frame": 158,
+          "serverTime": 5266.667,
+          "arrivalTime": 5321.667,
+          "bufferMs": 42,
+          "jitterMs": 0.00005734871565228618
+        },
+        {
+          "frame": 159,
+          "serverTime": 5300,
+          "arrivalTime": 5355,
+          "bufferMs": 42,
+          "jitterMs": 0.00004702594683487466
+        },
+        {
+          "frame": 160,
+          "serverTime": 5333.333,
+          "arrivalTime": 5388.333,
+          "bufferMs": 42,
+          "jitterMs": 0.00003856127640459722
+        },
+        {
+          "frame": 161,
+          "serverTime": 5366.667,
+          "arrivalTime": 5421.667,
+          "bufferMs": 42,
+          "jitterMs": 0.00003162024665176972
+        },
+        {
+          "frame": 162,
+          "serverTime": 5400,
+          "arrivalTime": 5455,
+          "bufferMs": 42,
+          "jitterMs": 0.00002592860225445117
+        },
+        {
+          "frame": 163,
+          "serverTime": 5433.333,
+          "arrivalTime": 5488.333,
+          "bufferMs": 42,
+          "jitterMs": 0.000021261453848649958
+        },
+        {
+          "frame": 164,
+          "serverTime": 5466.667,
+          "arrivalTime": 5521.667,
+          "bufferMs": 42,
+          "jitterMs": 0.000017434392155892963
+        },
+        {
+          "frame": 165,
+          "serverTime": 5500,
+          "arrivalTime": 5555,
+          "bufferMs": 42,
+          "jitterMs": 0.00001429620156783223
+        },
+        {
+          "frame": 166,
+          "serverTime": 5533.333,
+          "arrivalTime": 5588.333,
+          "bufferMs": 42,
+          "jitterMs": 0.000011722885285622427
+        },
+        {
+          "frame": 167,
+          "serverTime": 5566.667,
+          "arrivalTime": 5621.667,
+          "bufferMs": 42,
+          "jitterMs": 0.00000961276593421039
+        },
+        {
+          "frame": 168,
+          "serverTime": 5600,
+          "arrivalTime": 5655,
+          "bufferMs": 42,
+          "jitterMs": 0.000007882468066052519
+        },
+        {
+          "frame": 169,
+          "serverTime": 5633.333,
+          "arrivalTime": 5688.333,
+          "bufferMs": 42,
+          "jitterMs": 0.000006463623814163065
+        },
+        {
+          "frame": 170,
+          "serverTime": 5666.667,
+          "arrivalTime": 5721.667,
+          "bufferMs": 42,
+          "jitterMs": 0.000005300171527613713
+        },
+        {
+          "frame": 171,
+          "serverTime": 5700,
+          "arrivalTime": 5755,
+          "bufferMs": 42,
+          "jitterMs": 0.000004346140652643245
+        },
+        {
+          "frame": 172,
+          "serverTime": 5733.333,
+          "arrivalTime": 5788.333,
+          "bufferMs": 42,
+          "jitterMs": 0.0000035638353351674606
+        },
+        {
+          "frame": 173,
+          "serverTime": 5766.667,
+          "arrivalTime": 5821.667,
+          "bufferMs": 42,
+          "jitterMs": 0.0000029223449748373173
+        },
+        {
+          "frame": 174,
+          "serverTime": 5800,
+          "arrivalTime": 5855,
+          "bufferMs": 42,
+          "jitterMs": 0.0000023963228793666
+        },
+        {
+          "frame": 175,
+          "serverTime": 5833.333,
+          "arrivalTime": 5888.333,
+          "bufferMs": 42,
+          "jitterMs": 0.000001964984761080612
+        },
+        {
+          "frame": 176,
+          "serverTime": 5866.667,
+          "arrivalTime": 5921.667,
+          "bufferMs": 42,
+          "jitterMs": 0.0000016112875040861019
+        },
+        {
+          "frame": 177,
+          "serverTime": 5900,
+          "arrivalTime": 5955,
+          "bufferMs": 42,
+          "jitterMs": 0.0000013212557533506035
+        },
+        {
+          "frame": 178,
+          "serverTime": 5933.333,
+          "arrivalTime": 5988.333,
+          "bufferMs": 42,
+          "jitterMs": 0.000001083429717747495
+        },
+        {
+          "frame": 179,
+          "serverTime": 5966.667,
+          "arrivalTime": 6021.667,
+          "bufferMs": 42,
+          "jitterMs": 8.884123685529458e-7
+        },
+        {
+          "frame": 180,
+          "serverTime": 6000,
+          "arrivalTime": 6055,
+          "bufferMs": 42,
+          "jitterMs": 7.284981422134155e-7
+        },
+        {
+          "frame": 181,
+          "serverTime": 6033.333,
+          "arrivalTime": 6088.333,
+          "bufferMs": 42,
+          "jitterMs": 5.973684766150006e-7
+        },
+        {
+          "frame": 182,
+          "serverTime": 6066.667,
+          "arrivalTime": 6121.667,
+          "bufferMs": 42,
+          "jitterMs": 4.898421508243005e-7
+        },
+        {
+          "frame": 183,
+          "serverTime": 6100,
+          "arrivalTime": 6155,
+          "bufferMs": 42,
+          "jitterMs": 4.0167056367592636e-7
+        },
+        {
+          "frame": 184,
+          "serverTime": 6133.333,
+          "arrivalTime": 6188.333,
+          "bufferMs": 42,
+          "jitterMs": 3.293698622142596e-7
+        },
+        {
+          "frame": 185,
+          "serverTime": 6166.667,
+          "arrivalTime": 6221.667,
+          "bufferMs": 42,
+          "jitterMs": 2.700832870156929e-7
+        },
+        {
+          "frame": 186,
+          "serverTime": 6200,
+          "arrivalTime": 6255,
+          "bufferMs": 42,
+          "jitterMs": 2.2146829535286815e-7
+        },
+        {
+          "frame": 187,
+          "serverTime": 6233.333,
+          "arrivalTime": 6288.333,
+          "bufferMs": 42,
+          "jitterMs": 1.8160400218935188e-7
+        },
+        {
+          "frame": 188,
+          "serverTime": 6266.667,
+          "arrivalTime": 6321.667,
+          "bufferMs": 42,
+          "jitterMs": 1.4891528179526853e-7
+        },
+        {
+          "frame": 189,
+          "serverTime": 6300,
+          "arrivalTime": 6355,
+          "bufferMs": 42,
+          "jitterMs": 1.221105310721202e-7
+        },
+        {
+          "frame": 190,
+          "serverTime": 6333.333,
+          "arrivalTime": 6388.333,
+          "bufferMs": 42,
+          "jitterMs": 1.0013063547913854e-7
+        },
+        {
+          "frame": 191,
+          "serverTime": 6366.667,
+          "arrivalTime": 6421.667,
+          "bufferMs": 42,
+          "jitterMs": 8.21071210928936e-8
+        },
+        {
+          "frame": 192,
+          "serverTime": 6400,
+          "arrivalTime": 6455,
+          "bufferMs": 42,
+          "jitterMs": 6.732783929617275e-8
+        },
+        {
+          "frame": 193,
+          "serverTime": 6433.333,
+          "arrivalTime": 6488.333,
+          "bufferMs": 42,
+          "jitterMs": 5.5208828222861654e-8
+        },
+        {
+          "frame": 194,
+          "serverTime": 6466.667,
+          "arrivalTime": 6521.667,
+          "bufferMs": 42,
+          "jitterMs": 4.5271239142746554e-8
+        },
+        {
+          "frame": 195,
+          "serverTime": 6500,
+          "arrivalTime": 6555,
+          "bufferMs": 42,
+          "jitterMs": 3.7122416097052175e-8
+        },
+        {
+          "frame": 196,
+          "serverTime": 6533.333,
+          "arrivalTime": 6588.333,
+          "bufferMs": 42,
+          "jitterMs": 3.044038119958278e-8
+        },
+        {
+          "frame": 197,
+          "serverTime": 6566.667,
+          "arrivalTime": 6621.667,
+          "bufferMs": 42,
+          "jitterMs": 2.4961112583657876e-8
+        },
+        {
+          "frame": 198,
+          "serverTime": 6600,
+          "arrivalTime": 6655,
+          "bufferMs": 42,
+          "jitterMs": 2.0468112318599457e-8
+        },
+        {
+          "frame": 199,
+          "serverTime": 6633.333,
+          "arrivalTime": 6688.333,
+          "bufferMs": 42,
+          "jitterMs": 1.6783852101251555e-8
+        },
+        {
+          "frame": 200,
+          "serverTime": 6666.667,
+          "arrivalTime": 6721.667,
+          "bufferMs": 42,
+          "jitterMs": 1.3762758723026274e-8
+        },
+        {
+          "frame": 201,
+          "serverTime": 6700,
+          "arrivalTime": 6755,
+          "bufferMs": 42,
+          "jitterMs": 1.1285462152881544e-8
+        },
+        {
+          "frame": 202,
+          "serverTime": 6733.333,
+          "arrivalTime": 6788.333,
+          "bufferMs": 42,
+          "jitterMs": 9.254078965362866e-9
+        },
+        {
+          "frame": 203,
+          "serverTime": 6766.667,
+          "arrivalTime": 6821.667,
+          "bufferMs": 42,
+          "jitterMs": 7.58834475159755e-9
+        },
+        {
+          "frame": 204,
+          "serverTime": 6800,
+          "arrivalTime": 6855,
+          "bufferMs": 42,
+          "jitterMs": 6.222442696309991e-9
+        },
+        {
+          "frame": 205,
+          "serverTime": 6833.333,
+          "arrivalTime": 6888.333,
+          "bufferMs": 42,
+          "jitterMs": 5.102403010974192e-9
+        },
+        {
+          "frame": 206,
+          "serverTime": 6866.667,
+          "arrivalTime": 6921.667,
+          "bufferMs": 42,
+          "jitterMs": 4.1839704689988375e-9
+        },
+        {
+          "frame": 207,
+          "serverTime": 6900,
+          "arrivalTime": 6955,
+          "bufferMs": 42,
+          "jitterMs": 3.4308557845790466e-9
+        },
+        {
+          "frame": 208,
+          "serverTime": 6933.333,
+          "arrivalTime": 6988.333,
+          "bufferMs": 42,
+          "jitterMs": 2.813301743354818e-9
+        },
+        {
+          "frame": 209,
+          "serverTime": 6966.667,
+          "arrivalTime": 7021.667,
+          "bufferMs": 42,
+          "jitterMs": 2.3069074295509507e-9
+        },
+        {
+          "frame": 210,
+          "serverTime": 7000,
+          "arrivalTime": 7055,
+          "bufferMs": 42,
+          "jitterMs": 1.8916640922317795e-9
+        },
+        {
+          "frame": 211,
+          "serverTime": 7033.333,
+          "arrivalTime": 7088.333,
+          "bufferMs": 42,
+          "jitterMs": 1.551164555630059e-9
+        },
+        {
+          "frame": 212,
+          "serverTime": 7066.667,
+          "arrivalTime": 7121.667,
+          "bufferMs": 42,
+          "jitterMs": 1.2719549356166484e-9
+        },
+        {
+          "frame": 213,
+          "serverTime": 7100,
+          "arrivalTime": 7155,
+          "bufferMs": 42,
+          "jitterMs": 1.0430030472056515e-9
+        },
+        {
+          "frame": 214,
+          "serverTime": 7133.333,
+          "arrivalTime": 7188.333,
+          "bufferMs": 42,
+          "jitterMs": 8.552624987086341e-10
+        },
+        {
+          "frame": 215,
+          "serverTime": 7166.667,
+          "arrivalTime": 7221.667,
+          "bufferMs": 42,
+          "jitterMs": 7.013152489410799e-10
+        },
+        {
+          "frame": 216,
+          "serverTime": 7200,
+          "arrivalTime": 7255,
+          "bufferMs": 42,
+          "jitterMs": 5.750785041316856e-10
+        },
+        {
+          "frame": 217,
+          "serverTime": 7233.333,
+          "arrivalTime": 7288.333,
+          "bufferMs": 42,
+          "jitterMs": 4.715643733879822e-10
+        },
+        {
+          "frame": 218,
+          "serverTime": 7266.667,
+          "arrivalTime": 7321.667,
+          "bufferMs": 42,
+          "jitterMs": 3.8668278617814533e-10
+        },
+        {
+          "frame": 219,
+          "serverTime": 7300,
+          "arrivalTime": 7355,
+          "bufferMs": 42,
+          "jitterMs": 3.1707988466607914e-10
+        },
+        {
+          "frame": 220,
+          "serverTime": 7333.333,
+          "arrivalTime": 7388.333,
+          "bufferMs": 42,
+          "jitterMs": 2.6000550542618485e-10
+        },
+        {
+          "frame": 221,
+          "serverTime": 7366.667,
+          "arrivalTime": 7421.667,
+          "bufferMs": 42,
+          "jitterMs": 2.1320451444947157e-10
+        },
+        {
+          "frame": 222,
+          "serverTime": 7400,
+          "arrivalTime": 7455,
+          "bufferMs": 42,
+          "jitterMs": 1.7482770184856669e-10
+        },
+        {
+          "frame": 223,
+          "serverTime": 7433.333,
+          "arrivalTime": 7488.333,
+          "bufferMs": 42,
+          "jitterMs": 1.4335871551582468e-10
+        },
+        {
+          "frame": 224,
+          "serverTime": 7466.667,
+          "arrivalTime": 7521.667,
+          "bufferMs": 42,
+          "jitterMs": 1.1755414672297622e-10
+        },
+        {
+          "frame": 225,
+          "serverTime": 7500,
+          "arrivalTime": 7555,
+          "bufferMs": 42,
+          "jitterMs": 9.639440031284049e-11
+        },
+        {
+          "frame": 226,
+          "serverTime": 7533.333,
+          "arrivalTime": 7588.333,
+          "bufferMs": 42,
+          "jitterMs": 7.90434082565292e-11
+        },
+        {
+          "frame": 227,
+          "serverTime": 7566.667,
+          "arrivalTime": 7621.667,
+          "bufferMs": 42,
+          "jitterMs": 6.481559477035394e-11
+        },
+        {
+          "frame": 228,
+          "serverTime": 7600,
+          "arrivalTime": 7655,
+          "bufferMs": 42,
+          "jitterMs": 5.314878771169023e-11
+        },
+        {
+          "frame": 229,
+          "serverTime": 7633.333,
+          "arrivalTime": 7688.333,
+          "bufferMs": 42,
+          "jitterMs": 4.3582005923585987e-11
+        },
+        {
+          "frame": 230,
+          "serverTime": 7666.667,
+          "arrivalTime": 7721.667,
+          "bufferMs": 42,
+          "jitterMs": 3.5737244857340506e-11
+        },
+        {
+          "frame": 231,
+          "serverTime": 7700,
+          "arrivalTime": 7755,
+          "bufferMs": 42,
+          "jitterMs": 2.930454078301921e-11
+        },
+        {
+          "frame": 232,
+          "serverTime": 7733.333,
+          "arrivalTime": 7788.333,
+          "bufferMs": 42,
+          "jitterMs": 2.4029723442075752e-11
+        },
+        {
+          "frame": 233,
+          "serverTime": 7766.667,
+          "arrivalTime": 7821.667,
+          "bufferMs": 42,
+          "jitterMs": 1.9704373222502116e-11
+        },
+        {
+          "frame": 234,
+          "serverTime": 7800,
+          "arrivalTime": 7855,
+          "bufferMs": 42,
+          "jitterMs": 1.6157586042451734e-11
+        },
+        {
+          "frame": 235,
+          "serverTime": 7833.333,
+          "arrivalTime": 7888.333,
+          "bufferMs": 42,
+          "jitterMs": 1.324922055481042e-11
+        },
+        {
+          "frame": 236,
+          "serverTime": 7866.667,
+          "arrivalTime": 7921.667,
+          "bufferMs": 42,
+          "jitterMs": 1.0864360854944544e-11
+        },
+        {
+          "frame": 237,
+          "serverTime": 7900,
+          "arrivalTime": 7955,
+          "bufferMs": 42,
+          "jitterMs": 8.908775901054525e-12
+        },
+        {
+          "frame": 238,
+          "serverTime": 7933.333,
+          "arrivalTime": 7988.333,
+          "bufferMs": 42,
+          "jitterMs": 7.30519623886471e-12
+        },
+        {
+          "frame": 239,
+          "serverTime": 7966.667,
+          "arrivalTime": 8021.667,
+          "bufferMs": 42,
+          "jitterMs": 5.990260915869062e-12
+        }
+      ]
+    },
+    {
+      "name": "Severe ordered stall",
+      "description": "Steady stream with a 180 ms ordered-delivery stall at frame 90; queued snapshots then arrive as an ordered batch.",
+      "frames": 240,
+      "snapshotRateHz": 30,
+      "baseOneWayModelMs": 55,
+      "buffer": {
+        "minimumMs": 42,
+        "meanMs": 61.49,
+        "p50Ms": 43,
+        "p95Ms": 88,
+        "maximumMs": 140,
+        "finalMs": 42
+      },
+      "jitter": {
+        "meanMs": 6.67,
+        "p95Ms": 15.34,
+        "maximumMs": 42.67,
+        "finalMs": 0
+      },
+      "recovery": {
+        "frame": 115,
+        "msSinceStall": 833.3
+      },
+      "samples": [
+        {
+          "frame": 0,
+          "serverTime": 0,
+          "arrivalTime": 41,
+          "bufferMs": 42,
+          "jitterMs": 0
+        },
+        {
+          "frame": 1,
+          "serverTime": 33.333,
+          "arrivalTime": 96.333,
+          "bufferMs": 54,
+          "jitterMs": 3.96
+        },
+        {
+          "frame": 2,
+          "serverTime": 66.667,
+          "arrivalTime": 121.667,
+          "bufferMs": 56,
+          "jitterMs": 4.6872
+        },
+        {
+          "frame": 3,
+          "serverTime": 100,
+          "arrivalTime": 166,
+          "bufferMs": 59,
+          "jitterMs": 5.823504
+        },
+        {
+          "frame": 4,
+          "serverTime": 133.333,
+          "arrivalTime": 182.333,
+          "bufferMs": 66,
+          "jitterMs": 7.835273279999999
+        },
+        {
+          "frame": 5,
+          "serverTime": 166.667,
+          "arrivalTime": 224.667,
+          "bufferMs": 66,
+          "jitterMs": 8.044924089599998
+        },
+        {
+          "frame": 6,
+          "serverTime": 200,
+          "arrivalTime": 241,
+          "bufferMs": 71,
+          "jitterMs": 9.656837753471999
+        },
+        {
+          "frame": 7,
+          "serverTime": 233.333,
+          "arrivalTime": 296.333,
+          "bufferMs": 78,
+          "jitterMs": 11.878606957847044
+        },
+        {
+          "frame": 8,
+          "serverTime": 266.667,
+          "arrivalTime": 321.667,
+          "bufferMs": 76,
+          "jitterMs": 11.18045770543458
+        },
+        {
+          "frame": 9,
+          "serverTime": 300,
+          "arrivalTime": 366,
+          "bufferMs": 75,
+          "jitterMs": 11.147975318456355
+        },
+        {
+          "frame": 10,
+          "serverTime": 333.333,
+          "arrivalTime": 382.333,
+          "bufferMs": 79,
+          "jitterMs": 12.20133976113421
+        },
+        {
+          "frame": 11,
+          "serverTime": 366.667,
+          "arrivalTime": 424.667,
+          "bufferMs": 77,
+          "jitterMs": 11.625098604130052
+        },
+        {
+          "frame": 12,
+          "serverTime": 400,
+          "arrivalTime": 441,
+          "bufferMs": 80,
+          "jitterMs": 12.592580855386643
+        },
+        {
+          "frame": 13,
+          "serverTime": 433.333,
+          "arrivalTime": 496.333,
+          "bufferMs": 85,
+          "jitterMs": 14.285916301417046
+        },
+        {
+          "frame": 14,
+          "serverTime": 466.667,
+          "arrivalTime": 521.667,
+          "bufferMs": 81,
+          "jitterMs": 13.154451367161968
+        },
+        {
+          "frame": 15,
+          "serverTime": 500,
+          "arrivalTime": 566,
+          "bufferMs": 80,
+          "jitterMs": 12.766650121072804
+        },
+        {
+          "frame": 16,
+          "serverTime": 533.333,
+          "arrivalTime": 582.333,
+          "bufferMs": 83,
+          "jitterMs": 13.5286530992797
+        },
+        {
+          "frame": 17,
+          "serverTime": 566.667,
+          "arrivalTime": 624.667,
+          "bufferMs": 80,
+          "jitterMs": 12.713495541409353
+        },
+        {
+          "frame": 18,
+          "serverTime": 600,
+          "arrivalTime": 641,
+          "bufferMs": 82,
+          "jitterMs": 13.485066343955669
+        },
+        {
+          "frame": 19,
+          "serverTime": 633.333,
+          "arrivalTime": 696.333,
+          "bufferMs": 87,
+          "jitterMs": 15.017754402043646
+        },
+        {
+          "frame": 20,
+          "serverTime": 666.667,
+          "arrivalTime": 721.667,
+          "bufferMs": 83,
+          "jitterMs": 13.754558609675788
+        },
+        {
+          "frame": 21,
+          "serverTime": 700,
+          "arrivalTime": 766,
+          "bufferMs": 82,
+          "jitterMs": 13.258738059934146
+        },
+        {
+          "frame": 22,
+          "serverTime": 733.333,
+          "arrivalTime": 782.333,
+          "bufferMs": 84,
+          "jitterMs": 13.932165209146
+        },
+        {
+          "frame": 23,
+          "serverTime": 766.667,
+          "arrivalTime": 824.667,
+          "bufferMs": 81,
+          "jitterMs": 13.044375471499718
+        },
+        {
+          "frame": 24,
+          "serverTime": 800,
+          "arrivalTime": 841,
+          "bufferMs": 83,
+          "jitterMs": 13.756387886629769
+        },
+        {
+          "frame": 25,
+          "serverTime": 833.333,
+          "arrivalTime": 896.333,
+          "bufferMs": 88,
+          "jitterMs": 15.240238067036408
+        },
+        {
+          "frame": 26,
+          "serverTime": 866.667,
+          "arrivalTime": 921.667,
+          "bufferMs": 84,
+          "jitterMs": 13.936995214969853
+        },
+        {
+          "frame": 27,
+          "serverTime": 900,
+          "arrivalTime": 966,
+          "bufferMs": 82,
+          "jitterMs": 13.40833607627528
+        },
+        {
+          "frame": 28,
+          "serverTime": 933.333,
+          "arrivalTime": 982.333,
+          "bufferMs": 84,
+          "jitterMs": 14.05483558254573
+        },
+        {
+          "frame": 29,
+          "serverTime": 966.667,
+          "arrivalTime": 1024.667,
+          "bufferMs": 81,
+          "jitterMs": 13.144965177687478
+        },
+        {
+          "frame": 30,
+          "serverTime": 1000,
+          "arrivalTime": 1041,
+          "bufferMs": 84,
+          "jitterMs": 13.838871445703711
+        },
+        {
+          "frame": 31,
+          "serverTime": 1033.333,
+          "arrivalTime": 1096.333,
+          "bufferMs": 88,
+          "jitterMs": 15.307874585477041
+        },
+        {
+          "frame": 32,
+          "serverTime": 1066.667,
+          "arrivalTime": 1121.667,
+          "bufferMs": 84,
+          "jitterMs": 13.992457160091172
+        },
+        {
+          "frame": 33,
+          "serverTime": 1100,
+          "arrivalTime": 1166,
+          "bufferMs": 82,
+          "jitterMs": 13.45381487127476
+        },
+        {
+          "frame": 34,
+          "serverTime": 1133.333,
+          "arrivalTime": 1182.333,
+          "bufferMs": 84,
+          "jitterMs": 14.092128194445303
+        },
+        {
+          "frame": 35,
+          "serverTime": 1166.667,
+          "arrivalTime": 1224.667,
+          "bufferMs": 82,
+          "jitterMs": 13.175545119445147
+        },
+        {
+          "frame": 36,
+          "serverTime": 1200,
+          "arrivalTime": 1241,
+          "bufferMs": 84,
+          "jitterMs": 13.86394699794502
+        },
+        {
+          "frame": 37,
+          "serverTime": 1233.333,
+          "arrivalTime": 1296.333,
+          "bufferMs": 88,
+          "jitterMs": 15.328436538314914
+        },
+        {
+          "frame": 38,
+          "serverTime": 1266.667,
+          "arrivalTime": 1321.667,
+          "bufferMs": 84,
+          "jitterMs": 14.009317961418228
+        },
+        {
+          "frame": 39,
+          "serverTime": 1300,
+          "arrivalTime": 1366,
+          "bufferMs": 82,
+          "jitterMs": 13.467640728362946
+        },
+        {
+          "frame": 40,
+          "serverTime": 1333.333,
+          "arrivalTime": 1382.333,
+          "bufferMs": 84,
+          "jitterMs": 14.103465397257615
+        },
+        {
+          "frame": 41,
+          "serverTime": 1366.667,
+          "arrivalTime": 1424.667,
+          "bufferMs": 82,
+          "jitterMs": 13.184841625751243
+        },
+        {
+          "frame": 42,
+          "serverTime": 1400,
+          "arrivalTime": 1441,
+          "bufferMs": 84,
+          "jitterMs": 13.87157013311602
+        },
+        {
+          "frame": 43,
+          "serverTime": 1433.333,
+          "arrivalTime": 1496.333,
+          "bufferMs": 88,
+          "jitterMs": 15.334687509155135
+        },
+        {
+          "frame": 44,
+          "serverTime": 1466.667,
+          "arrivalTime": 1521.667,
+          "bufferMs": 84,
+          "jitterMs": 14.014443757507209
+        },
+        {
+          "frame": 45,
+          "serverTime": 1500,
+          "arrivalTime": 1566,
+          "bufferMs": 82,
+          "jitterMs": 13.47184388115591
+        },
+        {
+          "frame": 46,
+          "serverTime": 1533.333,
+          "arrivalTime": 1582.333,
+          "bufferMs": 84,
+          "jitterMs": 14.106911982547846
+        },
+        {
+          "frame": 47,
+          "serverTime": 1566.667,
+          "arrivalTime": 1624.667,
+          "bufferMs": 82,
+          "jitterMs": 13.187667825689232
+        },
+        {
+          "frame": 48,
+          "serverTime": 1600,
+          "arrivalTime": 1641,
+          "bufferMs": 84,
+          "jitterMs": 13.87388761706517
+        },
+        {
+          "frame": 49,
+          "serverTime": 1633.333,
+          "arrivalTime": 1696.333,
+          "bufferMs": 88,
+          "jitterMs": 15.336587845993439
+        },
+        {
+          "frame": 50,
+          "serverTime": 1666.667,
+          "arrivalTime": 1721.667,
+          "bufferMs": 84,
+          "jitterMs": 14.016002033714619
+        },
+        {
+          "frame": 51,
+          "serverTime": 1700,
+          "arrivalTime": 1766,
+          "bufferMs": 82,
+          "jitterMs": 13.473121667645987
+        },
+        {
+          "frame": 52,
+          "serverTime": 1733.333,
+          "arrivalTime": 1782.333,
+          "bufferMs": 84,
+          "jitterMs": 14.10795976746971
+        },
+        {
+          "frame": 53,
+          "serverTime": 1766.667,
+          "arrivalTime": 1824.667,
+          "bufferMs": 82,
+          "jitterMs": 13.188527009325162
+        },
+        {
+          "frame": 54,
+          "serverTime": 1800,
+          "arrivalTime": 1841,
+          "bufferMs": 84,
+          "jitterMs": 13.874592147646633
+        },
+        {
+          "frame": 55,
+          "serverTime": 1833.333,
+          "arrivalTime": 1896.333,
+          "bufferMs": 88,
+          "jitterMs": 15.337165561070236
+        },
+        {
+          "frame": 56,
+          "serverTime": 1866.667,
+          "arrivalTime": 1921.667,
+          "bufferMs": 84,
+          "jitterMs": 14.016475760077592
+        },
+        {
+          "frame": 57,
+          "serverTime": 1900,
+          "arrivalTime": 1966,
+          "bufferMs": 82,
+          "jitterMs": 13.473510123263624
+        },
+        {
+          "frame": 58,
+          "serverTime": 1933.333,
+          "arrivalTime": 1982.333,
+          "bufferMs": 84,
+          "jitterMs": 14.108278301076172
+        },
+        {
+          "frame": 59,
+          "serverTime": 1966.667,
+          "arrivalTime": 2024.667,
+          "bufferMs": 82,
+          "jitterMs": 13.18878820688246
+        },
+        {
+          "frame": 60,
+          "serverTime": 2000,
+          "arrivalTime": 2041,
+          "bufferMs": 84,
+          "jitterMs": 13.874806329643617
+        },
+        {
+          "frame": 61,
+          "serverTime": 2033.333,
+          "arrivalTime": 2096.333,
+          "bufferMs": 88,
+          "jitterMs": 15.337341190307765
+        },
+        {
+          "frame": 62,
+          "serverTime": 2066.667,
+          "arrivalTime": 2121.667,
+          "bufferMs": 84,
+          "jitterMs": 14.016619776052366
+        },
+        {
+          "frame": 63,
+          "serverTime": 2100,
+          "arrivalTime": 2166,
+          "bufferMs": 82,
+          "jitterMs": 13.47362821636294
+        },
+        {
+          "frame": 64,
+          "serverTime": 2133.333,
+          "arrivalTime": 2182.333,
+          "bufferMs": 84,
+          "jitterMs": 14.10837513741761
+        },
+        {
+          "frame": 65,
+          "serverTime": 2166.667,
+          "arrivalTime": 2224.667,
+          "bufferMs": 82,
+          "jitterMs": 13.188867612682438
+        },
+        {
+          "frame": 66,
+          "serverTime": 2200,
+          "arrivalTime": 2241,
+          "bufferMs": 84,
+          "jitterMs": 13.874871442399598
+        },
+        {
+          "frame": 67,
+          "serverTime": 2233.333,
+          "arrivalTime": 2296.333,
+          "bufferMs": 88,
+          "jitterMs": 15.337394582767669
+        },
+        {
+          "frame": 68,
+          "serverTime": 2266.667,
+          "arrivalTime": 2321.667,
+          "bufferMs": 84,
+          "jitterMs": 14.016663557869487
+        },
+        {
+          "frame": 69,
+          "serverTime": 2300,
+          "arrivalTime": 2366,
+          "bufferMs": 82,
+          "jitterMs": 13.473664117452978
+        },
+        {
+          "frame": 70,
+          "serverTime": 2333.333,
+          "arrivalTime": 2382.333,
+          "bufferMs": 84,
+          "jitterMs": 14.108404576311441
+        },
+        {
+          "frame": 71,
+          "serverTime": 2366.667,
+          "arrivalTime": 2424.667,
+          "bufferMs": 82,
+          "jitterMs": 13.18889175257538
+        },
+        {
+          "frame": 72,
+          "serverTime": 2400,
+          "arrivalTime": 2441,
+          "bufferMs": 84,
+          "jitterMs": 13.874891237111811
+        },
+        {
+          "frame": 73,
+          "serverTime": 2433.333,
+          "arrivalTime": 2496.333,
+          "bufferMs": 88,
+          "jitterMs": 15.337410814431685
+        },
+        {
+          "frame": 74,
+          "serverTime": 2466.667,
+          "arrivalTime": 2521.667,
+          "bufferMs": 84,
+          "jitterMs": 14.016676867833981
+        },
+        {
+          "frame": 75,
+          "serverTime": 2500,
+          "arrivalTime": 2566,
+          "bufferMs": 82,
+          "jitterMs": 13.473675031623864
+        },
+        {
+          "frame": 76,
+          "serverTime": 2533.333,
+          "arrivalTime": 2582.333,
+          "bufferMs": 84,
+          "jitterMs": 14.108413525931569
+        },
+        {
+          "frame": 77,
+          "serverTime": 2566.667,
+          "arrivalTime": 2624.667,
+          "bufferMs": 82,
+          "jitterMs": 13.188899091263885
+        },
+        {
+          "frame": 78,
+          "serverTime": 2600,
+          "arrivalTime": 2641,
+          "bufferMs": 84,
+          "jitterMs": 13.874897254836386
+        },
+        {
+          "frame": 79,
+          "serverTime": 2633.333,
+          "arrivalTime": 2696.333,
+          "bufferMs": 88,
+          "jitterMs": 15.337415748965835
+        },
+        {
+          "frame": 80,
+          "serverTime": 2666.667,
+          "arrivalTime": 2721.667,
+          "bufferMs": 84,
+          "jitterMs": 14.016680914151983
+        },
+        {
+          "frame": 81,
+          "serverTime": 2700,
+          "arrivalTime": 2766,
+          "bufferMs": 82,
+          "jitterMs": 13.473678349604626
+        },
+        {
+          "frame": 82,
+          "serverTime": 2733.333,
+          "arrivalTime": 2782.333,
+          "bufferMs": 84,
+          "jitterMs": 14.108416246675793
+        },
+        {
+          "frame": 83,
+          "serverTime": 2766.667,
+          "arrivalTime": 2824.667,
+          "bufferMs": 82,
+          "jitterMs": 13.188901322274148
+        },
+        {
+          "frame": 84,
+          "serverTime": 2800,
+          "arrivalTime": 2841,
+          "bufferMs": 84,
+          "jitterMs": 13.8748990842648
+        },
+        {
+          "frame": 85,
+          "serverTime": 2833.333,
+          "arrivalTime": 2896.333,
+          "bufferMs": 88,
+          "jitterMs": 15.337417249097136
+        },
+        {
+          "frame": 86,
+          "serverTime": 2866.667,
+          "arrivalTime": 2921.667,
+          "bufferMs": 84,
+          "jitterMs": 14.01668214425965
+        },
+        {
+          "frame": 87,
+          "serverTime": 2900,
+          "arrivalTime": 2966,
+          "bufferMs": 82,
+          "jitterMs": 13.473679358292914
+        },
+        {
+          "frame": 88,
+          "serverTime": 2933.333,
+          "arrivalTime": 2982.333,
+          "bufferMs": 84,
+          "jitterMs": 14.10841707380019
+        },
+        {
+          "frame": 89,
+          "serverTime": 2966.667,
+          "arrivalTime": 3024.667,
+          "bufferMs": 82,
+          "jitterMs": 13.188902000516155
+        },
+        {
+          "frame": 90,
+          "serverTime": 3000,
+          "arrivalTime": 3235,
+          "bufferMs": 140,
+          "jitterMs": 42.67489964042325
+        },
+        {
+          "frame": 91,
+          "serverTime": 3033.333,
+          "arrivalTime": 3235,
+          "bufferMs": 140,
+          "jitterMs": 40.993357705147076
+        },
+        {
+          "frame": 92,
+          "serverTime": 3066.667,
+          "arrivalTime": 3235,
+          "bufferMs": 140,
+          "jitterMs": 39.61467331822057
+        },
+        {
+          "frame": 93,
+          "serverTime": 3100,
+          "arrivalTime": 3235,
+          "bufferMs": 140,
+          "jitterMs": 38.483972120940884
+        },
+        {
+          "frame": 94,
+          "serverTime": 3133.333,
+          "arrivalTime": 3235,
+          "bufferMs": 140,
+          "jitterMs": 37.556797139171536
+        },
+        {
+          "frame": 95,
+          "serverTime": 3166.667,
+          "arrivalTime": 3235,
+          "bufferMs": 140,
+          "jitterMs": 36.796693654120624
+        },
+        {
+          "frame": 96,
+          "serverTime": 3200,
+          "arrivalTime": 3255,
+          "bufferMs": 140,
+          "jitterMs": 32.57322879637893
+        },
+        {
+          "frame": 97,
+          "serverTime": 3233.333,
+          "arrivalTime": 3288.333,
+          "bufferMs": 122,
+          "jitterMs": 26.71004761303072
+        },
+        {
+          "frame": 98,
+          "serverTime": 3266.667,
+          "arrivalTime": 3321.667,
+          "bufferMs": 108,
+          "jitterMs": 21.90223904268519
+        },
+        {
+          "frame": 99,
+          "serverTime": 3300,
+          "arrivalTime": 3355,
+          "bufferMs": 96,
+          "jitterMs": 17.959836015001855
+        },
+        {
+          "frame": 100,
+          "serverTime": 3333.333,
+          "arrivalTime": 3388.333,
+          "bufferMs": 86,
+          "jitterMs": 14.72706553230152
+        },
+        {
+          "frame": 101,
+          "serverTime": 3366.667,
+          "arrivalTime": 3421.667,
+          "bufferMs": 78,
+          "jitterMs": 12.076193736487246
+        },
+        {
+          "frame": 102,
+          "serverTime": 3400,
+          "arrivalTime": 3455,
+          "bufferMs": 72,
+          "jitterMs": 9.90247886391954
+        },
+        {
+          "frame": 103,
+          "serverTime": 3433.333,
+          "arrivalTime": 3488.333,
+          "bufferMs": 66,
+          "jitterMs": 8.120032668414023
+        },
+        {
+          "frame": 104,
+          "serverTime": 3466.667,
+          "arrivalTime": 3521.667,
+          "bufferMs": 62,
+          "jitterMs": 6.658426788099498
+        },
+        {
+          "frame": 105,
+          "serverTime": 3500,
+          "arrivalTime": 3555,
+          "bufferMs": 58,
+          "jitterMs": 5.459909966241588
+        },
+        {
+          "frame": 106,
+          "serverTime": 3533.333,
+          "arrivalTime": 3588.333,
+          "bufferMs": 55,
+          "jitterMs": 4.477126172318101
+        },
+        {
+          "frame": 107,
+          "serverTime": 3566.667,
+          "arrivalTime": 3621.667,
+          "bufferMs": 53,
+          "jitterMs": 3.671243461300843
+        },
+        {
+          "frame": 108,
+          "serverTime": 3600,
+          "arrivalTime": 3655,
+          "bufferMs": 51,
+          "jitterMs": 3.010419638266691
+        },
+        {
+          "frame": 109,
+          "serverTime": 3633.333,
+          "arrivalTime": 3688.333,
+          "bufferMs": 49,
+          "jitterMs": 2.468544103378686
+        },
+        {
+          "frame": 110,
+          "serverTime": 3666.667,
+          "arrivalTime": 3721.667,
+          "bufferMs": 48,
+          "jitterMs": 2.0242061647705225
+        },
+        {
+          "frame": 111,
+          "serverTime": 3700,
+          "arrivalTime": 3755,
+          "bufferMs": 47,
+          "jitterMs": 1.6598490551118283
+        },
+        {
+          "frame": 112,
+          "serverTime": 3733.333,
+          "arrivalTime": 3788.333,
+          "bufferMs": 46,
+          "jitterMs": 1.3610762251916992
+        },
+        {
+          "frame": 113,
+          "serverTime": 3766.667,
+          "arrivalTime": 3821.667,
+          "bufferMs": 45,
+          "jitterMs": 1.1160825046571934
+        },
+        {
+          "frame": 114,
+          "serverTime": 3800,
+          "arrivalTime": 3855,
+          "bufferMs": 45,
+          "jitterMs": 0.9151876538188985
+        },
+        {
+          "frame": 115,
+          "serverTime": 3833.333,
+          "arrivalTime": 3888.333,
+          "bufferMs": 44,
+          "jitterMs": 0.7504538761314967
+        },
+        {
+          "frame": 116,
+          "serverTime": 3866.667,
+          "arrivalTime": 3921.667,
+          "bufferMs": 44,
+          "jitterMs": 0.6153721784278273
+        },
+        {
+          "frame": 117,
+          "serverTime": 3900,
+          "arrivalTime": 3955,
+          "bufferMs": 44,
+          "jitterMs": 0.5046051863108184
+        },
+        {
+          "frame": 118,
+          "serverTime": 3933.333,
+          "arrivalTime": 3988.333,
+          "bufferMs": 43,
+          "jitterMs": 0.41377625277487107
+        },
+        {
+          "frame": 119,
+          "serverTime": 3966.667,
+          "arrivalTime": 4021.667,
+          "bufferMs": 43,
+          "jitterMs": 0.3392965272753943
+        },
+        {
+          "frame": 120,
+          "serverTime": 4000,
+          "arrivalTime": 4055,
+          "bufferMs": 43,
+          "jitterMs": 0.2782231523658233
+        },
+        {
+          "frame": 121,
+          "serverTime": 4033.333,
+          "arrivalTime": 4088.333,
+          "bufferMs": 43,
+          "jitterMs": 0.2281429849399751
+        },
+        {
+          "frame": 122,
+          "serverTime": 4066.667,
+          "arrivalTime": 4121.667,
+          "bufferMs": 43,
+          "jitterMs": 0.18707724765086142
+        },
+        {
+          "frame": 123,
+          "serverTime": 4100,
+          "arrivalTime": 4155,
+          "bufferMs": 42,
+          "jitterMs": 0.1534033430737882
+        },
+        {
+          "frame": 124,
+          "serverTime": 4133.333,
+          "arrivalTime": 4188.333,
+          "bufferMs": 42,
+          "jitterMs": 0.1257907413205063
+        },
+        {
+          "frame": 125,
+          "serverTime": 4166.667,
+          "arrivalTime": 4221.667,
+          "bufferMs": 42,
+          "jitterMs": 0.10314840788281517
+        },
+        {
+          "frame": 126,
+          "serverTime": 4200,
+          "arrivalTime": 4255,
+          "bufferMs": 42,
+          "jitterMs": 0.08458169446390842
+        },
+        {
+          "frame": 127,
+          "serverTime": 4233.333,
+          "arrivalTime": 4288.333,
+          "bufferMs": 42,
+          "jitterMs": 0.0693569894604049
+        },
+        {
+          "frame": 128,
+          "serverTime": 4266.667,
+          "arrivalTime": 4321.667,
+          "bufferMs": 42,
+          "jitterMs": 0.056872731357532014
+        },
+        {
+          "frame": 129,
+          "serverTime": 4300,
+          "arrivalTime": 4355,
+          "bufferMs": 42,
+          "jitterMs": 0.04663563971317625
+        },
+        {
+          "frame": 130,
+          "serverTime": 4333.333,
+          "arrivalTime": 4388.333,
+          "bufferMs": 42,
+          "jitterMs": 0.03824122456480452
+        },
+        {
+          "frame": 131,
+          "serverTime": 4366.667,
+          "arrivalTime": 4421.667,
+          "bufferMs": 42,
+          "jitterMs": 0.031357804143139704
+        },
+        {
+          "frame": 132,
+          "serverTime": 4400,
+          "arrivalTime": 4455,
+          "bufferMs": 42,
+          "jitterMs": 0.025713399397374555
+        },
+        {
+          "frame": 133,
+          "serverTime": 4433.333,
+          "arrivalTime": 4488.333,
+          "bufferMs": 42,
+          "jitterMs": 0.021084987505847134
+        },
+        {
+          "frame": 134,
+          "serverTime": 4466.667,
+          "arrivalTime": 4521.667,
+          "bufferMs": 42,
+          "jitterMs": 0.01728968975479465
+        },
+        {
+          "frame": 135,
+          "serverTime": 4500,
+          "arrivalTime": 4555,
+          "bufferMs": 42,
+          "jitterMs": 0.014177545598931612
+        },
+        {
+          "frame": 136,
+          "serverTime": 4533.333,
+          "arrivalTime": 4588.333,
+          "bufferMs": 42,
+          "jitterMs": 0.011625587391123921
+        },
+        {
+          "frame": 137,
+          "serverTime": 4566.667,
+          "arrivalTime": 4621.667,
+          "bufferMs": 42,
+          "jitterMs": 0.009532981660721614
+        },
+        {
+          "frame": 138,
+          "serverTime": 4600,
+          "arrivalTime": 4655,
+          "bufferMs": 42,
+          "jitterMs": 0.007817044961791723
+        },
+        {
+          "frame": 139,
+          "serverTime": 4633.333,
+          "arrivalTime": 4688.333,
+          "bufferMs": 42,
+          "jitterMs": 0.0064099768686692125
+        },
+        {
+          "frame": 140,
+          "serverTime": 4666.667,
+          "arrivalTime": 4721.667,
+          "bufferMs": 42,
+          "jitterMs": 0.005256181032308754
+        },
+        {
+          "frame": 141,
+          "serverTime": 4700,
+          "arrivalTime": 4755,
+          "bufferMs": 42,
+          "jitterMs": 0.004310068446493178
+        },
+        {
+          "frame": 142,
+          "serverTime": 4733.333,
+          "arrivalTime": 4788.333,
+          "bufferMs": 42,
+          "jitterMs": 0.0035342561261244056
+        },
+        {
+          "frame": 143,
+          "serverTime": 4766.667,
+          "arrivalTime": 4821.667,
+          "bufferMs": 42,
+          "jitterMs": 0.0028980900234220125
+        },
+        {
+          "frame": 144,
+          "serverTime": 4800,
+          "arrivalTime": 4855,
+          "bufferMs": 42,
+          "jitterMs": 0.00237643381920605
+        },
+        {
+          "frame": 145,
+          "serverTime": 4833.333,
+          "arrivalTime": 4888.333,
+          "bufferMs": 42,
+          "jitterMs": 0.0019486757317489609
+        },
+        {
+          "frame": 146,
+          "serverTime": 4866.667,
+          "arrivalTime": 4921.667,
+          "bufferMs": 42,
+          "jitterMs": 0.0015979141000341478
+        },
+        {
+          "frame": 147,
+          "serverTime": 4900,
+          "arrivalTime": 4955,
+          "bufferMs": 42,
+          "jitterMs": 0.001310289562028001
+        },
+        {
+          "frame": 148,
+          "serverTime": 4933.333,
+          "arrivalTime": 4988.333,
+          "bufferMs": 42,
+          "jitterMs": 0.0010744374408629609
+        },
+        {
+          "frame": 149,
+          "serverTime": 4966.667,
+          "arrivalTime": 5021.667,
+          "bufferMs": 42,
+          "jitterMs": 0.0008810387015076278
+        },
+        {
+          "frame": 150,
+          "serverTime": 5000,
+          "arrivalTime": 5055,
+          "bufferMs": 42,
+          "jitterMs": 0.0007224517352362547
+        },
+        {
+          "frame": 151,
+          "serverTime": 5033.333,
+          "arrivalTime": 5088.333,
+          "bufferMs": 42,
+          "jitterMs": 0.0005924104228937289
+        },
+        {
+          "frame": 152,
+          "serverTime": 5066.667,
+          "arrivalTime": 5121.667,
+          "bufferMs": 42,
+          "jitterMs": 0.0004857765467728576
+        },
+        {
+          "frame": 153,
+          "serverTime": 5100,
+          "arrivalTime": 5155,
+          "bufferMs": 42,
+          "jitterMs": 0.0003983367683537432
+        },
+        {
+          "frame": 154,
+          "serverTime": 5133.333,
+          "arrivalTime": 5188.333,
+          "bufferMs": 42,
+          "jitterMs": 0.0003266361500500694
+        },
+        {
+          "frame": 155,
+          "serverTime": 5166.667,
+          "arrivalTime": 5221.667,
+          "bufferMs": 42,
+          "jitterMs": 0.0002678416430410569
+        },
+        {
+          "frame": 156,
+          "serverTime": 5200,
+          "arrivalTime": 5255,
+          "bufferMs": 42,
+          "jitterMs": 0.00021963014729366667
+        },
+        {
+          "frame": 157,
+          "serverTime": 5233.333,
+          "arrivalTime": 5288.333,
+          "bufferMs": 42,
+          "jitterMs": 0.00018009672078080665
+        },
+        {
+          "frame": 158,
+          "serverTime": 5266.667,
+          "arrivalTime": 5321.667,
+          "bufferMs": 42,
+          "jitterMs": 0.00014767931104026145
+        },
+        {
+          "frame": 159,
+          "serverTime": 5300,
+          "arrivalTime": 5355,
+          "bufferMs": 42,
+          "jitterMs": 0.00012109703505301439
+        },
+        {
+          "frame": 160,
+          "serverTime": 5333.333,
+          "arrivalTime": 5388.333,
+          "bufferMs": 42,
+          "jitterMs": 0.00009929956874347179
+        },
+        {
+          "frame": 161,
+          "serverTime": 5366.667,
+          "arrivalTime": 5421.667,
+          "bufferMs": 42,
+          "jitterMs": 0.00008142564636964687
+        },
+        {
+          "frame": 162,
+          "serverTime": 5400,
+          "arrivalTime": 5455,
+          "bufferMs": 42,
+          "jitterMs": 0.00006676903002311043
+        },
+        {
+          "frame": 163,
+          "serverTime": 5433.333,
+          "arrivalTime": 5488.333,
+          "bufferMs": 42,
+          "jitterMs": 0.00005475060461895055
+        },
+        {
+          "frame": 164,
+          "serverTime": 5466.667,
+          "arrivalTime": 5521.667,
+          "bufferMs": 42,
+          "jitterMs": 0.00004489549578753945
+        },
+        {
+          "frame": 165,
+          "serverTime": 5500,
+          "arrivalTime": 5555,
+          "bufferMs": 42,
+          "jitterMs": 0.000036814306545782346
+        },
+        {
+          "frame": 166,
+          "serverTime": 5533.333,
+          "arrivalTime": 5588.333,
+          "bufferMs": 42,
+          "jitterMs": 0.00003018773136754152
+        },
+        {
+          "frame": 167,
+          "serverTime": 5566.667,
+          "arrivalTime": 5621.667,
+          "bufferMs": 42,
+          "jitterMs": 0.000024753939721384046
+        },
+        {
+          "frame": 168,
+          "serverTime": 5600,
+          "arrivalTime": 5655,
+          "bufferMs": 42,
+          "jitterMs": 0.000020298230571534916
+        },
+        {
+          "frame": 169,
+          "serverTime": 5633.333,
+          "arrivalTime": 5688.333,
+          "bufferMs": 42,
+          "jitterMs": 0.00001664454906865863
+        },
+        {
+          "frame": 170,
+          "serverTime": 5666.667,
+          "arrivalTime": 5721.667,
+          "bufferMs": 42,
+          "jitterMs": 0.000013648530236300077
+        },
+        {
+          "frame": 171,
+          "serverTime": 5700,
+          "arrivalTime": 5755,
+          "bufferMs": 42,
+          "jitterMs": 0.000011191794793766063
+        },
+        {
+          "frame": 172,
+          "serverTime": 5733.333,
+          "arrivalTime": 5788.333,
+          "bufferMs": 42,
+          "jitterMs": 0.00000917727173088817
+        },
+        {
+          "frame": 173,
+          "serverTime": 5766.667,
+          "arrivalTime": 5821.667,
+          "bufferMs": 42,
+          "jitterMs": 0.0000075253628193283
+        },
+        {
+          "frame": 174,
+          "serverTime": 5800,
+          "arrivalTime": 5855,
+          "bufferMs": 42,
+          "jitterMs": 0.000006170797511849205
+        },
+        {
+          "frame": 175,
+          "serverTime": 5833.333,
+          "arrivalTime": 5888.333,
+          "bufferMs": 42,
+          "jitterMs": 0.000005060053959716348
+        },
+        {
+          "frame": 176,
+          "serverTime": 5866.667,
+          "arrivalTime": 5921.667,
+          "bufferMs": 42,
+          "jitterMs": 0.0000041492442469674054
+        },
+        {
+          "frame": 177,
+          "serverTime": 5900,
+          "arrivalTime": 5955,
+          "bufferMs": 42,
+          "jitterMs": 0.0000034023802825132724
+        },
+        {
+          "frame": 178,
+          "serverTime": 5933.333,
+          "arrivalTime": 5988.333,
+          "bufferMs": 42,
+          "jitterMs": 0.0000027899518316608833
+        },
+        {
+          "frame": 179,
+          "serverTime": 5966.667,
+          "arrivalTime": 6021.667,
+          "bufferMs": 42,
+          "jitterMs": 0.000002287760501961924
+        },
+        {
+          "frame": 180,
+          "serverTime": 6000,
+          "arrivalTime": 6055,
+          "bufferMs": 42,
+          "jitterMs": 0.0000018759636116087778
+        },
+        {
+          "frame": 181,
+          "serverTime": 6033.333,
+          "arrivalTime": 6088.333,
+          "bufferMs": 42,
+          "jitterMs": 0.0000015382901615191977
+        },
+        {
+          "frame": 182,
+          "serverTime": 6066.667,
+          "arrivalTime": 6121.667,
+          "bufferMs": 42,
+          "jitterMs": 0.000001261397932445742
+        },
+        {
+          "frame": 183,
+          "serverTime": 6100,
+          "arrivalTime": 6155,
+          "bufferMs": 42,
+          "jitterMs": 0.0000010343463046055083
+        },
+        {
+          "frame": 184,
+          "serverTime": 6133.333,
+          "arrivalTime": 6188.333,
+          "bufferMs": 42,
+          "jitterMs": 8.481639697765168e-7
+        },
+        {
+          "frame": 185,
+          "serverTime": 6166.667,
+          "arrivalTime": 6221.667,
+          "bufferMs": 42,
+          "jitterMs": 6.954944552167437e-7
+        },
+        {
+          "frame": 186,
+          "serverTime": 6200,
+          "arrivalTime": 6255,
+          "bufferMs": 42,
+          "jitterMs": 5.703054532777298e-7
+        },
+        {
+          "frame": 187,
+          "serverTime": 6233.333,
+          "arrivalTime": 6288.333,
+          "bufferMs": 42,
+          "jitterMs": 4.676504716877384e-7
+        },
+        {
+          "frame": 188,
+          "serverTime": 6266.667,
+          "arrivalTime": 6321.667,
+          "bufferMs": 42,
+          "jitterMs": 3.8347338678394544e-7
+        },
+        {
+          "frame": 189,
+          "serverTime": 6300,
+          "arrivalTime": 6355,
+          "bufferMs": 42,
+          "jitterMs": 3.144481771628352e-7
+        },
+        {
+          "frame": 190,
+          "serverTime": 6333.333,
+          "arrivalTime": 6388.333,
+          "bufferMs": 42,
+          "jitterMs": 2.578475052735249e-7
+        },
+        {
+          "frame": 191,
+          "serverTime": 6366.667,
+          "arrivalTime": 6421.667,
+          "bufferMs": 42,
+          "jitterMs": 2.1143495432429038e-7
+        },
+        {
+          "frame": 192,
+          "serverTime": 6400,
+          "arrivalTime": 6455,
+          "bufferMs": 42,
+          "jitterMs": 1.733766625459181e-7
+        },
+        {
+          "frame": 193,
+          "serverTime": 6433.333,
+          "arrivalTime": 6488.333,
+          "bufferMs": 42,
+          "jitterMs": 1.4216886328765283e-7
+        },
+        {
+          "frame": 194,
+          "serverTime": 6466.667,
+          "arrivalTime": 6521.667,
+          "bufferMs": 42,
+          "jitterMs": 1.1657846789587532e-7
+        },
+        {
+          "frame": 195,
+          "serverTime": 6500,
+          "arrivalTime": 6555,
+          "bufferMs": 42,
+          "jitterMs": 9.559434367461775e-8
+        },
+        {
+          "frame": 196,
+          "serverTime": 6533.333,
+          "arrivalTime": 6588.333,
+          "bufferMs": 42,
+          "jitterMs": 7.838736181318655e-8
+        },
+        {
+          "frame": 197,
+          "serverTime": 6566.667,
+          "arrivalTime": 6621.667,
+          "bufferMs": 42,
+          "jitterMs": 6.427763668681298e-8
+        },
+        {
+          "frame": 198,
+          "serverTime": 6600,
+          "arrivalTime": 6655,
+          "bufferMs": 42,
+          "jitterMs": 5.270766208318664e-8
+        },
+        {
+          "frame": 199,
+          "serverTime": 6633.333,
+          "arrivalTime": 6688.333,
+          "bufferMs": 42,
+          "jitterMs": 4.322028290821304e-8
+        },
+        {
+          "frame": 200,
+          "serverTime": 6666.667,
+          "arrivalTime": 6721.667,
+          "bufferMs": 42,
+          "jitterMs": 3.5440631984734694e-8
+        },
+        {
+          "frame": 201,
+          "serverTime": 6700,
+          "arrivalTime": 6755,
+          "bufferMs": 42,
+          "jitterMs": 2.9061318227482447e-8
+        },
+        {
+          "frame": 202,
+          "serverTime": 6733.333,
+          "arrivalTime": 6788.333,
+          "bufferMs": 42,
+          "jitterMs": 2.3830280946535604e-8
+        },
+        {
+          "frame": 203,
+          "serverTime": 6766.667,
+          "arrivalTime": 6821.667,
+          "bufferMs": 42,
+          "jitterMs": 1.9540830376159194e-8
+        },
+        {
+          "frame": 204,
+          "serverTime": 6800,
+          "arrivalTime": 6855,
+          "bufferMs": 42,
+          "jitterMs": 1.6023480908450537e-8
+        },
+        {
+          "frame": 205,
+          "serverTime": 6833.333,
+          "arrivalTime": 6888.333,
+          "bufferMs": 42,
+          "jitterMs": 1.313925434492944e-8
+        },
+        {
+          "frame": 206,
+          "serverTime": 6866.667,
+          "arrivalTime": 6921.667,
+          "bufferMs": 42,
+          "jitterMs": 1.077418856284214e-8
+        },
+        {
+          "frame": 207,
+          "serverTime": 6900,
+          "arrivalTime": 6955,
+          "bufferMs": 42,
+          "jitterMs": 8.834834621530555e-9
+        },
+        {
+          "frame": 208,
+          "serverTime": 6933.333,
+          "arrivalTime": 6988.333,
+          "bufferMs": 42,
+          "jitterMs": 7.244564389655054e-9
+        },
+        {
+          "frame": 209,
+          "serverTime": 6966.667,
+          "arrivalTime": 7021.667,
+          "bufferMs": 42,
+          "jitterMs": 5.940542799517144e-9
+        },
+        {
+          "frame": 210,
+          "serverTime": 7000,
+          "arrivalTime": 7055,
+          "bufferMs": 42,
+          "jitterMs": 4.871245095604058e-9
+        },
+        {
+          "frame": 211,
+          "serverTime": 7033.333,
+          "arrivalTime": 7088.333,
+          "bufferMs": 42,
+          "jitterMs": 3.994420978395327e-9
+        },
+        {
+          "frame": 212,
+          "serverTime": 7066.667,
+          "arrivalTime": 7121.667,
+          "bufferMs": 42,
+          "jitterMs": 3.275425202284168e-9
+        },
+        {
+          "frame": 213,
+          "serverTime": 7100,
+          "arrivalTime": 7155,
+          "bufferMs": 42,
+          "jitterMs": 2.6858486658730175e-9
+        },
+        {
+          "frame": 214,
+          "serverTime": 7133.333,
+          "arrivalTime": 7188.333,
+          "bufferMs": 42,
+          "jitterMs": 2.202395906015874e-9
+        },
+        {
+          "frame": 215,
+          "serverTime": 7166.667,
+          "arrivalTime": 7221.667,
+          "bufferMs": 42,
+          "jitterMs": 1.8059646429330166e-9
+        },
+        {
+          "frame": 216,
+          "serverTime": 7200,
+          "arrivalTime": 7255,
+          "bufferMs": 42,
+          "jitterMs": 1.4808910072050735e-9
+        },
+        {
+          "frame": 217,
+          "serverTime": 7233.333,
+          "arrivalTime": 7288.333,
+          "bufferMs": 42,
+          "jitterMs": 1.2143306259081602e-9
+        },
+        {
+          "frame": 218,
+          "serverTime": 7266.667,
+          "arrivalTime": 7321.667,
+          "bufferMs": 42,
+          "jitterMs": 9.957511132446914e-10
+        },
+        {
+          "frame": 219,
+          "serverTime": 7300,
+          "arrivalTime": 7355,
+          "bufferMs": 42,
+          "jitterMs": 8.16515912860647e-10
+        },
+        {
+          "frame": 220,
+          "serverTime": 7333.333,
+          "arrivalTime": 7388.333,
+          "bufferMs": 42,
+          "jitterMs": 6.695430485457304e-10
+        },
+        {
+          "frame": 221,
+          "serverTime": 7366.667,
+          "arrivalTime": 7421.667,
+          "bufferMs": 42,
+          "jitterMs": 5.490252998074989e-10
+        },
+        {
+          "frame": 222,
+          "serverTime": 7400,
+          "arrivalTime": 7455,
+          "bufferMs": 42,
+          "jitterMs": 4.502007458421491e-10
+        },
+        {
+          "frame": 223,
+          "serverTime": 7433.333,
+          "arrivalTime": 7488.333,
+          "bufferMs": 42,
+          "jitterMs": 3.6916461159056224e-10
+        },
+        {
+          "frame": 224,
+          "serverTime": 7466.667,
+          "arrivalTime": 7521.667,
+          "bufferMs": 42,
+          "jitterMs": 3.02714981504261e-10
+        },
+        {
+          "frame": 225,
+          "serverTime": 7500,
+          "arrivalTime": 7555,
+          "bufferMs": 42,
+          "jitterMs": 2.48226284833494e-10
+        },
+        {
+          "frame": 226,
+          "serverTime": 7533.333,
+          "arrivalTime": 7588.333,
+          "bufferMs": 42,
+          "jitterMs": 2.0354555356346506e-10
+        },
+        {
+          "frame": 227,
+          "serverTime": 7566.667,
+          "arrivalTime": 7621.667,
+          "bufferMs": 42,
+          "jitterMs": 1.6690735392204134e-10
+        },
+        {
+          "frame": 228,
+          "serverTime": 7600,
+          "arrivalTime": 7655,
+          "bufferMs": 42,
+          "jitterMs": 1.368640302160739e-10
+        },
+        {
+          "frame": 229,
+          "serverTime": 7633.333,
+          "arrivalTime": 7688.333,
+          "bufferMs": 42,
+          "jitterMs": 1.1222850477718058e-10
+        },
+        {
+          "frame": 230,
+          "serverTime": 7666.667,
+          "arrivalTime": 7721.667,
+          "bufferMs": 42,
+          "jitterMs": 9.202737391728807e-11
+        },
+        {
+          "frame": 231,
+          "serverTime": 7700,
+          "arrivalTime": 7755,
+          "bufferMs": 42,
+          "jitterMs": 7.546244661217622e-11
+        },
+        {
+          "frame": 232,
+          "serverTime": 7733.333,
+          "arrivalTime": 7788.333,
+          "bufferMs": 42,
+          "jitterMs": 6.18792062219845e-11
+        },
+        {
+          "frame": 233,
+          "serverTime": 7766.667,
+          "arrivalTime": 7821.667,
+          "bufferMs": 42,
+          "jitterMs": 5.0740949102027283e-11
+        },
+        {
+          "frame": 234,
+          "serverTime": 7800,
+          "arrivalTime": 7855,
+          "bufferMs": 42,
+          "jitterMs": 4.160757826366237e-11
+        },
+        {
+          "frame": 235,
+          "serverTime": 7833.333,
+          "arrivalTime": 7888.333,
+          "bufferMs": 42,
+          "jitterMs": 3.411821417620314e-11
+        },
+        {
+          "frame": 236,
+          "serverTime": 7866.667,
+          "arrivalTime": 7921.667,
+          "bufferMs": 42,
+          "jitterMs": 2.7976935624486574e-11
+        },
+        {
+          "frame": 237,
+          "serverTime": 7900,
+          "arrivalTime": 7955,
+          "bufferMs": 42,
+          "jitterMs": 2.294108721207899e-11
+        },
+        {
+          "frame": 238,
+          "serverTime": 7933.333,
+          "arrivalTime": 7988.333,
+          "bufferMs": 42,
+          "jitterMs": 1.8811691513904772e-11
+        },
+        {
+          "frame": 239,
+          "serverTime": 7966.667,
+          "arrivalTime": 8021.667,
+          "bufferMs": 42,
+          "jitterMs": 1.5425587041401912e-11
+        }
+      ]
+    }
+  ]
+}

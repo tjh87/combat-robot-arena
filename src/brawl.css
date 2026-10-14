@@ -42,3 +42,21 @@ html.touch-device .results .brawl-result-status{font-size:11px}
 html.touch-device .results .brawl-rules-note{font-size:11px}
 
 html.touch-device:has(.result-backdrop[data-format="brawl"]) .touch-controls{display:none!important}
+
+/* Brawl callouts sit beside projected robot bounds, never over the machine. */
+.robot-damage-warning[data-callout-side]{width:min(206px,calc(100vw - 16px));transform:none;--callout-color:#f0a94e}
+.robot-damage-warning[data-callout-side][data-critical="true"]{--callout-color:#ff7176}
+.robot-damage-warning[data-callout-side="left"]::after{top:50%;left:100%;transform:translateY(-50%);border-top-color:transparent;border-left-color:var(--callout-color)}
+.robot-damage-warning[data-callout-side="right"]::after{top:50%;left:0;transform:translate(-100%,-50%);border-top-color:transparent;border-right-color:var(--callout-color)}
+.robot-damage-warning[data-callout-side="bottom"]::after{top:0;left:50%;transform:translate(-50%,-100%);border-top-color:transparent;border-bottom-color:var(--callout-color)}
+.robot-damage-warning[data-callout-side="top"]::after{border-top-color:var(--callout-color)}
+#brawl-opponents .brawl-hud-card[data-zero-hp="true"]{background:#27191df2;border-color:#ff6878;box-shadow:inset 3px 0 #ff6878,0 3px 12px #0007}
+#brawl-opponents .brawl-hud-card[data-zero-hp="true"] [data-brawl-status]{color:#ff9ca7;font-weight:900;letter-spacing:.02em}
+#brawl-opponents .brawl-hud-card[data-zero-hp="true"] .brawl-hp-track i{background:#ff6878}
+
+/* Brawl launch readouts use the same side-arrow language as damage alerts. */
+.flight-label[data-callout-side]::after{content:'';position:absolute;width:0;height:0;border:7px solid transparent}
+.flight-label[data-callout-side='left']::after{top:50%;right:-14px;transform:translateY(-50%);border-left-color:#f2d56d}
+.flight-label[data-callout-side='right']::after{top:50%;left:-14px;transform:translateY(-50%);border-right-color:#f2d56d}
+.flight-label[data-callout-side='top']::after{left:50%;bottom:-14px;transform:translateX(-50%);border-top-color:#f2d56d}
+.flight-label[data-callout-side='bottom']::after{left:50%;top:-14px;transform:translateX(-50%);border-bottom-color:#f2d56d}

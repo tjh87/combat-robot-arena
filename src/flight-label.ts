@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import type {Travel} from './sim';
+import {placeBrawlCallout,type BrawlRect} from './brawl-overlay-layout';
 
 export function flightReadout(track:Pick<Travel,'bot'|'horizontal'|'height'>){
  return{robot:`P${track.bot+1}`,distance:`${track.horizontal.toFixed(2)} m`,height:`${track.height.toFixed(2)} m`};
@@ -19,10 +20,11 @@ export class FlightLabel{
   this.element.innerHTML=`<span class="flight-robot">${r.robot} LAUNCH</span><span><small>Distance</small><strong>${r.distance}</strong></span><span><small>Peak height</small><strong>${r.height}</strong></span>`;
   this.element.setAttribute('aria-label',`${r.robot} launch: distance ${r.distance}, peak height ${r.height}`);
  }
- draw(camera:THREE.PerspectiveCamera,width:number,height:number,active:boolean){
+ draw(camera:THREE.PerspectiveCamera,width:number,height:number,active:boolean,brawl=false,obstacles:readonly BrawlRect[]=[]){
   const p=active&&this.track?flightLabelPosition(camera,this.track,width,height):undefined;this.element.hidden=!p;if(!p)return;
   const ew=this.element.offsetWidth||222,eh=this.element.offsetHeight||60;
-  const x=p.x+14+ew<width-8?p.x+14:p.x-ew-14,y=Math.max(8,Math.min(height-eh-8,p.y-eh/2));
+  if(brawl){const placed=placeBrawlCallout(p,{width,height},{width:ew,height:eh},obstacles,[]);this.element.style.left=`${placed.left}px`;this.element.style.top=`${placed.top}px`;this.element.dataset.calloutSide=placed.side;return;}
+  this.element.removeAttribute('data-callout-side');const x=p.x+14+ew<width-8?p.x+14:p.x-ew-14,y=Math.max(8,Math.min(height-eh-8,p.y-eh/2));
   this.element.style.left=`${Math.max(8,x)}px`;this.element.style.top=`${y}px`;
  }
  dispose(){this.element.remove();}

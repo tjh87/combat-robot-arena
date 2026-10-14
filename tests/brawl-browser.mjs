@@ -6,6 +6,9 @@ import {build} from 'esbuild';
 const exposed=`globalThis.__brawlFixture={
  get ready(){return ready},get count(){return sim?.bots.length},get ffa(){return sim?.options.freeForAll},
  get names(){return sim.bots.map(b=>b.compiled.config.identity.name)},
+ randomDraws(){const original=Math.random;try{Math.random=()=>0;const first=brawlConfigs().slice(1).map(c=>c.identity.name);Math.random=()=>.9;const second=brawlConfigs().slice(1).map(c=>c.identity.name);return{first,second,player:build.identity.name}}finally{Math.random=original}},
+ zeroHp(id=1){sim.bots[id].modules.chassis.hp=0;updateBrawlCard(sim.bots[id]);const card=document.querySelector('[data-brawl-card="'+id+'"]');return{zero:card.dataset.zeroHp,status:card.querySelector('[data-brawl-status]').textContent,health:card.querySelector('[data-brawl-health]').textContent}},
+ damageCallouts(){state='fighting';for(const bot of sim.bots){const badge=document.querySelector('#damage-badge-'+bot.id);badge.dataset.damaged='true';}updateDamageWarnings();return sim.bots.map(bot=>{const badge=document.querySelector('#damage-badge-'+bot.id),r=badge.getBoundingClientRect(),point=renderer.robotWarningPosition(sim,bot.id);return{id:bot.id,visible:!badge.classList.contains('hidden'),side:badge.dataset.calloutSide,box:{left:r.left,top:r.top,right:r.right,bottom:r.bottom},robot:point.bounds}}).filter(item=>item.visible)},
  result(){sim.finish('Judges’ decision');showResult()},
  recoverHeld(){setState('fighting');sim.tick=1300;sim.bots[0].count=RULES.hz;input.held.add(prefs.controls[0].forward);recoverRobots();const cmd=input.sampleDevice(0);return{left:cmd.left,right:cmd.right,recovered:sim.bots[0].lastManualRecovery===sim.tick,aiMoved:sim.bots.slice(1).some(b=>b.lastManualRecovery===sim.tick)}},
  dispose(){input.dispose();audio.dispose();renderer?.dispose();sim?.dispose()}
@@ -13,7 +16,7 @@ const exposed=`globalThis.__brawlFixture={
 const bundle=await build({entryPoints:['src/main.ts'],bundle:true,format:'iife',write:false,loader:{'.css':'empty'},plugins:[{name:'brawl-layout',setup(builder){
  builder.onLoad({filter:/src\/main\.ts$/},args=>({contents:readFileSync(args.path,'utf8')+exposed,loader:'ts',resolveDir:process.cwd()+'/src'}));
  builder.onResolve({filter:/^\.\/render$/},()=>({path:'layout-renderer',namespace:'fixture'}));
- builder.onLoad({filter:/layout-renderer/,namespace:'fixture'},()=>({contents:`export class ArenaRenderer{constructor(){this.quality='low';this.triangleCount=0;this.drawCalls=0;this.renderMs=0}attach(sim){this.sim=sim}setQuality(){}setAdaptive(){}showBuilder(){}startReplay(){}endReplay(){}replayFrame(){}update(){}draw(){}dispose(){}opponentIndicator(){return{visible:false}}projectCombatPoint(){return{visible:false}}robotWarningPosition(){return{visible:false}}}`}));
+ builder.onLoad({filter:/layout-renderer/,namespace:'fixture'},()=>({contents:`export class ArenaRenderer{constructor(){this.quality='low';this.triangleCount=0;this.drawCalls=0;this.renderMs=0}attach(sim){this.sim=sim}setQuality(){}setAdaptive(){}showBuilder(){}startReplay(){}endReplay(){}replayFrame(){}update(){}draw(){}dispose(){}opponentIndicator(){return{visible:false}}projectCombatPoint(){return{visible:false}}robotWarningPosition(sim,id){const x=innerWidth*(.13+.74*(id/Math.max(1,sim.bots.length-1))),y=innerHeight*(.42+(id%2)*.16);return{x:x/innerWidth*100,y:y/innerHeight*100,visible:true,bounds:{left:x-42,top:y-34,right:x+42,bottom:y+34}}}}`}));
 }}]});
 const origin=process.env.CRA_PREVIEW_URL??'http://127.0.0.1:4173/';
 const html=await(await fetch(origin)).text();
@@ -44,6 +47,9 @@ try{
    await wait(`__brawlFixture.count===${n+1}&&document.querySelectorAll('[data-brawl-card]').length===${n}`,'Brawl field');
    assert(await evaluate('__brawlFixture.ffa'));
    assert.equal(await evaluate('new Set(__brawlFixture.names).size'),n+1);
+   const draws=await evaluate('__brawlFixture.randomDraws()');assert.equal(new Set(draws.first).size,n);assert.equal(new Set(draws.second).size,n);assert(!draws.first.includes(draws.player)&&!draws.second.includes(draws.player));assert.notDeepEqual(draws.first,draws.second,'Fresh Brawl starts randomize the opponent roster');
+   const zero=await evaluate('__brawlFixture.zeroHp(1)');assert.equal(zero.zero,'true');assert.match(zero.status,/0 HP · KNOCKED OUT/);assert.match(zero.health,/^0 HP/);
+   const callouts=await evaluate('__brawlFixture.damageCallouts()'),visible=await evaluate('(()=>{const v=visualViewport;return{left:v?.offsetLeft??0,top:v?.offsetTop??0,right:(v?.offsetLeft??0)+(v?.width??innerWidth),bottom:(v?.offsetTop??0)+(v?.height??innerHeight)}})()');assert(callouts.length>=2);for(const item of callouts){assert(item.side,'Brawl warning is placed around its robot');assert(item.robot);assert(item.box.left>=visible.left-1&&item.box.top>=visible.top-1&&item.box.right<=visible.right+1&&item.box.bottom<=visible.bottom+1,`${device.name} ${n} AI callout outside visible CSS viewport ${JSON.stringify(visible)}: ${JSON.stringify(item)}`);assert(item.box.right<=item.robot.left||item.box.left>=item.robot.right||item.box.bottom<=item.robot.top||item.box.top>=item.robot.bottom,'Callout does not cover its robot');}
    const recovery=await evaluate('__brawlFixture.recoverHeld()');
    assert(recovery.recovered,'Player Unstick must find safe space');assert(recovery.left>0&&recovery.right>0,'Unstick must preserve held drive input');assert.equal(recovery.aiMoved,false,'Player Unstick must not teleport AI opponents');
    await evaluate('document.fonts.ready');
