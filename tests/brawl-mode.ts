@@ -51,9 +51,18 @@ try{
  sim.finish('Judges’ decision');
  assert.equal(sim.result?.scores.length,5,'Every entrant receives a pairwise 5/3/3 judging total.');
  assert(sim.result?.scores.every(score=>score.length===3));
- assert.match(brawlResultsMarkup(sim),/DAMAGE DEALT/);assert.match(brawlResultsMarkup(sim),/0 HP · KNOCKED OUT/);
- assert.match(brawlResultsMarkup(sim),/37 <small>HP<\/small>/);
- assert.equal((brawlResultsMarkup(sim).match(/class="brawl-result-row/g)??[]).length,5,'The standings contain all five robots.');
+ sim.highlights.robots.forEach((stats,id)=>stats.maxHeight=.4+id*.25);
+ const resultMarkup=brawlResultsMarkup(sim);
+ assert.match(resultMarkup,/DAMAGE DEALT/);assert.match(resultMarkup,/0 HP · KNOCKED OUT/);
+ assert.match(resultMarkup,/37 <small>HP<\/small>/);
+ assert.equal((resultMarkup.match(/class="brawl-result-row/g)??[]).length,5,'The standings contain all five robots.');
+ assert.equal((resultMarkup.match(/class="brawl-result-portrait"/g)??[]).length,5,'Every robot has an end-of-fight portrait.');
+ assert.match(resultMarkup,/data-brawl-result-bot="4" data-peak-height="1\.40"/,'Every row carries that robot’s tracked peak hit-flight rise in metres.');
+ assert.equal((resultMarkup.match(/class="brawl-top-damage"/g)??[]).length,1,'The sole highest positive damage dealer is labelled.');
+ sim.combatDamage.set('test-tied-damage',{attacker:1,target:0,module:'chassis',hp:37});
+ assert.equal((brawlResultsMarkup(sim).match(/class="brawl-top-damage"/g)??[]).length,2,'All tied positive damage leaders are labelled.');
+ sim.combatDamage.clear();
+ assert.equal((brawlResultsMarkup(sim).match(/class="brawl-top-damage"/g)??[]).length,0,'No top-damage badge is shown when no damage was dealt.');
 }finally{sim.dispose();}
 
 sim=new Simulation(configs,{freeForAll:true,hazards:false,ai:[false,true,true,true,true],seed:9183});

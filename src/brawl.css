@@ -60,3 +60,20 @@ html.touch-device:has(.result-backdrop[data-format="brawl"]) .touch-controls{dis
 .flight-label[data-callout-side='right']::after{top:50%;left:-14px;transform:translateY(-50%);border-right-color:#f2d56d}
 .flight-label[data-callout-side='top']::after{left:50%;bottom:-14px;transform:translateX(-50%);border-top-color:#f2d56d}
 .flight-label[data-callout-side='bottom']::after{left:50%;top:-14px;transform:translateX(-50%);border-bottom-color:#f2d56d}
+
+
+/* Result cards pair each Brawl robot portrait with its peak-hit-flight stat. */
+.results .brawl-result-machine{align-items:center;gap:6px;min-width:0;flex-wrap:nowrap}
+.results .brawl-result-portrait{display:block;flex:0 0 46px;width:46px;height:35px;box-sizing:border-box;object-fit:contain;border:1px solid #ffffff2a;border-radius:4px;background:#0b1116}
+.results .brawl-result-identity{display:grid;gap:3px;min-width:0;flex:1}
+.results .brawl-result-name{display:flex;align-items:center;gap:5px;min-width:0}
+.results .brawl-result-name strong{display:-webkit-box;min-width:0;font-size:16px;line-height:1.12;white-space:normal;overflow-wrap:anywhere;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.results .brawl-result-name small{flex:0 0 auto}
+.results .brawl-peak-flight{display:flex;align-items:baseline;justify-content:space-between;gap:4px;min-width:0;color:#d9e6eb}
+.results .brawl-peak-flight>span{font:700 8px/1.15 var(--font-mono);letter-spacing:.04em;color:#b7c7cf;white-space:nowrap}
+.results .brawl-peak-flight strong{font:800 12px/1.1 var(--font-mono);color:#f2d56d;white-space:nowrap}
+.results .brawl-peak-flight strong small{font-size:9px;color:#d9e6eb}
+.results .brawl-damage-value{display:grid;justify-items:start;gap:3px}
+.results .brawl-damage-number{white-space:nowrap}
+.results .brawl-top-damage{display:block;color:#ffd27d;font:900 10px/1.1 var(--font-mono);letter-spacing:.055em;white-space:nowrap}
+@media(max-width:760px){html.touch-device .results .brawl-result-heading,html.touch-device .results .brawl-result-row{grid-template-columns:minmax(112px,1.45fr) minmax(64px,.85fr) minmax(50px,.65fr) minmax(82px,.9fr);gap:5px}html.touch-device .results .brawl-result-portrait{flex-basis:32px;width:32px;height:24px}html.touch-device .results .brawl-result-machine{gap:3px;flex-wrap:nowrap}html.touch-device .results .brawl-result-name strong{font-size:14px;line-height:1.08}html.touch-device .results .brawl-peak-flight>span{font-size:7px}html.touch-device .results .brawl-peak-flight strong{font-size:10px}html.touch-device .results .brawl-peak-flight strong small{font-size:8px}html.touch-device .results .brawl-top-damage{font-size:8px}html.touch-device .results .brawl-result-status{font-size:10px}}

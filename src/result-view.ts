@@ -1,7 +1,9 @@
 import {ROBOT_PORTRAITS} from './robot-portraits';
 import type {RobotHighlights} from './match-highlights';
-import {type Result} from './sim';
+import type {Result} from './sim';
 import {ROSTER,type BotConfig} from './model';
+const portraitFallback:Record<string,string>={drum:'minotaur',flipper:'hydra',crusher:'quantum',vertical_disc:'hypershock',shell_spinner:'gigabyte',horizontal_cage:'whyachi',hammer_saw:'sawblaze',vertical_bar:'deep_six'};
+export function portraitProfileFor(config:BotConfig){return ROSTER.find(r=>r.profile===config.chassis.profile)?.profile??portraitFallback[config.weapon.type]??'tombstone';}
 export function highlightStats(h:RobotHighlights,id:number){
  const metrics=[
   {label:'Farthest hit travel',value:h.furthestTravel,unit:'m',className:'',help:'Distance travelled after an opponent hit. Powered ground travel is excluded.'},
@@ -13,7 +15,7 @@ export function highlightStats(h:RobotHighlights,id:number){
 }
 export function podium(configs:BotConfig[],winner:number,health?:{hp:number,max:number}[],highlights?:RobotHighlights[],reduced=false){
  return `<div class="podium">${[winner,1-winner].map((id,place)=>{
-  const c=configs[id],template=ROSTER.find(r=>r.profile===c.chassis.profile),fallback:Record<string,string>={drum:'minotaur',flipper:'hydra',crusher:'quantum',vertical_disc:'hypershock',shell_spinner:'gigabyte',horizontal_cage:'whyachi',hammer_saw:'sawblaze',vertical_bar:'deep_six'},profile=template?.profile??fallback[c.weapon.type]??'tombstone';
+  const c=configs[id],profile=portraitProfileFor(c);
   return `<article class="${place?'podium-runner':'podium-winner'}"><div class="podium-label"><span>${place?'RUNNER-UP':'★ WINNER'}</span><span>P${id+1}</span></div><div class="podium-content"><div class="podium-name ${place?'':'winner'}" data-name="${place?'runner-up':'winner'}"></div><div class="podium-portrait"><img src="${ROBOT_PORTRAITS[profile]??ROBOT_PORTRAITS.tombstone}" data-robot-portrait="${profile}" loading="eager" decoding="sync" alt="${place?'Runner-up':'Winning'} robot" width="160" height="126">${place?'':victoryConfetti(reduced)}</div></div>${health?`<div class="result-hp" data-robot="${id}"><span>HP LEFT</span><strong>${Math.ceil(Math.max(0,health[id].hp)).toLocaleString()}<small> / ${health[id].max.toLocaleString()}</small></strong><div class="result-health-track" role="progressbar" aria-label="HP left for P${id+1}" aria-valuemin="0" aria-valuemax="${health[id].max}" aria-valuenow="${Math.max(0,health[id].hp)}"><i style="width:${Math.max(0,Math.min(100,health[id].hp/health[id].max*100))}%"></i></div></div>`:''}${highlights?highlightStats(highlights[id],id):''}<div class="podium-caption">${place?'FINALIST':'ARENA VICTOR'}</div></article>`;
  }).join('')}</div>`;
 }
