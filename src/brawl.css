@@ -84,3 +84,17 @@ html.touch-device:has(.result-backdrop[data-format="brawl"]) .touch-controls{dis
 .results .brawl-peak-flight strong{font-size:16px}
 .results .brawl-peak-flight strong small{font-size:12px}
 @media(max-width:760px){html.touch-device .results .brawl-peak-flight>span{font-size:11px}html.touch-device .results .brawl-peak-flight strong{font-size:14px}html.touch-device .results .brawl-peak-flight strong small{font-size:11px}}
+
+
+/* Brawl standings keep robot identity and peak height in separate, consistently aligned columns. */
+.results .brawl-result-heading,.results .brawl-result-row{grid-template-columns:minmax(0,1.55fr) minmax(64px,.8fr) minmax(78px,.95fr) minmax(60px,.7fr) minmax(88px,.95fr);gap:6px}
+.results .brawl-result-heading>span:nth-child(2){text-align:center}
+.results .brawl-peak-flight{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;text-align:center}
+.results .brawl-peak-flight strong{font-size:16px}
+.results .brawl-peak-flight strong small{font-size:12px}
+.results .brawl-peak-flight[data-high-flier="true"] strong{color:#ffe18a}
+.results .brawl-high-flier{display:block;color:#ffd27d;font:900 10px/1.1 var(--font-mono);letter-spacing:.04em;white-space:nowrap}
+@media(max-width:760px){html.touch-device .results .brawl-result-heading,html.touch-device .results .brawl-result-row{grid-template-columns:minmax(94px,1.45fr) minmax(54px,.85fr) minmax(60px,.95fr) minmax(42px,.65fr) minmax(58px,.9fr);gap:4px}html.touch-device .results .brawl-peak-flight strong{font-size:14px}html.touch-device .results .brawl-peak-flight strong small{font-size:11px}html.touch-device .results .brawl-high-flier{font-size:8px}}
+
+html.touch-device .results .brawl-peak-flight strong{font-size:14px}
+html.touch-device .results .brawl-peak-flight strong small{font-size:11px}

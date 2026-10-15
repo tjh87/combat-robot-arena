@@ -252,3 +252,11 @@ Implementation outcome: the existing Brawl result rows now show an embedded robo
 
 
 The follow-up readability pass enlarges the Brawl peak-flight label and metre value to match the surrounding result-row/robot-name scale on desktop and mobile landscape; the added CSS is presentation-only.
+
+
+### Brawl standings alignment and High Flier follow-up
+
+Supersede the earlier four-column layout note: give robot identity, peak height, damage, judging points, and status five dedicated columns. Center the peak-height header and every row value in the same fixed grid column so the measurements line up vertically, including on mobile landscape. Add a `HIGH FLIER` label to every entrant tied for the greatest positive recorded peak height; show no award when all heights are zero. Use the existing post-impact peak-height data only; standings, combat, rules, camera, and physics remain unchanged.
+
+
+Implementation outcome: Brawl results now use five columns for robot, peak height, damage, judge points, and status. The height header and values share a centered grid column; the participant(s) with the greatest positive recorded rise receive `HIGH FLIER`, with ties supported and no badge when every height is zero. Unit checks and the desktop/Android/Small Android browser regression passed for 1–4 AI, including column alignment, responsive fit, and High Flier selection; the production build passed.

@@ -59,9 +59,15 @@ try{
  assert.equal((resultMarkup.match(/class="brawl-result-portrait"/g)??[]).length,5,'Every robot has an end-of-fight portrait.');
  assert.match(resultMarkup,/data-brawl-result-bot="4" data-peak-height="1\.40"/,'Every row carries that robot’s tracked peak hit-flight rise in metres.');
  assert.equal((resultMarkup.match(/class="brawl-top-damage"/g)??[]).length,1,'The sole highest positive damage dealer is labelled.');
+ assert.match(resultMarkup,/data-brawl-result-bot="4" data-peak-height="1\.40" data-top-damage="false" data-high-flier="true"/,'The robot with the greatest positive peak height receives the High Flier mark.');
+ assert.equal((resultMarkup.match(/class="brawl-high-flier"/g)??[]).length,1,'Only the highest flyer is labelled when the result is unique.');
+ sim.highlights.robots[3].maxHeight=1.4;
+ assert.equal((brawlResultsMarkup(sim).match(/class="brawl-high-flier"/g)??[]).length,2,'All robots tied for the greatest positive peak height are labelled.');
  sim.combatDamage.set('test-tied-damage',{attacker:1,target:0,module:'chassis',hp:37});
  assert.equal((brawlResultsMarkup(sim).match(/class="brawl-top-damage"/g)??[]).length,2,'All tied positive damage leaders are labelled.');
  sim.combatDamage.clear();
+ sim.highlights.robots.forEach(stats=>stats.maxHeight=0);
+ assert.equal((brawlResultsMarkup(sim).match(/class="brawl-high-flier"/g)??[]).length,0,'No High Flier mark is shown when all peak heights are zero.');
  assert.equal((brawlResultsMarkup(sim).match(/class="brawl-top-damage"/g)??[]).length,0,'No top-damage badge is shown when no damage was dealt.');
 }finally{sim.dispose();}
 
