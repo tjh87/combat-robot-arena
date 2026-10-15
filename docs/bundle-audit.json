@@ -1,9 +1,13 @@
 {
   "status": "passed",
   "assetReferences": [
-    "/favicon.svg",
-    "/assets/index-DdQHNgYu.js",
-    "/assets/index-DmQm7yMY.css"
+    "/manifest.webmanifest",
+    "/branding/arena-logo-192.png",
+    "/branding/arena-logo-64.png",
+    "/assets/index-CctVEXBP.js",
+    "/assets/graphics-DQ5g_2vW.js",
+    "/assets/physics-DD3n_w3i.js",
+    "/assets/index-DzHYVjZH.css"
   ],
   "embeddedWasmBytes": 1555075,
   "testFixturesExcluded": true,
@@ -15,23 +19,68 @@
     },
     {
       "path": "index.html",
-      "bytes": 515,
-      "sha256": "e9fde7fc798543f6be72fe37b81edf8c3ba0ae63a0ab36d2d50b33163115d2cf"
+      "bytes": 2217,
+      "sha256": "a0eca081abd5be2f112951332e8b57f2829c672e2d0604c1bd448c4052b7d6df"
     },
     {
-      "path": "assets/index-DdQHNgYu.js",
-      "bytes": 3173017,
-      "sha256": "d9386fec670cfd9f5d0867805a603c85719d6ee192508284e22b4fd13d3ac14b"
+      "path": "manifest.webmanifest",
+      "bytes": 605,
+      "sha256": "9f3f08b514bf95b3c862843761b99eedc1f52079aa02507839d65999d110499e"
     },
     {
-      "path": "assets/index-DmQm7yMY.css",
-      "bytes": 57848,
-      "sha256": "67e59bd4078d1d6ab514ae8d2a5f943ede71b8b28c242d21a7c687f48bbb42f8"
+      "path": "assets/build-fit-worker-CQ9DAV0O.js",
+      "bytes": 2425832,
+      "sha256": "d2f566ff6bf822c3dabb29e851c228927ba814e0ab315a5b7d5931133d30d134"
+    },
+    {
+      "path": "assets/graphics-DQ5g_2vW.js",
+      "bytes": 558763,
+      "sha256": "16932ed60fd3327104512638906d46b3563e270c76f5726f2739be77cb621770"
+    },
+    {
+      "path": "assets/index-CctVEXBP.js",
+      "bytes": 602562,
+      "sha256": "ae1f56981f6b289c701bff3447fa0a870730b02bb7681bb4dfc08bb6ba2f5c9f"
+    },
+    {
+      "path": "assets/index-DzHYVjZH.css",
+      "bytes": 175302,
+      "sha256": "8c4805e8f77d76c224fa0bddb5a81d2ff60cbea9955c8a875c4c8f9175032e56"
+    },
+    {
+      "path": "assets/physics-DD3n_w3i.js",
+      "bytes": 2216108,
+      "sha256": "570291b3dc010a2498342ee02844c14f10c3bbe0b474cd5beb1ab8ce7646657b"
+    },
+    {
+      "path": "assets/predictor-B0HvfbHW.js",
+      "bytes": 2424374,
+      "sha256": "3facb314b64e953306aadb83a7ccfede1e76a1d987d87024400c0e501df77fc4"
+    },
+    {
+      "path": "assets/tournament-worker-D46Z20Ch.js",
+      "bytes": 2422104,
+      "sha256": "2cc7d5d1f8d172e081b54e23bcb9d110c229197a278cac465d3e284088f2c03c"
     },
     {
       "path": "audio/License.txt",
-      "bytes": 2255,
-      "sha256": "e60eebeb1acf79ece3206d3e4cd1f07aa8e21b41cb0b1c114a303af686a2bef7"
+      "bytes": 4593,
+      "sha256": "56f0aa1b6389b22bce398c735b2c17c65143a5a73eb26485525aa8a8802bd5a7"
+    },
+    {
+      "path": "audio/deep-six-coast-down-v1.mp3",
+      "bytes": 121581,
+      "sha256": "1a4d7bc25b40353b24427811de2a0ffaed578fa998e8047806891f41ed6d5564"
+    },
+    {
+      "path": "audio/deep-six-full-speed-v1.mp3",
+      "bytes": 121581,
+      "sha256": "2048ee9c7a7100e03dbef4c3c40e10b6ea3f944748add32af8151e72364ef812"
+    },
+    {
+      "path": "audio/deep-six-spin-up-v1.mp3",
+      "bytes": 97389,
+      "sha256": "afff8778cb6a48933eace7063379f9946535c3a7341c83227a1186eede18ab49"
     },
     {
       "path": "audio/landing_heavy_01.mp3",
@@ -49,9 +98,34 @@
       "sha256": "72734460fd294868f9cdd497f28f2256c76792a21a0525a6227e6e624ebb26b6"
     },
     {
+      "path": "audio/magnetar-high-speed-v4.mp3",
+      "bytes": 121581,
+      "sha256": "085db17fe44a798c010ba0d8e49ffb49203cbb60b6b3fe200ca3df882ffd9ec9"
+    },
+    {
+      "path": "audio/magnetar-rpm-change-v4.mp3",
+      "bytes": 145197,
+      "sha256": "8e63bb858dc4429e09603f0b6dcd29eeb647be32fdeed34387382f50d9c98978"
+    },
+    {
+      "path": "audio/magnetar-spin-up-v4.mp3",
+      "bytes": 73197,
+      "sha256": "ed8917dc2906461ff19c2b928f4e8aa7a859dd956746d795bbb2c0e8f886f822"
+    },
+    {
       "path": "audio/match-start.mp3",
       "bytes": 56989,
       "sha256": "e15d01328df33748628234b0cbcc856060a353c8e4411841de7daf971d74eb2d"
+    },
+    {
+      "path": "audio/polycarbonate-flex-rebound.mp3",
+      "bytes": 40586,
+      "sha256": "8cf3bff298dd314bda0318fe5fbdb9d97971492c94f8d40cfac5f9a6ae3bf1e1"
+    },
+    {
+      "path": "audio/polycarbonate-heavy-thump.mp3",
+      "bytes": 34316,
+      "sha256": "cfd9ef06c34bd48d0de398b5687d31a963c50a89361e84f03d8877eb1a7a765b"
     },
     {
       "path": "audio/steel_crash_01.mp3",
@@ -92,6 +166,31 @@
       "path": "audio/steel_tap_02.mp3",
       "bytes": 7359,
       "sha256": "84aaafe3cc1c73d82d7f478ad9c0f7cb1d33cd2b729b792f7c7f7d575b9f2200"
+    },
+    {
+      "path": "branding/arena-logo-192.png",
+      "bytes": 35505,
+      "sha256": "01913f39ec47977dc7e8e2aca63427327707d070387367042a4ccda3aa1699cb"
+    },
+    {
+      "path": "branding/arena-logo-256.png",
+      "bytes": 171428,
+      "sha256": "7ebaf408e59d1a3e2da755a179f2a17fed507d98c7e9b30ff063dc71066ec846"
+    },
+    {
+      "path": "branding/arena-logo-512.png",
+      "bytes": 220390,
+      "sha256": "2ca29a06dd4cf7dc0c98092c8bb1187029fa35eb740b994f7d32df411de0d59b"
+    },
+    {
+      "path": "branding/arena-logo-64.png",
+      "bytes": 11629,
+      "sha256": "5b412d1dfdd7858de5c32de3f4b294328fe64756ea8eb5847fdf4b3f59921c3e"
+    },
+    {
+      "path": "branding/arena-logo-96.png",
+      "bytes": 25477,
+      "sha256": "78eabcd2de0e257ccfe9bb7cbd8f98c34442f6f97808670a18f578ae30f96a7c"
     },
     {
       "path": "robots/deep_six.png",

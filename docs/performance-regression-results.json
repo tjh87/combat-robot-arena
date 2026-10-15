@@ -44,12 +44,36 @@
       }
     },
     {
+      "name": "Online timing buffer stays near current snapshots on a stable link and widens only for arrival jitter",
+      "detail": {
+        "stable": 42,
+        "jittered": 64,
+        "recovered": 140,
+        "maximum": 140
+      }
+    },
+    {
+      "name": "Impact light profile is bounded and scales only with authoritative contact energy",
+      "detail": {
+        "medium": {
+          "intensity": 2.596292015609668,
+          "distance": 2.8968070134416584,
+          "color": 10934783
+        },
+        "heavy": {
+          "intensity": 4.396292015609668,
+          "distance": 4.446807013441658,
+          "color": 16751445
+        }
+      }
+    },
+    {
       "name": "All 11 robot shapes keep every triangle, UV seam and normal after vertex indexing",
       "detail": {
         "robots": 11,
-        "parts": 825,
-        "oldBytes": 15025456,
-        "newBytes": 8133192
+        "parts": 1175,
+        "oldBytes": 17566800,
+        "newBytes": 9787552
       }
     },
     {
@@ -57,6 +81,22 @@
       "detail": {
         "idleUpdates": 120,
         "idleUploads": 0
+      }
+    },
+    {
+      "name": "Inactive damage smoke performs no position-buffer uploads while active smoke still advances",
+      "detail": {
+        "idleUploads": 0,
+        "activeUploads": 1
+      }
+    },
+    {
+      "name": "Idle and sparse spark fields avoid full-capacity scans and GPU draw work",
+      "detail": {
+        "capacity": 720,
+        "idleDrawVertices": 0,
+        "sparsePoints": 3,
+        "sparseTrailVertices": 18
       }
     },
     {

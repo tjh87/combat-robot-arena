@@ -1,7 +1,7 @@
 # Combat Robot Arena — Performance & Stability Test Report
 
-- **Test date:** 14 October 2026
-- **Revision under test:** local-only Brawl validation build; changes remain unpushed
+- **Test date:** 15 October 2026
+- **Revision under test:** validated renderer-optimization build; committed locally, not pushed
 - **Preview target:** [online WebGL preview](https://4173-iy2g4qa5twboexd3hqdx3-c388a922.sg2.manus.computer/)
 **Overall result:** **MIXED** — network/authority and Brawl browser checks pass; the Brawl CPU stress test exceeds the 240 Hz step budget with 2–4 AI opponents on this sandbox. See §5.1.
 
@@ -82,6 +82,7 @@ The full per-snapshot samples are retained in [network-jitter-results.json](netw
 | Shadow scheduling | 60 static-menu frames trigger 1 shadow refresh; match and replay each refresh at 30 updates in the 60-frame test. |
 | Impact illumination | Profile remains bounded: medium impact intensity 2.596 / distance 2.897; heavy impact intensity 4.396 / distance 4.447. It is non-shadow-casting and respects reduced-motion mode. |
 | Simulation continuity | A 960-tick off-screen tournament comparison preserves exact seeded state; the unseen run stores zero replay frames. |
+| Sparse spark pool | Idle updates skip the 720-slot age scan and use an empty draw range; a 3-particle active prefix draws 3 point vertices and 18 trail vertices rather than the full 720-point / 4,320-trail-vertex capacity. |
 
 ### 5.1 Brawl multi-robot simulation stress
 
@@ -97,6 +98,12 @@ The Brawl UI and physics regressions pass for 1–4 AI rivals. Before this run, 
 These CPU-only timings **do not establish browser frame time or end-user performance**; the sandbox CPU is not a representative phone/desktop. This run misses the interval in 14.4% of one-rival samples and every measured sample with 2–4 AI rivals. There were no simulation faults. Snapshot-state reuse and allocation-light validation reduce avoidable per-tick work, but this report does **not** claim the multi-AI lag is fixed. To preserve the approved combat physics and rules, this pass does not lower the physics rate, solver settings, or AI behavior to conceal the remaining budget gap.
 
 The Brawl browser suite passed Desktop, Android landscape, and Small Android layouts for each 1–4 AI field, including randomized distinct opponents, zero-HP status, non-overlapping in-arena callouts, preserved Unstick controls, results, and rematches. Its Small Android 640×360 CSS-viewport assertion caught and now guards against the callout expanding after its arrow-side style is applied. The renderer regression also passed the Brawl opening full-arena fit, bounded combat framing, wall-visibility hysteresis, and spark-output checks.
+
+### 5.2 Sparse spark-pool resource work
+
+The live renderer uses fixed-size buffers with a **720-particle capacity**. Idle updates now use an active counter instead of scanning every age; active updates traverse only the highest live slot, and WebGL draw ranges stop at that prefix. Expired particles and holes within that prefix are still hidden. Emission writes coordinates/tints directly into existing typed arrays rather than creating per-spark array literals. The deterministic regression confirms a zero idle draw range, no idle full-pool scan, and 3 point vertices / 18 trail vertices for a three-slot live prefix. This is evidence for sparse-pool CPU/GPU work, not a promise of a fixed GPU frame-time gain under dense impacts.
+
+A separate 600-step post-render-optimization spot-check (180 warm-up steps, 240 Hz, isolated `Simulation.step()`) measured P95 **4.74 ms** for one AI opponent (56/600 steps over the 4.17 ms interval) and **8.85 ms** for four AI opponents (600/600 over). There were no simulation faults. Since the renderer change does not touch `Simulation.step()`, these readings do not claim a physics speedup; the multi-AI CPU-budget limitation remains open, and the 840-sample table above remains the wider per-count run.
 
 ## 6. Online stability and authority regressions
 

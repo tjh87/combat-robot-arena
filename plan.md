@@ -234,3 +234,10 @@ Vendored physics-tuning, game-feel, game-ai and ai-behavior-trees-utility-ai wit
 ### Match-opening film treatment
 
 During the match introduction/countdown only, apply a restrained static grain texture, a soft edge vignette and a very small contrast/saturation lift to the arena canvas. Keep the HUD and text unaffected, use no animated grain or flashes, and remove the class as soon as active fighting starts. This is presentation-only: physics, network timing, controls, exposure outside the intro and camera behavior remain unchanged. The browser regression verifies visibility during the intro and removal at fight start.
+
+
+### Behavior-preserving renderer resource reduction
+
+The 720-slot spark pool now tracks the live count/high-water prefix, so idle updates do not scan all ages and sparse effects update/draw only their active prefix. Free holes are still hidden, and expiration, gravity, drag, bounce, trail/color calculations and reduced-motion behavior are unchanged. Spark initialization writes directly into existing typed arrays instead of allocating temporary per-particle arrays; both particle systems start hidden with empty draw ranges. The performance regression forces the idle scan to fail if it enumerates the typed array, verifies zero idle draw range, confirms 3 point vertices plus 18 trail vertices for a sparse active prefix, and checks expiration/reset.
+
+The standard performance suite and Brawl/rendering/browser/build/offline checks passed. A separate post-change Node spot-check (180 warm-up + 600 fixed steps, 240 Hz) measured 1v1 P95 4.74 ms (56/600 over budget) and four-AI Brawl P95 8.85 ms (600/600 over budget), with no physics faults. Because this is a renderer-only change and the benchmark isolates `Simulation.step()`, these timings do not demonstrate a simulation speedup; the CPU frame-budget follow-up remains open.

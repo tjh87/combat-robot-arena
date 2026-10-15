@@ -3,7 +3,7 @@
     "name": "Clipped plate mass moments match independently constructed Rapier hulls",
     "status": "passed",
     "detail": {
-      "momentsCompared": 24
+      "momentsCompared": 18
     }
   },
   {
@@ -13,18 +13,18 @@
       "masses": [
         113.20000000000003,
         113.20000000000002,
-        113.20000000000002
+        113.2000000000005
       ],
       "bladeFloorGap": 0.006,
       "bladeTopGap": 0.007999999999999993,
       "rpm": [
         1157.4244016882892,
-        2499.6713020272455
+        2499.663630805352
       ]
     }
   },
   {
-    "name": "Body-mounted POV uses the interpolated robot heading, pitch and roll",
+    "name": "Body-mounted POV uses the interpolated robot heading with a stabilized level horizon",
     "status": "passed",
     "detail": {
       "livePoses": 4,
@@ -35,9 +35,9 @@
     "name": "Detailed arena and robots retain finite geometry within the triangle budget",
     "status": "passed",
     "detail": {
-      "triangles": 75776,
-      "meshBatches": 210,
-      "paintedSurfaces": 12,
+      "triangles": 112388,
+      "meshBatches": 315,
+      "paintedSurfaces": 73,
       "actualWebGL": "unverified"
     }
   },

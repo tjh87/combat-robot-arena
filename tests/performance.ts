@@ -8,6 +8,7 @@ import {ROSTER,preset,compile,RULES} from '../src/model';
 import {Simulation,initializePhysics,Tournament} from '../src/sim';
 import {BatteryFireVisual} from '../src/battery-fire-visual';
 import {ArenaRenderer,impactLightProfile} from '../src/render';
+import {SPARK_CAPACITY,SPARK_TRAIL_FLOATS} from '../src/impact-sparks';
 import {GameAudio} from '../src/audio';
 import {SnapshotTiming} from '../src/online/timing';
 
@@ -43,6 +44,18 @@ test('Inactive damage smoke performs no position-buffer uploads while active smo
  const renderer=Object.create(ArenaRenderer.prototype) as any,positions=new Float32Array(64*3),ages=new Float32Array(64).fill(-1),geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));Object.assign(renderer,{reduced:false,smokeClock:0,smokeAges:ages,smokeActive:0,smokeCursor:0,smokePositions:positions,smoke:new THREE.Points(geometry,new THREE.PointsMaterial())});const attribute=geometry.getAttribute('position'),initial=attribute.version;
  renderer.updateSmoke({bots:[]},1/60);assert.equal(attribute.version,initial);assert(!renderer.smoke.visible);ages[0]=1;renderer.smokeActive=1;positions[1]=.5;renderer.updateSmoke({bots:[]},1/60);assert(attribute.version>initial);assert(renderer.smoke.visible);return{idleUploads:0,activeUploads:attribute.version-initial};
 });
+test('Idle and sparse spark fields avoid full-capacity scans and GPU draw work',()=>{
+ const renderer=Object.create(ArenaRenderer.prototype) as any,ages=new Float32Array(SPARK_CAPACITY).fill(-1),positions=new Float32Array(SPARK_CAPACITY*3),trailPositions=new Float32Array(SPARK_CAPACITY*SPARK_TRAIL_FLOATS),colors=new Float32Array(trailPositions.length),headColors=new Float32Array(positions.length),velocity=new Float32Array(positions.length),tints=new Float32Array(positions.length),life=new Float32Array(SPARK_CAPACITY),lengths=new Float32Array(SPARK_CAPACITY),branches=new Uint8Array(SPARK_CAPACITY);
+ const pointGeometry=new THREE.BufferGeometry();pointGeometry.setAttribute('position',new THREE.BufferAttribute(positions,3));pointGeometry.setAttribute('color',new THREE.BufferAttribute(headColors,3));pointGeometry.setAttribute('sparkSize',new THREE.BufferAttribute(new Float32Array(SPARK_CAPACITY),1));const points=new THREE.Points(pointGeometry,new THREE.PointsMaterial());
+ const trailGeometry=new THREE.BufferGeometry();trailGeometry.setAttribute('position',new THREE.BufferAttribute(trailPositions,3));trailGeometry.setAttribute('color',new THREE.BufferAttribute(colors,3));const trails=new THREE.LineSegments(trailGeometry,new THREE.LineBasicMaterial());
+ Object.defineProperty(ages,'some',{value(){throw new Error('idle spark path scanned the whole pool');}});
+ Object.assign(renderer,{reduced:false,particleAges:ages,particlePositions:positions,particleVelocity:velocity,particleActiveCount:0,particleHighWater:0,sparkTrailPositions:trailPositions,sparkColors:colors,sparkHeadColors:headColors,sparkTints:tints,sparkLifetimes:life,sparkLengths:lengths,sparkBranches:branches,sparkTintScratch:{x:1,y:.5,z:.1},sparkHeadScratch:{x:0,y:0,z:0},particles:points,sparkTrails:trails});
+ renderer.animateParticles(1/60);assert(!points.visible&&!trails.visible);assert.equal(pointGeometry.drawRange.count,0);assert.equal(trailGeometry.drawRange.count,0);
+ ages[0]=1;ages[2]=1;life[0]=life[2]=2;lengths[0]=lengths[2]=.04;tints[0]=tints[3]=1;tints[1]=tints[4]=.5;tints[2]=tints[5]=.1;positions[1]=positions[7]=.2;positions[16]=123;trailPositions[SPARK_TRAIL_FLOATS*5]=123;renderer.particleActiveCount=2;renderer.particleHighWater=3;
+ renderer.animateParticles(1/60);assert(points.visible&&trails.visible);assert.equal(pointGeometry.drawRange.count,3);assert.equal(trailGeometry.drawRange.count,3*SPARK_TRAIL_FLOATS/3);assert.equal(positions[16],123);assert.equal(trailPositions[SPARK_TRAIL_FLOATS*5],123);assert.equal(positions[4],-10,'Inactive holes inside the live prefix stay hidden');
+ renderer.animateParticles(3);assert(!points.visible&&!trails.visible);assert.equal(renderer.particleActiveCount,0);assert.equal(pointGeometry.drawRange.count,0);assert.equal(trailGeometry.drawRange.count,0);
+ return{capacity:SPARK_CAPACITY,idleDrawVertices:0,sparsePoints:3,sparseTrailVertices:3*SPARK_TRAIL_FLOATS/3};
+});
 test('Instanced graphics buffers are released when a scene is replaced',()=>{
  const renderer=Object.create(ArenaRenderer.prototype) as ArenaRenderer,root=new THREE.Group(),mesh=new THREE.InstancedMesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial(),5);root.add(mesh);let released=0;mesh.addEventListener('dispose',()=>released++);renderer.clear(root);assert.equal(released,1);assert.equal(root.children.length,0);return{instanceDisposals:released};
 });
@@ -51,7 +64,7 @@ test('Static menus reuse shadows; moving robots and replays refresh medium shado
  const graphics={shadowMap:{enabled:true,needsUpdate:false},info:{render:{triangles:0,calls:0}},setViewport(){},setScissorTest(){},render(){if(this.shadowMap.needsUpdate){shadows++;this.shadowMap.needsUpdate=false;}}};
  Object.assign(renderer,{renderer:graphics,scene:new THREE.Scene(),arena:new THREE.Group(),bots:new THREE.Group(),preview:new THREE.Group(),effects:new THREE.Group(),camera:new THREE.PerspectiveCamera(42,1,.05,100),cameraTarget:new THREE.Vector3(),bodyGroups:new Map(),replayGroups:new Map(),damageDebris:{root:new THREE.Group()},batteryFireVisual:new BatteryFireVisual(),impactLight:new THREE.PointLight(),followCamera:{reset(){}},povTracking:{reset(){}},quality:'medium',mode:'menu',cameraMode:'tactical',time:0,width:1280,height:720,replay:false,reduced:false,inset:false,lastShadowTime:-Infinity,lastShadowTick:-1,lastShadowMode:'',shadowDirty:true});
  for(let i=0;i<60;i++)renderer.draw(undefined,1/30);assert.equal(shadows,1);
- const sim={bots:[0,1].map(id=>({id,compiled:{config:preset(id)},chassis:{translation:()=>({x:id*2,y:.2,z:0})}})),tick:0,batteryFireSeconds:()=>0} as unknown as Simulation;renderer.mode='match';const before=shadows;
+ const sim={bots:[0,1].map(id=>({id,compiled:{config:preset(id)},chassis:{translation:()=>({x:id*2,y:.2,z:0})}})),options:{freeForAll:false},tick:0,batteryFireSeconds:()=>0} as unknown as Simulation;renderer.mode='match';const before=shadows;
  for(let i=0;i<60;i++){sim.tick++;renderer.draw(sim,1/60);}assert(shadows-before>=29&&shadows-before<=31,`shadow updates: ${shadows-before}`);
  const replayStart=shadows;renderer.replay=true;for(let i=0;i<60;i++)renderer.draw(sim,1/60);assert(shadows-replayStart>=29&&shadows-replayStart<=31);return{menuFrames:60,menuShadowUpdates:1,matchShadowUpdates:shadows-before-(shadows-replayStart),replayShadowUpdates:shadows-replayStart};
 });
