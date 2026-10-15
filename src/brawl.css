@@ -77,3 +77,10 @@ html.touch-device:has(.result-backdrop[data-format="brawl"]) .touch-controls{dis
 .results .brawl-damage-number{white-space:nowrap}
 .results .brawl-top-damage{display:block;color:#ffd27d;font:900 10px/1.1 var(--font-mono);letter-spacing:.055em;white-space:nowrap}
 @media(max-width:760px){html.touch-device .results .brawl-result-heading,html.touch-device .results .brawl-result-row{grid-template-columns:minmax(112px,1.45fr) minmax(64px,.85fr) minmax(50px,.65fr) minmax(82px,.9fr);gap:5px}html.touch-device .results .brawl-result-portrait{flex-basis:32px;width:32px;height:24px}html.touch-device .results .brawl-result-machine{gap:3px;flex-wrap:nowrap}html.touch-device .results .brawl-result-name strong{font-size:14px;line-height:1.08}html.touch-device .results .brawl-peak-flight>span{font-size:7px}html.touch-device .results .brawl-peak-flight strong{font-size:10px}html.touch-device .results .brawl-peak-flight strong small{font-size:8px}html.touch-device .results .brawl-top-damage{font-size:8px}html.touch-device .results .brawl-result-status{font-size:10px}}
+
+
+/* Peak-flight values now use the same readable scale as the robot names and standings text. */
+.results .brawl-peak-flight>span{font-size:12px}
+.results .brawl-peak-flight strong{font-size:16px}
+.results .brawl-peak-flight strong small{font-size:12px}
+@media(max-width:760px){html.touch-device .results .brawl-peak-flight>span{font-size:11px}html.touch-device .results .brawl-peak-flight strong{font-size:14px}html.touch-device .results .brawl-peak-flight strong small{font-size:11px}}

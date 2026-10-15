@@ -249,3 +249,6 @@ Extend only the existing Brawl standings renderer. Derive the award from the sam
 
 
 Implementation outcome: the existing Brawl result rows now show an embedded robot portrait, a per-robot `PEAK FLIGHT` rise in metres, and a `TOP DAMAGE` badge for the highest positive damage dealer(s), with ties handled explicitly. The standard podium uses the same extracted portrait-profile fallback without changing its markup. The production build, Brawl unit suite, and Brawl browser suite passed for 1–4 AI on Desktop, Android landscape, and Small Android; the result-specific standard-podium checks also passed. The broader review suite remains non-green on unrelated existing physics/fixture assertions, recorded separately from these passing feature checks.
+
+
+The follow-up readability pass enlarges the Brawl peak-flight label and metre value to match the surrounding result-row/robot-name scale on desktop and mobile landscape; the added CSS is presentation-only.
