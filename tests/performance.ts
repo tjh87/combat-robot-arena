@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import {FrameGate,AdaptiveResolution,graphicsPixelRatio} from '../src/performance';
 import {compactGeometry} from '../src/geometry-memory';
 import {finishedGeometry} from '../src/finish-geometry';
-import {ROSTER,preset,compile,RULES} from '../src/model';
+import {ROSTER,preset,compile,RULES,MATERIALS} from '../src/model';
 import {Simulation,initializePhysics,Tournament} from '../src/sim';
 import {BatteryFireVisual} from '../src/battery-fire-visual';
 import {ArenaRenderer,impactLightProfile} from '../src/render';
@@ -73,6 +73,13 @@ test('Idle audio suspends once and resumes through the existing start flow',()=>
  audio.mute();audio.mute();assert.equal(suspended,1);audio.start(.5,.5);assert.equal(resumed,1);audio.mute();assert.equal(suspended,2);return{suspends:suspended,resumes:resumed};
 });
 await initializePhysics();
+test('Cached contact eligibility matches collider flags and remains valid after armor removal',()=>{
+ const configs=[preset(7),preset(2),preset(4)],sim=new Simulation(configs,{seed:73145,hazards:false,freeForAll:true,ai:[false,true,true],recordVisuals:false});
+ try{let total=0,ineligible=0;for(const b of sim.bots)for(const collider of b.colliders.values()){const info=sim.meta.get(collider.handle);assert(info);const eligible=!collider.isSensor()&&!!collider.collisionGroups();assert.equal(info.contactEligible,eligible);total++;if(!eligible)ineligible++;}
+ const bot=sim.bots[0],armour=Object.entries(bot.modules).find(([slot,module])=>slot.startsWith('armour_')&&module.present);assert(armour);const slot=armour[0] as keyof typeof bot.modules;sim.damage(bot.id,slot,bot.modules[slot].hp*MATERIALS[bot.modules[slot].material].resistance+1);assert.equal(bot.modules[slot].functional,false);
+ for(const b of sim.bots)for(const collider of b.colliders.values())assert(collider.isValid(),'The live robot-collider map must not retain removed colliders.');for(let tick=0;tick<8;tick++)sim.step();assert.equal(sim.fault,undefined);return{robotColliders:total,cachedIneligible:ineligible,armorSlot:slot,ticksAfterRemoval:8};
+ }finally{sim.dispose();}
+});
 test('Skipping unseen tournament recordings preserves exact seeded physical state and damage',()=>{
  const configs:[ReturnType<typeof preset>,ReturnType<typeof preset>]=[preset(4),preset(7)],a=new Simulation(configs,{seed:991,hazards:true,practice:true,ai:[true,true]}),b=new Simulation(configs,{seed:991,hazards:true,practice:true,ai:[true,true],recordVisuals:false});
  try{for(let tick=0;tick<960;tick++){a.step();b.step();}assert(!a.fault&&!b.fault);assert.deepEqual(a.snapshot(),b.snapshot());assert.deepEqual(a.events,b.events);assert(a.frames.length>0);assert.equal(b.frames.length,0);return{ticks:a.tick,physicsHz:RULES.hz,recordedFrames:a.frames.length,unseenFrames:b.frames.length};}finally{a.dispose();b.dispose();}

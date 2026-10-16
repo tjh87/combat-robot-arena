@@ -4,10 +4,10 @@
     "/manifest.webmanifest",
     "/branding/arena-logo-192.png",
     "/branding/arena-logo-64.png",
-    "/assets/index-CctVEXBP.js",
+    "/assets/index-_yYeuC4a.js",
     "/assets/graphics-DQ5g_2vW.js",
     "/assets/physics-DD3n_w3i.js",
-    "/assets/index-DzHYVjZH.css"
+    "/assets/index-SYLJ80s-.css"
   ],
   "embeddedWasmBytes": 1555075,
   "testFixturesExcluded": true,
@@ -20,7 +20,7 @@
     {
       "path": "index.html",
       "bytes": 2217,
-      "sha256": "a0eca081abd5be2f112951332e8b57f2829c672e2d0604c1bd448c4052b7d6df"
+      "sha256": "9a745dbdf78f0a554865a085589ef9f7b114980f18edbb619ed369652ff6e71e"
     },
     {
       "path": "manifest.webmanifest",
@@ -28,9 +28,9 @@
       "sha256": "9f3f08b514bf95b3c862843761b99eedc1f52079aa02507839d65999d110499e"
     },
     {
-      "path": "assets/build-fit-worker-CQ9DAV0O.js",
-      "bytes": 2425832,
-      "sha256": "d2f566ff6bf822c3dabb29e851c228927ba814e0ab315a5b7d5931133d30d134"
+      "path": "assets/build-fit-worker-DKrqcrcR.js",
+      "bytes": 2426024,
+      "sha256": "87ba6abe5031f7afd9d4c4df454e7ae07f3802d3bf5c08e680c5a96d9af3adda"
     },
     {
       "path": "assets/graphics-DQ5g_2vW.js",
@@ -38,14 +38,14 @@
       "sha256": "16932ed60fd3327104512638906d46b3563e270c76f5726f2739be77cb621770"
     },
     {
-      "path": "assets/index-CctVEXBP.js",
-      "bytes": 602562,
-      "sha256": "ae1f56981f6b289c701bff3447fa0a870730b02bb7681bb4dfc08bb6ba2f5c9f"
+      "path": "assets/index-SYLJ80s-.css",
+      "bytes": 178989,
+      "sha256": "f2cfdc3ba0a3acffc50a445187d797ffc297d1ef49eca6892711091bce77fa7c"
     },
     {
-      "path": "assets/index-DzHYVjZH.css",
-      "bytes": 175302,
-      "sha256": "8c4805e8f77d76c224fa0bddb5a81d2ff60cbea9955c8a875c4c8f9175032e56"
+      "path": "assets/index-_yYeuC4a.js",
+      "bytes": 603873,
+      "sha256": "e41dbb1c49ff0e81cb43f9b7fff4276d20b87a067e13d80025e5e621ca99ccae"
     },
     {
       "path": "assets/physics-DD3n_w3i.js",
@@ -53,14 +53,14 @@
       "sha256": "570291b3dc010a2498342ee02844c14f10c3bbe0b474cd5beb1ab8ce7646657b"
     },
     {
-      "path": "assets/predictor-B0HvfbHW.js",
-      "bytes": 2424374,
-      "sha256": "3facb314b64e953306aadb83a7ccfede1e76a1d987d87024400c0e501df77fc4"
+      "path": "assets/predictor-BXJ44az8.js",
+      "bytes": 2424566,
+      "sha256": "7dce37fb437376a3960c1a0a861be0c824a57b0cbdb4f1b3afcc188d6535dcc2"
     },
     {
-      "path": "assets/tournament-worker-D46Z20Ch.js",
-      "bytes": 2422104,
-      "sha256": "2cc7d5d1f8d172e081b54e23bcb9d110c229197a278cac465d3e284088f2c03c"
+      "path": "assets/tournament-worker-Df982mLp.js",
+      "bytes": 2422296,
+      "sha256": "2019ba2dd5745c2852672b830d5629522b19f300224cffb726f45e9fdb189a4f"
     },
     {
       "path": "audio/License.txt",

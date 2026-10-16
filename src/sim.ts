@@ -36,7 +36,7 @@ export type ContactSample={key:string,a:number,b:number,impulse:number,frictionI
 export type Travel={impactId:number,bot:number,role:'Post-impact travel'|'Recoil travel',origin:Vec,final:Vec,comOrigin:Vec,comFinal:Vec,maxHorizontal:number,horizontal:number,displacement3d:number,path:number,height:number,airtime:number,powered:boolean,compound:boolean,reason:string,ticks:number,still:number,points:Vec[],airborne:boolean,landed:number,endedTick?:number};
 export type RingOut={bot:number,origin:Vec,height:number,distance:number};
 export type Result={ringOut?:RingOut,winner:number,reason:string,tick:number,scores:number[][],metrics:number[][],ties:string[],damage:number[],raw:{engage:number[],closing:number[],pin:number[],forced:number[],stable:number[]}};
-type ColliderInfo={bot:number|null,module:Slot|'arena',part?:Part,hazard?:number};
+type ColliderInfo={bot:number|null,module:Slot|'arena',part?:Part,hazard?:number,contactEligible?:boolean};
 type Episode={id:string,last:number,energy:number,impulse:number,peak:number,event?:ImpactEvent};
 type BodyState={p:Vec,com:Vec,q:Quat,lin:Vec,ang:Vec};
 type FallState={peakY:number,airTicks:number,lastContact:number,landing?:{event:ImpactEvent,budget:number,absorbed:number}};
@@ -115,16 +115,16 @@ export class Simulation{
  if(skid)desc.setFrictionCombineRule(RAPIER.CoefficientCombineRule.Min);
  if(p.material==='rubber'&&(componentProfile(c,'drive')==='quantum'||componentProfile(c,'drive')==='gigabyte'||c.drive.traction==='tracks'))desc.setFrictionCombineRule(RAPIER.CoefficientCombineRule.Max);
  if((componentProfile(c,'drive')==='huge'&&c.drive.traction!=='tracks'||hydraSleekWheels(c))&&p.body.startsWith('wheel_'))desc.setCollisionGroups(0);
- const collider=this.world.createCollider(desc,body);colliders.set(p.id,collider);this.meta.set(collider.handle,{bot:id,module:p.module,part:p});}
+ const collider=this.world.createCollider(desc,body);colliders.set(p.id,collider);this.meta.set(collider.handle,{bot:id,module:p.module,part:p,contactEligible:!collider.isSensor()&&!!collider.collisionGroups()});}
  // Continuous rounded wheel contacts prevent gaps between visual spokes and
  // tread sectors from catching the floor, rails or an opponent's wedge.
  if(componentProfile(c,'drive')==='huge'&&c.drive.traction!=='tracks')for(const [key,body]of bodies)if(key.startsWith('wheel_')){
   const part=compiled.parts.find(p=>p.body===key)!,edge=Math.min(.008,c.drive.width*.2),desc=RAPIER.ColliderDesc.roundCylinder(c.drive.width/2-edge,c.drive.radius-edge,edge).setRotation(axisQ(v(0,0,1),Math.PI/2)).setDensity(0).setFriction(HUGE_HANDLING.friction).setFrictionCombineRule(RAPIER.CoefficientCombineRule.Max).setRestitution(.03).setContactSkin(.001).setCollisionGroups(groups(robotGroup(id),robotFilter(id,totalRobots))).setActiveEvents(RAPIER.ActiveEvents.COLLISION_EVENTS);
-  const collider=this.world.createCollider(desc,body);colliders.set(key+'_contact',collider);this.meta.set(collider.handle,{bot:id,module:part.module,part:{...part,id:key+'_contact'}});
+  const collider=this.world.createCollider(desc,body);colliders.set(key+'_contact',collider);this.meta.set(collider.handle,{bot:id,module:part.module,part:{...part,id:key+'_contact'},contactEligible:!collider.isSensor()&&!!collider.collisionGroups()});
  }
   if(hydraSleekWheels(c))for(const[key,body]of bodies)if(key.startsWith('wheel_')){
    const part=compiled.parts.find(p=>p.body===key)!,edge=Math.min(.0012,c.drive.width*.08),desc=RAPIER.ColliderDesc.roundCylinder(c.drive.width/2-edge,c.drive.radius-edge,edge).setRotation(axisQ(v(0,0,1),Math.PI/2)).setMass(0).setFriction(1.35).setRestitution(.06).setContactSkin(.001).setCollisionGroups(groups(robotGroup(id),robotFilter(id,totalRobots))).setActiveEvents(RAPIER.ActiveEvents.COLLISION_EVENTS);
-   const collider=this.world.createCollider(desc,body);colliders.set(key+'_contact',collider);this.meta.set(collider.handle,{bot:id,module:part.module,part:{...part,id:key+'_contact'}});
+   const collider=this.world.createCollider(desc,body);colliders.set(key+'_contact',collider);this.meta.set(collider.handle,{bot:id,module:part.module,part:{...part,id:key+'_contact'},contactEligible:!collider.isSensor()&&!!collider.collisionGroups()});
   }
  const startHP={} as Record<Slot,number>;SLOTS.forEach(s=>startHP[s]=modules[s].hp);
  const driveInertia=new Map<string,number>();for(const[id,body]of bodies)if(id.startsWith('wheel_')){const q=body.principalInertiaLocalFrame(),a=rotate(v(1,0,0),{x:-q.x,y:-q.y,z:-q.z,w:q.w}),I=body.principalInertia(),wheel=I.x*a.x*a.x+I.y*a.y*a.y+I.z*a.z*a.z;driveInertia.set(id,1/(1/Math.max(.00001,wheel)+1/compiled.inertia.x));}
@@ -585,14 +585,15 @@ export class Simulation{
   }
   return handled;
  }
- private contactSamples(){
- const samples:ContactSample[]=[],seen=new Set<string>();this.bots.forEach(b=>b.wall=false);this.robotsInContact=false;this.floorSupport.clear();
- for(const b of this.bots)for(const col of b.colliders.values()){if(!col.isValid()||col.isSensor()||!col.collisionGroups())continue;const own=this.meta.get(col.handle);if(!own)continue;this.world.contactPairsWith(col,other=>{
+	 private contactSamples(){
+	 const samples:ContactSample[]=[];this.bots.forEach(b=>b.wall=false);this.robotsInContact=false;this.floorSupport.clear();
+ for(const b of this.bots)for(const col of b.colliders.values()){const own=this.meta.get(col.handle);if(!own?.contactEligible||!col.isValid())continue;this.world.contactPairsWith(col,other=>{
  // Adjacent parts of one robot generate many candidate pairs. They never
  // produce game damage or support here; reject them before string keys and
  // additional WASM collider lookups. Rapier still solves every physical contact.
- const otherInfo=this.meta.get(other.handle);if(!otherInfo||own.bot!==null&&own.bot===otherInfo.bot)return;
- const ordered=col.handle<other.handle,a=ordered?col.handle:other.handle,d=ordered?other.handle:col.handle,key=`${a}:${d}`;if(seen.has(key))return;seen.add(key);const ca=ordered?col:other,cb=ordered?other:col,ma=ordered?own:otherInfo,mb=ordered?otherInfo:own;
+	 const otherInfo=this.meta.get(other.handle);if(!otherInfo||own.bot!==null&&own.bot===otherInfo.bot)return;
+	 if(own.bot!==null&&otherInfo.bot!==null&&col.handle>other.handle)return;
+	 const ordered=col.handle<other.handle,a=ordered?col.handle:other.handle,d=ordered?other.handle:col.handle,key=`${a}:${d}`,ca=ordered?col:other,cb=ordered?other:col,ma=ordered?own:otherInfo,mb=ordered?otherInfo:own;
  this.world.contactPair(ca,cb,(m,flipped)=>{const normal=mul(m.normal(),flipped?-1:1);if(ma.bot!==null&&mb.bot!==null&&m.numContacts()>0)this.robotsInContact=true;for(let j=0;j<m.numContacts();j++){const impulse=m.contactImpulse(j);if(impulse<=1e-5)continue;let point:Vec;if(m.numSolverContacts())point=m.solverContactPoint(Math.min(j,m.numSolverContacts()-1));else{const lp=m.localContactPoint1(j),owner=flipped?cb:ca;point=lp?add(owner.translation(),rotate(lp,owner.rotation())):owner.translation();}
  const va=this.preVelocity(ca.parent(),point),vb=this.preVelocity(cb.parent(),point),closing=Math.max(0,dot(sub(va,vb),normal));samples.push({key,a,b:d,impulse,frictionImpulse:Math.hypot(m.contactTangentImpulseX(j),m.contactTangentImpulseY(j)),closing,point,normal:{...normal}});}
  if(m.numSolverContacts()>0&&Math.abs(normal.y)>.5){const id=ma.bot??mb.bot,arena=ma.bot===null?ca:mb.bot===null?cb:undefined,name=arena?this.bodyIds.get(arena.parent()!.handle):undefined;if(id!==null&&(name==='floor'||name==='shelf'))this.floorSupport.add(id);}
@@ -605,10 +606,10 @@ export class Simulation{
  const spinBudget=this.bots.map((b,i)=>{if(!b.rotor||!isSpinner(b.compiled.config.weapon))return 0;const parent=b.arm??b.chassis,axis=rotate(weaponAxis(b.compiled.config.weapon),this.pre.get(parent.handle)!.q),omega=dot(sub(this.pre.get(b.rotor.handle)!.ang,this.pre.get(parent.handle)!.ang),axis);return rotorBefore[i]+Math.max(0,b.actuatorTorque*omega*RULES.dt)+.5*(b.actuatorTorque*RULES.dt)**2/Math.max(.001,b.compiled.rotorInertia);});
  const debit=(hit:ReturnType<Simulation['spinnerContact']>)=>{if(!hit)return 0;const used=Math.min(spinBudget[hit.bot.id],hit.work);spinBudget[hit.bot.id]-=used;this.limitRotorEnergy(hit.bot,spinBudget[hit.bot.id]);return used;};
  const masses=this.bots.map(b=>[...b.bodies.values()].reduce((total,body)=>total+(body.isValid()?body.mass():0),0)),linear=this.bots.map(b=>this.pre.get(b.chassis.handle)?.lin??v()),motionBudget=masses.map((mass,i)=>.5*mass*dot(linear[i],linear[i]));
- const samples=this.substepContacts??this.contactSamples(),updatedEvents=new Set<ImpactEvent>();this.substepContacts=undefined;this.pushImpulse.fill(0);
- samples.sort((a,b)=>a.a-b.a||a.b-b.b);const aggregate=new Map<string,ContactSample>();for(const s of samples){const old=aggregate.get(s.key);if(old){old.closing=(old.closing*old.impulse+s.closing*s.impulse)/(old.impulse+s.impulse);old.impulse+=s.impulse;old.frictionImpulse+=s.frictionImpulse;}else aggregate.set(s.key,{...s});}
- const wallHits=new Map<string,{wall:import('./wall-damage').WallName,point:Vec,energy:number,impulse:number,velocity:Vec}>();
- const contactMetadata=new Map(this.meta),landingKeys=this.landingContacts([...aggregate.values()],contactMetadata,rotorBefore,updatedEvents);for(const s of aggregate.values()){const ma=contactMetadata.get(s.a)!,mb=contactMetadata.get(s.b)!;
+  const samples=this.substepContacts??this.contactSamples(),updatedEvents=new Set<ImpactEvent>();this.substepContacts=undefined;this.pushImpulse.fill(0);
+	 samples.sort((a,b)=>a.a-b.a||a.b-b.b);const aggregate=new Map<string,ContactSample>();for(const s of samples){const old=aggregate.get(s.key);if(old){old.closing=(old.closing*old.impulse+s.closing*s.impulse)/(old.impulse+s.impulse);old.impulse+=s.impulse;old.frictionImpulse+=s.frictionImpulse;}else aggregate.set(s.key,{...s});}
+	 const wallHits=new Map<string,{wall:import('./wall-damage').WallName,point:Vec,energy:number,impulse:number,velocity:Vec}>();
+	 const contacts=[...aggregate.values()],contactMetadata=new Map<number,ColliderInfo>();for(const s of contacts){const a=this.meta.get(s.a),b=this.meta.get(s.b);if(a)contactMetadata.set(s.a,a);if(b)contactMetadata.set(s.b,b);}const landingKeys=this.landingContacts(contacts,contactMetadata,rotorBefore,updatedEvents);let robotSpeeds:number[]|undefined;for(const s of contacts){const ma=contactMetadata.get(s.a)!,mb=contactMetadata.get(s.b)!;
  const ca=this.world.getCollider(s.a),cb=this.world.getCollider(s.b),spinA=cb?.isValid()?this.spinnerContact(ma,cb,s,1):undefined,spinB=ca?.isValid()?this.spinnerContact(mb,ca,s,-1):undefined,spentA=debit(spinA),spentB=debit(spinB);
  if(landingKeys.has(s.key))continue;
  const robotPair=ma.bot!==null&&mb.bot!==null;
@@ -639,7 +640,7 @@ export class Simulation{
  if(floorWorkKey)this.hammerFloorWork.set(floorWorkKey,(this.hammerFloorWork.get(floorWorkKey)??0)+deltaEnergy);
  if(!episode.event){const aw=policy?.attacker===0,bw=policy?.attacker===1,clash=policy?.cause==='weapon'&&policy.attacker===null;const attacker=aw||clash?ma.bot:bw?mb.bot:null,target=aw||clash?mb.bot:bw?ma.bot:ma.bot??mb.bot,targetMeta=aw||clash?mb:bw?ma:ma.bot!==null?ma:mb;
  const source=hazard?hazard.name:attacker!==null?this.bots[attacker].compiled.config.identity.name:ma.bot!==null&&mb.bot!==null?'Chassis collision':'Arena contact';
- const event:ImpactEvent={id:this.nextImpact++,tick:this.tick,episode:episode.id,source,attacker,target,module:targetMeta.module,energy:0,impulse:0,closing:s.closing,point:{...s.point},rotorBefore:[...rotorBefore],rotorAfter:this.bots.map(b=>.5*b.compiled.rotorInertia*this.omega(b)**2),allocations:[],cause:hazard?'hazard':policy?policy.cause:floorContact?'landing / arena':'collision'};
+	 const event:ImpactEvent={id:this.nextImpact++,tick:this.tick,episode:episode.id,source,attacker,target,module:targetMeta.module,energy:0,impulse:0,closing:s.closing,point:{...s.point},rotorBefore:[...rotorBefore],rotorAfter:[],allocations:[],cause:hazard?'hazard':policy?policy.cause:floorContact?'landing / arena':'collision'};
  if(Math.abs(s.normal.y)<.4)event.arenaWallImpact=opponentFlungWallImpact(wallName,target,target===null?null:this.bots[target].lastAttacker,target===null?this.tick:this.bots[target].lastAction,this.tick);
 
  const n=mul(s.normal,target===mb.bot?1:-1),blade=attacker===null?undefined:this.bots[attacker].rotor,tangent=blade?sub(this.preVelocity(blade,s.point),this.preVelocity(this.bots[attacker!].chassis,s.point)):n;
@@ -649,7 +650,7 @@ export class Simulation{
  if(attacker!==null&&target!==null&&attacker!==target){this.bots[target].lastAttacker=attacker;this.bots[target].lastAction=this.tick;this.openTravel(target,event,'Post-impact travel');this.openTravel(attacker,event,'Recoil travel');}
  else if(target!==null){const tr=this.tracking.get(target);if(tr)tr.compound=true;}
  }
- const event=episode.event;updatedEvents.add(event);event.energy=previous+deltaEnergy;event.impulse=episode.impulse;event.closing=Math.max(event.closing,s.closing);event.robotSpeed=linear.map(velocity=>length(velocity));const scale=energy>0?deltaEnergy/energy:0;event.translationEnergy=(event.translationEnergy??0)+breakdown.translation*scale;event.rotationalEnergy=(event.rotationalEnergy??0)+breakdown.rotation*scale;event.otherContactEnergy=(event.otherContactEnergy??0)+breakdown.other*scale;this.highlights.hit(event);
+  const event=episode.event;updatedEvents.add(event);event.energy=previous+deltaEnergy;event.impulse=episode.impulse;event.closing=Math.max(event.closing,s.closing);event.robotSpeed=(robotSpeeds??=linear.map(velocity=>length(velocity))).slice();const scale=energy>0?deltaEnergy/energy:0;event.translationEnergy=(event.translationEnergy??0)+breakdown.translation*scale;event.rotationalEnergy=(event.rotationalEnergy??0)+breakdown.rotation*scale;event.otherContactEnergy=(event.otherContactEnergy??0)+breakdown.other*scale;this.highlights.hit(event);
  if(policy?.cause==='weapon'&&policy.attacker!==null){const bite=policy.attacker===0?spinA:spinB,attacker=policy.attacker===0?ma.bot!:mb.bot!;event.damageScale=strikeMultiplier(this.bots[attacker].compiled.config)*(bite?.damageScale??1);if(bite){event.biteDepth=Math.max(event.biteDepth??0,bite.depth);event.engagement=Math.max(event.engagement??0,bite.engagement);}}
  if(robotPair&&policy){const shares=event.cause==='weapon'?(event.attacker===ma.bot?[0,ma.module==='weapon'&&mb.module==='weapon'?.5:1.2]:[ma.module==='weapon'&&mb.module==='weapon'?.5:1.2,0]):policy.shares;this.damage(ma.bot!,ma.module,deltaEnergy*shares[0]*(event.damageScale??1),event,ma.part,{point:s.point,direction:mul(s.normal,-1)});this.damage(mb.bot!,mb.module,deltaEnergy*shares[1]*(event.damageScale??1),event,mb.part,{point:s.point,direction:s.normal});
  }
@@ -657,7 +658,7 @@ export class Simulation{
  }
  for(const hit of wallHits.values())this.wallDamage.impact(hit.wall,hit.point,hit.energy,hit.impulse,this.tick,hit.velocity);
  for(const [key,e]of this.episodes)if(this.tick-e.last>2*RULES.hz)this.episodes.delete(key);
- const after=this.bots.map(b=>.5*b.compiled.rotorInertia*this.omega(b)**2);for(const e of updatedEvents)e.rotorAfter=[...after];
+  if(updatedEvents.size){const after=this.bots.map(b=>.5*b.compiled.rotorInertia*this.omega(b)**2);for(const e of updatedEvents)e.rotorAfter=[...after];}
  }
  damage(id:number,slot:Slot|'arena',energy:number,event?:ImpactEvent,part?:Part,contact?:{point:Vec,direction:Vec}){if(slot==='arena')return;const b=this.bots[id];
  // Flexible HUGE wheels absorb damage without reducing the solved hit impulse.

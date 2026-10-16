@@ -1,7 +1,7 @@
 # Combat Robot Arena — Performance & Stability Test Report
 
-- **Test date:** 15 October 2026
-- **Revision under test:** validated renderer-optimization build; committed locally, not pushed
+- **Test date:** 16 October 2026
+- **Revision under test:** performance-optimization working tree based on local `b23bd00`; not pushed
 - **Preview target:** [online WebGL preview](https://4173-iy2g4qa5twboexd3hqdx3-c388a922.sg2.manus.computer/)
 **Overall result:** **MIXED** — network/authority and Brawl browser checks pass; the Brawl CPU stress test exceeds the 240 Hz step budget with 2–4 AI opponents on this sandbox. See §5.1.
 
@@ -104,6 +104,23 @@ The Brawl browser suite passed Desktop, Android landscape, and Small Android lay
 The live renderer uses fixed-size buffers with a **720-particle capacity**. Idle updates now use an active counter instead of scanning every age; active updates traverse only the highest live slot, and WebGL draw ranges stop at that prefix. Expired particles and holes within that prefix are still hidden. Emission writes coordinates/tints directly into existing typed arrays rather than creating per-spark array literals. The deterministic regression confirms a zero idle draw range, no idle full-pool scan, and 3 point vertices / 18 trail vertices for a three-slot live prefix. This is evidence for sparse-pool CPU/GPU work, not a promise of a fixed GPU frame-time gain under dense impacts.
 
 A separate 600-step post-render-optimization spot-check (180 warm-up steps, 240 Hz, isolated `Simulation.step()`) measured P95 **4.74 ms** for one AI opponent (56/600 steps over the 4.17 ms interval) and **8.85 ms** for four AI opponents (600/600 over). There were no simulation faults. Since the renderer change does not touch `Simulation.step()`, these readings do not claim a physics speedup; the multi-AI CPU-budget limitation remains open, and the 840-sample table above remains the wider per-count run.
+
+### 5.3 Profile-guided contact-path optimization
+
+The follow-up pass cached immutable sensor/collision-group eligibility once when each robot collider is created, restricted contact metadata snapshots to handles present in the current aggregate, reused that aggregate, and computed shared per-tick event values once. It does not change the 240 Hz timestep, contact selection, solver, forces, AI cadence, damage, or game rules. The performance regression verifies cached flags against Rapier and checks armor removal remains safe (702 colliders in the fixture, 240 cached as ineligible).
+
+The paired Node benchmark compares local baseline `b23bd00` with the optimized working tree. Each result is the median of three alternating baseline/candidate trials using the same seed, stock robots, Medium AI, hazards, visual recording, 180 warm-up steps, and 600 measured `Simulation.step()` calls at 240 Hz. The budget remains **4.17 ms per step**.
+
+| AI rivals | Baseline P50 → optimized P50 (change) | Baseline P95 → optimized P95 (change) | Over budget: baseline → optimized | Candidate faults |
+| ---: | ---: | ---: | ---: | ---: |
+| 1 | 3.174 → 3.110 ms (−2.0%) | 5.438 → 5.574 ms (+2.5%) | 66 → 69 / 600 | 0 |
+| 2 | 8.005 → 7.577 ms (−5.3%) | 13.792 → 11.689 ms (−15.2%) | 600 → 600 / 600 | 0 |
+| 3 | 8.345 → 8.313 ms (−0.4%) | 13.080 → 13.292 ms (+1.6%) | 600 → 600 / 600 | 0 |
+| 4 | 13.021 → 12.288 ms (−5.6%) | 19.904 → 17.987 ms (−9.6%) | 600 → 600 / 600 | 0 |
+
+Median P50 improved slightly in all four field sizes; the larger P95 gains occurred at 2 and 4 AI, while 1- and 3-AI P95 was mixed. **This is a modest bookkeeping improvement, not a resolution of Brawl CPU lag:** the optimized 2–4 AI run still exceeded the 4.17 ms budget in every measured sample. A fixed-seed 780-step four-AI equivalence check retained the same tick count, one event, and 180 visual frames; SHA-256 over snapshot state, events, and frames matched exactly (`db656217f9421c859f14ce77335ab703f6fc8038312a4ad3d8dae78ee254ea32`).
+
+`npm run build`, `npm run test:brawl`, and `npm run test:performance` passed. The broader `npm run verify:physics` run was stopped after roughly 20 minutes during the 20-match AI phase (4/20 matches complete). Before that stop it showed three unrelated G06/G07 fixture failures: reference-panel damage expected 1800 HP remaining but got 1200; the flipper target fixture did not start at equal mass; and a missed-flip fixture rejected its `weapon.length` value. Those three filtered cases reproduced on the pre-optimization `b23bd00` baseline. The remaining AI matches were not verified, so the broad verifier is not reported as a pass.
 
 ## 6. Online stability and authority regressions
 

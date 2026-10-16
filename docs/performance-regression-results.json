@@ -122,6 +122,15 @@
       }
     },
     {
+      "name": "Cached contact eligibility matches collider flags and remains valid after armor removal",
+      "detail": {
+        "robotColliders": 702,
+        "cachedIneligible": 240,
+        "armorSlot": "armour_front",
+        "ticksAfterRemoval": 8
+      }
+    },
+    {
       "name": "Skipping unseen tournament recordings preserves exact seeded physical state and damage",
       "detail": {
         "ticks": 960,
