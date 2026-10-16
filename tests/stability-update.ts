@@ -37,8 +37,8 @@ await test('Both stuck robots recover to separate clear positions and recovery c
   b.count=2*RULES.hz;assert(!s.manualRecoveryReady(b));assert.deepEqual(s.manualUnstick(),[]);s.tick+=5*RULES.hz;assert(s.manualRecoveryReady(b));s.finish('Count-out',1);assert(!s.manualRecoveryReady(b));assert.deepEqual(s.manualUnstick(),[]);return{robotsRecovered:2,cooldownSeconds:5,flightDistanceUnchanged:true};
  }finally{s.dispose();}
 });
-await test('Healthy idle, moving, unpowered and fully disabled robots cannot use manual recovery',()=>{
+await test('Healthy idle, moving and unpowered robots cannot recover; damaged wheels retain manual recovery',()=>{
  const s=new Simulation([preset(0),preset(1)],{practice:true,hazards:false,ai:[false,false],autoUnstick:false});try{
-  for(let t=0;t<240;t++)s.step();const b=s.bots[0];assert(!s.manualRecoveryReady(b));b.count=RULES.hz;b.chassis.setLinvel(v(2,0,0),true);assert(!s.manualRecoveryReady(b));b.chassis.setLinvel(v(),true);b.energy=0;assert(!s.manualRecoveryReady(b));b.energy=1000;b.modules.drive_left.functional=false;b.modules.drive_right.functional=false;assert(!s.manualRecoveryReady(b));assert.deepEqual(s.manualUnstick(),[]);return{blockedStates:4};
+  for(let t=0;t<240;t++)s.step();const b=s.bots[0];assert(!s.manualRecoveryReady(b));b.count=RULES.hz;b.chassis.setLinvel(v(2,0,0),true);assert(!s.manualRecoveryReady(b));b.chassis.setLinvel(v(),true);b.energy=0;assert(!s.manualRecoveryReady(b));b.energy=1000;b.modules.drive_left.functional=false;b.modules.drive_right.functional=false;assert(s.manualRecoveryReady(b));assert.deepEqual(s.manualUnstick(),[b.compiled.config.identity.name]);return{blockedStates:3,wheelDamageRecovery:true};
  }finally{s.dispose();}
 });

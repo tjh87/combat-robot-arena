@@ -16,5 +16,5 @@ try{
  const left=parts.find(p=>p.module==='drive_left')!,drive=b.modules.drive_left;drive.hp=drive.max;drive.functional=true;
  for(let i=0;i<7;i++)sim.damage(0,'drive_left',100*MATERIALS[drive.material].resistance,event(),left);
  assert.equal(drive.hp,50);assert(drive.functional);sim.damage(0,'drive_left',100*MATERIALS[drive.material].resistance,event(),left);assert.equal(drive.hp,0);assert(!drive.functional);assert.equal(b.modules.chassis.hp,b.modules.chassis.max-100);
- console.log('PASS wheel damage accumulates correctly and can still disable the drive');
+ console.log('PASS wheel damage remains recorded without disabling motor propulsion');
 }finally{sim.dispose();}
