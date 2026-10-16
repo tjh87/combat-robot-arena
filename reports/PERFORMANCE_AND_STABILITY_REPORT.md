@@ -1,7 +1,7 @@
 # Combat Robot Arena — Performance & Stability Test Report
 
 - **Test date:** 16 October 2026
-- **Revision under test:** performance-optimization working tree based on local `b23bd00`; not pushed
+- **Revision under test:** local commit `0c80c68` (based on `b23bd00`); not pushed
 - **Preview target:** [online WebGL preview](https://4173-iy2g4qa5twboexd3hqdx3-c388a922.sg2.manus.computer/)
 **Overall result:** **MIXED** — network/authority and Brawl browser checks pass; the Brawl CPU stress test exceeds the 240 Hz step budget with 2–4 AI opponents on this sandbox. See §5.1.
 
