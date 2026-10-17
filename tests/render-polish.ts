@@ -6,6 +6,7 @@ import {writeSparkTrail,sparkHeadColor} from '../src/impact-sparks';
 import {v,preset,RULES} from '../src/model';
 import {StableTrackingPose,BRAWL_CAMERA_STABILITY} from '../src/follow-camera';
 import {ArenaRenderer} from '../src/render';
+import {createTravelLineGeometry,TRAVEL_LINE_VERTEX_CAPACITY,writeTravelLineGeometry} from '../src/travel-line-geometry';
 import {Simulation,initializePhysics} from '../src/sim';
 
 for(const initial of [true,false]){
@@ -26,6 +27,21 @@ for(let n=0;n<100;n++){
  writeSparkTrail(p,c,0,x,y,z,vx,vy,vz,trail,fade,branch,tint);assert.deepEqual(p,oldP);assert.deepEqual(c,oldC);
  const scratch=v();assert.equal(sparkHeadColor(tint,fade,scratch),scratch);assert.deepEqual(scratch,hot);
 }
+const travelLine=createTravelLineGeometry(),travelPosition=travelLine.getAttribute('position') as THREE.BufferAttribute;
+assert.equal(travelPosition.count,TRAVEL_LINE_VERTEX_CAPACITY);assert.equal(travelPosition.usage,THREE.StreamDrawUsage);
+travelPosition.array.fill(-7);travelPosition.addUpdateRange(6,3);
+const travelPoints=[v(1,.2,3),v(-2,1.5,4),v(5,-.5,-1)],travelFinal=v(2,3,1),originY=.4;
+const legacyTravel=[...travelPoints,travelFinal].slice(0,travelPosition.count),expectedTravel=new Float32Array(travelPosition.array);
+legacyTravel.forEach((p,i)=>expectedTravel.set([p.x,.046+Math.max(0,p.y-originY),p.z],i*3));
+assert.equal(writeTravelLineGeometry(travelLine,travelPoints,travelFinal,originY),legacyTravel.length);
+assert.deepEqual(travelPosition.array,expectedTravel);assert.deepEqual(travelLine.drawRange,{start:0,count:legacyTravel.length});
+assert.deepEqual(travelPosition.updateRanges,[{start:0,count:legacyTravel.length*3}]);
+assert.equal(travelPosition.updateRanges[0].count*Float32Array.BYTES_PER_ELEMENT,legacyTravel.length*12);
+const overCapacity=Array.from({length:TRAVEL_LINE_VERTEX_CAPACITY+3},(_,i)=>v(i,i*.1,-i)),legacyFull=[...overCapacity,travelFinal].slice(0,TRAVEL_LINE_VERTEX_CAPACITY),expectedFull=new Float32Array(travelPosition.array);
+legacyFull.forEach((p,i)=>expectedFull.set([p.x,.046+Math.max(0,p.y-originY),p.z],i*3));
+assert.equal(writeTravelLineGeometry(travelLine,overCapacity,travelFinal,originY),TRAVEL_LINE_VERTEX_CAPACITY);
+assert.deepEqual(travelPosition.array,expectedFull);assert.deepEqual(travelLine.drawRange,{start:0,count:TRAVEL_LINE_VERTEX_CAPACITY});
+assert.deepEqual(travelPosition.updateRanges,[{start:0,count:TRAVEL_LINE_VERTEX_CAPACITY*3}]);
 const tracking=new StableTrackingPose(),config=preset(0),position=new THREE.Vector3();
 tracking.update(position,new THREE.Quaternion(),config,'brawl',1/60,BRAWL_CAMERA_STABILITY);
 const turn=tracking.update(position,new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI),config,'brawl',1/60,BRAWL_CAMERA_STABILITY);
@@ -57,4 +73,4 @@ try{
  }
 
 }finally{sim.dispose()}
-console.log('PASS wall-visibility hysteresis, identical allocation-free spark buffers, reusable spark color and Brawl opening-fit and bounded combat framing');
+console.log('PASS wall-visibility hysteresis, identical allocation-free spark buffers, partial launch-trail uploads, reusable spark color and Brawl opening-fit and bounded combat framing');

@@ -1,9 +1,9 @@
 # Combat Robot Arena — Performance & Stability Test Report
 
-- **Test date:** 16 October 2026
-- **Revision under test:** local commit `0c80c68` (based on `b23bd00`); not pushed
+- **Test date:** 17 October 2026
+- **Revision under test:** local working tree based on `fd8c1be`, including the verified WebGL flight-trail update; not pushed
 - **Preview target:** [online WebGL preview](https://4173-iy2g4qa5twboexd3hqdx3-c388a922.sg2.manus.computer/)
-**Overall result:** **MIXED** — network/authority and Brawl browser checks pass; the Brawl CPU stress test exceeds the 240 Hz step budget with 2–4 AI opponents on this sandbox. See §5.1.
+**Overall result:** **MIXED** — network/authority and Brawl browser checks pass; the WebGL flight-trail live-range update is regression-verified; the Brawl CPU stress test exceeds the 240 Hz step budget with 2–4 AI opponents on this sandbox. See §5.1 and §9.
 
 > This report distinguishes deterministic simulation from an internet measurement. The jitter figures below exercise the production `SnapshotTiming` implementation with controlled arrival patterns. They establish expected client behavior, but do **not** measure a browser GPU, the user’s ISP route, Wi-Fi contention, or production Redis/Vercel latency.
 
@@ -151,3 +151,14 @@ Median P50 improved slightly in all four field sizes; the larger P95 gains occur
 The preview is an ephemeral sandbox service and its local Redis state is not production infrastructure. The deterministic benchmark does not emulate congestion control, packet loss recovery, a mobile radio, cross-region routes, a real Vercel edge path, or GPU/monitor timing.
 
 For a production acceptance pass, record a two-player session from representative regions and capture: browser RTT/jitter/buffer telemetry, input-to-authoritative-ack time, snapshot inter-arrival percentiles, WebGL frame time, long-frame count, reconnect rate, room recovery time, and browser/device/GPU metadata. Compare that measured data against the deterministic bounds in this report.
+
+
+## 9. WebGL flight-trail partial updates
+
+The flight trail retains its existing 242-vertex capacity, material, coordinate transform, draw count, and per-frame bounding-sphere/culling update. Its former spread-and-slice path allocated temporary point arrays and marked all 242 × 3 Float32 components dirty. It now writes the same live vertices directly into the reusable position attribute, requests `StreamDrawUsage`, and marks one contiguous update range for only the rendered prefix. Physics, network behavior, camera framing, and visible trail geometry are unchanged.
+
+The regression compares the resulting Float32 coordinates and draw range with the legacy `[...points, final].slice(0, capacity)` behavior for both sparse and capacity-limited tracks. A four-vertex path marks 12 Float32 components, or **48 bytes**, rather than all **2,904 bytes** in the full position buffer: **98.35% fewer update bytes** for that sparse case. At full capacity the update remains 2,904 bytes. The backing buffer is still 2,904 bytes; this optimization reduces temporary CPU allocations and the requested per-update transfer size, not allocated GPU memory.
+
+`npm run build`, `npm run test:render-polish`, `npm run test:visuals`, and `npm run test:brawl-browser` passed, including desktop, Android landscape, and small Android Brawl cases. The byte figures derive from the verified BufferAttribute component range and Float32 size; no GPU frame-time or device-wide memory measurement was captured, so they are not presented as a frame-time or latency guarantee.
+
+**Runtime WebGL smoke:** On the running port-4173 preview, headless Chromium 154 WebGL2 with SwiftShader rendered an injected four-vertex launch trail. The position buffer retained 242 vertices and `StreamDrawUsage`; the initial allocation was 2,904 bytes, followed by two captured `bufferSubData` calls of 12 Float32 components (48 bytes) each with draw range 4. The screenshot showed the gold trajectory, and the browser recorded no JavaScript exceptions. SwiftShader is a software renderer, so this does not estimate hardware GPU time, total memory, or user-device performance.
