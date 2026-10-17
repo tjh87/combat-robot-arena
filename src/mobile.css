@@ -234,3 +234,107 @@ html.touch-playing #hud .player-panel .hud-start-rpm small{font:800 9px/1.1 var(
  }
  html.touch-device .online-result-card h2{font-size:18px;margin:5px 0}
 }
+
+
+/* Follow-up: reduce the complete post-fight and related-menu footprint on mobile landscape. */
+@media (orientation:landscape){
+ html.touch-device .modal-backdrop{
+  position:fixed!important;inset:0!important;box-sizing:border-box;overflow:hidden;
+  padding:max(6px,env(safe-area-inset-top,0px)) max(6px,env(safe-area-inset-right,0px)) max(6px,env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));
+ }
+ html.touch-device .modal-backdrop .modal:not(.results){
+  width:min(760px,100%);max-width:100%;max-height:calc(100dvh - 12px)!important;
+  padding:clamp(9px,2.2vw,13px);border-radius:8px;
+ }
+ html.touch-device .modal-backdrop .modal.compact{width:min(430px,100%)!important;max-width:100%}
+ html.touch-device .modal-backdrop .modal:not(.results) h2{font-size:clamp(16px,4vh,20px);line-height:1.12;letter-spacing:-.025em;margin:4px 0 7px}
+ html.touch-device .modal-backdrop .modal:not(.results) p{font-size:12px;line-height:1.4;margin:5px 0}
+ html.touch-device .modal-backdrop .modal:not(.results) .eyebrow{font-size:9px}
+ html.touch-device .modal-backdrop .modal:not(.results) .modal-header{gap:8px;margin-bottom:9px}
+ html.touch-device .modal-backdrop .modal:not(.results) .modal-actions{gap:6px;margin-top:10px}
+ html.touch-device .modal-backdrop .modal:not(.results) :is(.modal-actions,.modal-header)>button{min-height:40px;padding:7px 9px;font-size:11px;line-height:1.2}
+ html.touch-device .modal-backdrop .modal:not(.results) .field{gap:4px}
+ html.touch-device .modal-backdrop .modal:not(.results) .field :is(label,small){font-size:11px;line-height:1.35}
+ html.touch-device .modal-backdrop .modal:not(.results) :is(.selector,input[type=number],input[type=text],textarea){min-height:40px;padding:7px;font-size:12px}
+ html.touch-device .modal-backdrop .modal:not(.results) .settings-grid{gap:10px 14px}
+ html.touch-device .modal-backdrop .modal:not(.results) .setting-section{margin-top:12px;padding-top:10px}
+ html.touch-device .modal-backdrop .modal:not(.results) .binding-grid{grid-template-columns:1fr .9fr .9fr;gap:4px;font-size:10px}
+ html.touch-device .modal-backdrop .modal:not(.results) .binding-grid button{min-height:36px;padding:5px 4px;font-size:10px}
+ html.touch-device .modal-backdrop .modal.cup-shell,html.touch-device .modal-backdrop .modal.repair-studio{width:min(760px,100%);padding:10px 12px!important;border-radius:9px}
+ html.touch-device .modal-backdrop .cup-shell .cup-shell-header{gap:8px;margin-bottom:10px}
+ html.touch-device .modal-backdrop .cup-shell .cup-shell-header>span{padding:5px 7px;font-size:8px}
+ html.touch-device .modal-backdrop .cup-shell .cup-action-bar{gap:6px;padding-top:8px;margin-top:10px}
+ html.touch-device .modal-backdrop .cup-shell .cup-action-bar button{min-height:40px;padding:7px 10px;font-size:11px}
+ html.touch-device .result-backdrop .modal.results{width:min(760px,100%);padding:6px 8px;border-radius:8px}
+ html.touch-device .results .winner{font-size:clamp(15px,2.2vw,18px);line-height:1.1;margin:3px 0}
+ html.touch-device .results .podium{gap:5px;margin:5px 0}
+ html.touch-device .results .podium>article{padding:6px;border-radius:7px}
+ html.touch-device .results .podium-label{min-height:12px;gap:4px}
+ html.touch-device .results .podium-label span{font-size:8px;letter-spacing:.04em}
+ html.touch-device .results .podium-content{grid-template-columns:minmax(0,1fr) 44px;gap:5px;min-height:44px;margin:3px 0}
+ html.touch-device .results .podium .podium-name{font-size:clamp(13px,2vw,17px);line-height:1.08}
+ html.touch-device .results .podium-portrait{border-radius:5px}
+ html.touch-device .results .podium-caption{padding-top:3px;font-size:8px;letter-spacing:.06em}
+ html.touch-device .results .result-hp{margin:3px 0 5px;padding:4px 6px;border-radius:4px}
+ html.touch-device .results .result-hp>span{font-size:8px}
+ html.touch-device .results .result-hp strong{font-size:14px;line-height:1.1;margin:2px 0}
+ html.touch-device .results .result-hp strong small{font-size:9px}
+ html.touch-device .results .result-health-track{height:5px}
+ html.touch-device .results .result-highlights{gap:4px 6px;margin:0 0 4px}
+ html.touch-device .results .result-highlights>div{padding-left:4px}
+ html.touch-device .results .result-highlights dt{font-size:9px;line-height:1.15}
+ html.touch-device .results .result-highlights dd{font-size:12px;line-height:1.1;margin:2px 0 0}
+ html.touch-device .results .result-highlights dd small{font-size:9px}
+ html.touch-device .results #result-reason{padding:4px 6px;margin:4px 0;font-size:10px;line-height:1.3}
+ html.touch-device :is(.results,.online-result-card) .score-explainer{padding:5px 6px;margin:4px 0;border-radius:5px}
+ html.touch-device :is(.results,.online-result-card) .score-explainer strong{font-size:11px;line-height:1.2}
+ html.touch-device :is(.results,.online-result-card) .score-explainer p{font-size:10px;line-height:1.3;margin:2px 0 0}
+ html.touch-device :is(.results,.online-result-card) .result-score{gap:6px;margin:5px 0}
+ html.touch-device :is(.results,.online-result-card) .score-card{padding:5px 6px;gap:3px;min-width:0}
+ html.touch-device :is(.results,.online-result-card) .score-player{font-size:9px}
+ html.touch-device :is(.results,.online-result-card) .score-card h3{font-size:12px;margin:0;line-height:1.15;overflow-wrap:anywhere}
+ html.touch-device :is(.results,.online-result-card) .score-total{font-size:18px;line-height:1.05;padding-top:5px;margin-top:4px}
+ html.touch-device :is(.results,.online-result-card) .score-total small{font-size:9px;margin-left:3px}
+ html.touch-device :is(.results,.online-result-card) .stoppage-status{font-size:13px;line-height:1.1}
+ html.touch-device :is(.results,.online-result-card) .judge-scoreboard{margin-bottom:5px}
+ html.touch-device :is(.results,.online-result-card) .judge-scoreboard caption{font-size:9px;padding:3px 0}
+ html.touch-device :is(.results,.online-result-card) .judge-scoreboard thead th{padding:3px;font-size:9px}
+ html.touch-device :is(.results,.online-result-card) .judge-scoreboard tbody th{padding:4px 3px}
+ html.touch-device :is(.results,.online-result-card) .judge-scoreboard tbody th strong{font-size:10px;margin-bottom:2px}
+ html.touch-device :is(.results,.online-result-card) .judge-scoreboard tbody th span{font-size:9px;line-height:1.15}
+ html.touch-device :is(.results,.online-result-card) .judge-scoreboard td strong{font-size:16px}
+ html.touch-device :is(.results,.online-result-card) .judge-scoreboard td span{font-size:9px}
+ html.touch-device :is(.results,.online-result-card) .judge-note{font-size:9px!important;line-height:1.25;margin:0 0 5px}
+ html.touch-device .results details{margin:4px 0!important}
+ html.touch-device .results details>summary{padding:6px 0;font-size:10px;line-height:1.2}
+ html.touch-device .results .data-table{font-size:10px}
+ html.touch-device .results .data-table th{font-size:9px}
+ html.touch-device .results .scroll-table{max-height:30dvh}
+ html.touch-device .results .ringout-result{padding:4px 6px;font-size:10px;gap:4px}
+ html.touch-device .results .modal-actions{gap:4px;margin:6px 0 0;padding:6px 0 0}
+ html.touch-device .results .modal-actions button{min-height:40px;padding:5px 6px;font-size:11px;line-height:1.15}
+ html.touch-device :is(.results,.cup-shell) .cup-victory-banner{padding:6px 8px;gap:6px;margin:0 0 6px;border-radius:7px}
+ html.touch-device :is(.results,.cup-shell) .cup-medal{width:26px}
+ html.touch-device :is(.results,.cup-shell) .cup-victory-banner strong{font-size:14px;margin:2px 0}
+ html.touch-device :is(.results,.cup-shell) .cup-victory-banner small{font-size:9px}
+ html.touch-device :is(.results,.cup-shell) .cup-victory-banner .cup-record{font-size:10px;gap:5px}
+ html.touch-device :is(.results,.cup-shell) .cup-champion{grid-template-columns:30px minmax(0,1fr) 82px;padding:7px;gap:6px;margin:5px 0;border-radius:8px}
+ html.touch-device :is(.results,.cup-shell) .cup-champion-emblem>svg{width:28px}
+ html.touch-device :is(.results,.cup-shell) .cup-champion-copy h2{font-size:11px;margin:2px 0}
+ html.touch-device :is(.results,.cup-shell) .cup-champion-copy>strong{font-size:16px;margin-bottom:3px}
+ html.touch-device :is(.results,.cup-shell) .cup-champion-copy .cup-record{font-size:10px;gap:5px}
+ html.touch-device :is(.results,.cup-shell) .cup-champion-copy p{font-size:9px;margin:3px 0 0}
+ html.touch-device :is(.results,.cup-shell) .cup-champion-photo img{width:78px;height:56px;border-radius:5px}
+ html.touch-device .online-result-card{top:max(6px,env(safe-area-inset-top,0px));padding:7px 9px;max-height:calc(100dvh - 12px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
+ html.touch-device .online-result-card h2{font-size:16px;line-height:1.1;margin:3px 0}
+ html.touch-device .online-result-card p{font-size:11px;line-height:1.3;margin:4px 0}
+}
+
+
+@media (orientation:landscape){
+ html.touch-device :is(.results,.cup-shell) .cup-champion{padding:5px;gap:5px;margin:3px 0}
+ html.touch-device :is(.results,.cup-shell) .cup-champion-copy p{line-height:1.15}
+}
+
+
+@media (orientation:landscape){html.touch-device :is(.results,.cup-shell) .cup-champion{padding:3px;gap:4px;margin:2px 0}}

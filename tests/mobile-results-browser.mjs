@@ -13,16 +13,21 @@ globalThis.__mobileResultFixture={
   sim.finish(reason,0);showResult();
  },
  champion(){tournament?.dispose();tournament=new Tournament(preset(1),false,8412,'medium',1);sim?.dispose();sim=new Simulation(tournament.playerConfigs(),{hazards:false,ai:[false,false],recordVisuals:false});tournamentRecorded=false;sim.finish('Structural KO',0);showResult();},
+ settings(){openSettings();},
  dispose(){input.dispose();audio.dispose();renderer?.dispose();sim?.dispose();tournament?.dispose();}
 };`;
 const bundle=await build({entryPoints:['src/main.ts'],bundle:true,format:'iife',write:false,loader:{'.css':'empty'},plugins:[{name:'mobile-layout-fixture',setup(builder){
  builder.onLoad({filter:/src\/main\.ts$/},args=>({contents:readFileSync(args.path,'utf8')+exposed,loader:'ts',resolveDir:process.cwd()+'/src'}));
  builder.onResolve({filter:/^\.\/render$/},()=>({path:'layout-renderer',namespace:'fixture'}));
- builder.onLoad({filter:/layout-renderer/,namespace:'fixture'},()=>({contents:`export class ArenaRenderer{constructor(){this.quality='low';this.triangleCount=0;this.drawCalls=0;this.renderMs=0;}attach(sim){this.sim=sim;}setQuality(){}setAdaptive(){}showBuilder(){}startReplay(){}endReplay(){}replayFrame(){}update(){}draw(){}dispose(){}opponentIndicator(){return{visible:false};}projectCombatPoint(){return{visible:false};}robotWarningPosition(){return{visible:false};}}`}));
-}}]});
+ builder.onLoad({filter:/layout-renderer/,namespace:'fixture'},()=>({contents:`export class ArenaRenderer{constructor(){this.quality='low';this.triangleCount=0;this.drawCalls=0;this.renderMs=0;this.container={classList:{toggle(){}}};this.needsRender=false;}attach(sim){this.sim=sim;}setQuality(){}setAdaptive(){}showBuilder(){}startReplay(){}endReplay(){}replayFrame(){}update(){}draw(){}dispose(){}opponentIndicator(){return{visible:false};}projectCombatPoint(){return{visible:false};}robotWarningPosition(){return{visible:false};}}`}));
+ }}]});
 const origin=process.env.CRA_PREVIEW_URL??'http://127.0.0.1:4173/';
 const html=await(await fetch(origin)).text();
-const cssLinks=[...html.matchAll(/href="([^\"]+\.css)"/g)].map(match=>new URL(match[1],origin).href);
+let cssLinks=[...html.matchAll(/href="([^\"]+\.css)"/g)].map(match=>new URL(match[1],origin).href);
+if(!cssLinks.length){
+ const imports=[...readFileSync('src/main.ts','utf8').matchAll(/import\s+['"](\.\/[^'"]+\.css)['"]/g)].map(match=>new URL('/src/'+match[1].slice(2)+'?direct',origin).href);
+ cssLinks=[new URL('/src/online/online.css?direct',origin).href,...imports];
+}
 assert(cssLinks.length>0);
 const pages=await(await fetch(`http://127.0.0.1:${process.env.CRA_CDP_PORT??9224}/json/list`)).json();
 const socket=new WebSocket(pages.find(page=>page.type==='page').webSocketDebuggerUrl);
@@ -54,12 +59,12 @@ try{
   for(const [reason,cup] of [['Structural KO',false],['Judges’ decision',false],['Structural KO',true]]){
    await evaluate(`__mobileResultFixture.result(${JSON.stringify(reason)},${cup})`);
    await evaluate('document.fonts.ready');
-   const layout=await evaluate(`(()=>{const modal=document.querySelector('.results'),body=modal.querySelector('.result-content'),footer=modal.querySelector('.modal-actions'),box=modal.getBoundingClientRect(),buttons=[...footer.querySelectorAll('button')].map(button=>{const rect=button.getBoundingClientRect();return{id:button.id,height:rect.height,inside:rect.top>=0&&rect.bottom<=innerHeight&&rect.left>=0&&rect.right<=innerWidth};});return{inside:box.top>=0&&box.left>=0&&box.bottom<=innerHeight+1&&box.right<=innerWidth+1,bodyOverflow:getComputedStyle(body).overflowY,footerPosition:getComputedStyle(footer).position,buttons,headingSize:parseFloat(getComputedStyle(modal.querySelector('.podium-name')).fontSize),cards:modal.querySelectorAll('.podium>article').length,health:modal.querySelectorAll('.result-health-track').length,scrollWidth:body.scrollWidth,bodyWidth:body.clientWidth,details:modal.querySelectorAll('details').length};})()`);
+   const layout=await evaluate(`(()=>{const modal=document.querySelector('.results'),body=modal.querySelector('.result-content'),footer=modal.querySelector('.modal-actions'),box=modal.getBoundingClientRect(),buttons=[...footer.querySelectorAll('button')].map(button=>{const rect=button.getBoundingClientRect();return{id:button.id,height:rect.height,inside:rect.top>=0&&rect.bottom<=innerHeight&&rect.left>=0&&rect.right<=innerWidth};}),score=modal.querySelector('.score-total')||modal.querySelector('.stoppage-status');return{inside:box.top>=0&&box.left>=0&&box.bottom<=innerHeight+1&&box.right<=innerWidth+1,bodyOverflow:getComputedStyle(body).overflowY,footerPosition:getComputedStyle(footer).position,buttons,headingSize:parseFloat(getComputedStyle(modal.querySelector('.podium-name')).fontSize),winnerSize:parseFloat(getComputedStyle(modal.querySelector('.podium-name.winner')).fontSize),metricSize:parseFloat(getComputedStyle(modal.querySelector('.result-highlights dd')).fontSize),scoreSize:parseFloat(getComputedStyle(score).fontSize),cards:modal.querySelectorAll('.podium>article').length,health:modal.querySelectorAll('.result-health-track').length,scrollWidth:body.scrollWidth,bodyWidth:body.clientWidth,details:modal.querySelectorAll('details').length};})()`);
    assert.equal(layout.cards,2);assert.equal(layout.health,2);assert(layout.details>=2);
    if(device.mobile){
     assert(layout.inside,device.name+' dialog must fit');assert.equal(layout.bodyOverflow,'auto');assert.equal(layout.footerPosition,'static');
     assert(layout.buttons.every(button=>button.inside&&button.height>=40),device.name+' buttons must stay visible and tappable');
-    assert(layout.headingSize>=16&&layout.headingSize<=22);assert(layout.scrollWidth<=layout.bodyWidth+1,'No horizontal result-body overflow');
+    assert(layout.headingSize>=13&&layout.headingSize<=17,device.name+' podium names use the compact mobile scale');assert(layout.winnerSize<=18,device.name+' winner title stays compact');assert(layout.metricSize>=11&&layout.metricSize<=13,device.name+' result values remain readable at a smaller size');assert(layout.scoreSize<=19,device.name+' score/stoppage headline stays compact');assert(layout.scrollWidth<=layout.bodyWidth+1,'No horizontal result-body overflow');
     await evaluate("document.querySelector('.results details').open=true;document.querySelector('.result-content').scrollTop=10000");
     assert(await evaluate("[...document.querySelectorAll('.results .modal-actions button')].every(button=>{const r=button.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight})"),'Expanded evidence must not push actions offscreen');
     await evaluate("document.querySelector('#result-menu').click()");assert.equal(await evaluate("document.querySelector('.results')===null"),true,'Menu action remains functional');
@@ -68,12 +73,19 @@ try{
   }
   if(device.mobile){
    await evaluate('__mobileResultFixture.champion()');
-   assert(await evaluate("(()=>{const r=document.querySelector('.cup-champion').getBoundingClientRect();return r.width<=innerWidth&&r.height<150})()"),'Mobile tournament champion stays compact');
+   const championLayout=await evaluate("(()=>{const el=document.querySelector('.cup-champion'),r=el.getBoundingClientRect(),name=parseFloat(getComputedStyle(el.querySelector('.cup-champion-copy>strong')).fontSize);return{width:r.width,height:r.height,name,top:r.top,bottom:r.bottom,viewport:{width:innerWidth,height:innerHeight}}})()");
+   assert(championLayout.width<=championLayout.viewport.width&&championLayout.height<140&&championLayout.name<=16,'Mobile tournament champion stays compact: '+JSON.stringify(championLayout));
    await evaluate(`document.querySelector('#modals').innerHTML='';document.querySelector('#arena-overlay').innerHTML='<section class="online-result-card"><h2>Robot wins</h2><p>Match complete</p>'+${JSON.stringify('<div class="score-explainer"><strong>Judges’ scorecard</strong><p>The higher total wins.</p></div><div class="result-score"><div class="score-card"><h3>Minotaur</h3><div class="score-total">8</div></div><div class="score-card"><h3>Tombstone</h3><div class="score-total">3</div></div></div>')}+'</section>'`);
    const onlineLayout=await evaluate("(()=>{const el=document.querySelector('.online-result-card'),r=el.getBoundingClientRect(),s=getComputedStyle(el);return{rect:{top:r.top,right:r.right,bottom:r.bottom,left:r.left,width:r.width,height:r.height},viewport:{width:innerWidth,height:innerHeight},position:s.position,top:s.top,right:s.right,width:s.width,maxHeight:s.maxHeight,touch:document.documentElement.className}})()");
    assert(onlineLayout.rect.top>=0&&onlineLayout.rect.bottom<=onlineLayout.viewport.height&&onlineLayout.rect.right<=onlineLayout.viewport.width,'Online result card fits: '+JSON.stringify(onlineLayout));
+   assert(parseFloat(await evaluate("getComputedStyle(document.querySelector('.online-result-card h2')).fontSize"))<=16,'Online result heading uses the compact mobile scale');
+   await evaluate("__mobileResultFixture.result('Structural KO',false);__mobileResultFixture.settings()");
+   const menuLayout=await evaluate("(()=>{const modal=document.querySelector('.modal-backdrop .modal'),box=modal.getBoundingClientRect(),title=modal.querySelector('h2'),button=modal.querySelector('#close-settings'),r=button.getBoundingClientRect();return{inside:box.top>=0&&box.left>=0&&box.bottom<=innerHeight+1&&box.right<=innerWidth+1,titleSize:parseFloat(getComputedStyle(title).fontSize),buttonHeight:r.height,buttonInside:r.top>=0&&r.bottom<=innerHeight&&r.left>=0&&r.right<=innerWidth}})()");
+   assert(menuLayout.inside&&menuLayout.titleSize>=16&&menuLayout.titleSize<=20,'Related settings menu fits and uses smaller mobile typography: '+JSON.stringify(menuLayout));
+   assert(menuLayout.buttonInside&&menuLayout.buttonHeight>=40,'Settings close action remains visible and tappable: '+JSON.stringify(menuLayout));
+   console.log('PASS',device.name,'related settings menu',JSON.stringify(menuLayout));
   }
   await evaluate('__mobileResultFixture.dispose()');
  }
- console.log('PASS mobile result bounds, compact typography, retained values, independent evidence scrolling, working actions, tournament/online fit and desktop styling');
+ console.log('PASS mobile result bounds, compact result and menu typography, retained values, independent evidence scrolling, working actions, tournament/online fit and desktop styling');
 }finally{socket.close();}

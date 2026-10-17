@@ -119,3 +119,24 @@ html.touch-device .brawl-results .brawl-peak-flight strong small{font-size:11px}
  }
  #hud[data-mode="brawl"] .hud-start-rpm .rpm-silhouette{max-width:clamp(36px,6.2vw,50px)}
 }
+
+
+/* Compact mobile Brawl results without changing desktop standings or column order. */
+@media (orientation:landscape){
+ html.touch-device .brawl-results .brawl-result-heading{font-size:8px;line-height:1.15;letter-spacing:0}
+ html.touch-device .brawl-results .brawl-result-row{font-size:12px;line-height:1.2;margin:0;padding:5px 3px;letter-spacing:0}
+ html.touch-device .brawl-results .brawl-result-machine{gap:2px}
+ html.touch-device .brawl-results .brawl-result-portrait{flex-basis:28px;width:28px;height:21px}
+ html.touch-device .brawl-results .brawl-result-name strong{font-size:12px;line-height:1.05}
+ html.touch-device .brawl-results .brawl-result-name small{font-size:7px}
+ html.touch-device .brawl-results .brawl-peak-flight{gap:2px}
+ html.touch-device .brawl-results .brawl-peak-flight>span{font-size:8px;line-height:1.1}
+ html.touch-device .brawl-results .brawl-peak-flight strong{font-size:12px;line-height:1.05}
+ html.touch-device .brawl-results .brawl-peak-flight strong small{font-size:10px}
+ html.touch-device .brawl-results .brawl-high-flier{font-size:7px}
+ html.touch-device .brawl-results .brawl-result-machine>b{font-size:13px}
+ html.touch-device .brawl-results .brawl-result-machine small,html.touch-device .brawl-results .brawl-damage-value small,html.touch-device .brawl-results .brawl-points small{font-size:9px}
+ html.touch-device .brawl-results .brawl-top-damage{font-size:7px}
+ html.touch-device .brawl-results .brawl-result-status{font-size:9px;line-height:1.15}
+ html.touch-device .brawl-results .brawl-rules-note{font-size:9px;line-height:1.25}
+}
