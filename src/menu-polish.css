@@ -21,4 +21,8 @@
 .brawl-count-picker>p{font-size:.75rem;line-height:1.4;color:#a7bac4;margin:8px 0 0}
 .brawl-count-buttons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
 .brawl-count-buttons button{min-height:38px;border:1px solid #4d6874;border-radius:5px;background:#182832;color:#d9e8ed;font:700 1rem var(--font-mono);cursor:pointer}
-.brawl-count-buttons button.active{border-color:#f1b45e;background:linear-gradient(135deg,#59452b,#273139);color:#ffe3ad;box-shadow:inset 0 0 0 1px #f6bc6747}
+.brawl-count-buttons button{transition:background-color .14s,border-color .14s,color .14s,box-shadow .14s,transform .14s}
+.brawl-count-buttons button:is(:hover,:focus-visible){border-color:#f7c675;outline:0;box-shadow:0 0 0 2px #ffc46b36,0 0 14px #ffad4666}
+.brawl-count-buttons button.active{border-color:#ffe0a0;background:linear-gradient(135deg,#ffd476,#f09236);color:#1b2022;box-shadow:inset 0 0 0 1px #fff2c288,0 0 0 2px #ffbf5b55,0 0 20px #ff9c38bb;font-weight:900;transform:translateY(-1px)}
+#sidebar .brawl-count-buttons button.active{background:linear-gradient(135deg,#ffd476,#f09236);color:#1b2022}
+@media(prefers-reduced-motion:reduce){.brawl-count-buttons button{transition:none}.brawl-count-buttons button.active{transform:none}}

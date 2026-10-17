@@ -4,7 +4,7 @@ import {build} from 'esbuild';
 
 // Run real menu, simulator, results and production CSS; stub WebGL only for deterministic layout.
 const exposed=`globalThis.__brawlFixture={
- get ready(){return ready},get count(){return sim?.bots.length},get ffa(){return sim?.options.freeForAll}, openingFilm(){const prior=state;setState('introduction');const scene=document.querySelector('#scene'),canvas=scene.querySelector('canvas'),grain=getComputedStyle(scene,'::after'),vignette=getComputedStyle(scene,'::before'),active=scene.classList.contains('opening-film'),result={active,grain:grain.backgroundImage.includes('data:image/svg+xml'),grainOpacity:grain.opacity,vignette:vignette.backgroundImage.includes('radial-gradient'),canvasFilter:getComputedStyle(canvas).filter};setState(prior);result.removed=!scene.classList.contains('opening-film')&&getComputedStyle(canvas).filter==='none';return result},
+ get ready(){return ready},get preparing(){return starting},get warming(){return !!renderer?.warming},get prepared(){return !!renderer?.prepared},get count(){return sim?.bots.length},get ffa(){return sim?.options.freeForAll},finishWarmup(){renderer?.finishWarmup?.()},openingFilm(){const prior=state;setState('introduction');const scene=document.querySelector('#scene'),canvas=scene.querySelector('canvas'),grain=getComputedStyle(scene,'::after'),vignette=getComputedStyle(scene,'::before'),active=scene.classList.contains('opening-film'),result={active,grain:grain.backgroundImage.includes('data:image/svg+xml'),grainOpacity:grain.opacity,vignette:vignette.backgroundImage.includes('radial-gradient'),canvasFilter:getComputedStyle(canvas).filter};setState(prior);result.removed=!scene.classList.contains('opening-film')&&getComputedStyle(canvas).filter==='none';return result},
  get names(){return sim.bots.map(b=>b.compiled.config.identity.name)},
  randomDraws(){const original=Math.random;try{Math.random=()=>0;const first=brawlConfigs().slice(1).map(c=>c.identity.name);Math.random=()=>.9;const second=brawlConfigs().slice(1).map(c=>c.identity.name);return{first,second,player:build.identity.name}}finally{Math.random=original}},
  zeroHp(id=1){sim.bots[id].modules.chassis.hp=0;updateBrawlCard(sim.bots[id]);const card=document.querySelector('[data-brawl-card="'+id+'"]');return{zero:card.dataset.zeroHp,status:card.querySelector('[data-brawl-status]').textContent,health:card.querySelector('[data-brawl-health]').textContent}},
@@ -16,7 +16,7 @@ const exposed=`globalThis.__brawlFixture={
 const bundle=await build({entryPoints:['src/main.ts'],bundle:true,format:'iife',write:false,loader:{'.css':'empty'},plugins:[{name:'brawl-layout',setup(builder){
  builder.onLoad({filter:/src\/main\.ts$/},args=>({contents:readFileSync(args.path,'utf8')+exposed,loader:'ts',resolveDir:process.cwd()+'/src'}));
  builder.onResolve({filter:/^\.\/render$/},()=>({path:'layout-renderer',namespace:'fixture'}));
- builder.onLoad({filter:/layout-renderer/,namespace:'fixture'},()=>({contents:`export class ArenaRenderer{constructor(container){this.container=container;this.canvas=document.createElement('canvas');container.appendChild(this.canvas);this.quality='low';this.triangleCount=0;this.drawCalls=0;this.renderMs=0}attach(sim){this.sim=sim}setQuality(){}setAdaptive(){}showBuilder(){}startReplay(){}endReplay(){}replayFrame(){}update(){}draw(){}dispose(){}opponentIndicator(){return{visible:false}}projectCombatPoint(){return{visible:false}}robotWarningPosition(sim,id){const x=innerWidth*(.13+.74*(id/Math.max(1,sim.bots.length-1))),y=innerHeight*(.42+(id%2)*.16);return{x:x/innerWidth*100,y:y/innerHeight*100,visible:true,bounds:{left:x-42,top:y-34,right:x+42,bottom:y+34}}}}`}));
+ builder.onLoad({filter:/layout-renderer/,namespace:'fixture'},()=>({contents:`export class ArenaRenderer{constructor(container){this.container=container;this.canvas=document.createElement('canvas');container.appendChild(this.canvas);this.quality='low';this.triangleCount=0;this.drawCalls=0;this.renderMs=0}attach(sim){this.sim=sim}async prepareMatch(sim){this.warming=true;await new Promise(resolve=>this.finishWarmup=resolve);this.prepared=!!sim;this.warming=false}setQuality(){}setAdaptive(){}showBuilder(){}startReplay(){}endReplay(){}replayFrame(){}update(){}draw(){}dispose(){}opponentIndicator(){return{visible:false}}projectCombatPoint(){return{visible:false}}robotWarningPosition(sim,id){const x=innerWidth*(.13+.74*(id/Math.max(1,sim.bots.length-1))),y=innerHeight*(.42+(id%2)*.16);return{x:x/innerWidth*100,y:y/innerHeight*100,visible:true,bounds:{left:x-42,top:y-34,right:x+42,bottom:y+34}}}}`}));
 }}]});
 const origin=process.env.CRA_PREVIEW_URL??'http://127.0.0.1:4173/';
 const html=await(await fetch(origin)).text();
@@ -44,9 +44,13 @@ try{
   await wait('window.__brawlFixture?.ready','physics/menu');
   const film=await evaluate('__brawlFixture.openingFilm()');assert(film.active&&film.grain&&film.vignette&&film.canvasFilter!=='none'&&film.removed,'Match-intro grain/vignette is static, visible, and removed before combat');assert(Number(film.grainOpacity)<=.08,'Opening grain remains subtle');
   for(const n of [1,2,3,4]){
-   await evaluate(`document.querySelector('[data-mode="brawl"]').click();document.querySelector('[data-brawl-count="${n}"]').click();document.querySelector('#start').click()`);
+   await evaluate(`document.querySelector('[data-mode="brawl"]').click();document.querySelector('[data-brawl-count="${n}"]').click()`);
+   const selection=await evaluate(`(()=>{const b=document.querySelector('[data-brawl-count="${n}"]'),s=getComputedStyle(b);return{pressed:b.getAttribute('aria-pressed'),active:b.classList.contains('active'),background:s.backgroundImage,color:s.color,glow:s.boxShadow}})()`);
+   assert.equal(selection.pressed,'true');assert(selection.active&&selection.background.includes('linear-gradient')&&selection.glow!=='none','Chosen Brawl count is selected with a bright colored fill and glow');
+   await evaluate("document.querySelector('#start').click()");
+   await wait('__brawlFixture.warming','renderer preparation');assert(await evaluate('__brawlFixture.preparing'),'The fight stays in preparation while renderer assets warm up');assert(await evaluate("document.querySelector('#modals').textContent.includes('Warming the fight scene')"),'The preparation state is visible before the countdown');await evaluate('__brawlFixture.finishWarmup()');
    await wait(`__brawlFixture.count===${n+1}&&document.querySelectorAll('[data-brawl-card]').length===${n}`,'Brawl field');
-   assert(await evaluate('__brawlFixture.ffa'));
+   assert(await evaluate('__brawlFixture.ffa'));assert(await evaluate('__brawlFixture.prepared'),'Brawl match preparation completes before entering the fight');
    assert.equal(await evaluate('new Set(__brawlFixture.names).size'),n+1);
    const draws=await evaluate('__brawlFixture.randomDraws()');assert.equal(new Set(draws.first).size,n);assert.equal(new Set(draws.second).size,n);assert(!draws.first.includes(draws.player)&&!draws.second.includes(draws.player));assert.notDeepEqual(draws.first,draws.second,'Fresh Brawl starts randomize the opponent roster');
    const zero=await evaluate('__brawlFixture.zeroHp(1)');assert.equal(zero.zero,'true');assert.match(zero.status,/0 HP · KNOCKED OUT/);assert.match(zero.health,/^0 HP/);
@@ -77,12 +81,13 @@ try{
    if(process.env.CRA_CAPTURE_BRAWL&&n===4){const screenshot=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});writeFileSync('/home/ubuntu/screenshots/brawl-results-'+device.name.replaceAll(' ','-')+'.png',Buffer.from(screenshot.data,'base64'));}
    if(device.mobile)assert(await evaluate(`(()=>{const r=document.querySelector('.results').getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.top>=0&&r.bottom<=innerHeight+1&&[...document.querySelectorAll('.modal-actions button')].every(e=>{const b=e.getBoundingClientRect();return b.bottom<=innerHeight+1})})()`),'Mobile results/actions fit');
    await evaluate("document.querySelector('#rematch').click()");
+   await wait('__brawlFixture.warming','rematch renderer preparation');await evaluate('__brawlFixture.finishWarmup()');
    await wait(`__brawlFixture.count===${n+1}&&document.querySelector('.results')===null`,'rematch');
    await evaluate("document.querySelector('#fight-menu').click()");
    await wait("document.querySelector('#start')",'menu return');
    console.log('PASS',device.name,n,'opponents: selection, unique robots, HUD, results and rematch');
   }
-  await evaluate("document.querySelector('[data-mode=\"ai\"]').click();document.querySelector('#start').click()");
+  await evaluate("document.querySelector('[data-mode=\"ai\"]').click();document.querySelector('#start').click()");await wait('__brawlFixture.warming','duel renderer preparation');await evaluate('__brawlFixture.finishWarmup()');
   await wait('__brawlFixture.count===2&&!__brawlFixture.ffa','duel path');
   assert.equal(await evaluate("document.querySelectorAll('.player-panel').length"),2);
   console.log('PASS',device.name,'normal duel remains separate');

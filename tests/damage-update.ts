@@ -3,12 +3,18 @@ import {writeFileSync} from 'node:fs';
 import * as THREE from 'three';
 import {preset,compile,MATERIALS,RULES,isSpinner,v,add,type Slot} from '../src/model';
 import {Simulation,initializePhysics,neutral,type ImpactEvent} from '../src/sim';
-import {damageStatus} from '../src/combat-damage';
+import {damageStatus,weaponSpinupTorqueScale} from '../src/combat-damage';
 import {ArenaRenderer} from '../src/render';
 import {readyImpactSounds,GameAudio} from '../src/audio';
 const results:any[]=[];
-async function test(name:string,run:()=>unknown){try{const detail=await run();results.push({name,status:'passed',detail});console.log('PASS',name,JSON.stringify(detail));}catch(error){process.exitCode=1;results.push({name,status:'failed',error:String(error)});console.log('FAIL',name,String(error));}writeFileSync('docs/damage-update-results.json',JSON.stringify(results,null,2)+'\n');}
+async function test(name:string,run:()=>unknown){if(process.env.CRA_TEST_FILTER&&!new RegExp(process.env.CRA_TEST_FILTER,'i').test(name))return;try{const detail=await run();results.push({name,status:'passed',detail});console.log('PASS',name,JSON.stringify(detail));}catch(error){process.exitCode=1;results.push({name,status:'failed',error:String(error)});console.log('FAIL',name,String(error));}writeFileSync(process.env.CRA_TEST_FILTER?'docs/damage-update-focused-results.json':'docs/damage-update-results.json',JSON.stringify(results,null,2)+'\n');}
 await initializePhysics();
+
+await test('Half-damaged weapon has a modest spin-up-only penalty that recovers at target RPM',()=>{
+ const fresh=weaponSpinupTorqueScale(0,0),damagedStart=weaponSpinupTorqueScale(.5,0),damagedMid=weaponSpinupTorqueScale(.5,.5),damagedAtTarget=weaponSpinupTorqueScale(.5,1);
+ assert.equal(fresh,1);assert(damagedStart<1&&damagedStart>=.75);assert(damagedMid>damagedStart&&damagedMid<1);assert.equal(damagedAtTarget,1);
+ return{freshStart: fresh,halfDamageStart:damagedStart,halfDamageAtHalfRPM:damagedMid,halfDamageAtTargetRPM:damagedAtTarget};
+});
 
 await test('Weapon output stays full through 50% damage, then derates without stopping',()=>{
  const rows=[];
@@ -17,12 +23,13 @@ await test('Weapon output stays full through 50% damage, then derates without st
   try{
    s.world.gravity=v();for(const bot of s.bots){for(const body of bot.bodies.values())body.setTranslation(add(body.translation(),v(0,2,0)),true);bot.chassis.setEnabledTranslations(false,false,false,true);bot.chassis.setEnabledRotations(false,false,false,true);}s.world.propagateModifiedBodyPositionsToColliders();
    s.damage(0,'weapon',b.modules.weapon.max*weaponDamage*MATERIALS[b.modules.weapon.material].resistance);s.damage(0,'battery',b.modules.battery.max*batteryDamage*MATERIALS[b.modules.battery.material].resistance);
-   for(let t=0;t<30*RULES.hz;t++)s.step([{...neutral(),weapon:t===0},neutral()]);
+   let spinUpTicks=-1;
+   for(let t=0;t<30*RULES.hz;t++){s.step([{...neutral(),weapon:t===0},neutral()]);if(spinUpTicks<0&&b.rpm>=c.weapon.rpm*damageStatus(b.modules).rpmScale*.95)spinUpTicks=t+1;}
    const output=damageStatus(b.modules);assert(b.weaponOn&&s.weaponPowered(b));assert(isSpinner(c.weapon));assert(Math.abs(b.rpm/(c.weapon.rpm*output.rpmScale)-1)<.12,JSON.stringify({weaponDamage,batteryDamage,rpm:b.rpm,output}));assert.equal(s.fault,undefined);
-   rows.push({weaponDamage,batteryDamage,rpm:b.rpm,output:output.weaponOutput});
+   rows.push({weaponDamage,batteryDamage,rpm:b.rpm,output:output.weaponOutput,spinUpTicks});
   }finally{s.dispose();}
  }
- assert(Math.abs(rows[0].rpm-rows[1].rpm)<1);assert(Math.abs(rows[0].rpm-rows[2].rpm)<1);assert(rows[1].rpm>rows[3].rpm&&rows[3].rpm>rows[4].rpm);return rows;
+ assert(Math.abs(rows[0].rpm-rows[1].rpm)<1);assert(Math.abs(rows[0].rpm-rows[2].rpm)<1);assert(rows[1].rpm>rows[3].rpm&&rows[3].rpm>rows[4].rpm);assert(rows[1].output===1,'A spinner at 50% damage must keep full peak damage output');assert(rows[1].spinUpTicks>rows[0].spinUpTicks,'A spinner at 50% damage must take longer to reach 95% RPM');return rows;
 });
 
 function contact(a:Slot,b:Slot,options:{bladeSpeed?:number,ramSpeed?:number,bodySpin?:number,swap?:boolean,vertical?:boolean}={}){

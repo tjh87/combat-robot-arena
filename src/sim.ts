@@ -13,7 +13,7 @@ import {totalHPLost} from './tournament-damage';
 import {MatchHighlights} from './match-highlights';
 import {toothBite,remainingSpin} from './weapon-impact';
 import {colliderBounds,previousColliderPose,cacheColliderGeometry} from './arena-wall';
-import {BATTERY_FIRE,HUGE_WHEEL_DAMAGE_SCALE,damageStatus,contactDamage} from './combat-damage';
+import {BATTERY_FIRE,HUGE_WHEEL_DAMAGE_SCALE,damageStatus,contactDamage,weaponSpinupTorqueScale} from './combat-damage';
 import {QUANTUM_HYDRAULICS,quantumBiteForce} from './weapon-specs';
 import {HUGE_HANDLING,hugeDriveDuty} from './huge-handling';
 import {LANDING,landingEnergy} from './landing-impact';
@@ -336,7 +336,7 @@ export class Simulation{
  if(weaponPowered){const remaining=quantum&&!righting?Math.min(QUANTUM_HYDRAULICS.pumpWatts*RULES.dt,b.weaponOn?Math.max(0,QUANTUM_HYDRAULICS.cycleJoules-b.crushWork):Infinity):Infinity,limit=workLimitedTorque(demand*output.weaponOutput,omega,invI,remaining);this.torquePair(b,b.rotor,spinAxis,limit.torque);b.weaponWatts=limit.work/RULES.dt;b.actuatorTorque=limit.torque;if(quantum&&b.weaponOn&&!righting)b.crushWork+=limit.work;}else this.torquePair(b,b.rotor,spinAxis,-omega*4);
  }else{
  let torque=-omega*.015;if(rotorRecovery&&weaponPowered){const invI=1/Math.max(.01,b.compiled.rotorInertia)+1/Math.max(.01,isHorizontal(w)?b.compiled.inertia.y:b.compiled.inertia.x);torque+=clamp(-omega/(RULES.dt*invI),-300,300);}
- if(weaponPowered&&b.weaponOn){if(!isHorizontal(w)&&!(selfRightKind(c)==='gyro'&&b.rollStart>=0)){b.spinDirection=(w.direction*b.driveSign) as 1|-1;}const m=spinnerMotor(w,omega,b.spinDirection,selfRightKind(c)==='gyro'&&b.rollStart>=0?Math.min(b.gyroDance?.braking?0:.5,output.rpmScale):output.rpmScale),scale=output.weaponOutput;torque+=m.torque*scale;b.actuatorTorque=m.torque*scale;b.weaponWatts=m.watts*scale;b.powerWork+=Math.max(0,m.torque*omega)*RULES.dt*scale;}
+ if(weaponPowered&&b.weaponOn){const gyroRighting=selfRightKind(c)==='gyro'&&b.rollStart>=0;if(!isHorizontal(w)&&!gyroRighting){b.spinDirection=(w.direction*b.driveSign) as 1|-1;}const speedScale=gyroRighting?Math.min(b.gyroDance?.braking?0:.5,output.rpmScale):output.rpmScale,m=spinnerMotor(w,omega,b.spinDirection,speedScale),rpmFraction=Math.abs(omega)/Math.max(1,w.rpm*Math.PI/30*speedScale),accelerationScale=gyroRighting?1:weaponSpinupTorqueScale(output.weaponDamage,rpmFraction),scale=output.weaponOutput*accelerationScale;torque+=m.torque*scale;b.actuatorTorque=m.torque*scale;b.weaponWatts=m.watts*scale;b.powerWork+=Math.max(0,m.torque*omega)*RULES.dt*scale;}
  this.torquePair(b,b.rotor,spinAxis,torque,b.arm??b.chassis);
  }}
  if(b.arm&&c.weapon.type==='hammer_saw'){

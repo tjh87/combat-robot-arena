@@ -1,0 +1,53 @@
+[
+  {
+    "name": "Half-damaged weapon has a modest spin-up-only penalty that recovers at target RPM",
+    "status": "passed",
+    "detail": {
+      "freshStart": 1,
+      "halfDamageStart": 0.78,
+      "halfDamageAtHalfRPM": 0.89,
+      "halfDamageAtTargetRPM": 1
+    }
+  },
+  {
+    "name": "Weapon output stays full through 50% damage, then derates without stopping",
+    "status": "passed",
+    "detail": [
+      {
+        "weaponDamage": 0,
+        "batteryDamage": 0,
+        "rpm": 2531.395311849828,
+        "output": 1,
+        "spinUpTicks": 1531
+      },
+      {
+        "weaponDamage": 0.5,
+        "batteryDamage": 0,
+        "rpm": 2531.385403522072,
+        "output": 1,
+        "spinUpTicks": 1742
+      },
+      {
+        "weaponDamage": 0,
+        "batteryDamage": 0.5,
+        "rpm": 2531.395311849828,
+        "output": 1,
+        "spinUpTicks": 1531
+      },
+      {
+        "weaponDamage": 0.75,
+        "batteryDamage": 0,
+        "rpm": 2152.5358290302706,
+        "output": 0.725,
+        "spinUpTicks": 2060
+      },
+      {
+        "weaponDamage": 1,
+        "batteryDamage": 1,
+        "rpm": 1690.7914360036368,
+        "output": 0.44999999999999996,
+        "spinUpTicks": 2657
+      }
+    ]
+  }
+]

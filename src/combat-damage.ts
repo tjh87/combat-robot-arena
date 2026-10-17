@@ -8,6 +8,13 @@ export function damageFraction(module:Module){
  return module.present&&module.max>0?clamp(1-module.hp/module.max,0,1):0;
 }
 
+// Damaged spinners take slightly longer to accelerate, but recover full motor
+// torque near target RPM so 50% damage does not reduce their peak strike.
+export function weaponSpinupTorqueScale(weaponDamage:number,rpmFraction:number){
+ const damage=clamp(weaponDamage/.5,0,1),acceleration=1-clamp(Math.abs(rpmFraction),0,1);
+ return 1-.22*damage*acceleration;
+}
+
 // Keep a reduced-output reserve so damage never silently switches a weapon off.
 // The RPM cap follows sqrt(output); torque and mechanical losses set actual RPM.
 export function damageStatus(modules:Record<Slot,Module>){

@@ -272,3 +272,13 @@ The build, Brawl suite, and performance regression suite passed. The eligibility
 ### Wheel damage and mobility (16 October 2026)
 
 Treat wheel/drivetrain module HP as damage/judging/repair state, not as a propulsion kill switch. Keep motor control and AI throttle at their normal values when wheels are damaged, and do not block mobility-related recovery or count-out evaluation solely because drive-module HP reached zero. Preserve physical damage records, visuals, battery-driven output reduction, energy limits, genuine stoppage, and chassis knockout rules. Verify that otherwise identical 240 Hz seeded simulations travel equivalently with intact versus destroyed wheel modules.
+
+
+## Fight-start smoothness, Brawl selection feedback, and weapon spin-up (Oct 17)
+
+- Prepare match graphics before starting the countdown: show a short accessible preparation state, attach the final match scene, update its geometry/material variants, asynchronously compile shaders with Three.js, and render once to prime GPU buffers/shadows. Keep the 240 Hz simulation fixed-step behavior, camera, visual effects and match rules unchanged; begin the countdown only after preparation completes.
+- Give the selected Brawl opponent-count button an unmistakable warm accent fill, dark contrasting text, border, and soft glow. Preserve the existing selected/pressed accessibility state and respect reduced-motion preferences.
+- Apply a modest torque reduction only while a damaged weapon is below its target RPM, scaling the reduction smoothly with weapon damage and remaining acceleration. Restore full torque/output at target speed; at 50% weapon damage, retain full peak RPM and strike-damage output while measuring a slightly longer spin-up. Leave existing greater-than-50% output derating and battery effects unchanged.
+
+
+Verification: the production build, Brawl simulation suite, render-polish regression, focused weapon-damage/spin-up cases, and full desktop/Android/Small Android Brawl browser suite passed. A real WebGL2 browser run confirmed the preparation screen is visible, shader warm-up gates the countdown, the countdown begins after warm-up, and there are no JavaScript/console errors. At exactly 50% weapon damage, output/peak RPM remain full while time to 95% target RPM increases from 1,531 to 1,742 steps (0.88 seconds at 240 Hz). Changes remain local and unpushed.

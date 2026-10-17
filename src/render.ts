@@ -111,6 +111,13 @@ export class ArenaRenderer{
  this.bots.add(group);this.bodyGroups.set('hazard_'+h.id,group);this.hazardMeshes.set('hazard_'+h.id,group);}
  this.update(sim,0);
  }
+ async prepareMatch(sim:Simulation){
+  this.mode='match';this.preMatch=true;this.arena.visible=true;this.bots.visible=true;this.preview.visible=false;this.effects.visible=true;this.damageDebris.root.visible=COMPONENT_DEBRIS_VISIBLE;this.batteryFireVisual.visible=true;
+  this.update(sim,0,1);
+  await this.renderer.compileAsync(this.scene,this.camera);
+  this.shadowDirty=true;this.draw(sim,0);
+ }
+
  showBuilder(c:BotConfig){this.shadowDirty=true;this.needsRender=true;this.mode='builder';this.previewConfig=c;this.clear(this.preview);const compiled=compile(c,true),root=new THREE.Group();root.userData.createdAt=this.time;this.preview.add(root);for(const {p,mesh} of this.displayParts(c,compiled.parts)){if(!p.body.startsWith('wheel_'))mesh.position.add(vec(bodyOrigin(c,p.body)));root.add(mesh);}root.add(frontMarker(c,'#91c9ff'),batteryOutlines(c));const bounds=new THREE.Box3().setFromObject(root);root.userData.centre=bounds.getCenter(new THREE.Vector3());root.userData.span=bounds.getSize(new THREE.Vector3()).length();const pedestal=this.box(v(1.7,.12,1.7),v(0,-c.chassis.height/2-c.chassis.clearance-.065,0),this.material('#283239',.6,.6),root);pedestal.receiveShadow=true;}
  setQuality(q:Quality){this.quality=q;this.resolution.reset();this.renderer.shadowMap.enabled=q!=='low';const n=q==='high'?2048:q==='medium'?1024:512;if(this.mainLight.shadow.mapSize.x!==n){this.mainLight.shadow.mapSize.set(n,n);this.mainLight.shadow.map?.dispose();this.mainLight.shadow.map=null;}this.shadowDirty=true;this.size();}
  setAdaptive(enabled:boolean){this.adaptive=enabled;this.resolution.reset();this.size();}
