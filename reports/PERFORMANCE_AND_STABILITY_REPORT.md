@@ -1,7 +1,7 @@
 # Combat Robot Arena — Performance & Stability Test Report
 
 - **Test date:** 17 October 2026
-- **Revision under test:** local working tree based on `fd8c1be`, including the verified WebGL flight-trail update; not pushed
+- **Revision under test:** local commit `39cf165` (based on `fd8c1be`); not pushed
 - **Preview target:** [online WebGL preview](https://4173-iy2g4qa5twboexd3hqdx3-c388a922.sg2.manus.computer/)
 **Overall result:** **MIXED** — network/authority and Brawl browser checks pass; the WebGL flight-trail live-range update is regression-verified; the Brawl CPU stress test exceeds the 240 Hz step budget with 2–4 AI opponents on this sandbox. See §5.1 and §9.
 
