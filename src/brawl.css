@@ -9,15 +9,15 @@
 #brawl-opponents .brawl-hp-track{height:10px;margin:5px 0}
 #brawl-opponents .brawl-hud-foot{flex-wrap:wrap;gap:3px 6px}
 /* Avoid the duel podium's generic .winner rules on table rows. */
-.results .brawl-results{background:#101820;color:#f4f8fb}
-.results .brawl-result-heading{font-size:12px;line-height:1.3;color:#d4e1e8;letter-spacing:.03em}
-.results .brawl-result-row{font-size:18px;line-height:1.35;margin:0;padding:11px 8px;letter-spacing:0;font-weight:700;background:#101820}
-.results .brawl-result-row.brawl-winner{background:#202b35;box-shadow:inset 3px 0 var(--brawl-accent)}
-.results .brawl-result-machine strong{font-size:18px;white-space:normal;overflow-wrap:anywhere}
-.results .brawl-result-machine>b{font-size:20px}
-.results .brawl-result-machine small,.results .brawl-damage-value small,.results .brawl-points small{font-size:12px;color:#d1dde5}
-.results .brawl-result-status{font-size:13px;line-height:1.35;color:#edf4f8;overflow-wrap:anywhere}
-.results .brawl-rules-note{font-size:13px;line-height:1.5;color:#cedde5}
+.brawl-results{background:#101820;color:#f4f8fb}
+.brawl-results .brawl-result-heading{font-size:12px;line-height:1.3;color:#d4e1e8;letter-spacing:.03em}
+.brawl-results .brawl-result-row{font-size:18px;line-height:1.35;margin:0;padding:11px 8px;letter-spacing:0;font-weight:700;background:#101820}
+.brawl-results .brawl-result-row.brawl-winner{background:#202b35;box-shadow:inset 3px 0 var(--brawl-accent)}
+.brawl-results .brawl-result-machine strong{font-size:18px;white-space:normal;overflow-wrap:anywhere}
+.brawl-results .brawl-result-machine>b{font-size:20px}
+.brawl-results .brawl-result-machine small,.brawl-results .brawl-damage-value small,.brawl-results .brawl-points small{font-size:12px;color:#d1dde5}
+.brawl-results .brawl-result-status{font-size:13px;line-height:1.35;color:#edf4f8;overflow-wrap:anywhere}
+.brawl-results .brawl-rules-note{font-size:13px;line-height:1.5;color:#cedde5}
 /* A solid, unblurred backdrop prevents the frozen WebGL canvas bleeding through. */
 html[data-menu-theme="revamp"] .result-backdrop[data-format="brawl"],.result-backdrop[data-format="brawl"]{background:#070d14f5;backdrop-filter:none;-webkit-backdrop-filter:none}
 html.touch-playing #hud[data-mode="brawl"] .hud-top{grid-template-columns:minmax(0,1fr) 112px minmax(0,1fr)!important;gap:6px!important}
@@ -31,15 +31,15 @@ html.touch-playing #brawl-opponents .brawl-hud-card{padding:5px 6px}
 html.touch-playing #brawl-opponents .brawl-hud-heading strong{font-size:12px}
 html.touch-playing #brawl-opponents .brawl-hud-heading span,html.touch-playing #brawl-opponents .brawl-hud-foot{font-size:10px}
 html.touch-playing #brawl-opponents .brawl-hp-track{height:7px;margin:3px 0}
-html.touch-device .results .brawl-result-heading,html.touch-device .results .brawl-result-row{grid-template-columns:minmax(0,1.4fr) minmax(0,.85fr) minmax(0,.7fr) minmax(0,1fr);gap:6px}
-html.touch-device .results .brawl-result-heading{font-size:10px;letter-spacing:0}
-html.touch-device .results .brawl-result-row{font-size:14px;padding:8px 4px;line-height:1.35}
-html.touch-device .results .brawl-result-machine{gap:4px;flex-wrap:wrap}
-html.touch-device .results .brawl-result-machine strong{font-size:14px}
-html.touch-device .results .brawl-result-machine>b{font-size:16px}
-html.touch-device .results .brawl-result-machine small,html.touch-device .results .brawl-damage-value small,html.touch-device .results .brawl-points small{font-size:10px}
-html.touch-device .results .brawl-result-status{font-size:11px}
-html.touch-device .results .brawl-rules-note{font-size:11px}
+html.touch-device .brawl-results .brawl-result-heading,html.touch-device .brawl-results .brawl-result-row{grid-template-columns:minmax(0,1.4fr) minmax(0,.85fr) minmax(0,.7fr) minmax(0,1fr);gap:6px}
+html.touch-device .brawl-results .brawl-result-heading{font-size:10px;letter-spacing:0}
+html.touch-device .brawl-results .brawl-result-row{font-size:14px;padding:8px 4px;line-height:1.35}
+html.touch-device .brawl-results .brawl-result-machine{gap:4px;flex-wrap:wrap}
+html.touch-device .brawl-results .brawl-result-machine strong{font-size:14px}
+html.touch-device .brawl-results .brawl-result-machine>b{font-size:16px}
+html.touch-device .brawl-results .brawl-result-machine small,html.touch-device .brawl-results .brawl-damage-value small,html.touch-device .brawl-results .brawl-points small{font-size:10px}
+html.touch-device .brawl-results .brawl-result-status{font-size:11px}
+html.touch-device .brawl-results .brawl-rules-note{font-size:11px}
 
 html.touch-device:has(.result-backdrop[data-format="brawl"]) .touch-controls{display:none!important}
 
@@ -63,38 +63,59 @@ html.touch-device:has(.result-backdrop[data-format="brawl"]) .touch-controls{dis
 
 
 /* Result cards pair each Brawl robot portrait with its peak-hit-flight stat. */
-.results .brawl-result-machine{align-items:center;gap:6px;min-width:0;flex-wrap:nowrap}
-.results .brawl-result-portrait{display:block;flex:0 0 46px;width:46px;height:35px;box-sizing:border-box;object-fit:contain;border:1px solid #ffffff2a;border-radius:4px;background:#0b1116}
-.results .brawl-result-identity{display:grid;gap:3px;min-width:0;flex:1}
-.results .brawl-result-name{display:flex;align-items:center;gap:5px;min-width:0}
-.results .brawl-result-name strong{display:-webkit-box;min-width:0;font-size:16px;line-height:1.12;white-space:normal;overflow-wrap:anywhere;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.results .brawl-result-name small{flex:0 0 auto}
-.results .brawl-peak-flight{display:flex;align-items:baseline;justify-content:space-between;gap:4px;min-width:0;color:#d9e6eb}
-.results .brawl-peak-flight>span{font:700 8px/1.15 var(--font-mono);letter-spacing:.04em;color:#b7c7cf;white-space:nowrap}
-.results .brawl-peak-flight strong{font:800 12px/1.1 var(--font-mono);color:#f2d56d;white-space:nowrap}
-.results .brawl-peak-flight strong small{font-size:9px;color:#d9e6eb}
-.results .brawl-damage-value{display:grid;justify-items:start;gap:3px}
-.results .brawl-damage-number{white-space:nowrap}
-.results .brawl-top-damage{display:block;color:#ffd27d;font:900 10px/1.1 var(--font-mono);letter-spacing:.055em;white-space:nowrap}
-@media(max-width:760px){html.touch-device .results .brawl-result-heading,html.touch-device .results .brawl-result-row{grid-template-columns:minmax(112px,1.45fr) minmax(64px,.85fr) minmax(50px,.65fr) minmax(82px,.9fr);gap:5px}html.touch-device .results .brawl-result-portrait{flex-basis:32px;width:32px;height:24px}html.touch-device .results .brawl-result-machine{gap:3px;flex-wrap:nowrap}html.touch-device .results .brawl-result-name strong{font-size:14px;line-height:1.08}html.touch-device .results .brawl-peak-flight>span{font-size:7px}html.touch-device .results .brawl-peak-flight strong{font-size:10px}html.touch-device .results .brawl-peak-flight strong small{font-size:8px}html.touch-device .results .brawl-top-damage{font-size:8px}html.touch-device .results .brawl-result-status{font-size:10px}}
+.brawl-results .brawl-result-machine{align-items:center;gap:6px;min-width:0;flex-wrap:nowrap}
+.brawl-results .brawl-result-portrait{display:block;flex:0 0 46px;width:46px;height:35px;box-sizing:border-box;object-fit:contain;border:1px solid #ffffff2a;border-radius:4px;background:#0b1116}
+.brawl-results .brawl-result-identity{display:grid;gap:3px;min-width:0;flex:1}
+.brawl-results .brawl-result-name{display:flex;align-items:center;gap:5px;min-width:0}
+.brawl-results .brawl-result-name strong{display:-webkit-box;min-width:0;font-size:16px;line-height:1.12;white-space:normal;overflow-wrap:anywhere;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.brawl-results .brawl-result-name small{flex:0 0 auto}
+.brawl-results .brawl-peak-flight{display:flex;align-items:baseline;justify-content:space-between;gap:4px;min-width:0;color:#d9e6eb}
+.brawl-results .brawl-peak-flight>span{font:700 8px/1.15 var(--font-mono);letter-spacing:.04em;color:#b7c7cf;white-space:nowrap}
+.brawl-results .brawl-peak-flight strong{font:800 12px/1.1 var(--font-mono);color:#f2d56d;white-space:nowrap}
+.brawl-results .brawl-peak-flight strong small{font-size:9px;color:#d9e6eb}
+.brawl-results .brawl-damage-value{display:grid;justify-items:start;gap:3px}
+.brawl-results .brawl-damage-number{white-space:nowrap}
+.brawl-results .brawl-top-damage{display:block;color:#ffd27d;font:900 10px/1.1 var(--font-mono);letter-spacing:.055em;white-space:nowrap}
+@media(max-width:760px){html.touch-device .brawl-results .brawl-result-heading,html.touch-device .brawl-results .brawl-result-row{grid-template-columns:minmax(112px,1.45fr) minmax(64px,.85fr) minmax(50px,.65fr) minmax(82px,.9fr);gap:5px}html.touch-device .brawl-results .brawl-result-portrait{flex-basis:32px;width:32px;height:24px}html.touch-device .brawl-results .brawl-result-machine{gap:3px;flex-wrap:nowrap}html.touch-device .brawl-results .brawl-result-name strong{font-size:14px;line-height:1.08}html.touch-device .brawl-results .brawl-peak-flight>span{font-size:7px}html.touch-device .brawl-results .brawl-peak-flight strong{font-size:10px}html.touch-device .brawl-results .brawl-peak-flight strong small{font-size:8px}html.touch-device .brawl-results .brawl-top-damage{font-size:8px}html.touch-device .brawl-results .brawl-result-status{font-size:10px}}
 
 
 /* Peak-flight values now use the same readable scale as the robot names and standings text. */
-.results .brawl-peak-flight>span{font-size:12px}
-.results .brawl-peak-flight strong{font-size:16px}
-.results .brawl-peak-flight strong small{font-size:12px}
-@media(max-width:760px){html.touch-device .results .brawl-peak-flight>span{font-size:11px}html.touch-device .results .brawl-peak-flight strong{font-size:14px}html.touch-device .results .brawl-peak-flight strong small{font-size:11px}}
+.brawl-results .brawl-peak-flight>span{font-size:12px}
+.brawl-results .brawl-peak-flight strong{font-size:16px}
+.brawl-results .brawl-peak-flight strong small{font-size:12px}
+@media(max-width:760px){html.touch-device .brawl-results .brawl-peak-flight>span{font-size:11px}html.touch-device .brawl-results .brawl-peak-flight strong{font-size:14px}html.touch-device .brawl-results .brawl-peak-flight strong small{font-size:11px}}
 
 
 /* Brawl standings keep robot identity and peak height in separate, consistently aligned columns. */
-.results .brawl-result-heading,.results .brawl-result-row{grid-template-columns:minmax(0,1.55fr) minmax(64px,.8fr) minmax(78px,.95fr) minmax(60px,.7fr) minmax(88px,.95fr);gap:6px}
-.results .brawl-result-heading>span:nth-child(2){text-align:center}
-.results .brawl-peak-flight{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;text-align:center}
-.results .brawl-peak-flight strong{font-size:16px}
-.results .brawl-peak-flight strong small{font-size:12px}
-.results .brawl-peak-flight[data-high-flier="true"] strong{color:#ffe18a}
-.results .brawl-high-flier{display:block;color:#ffd27d;font:900 10px/1.1 var(--font-mono);letter-spacing:.04em;white-space:nowrap}
-@media(max-width:760px){html.touch-device .results .brawl-result-heading,html.touch-device .results .brawl-result-row{grid-template-columns:minmax(94px,1.45fr) minmax(54px,.85fr) minmax(60px,.95fr) minmax(42px,.65fr) minmax(58px,.9fr);gap:4px}html.touch-device .results .brawl-peak-flight strong{font-size:14px}html.touch-device .results .brawl-peak-flight strong small{font-size:11px}html.touch-device .results .brawl-high-flier{font-size:8px}}
+.brawl-results .brawl-result-heading,.brawl-results .brawl-result-row{grid-template-columns:minmax(0,1.55fr) minmax(64px,.8fr) minmax(78px,.95fr) minmax(60px,.7fr) minmax(88px,.95fr);gap:6px}
+.brawl-results .brawl-result-heading>span:nth-child(2){text-align:center}
+.brawl-results .brawl-peak-flight{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;text-align:center}
+.brawl-results .brawl-peak-flight strong{font-size:16px}
+.brawl-results .brawl-peak-flight strong small{font-size:12px}
+.brawl-results .brawl-peak-flight[data-high-flier="true"] strong{color:#ffe18a}
+.brawl-results .brawl-high-flier{display:block;color:#ffd27d;font:900 10px/1.1 var(--font-mono);letter-spacing:.04em;white-space:nowrap}
+@media(max-width:760px){html.touch-device .brawl-results .brawl-result-heading,html.touch-device .brawl-results .brawl-result-row{grid-template-columns:minmax(94px,1.45fr) minmax(54px,.85fr) minmax(60px,.95fr) minmax(42px,.65fr) minmax(58px,.9fr);gap:4px}html.touch-device .brawl-results .brawl-peak-flight strong{font-size:14px}html.touch-device .brawl-results .brawl-peak-flight strong small{font-size:11px}html.touch-device .brawl-results .brawl-high-flier{font-size:8px}}
 
-html.touch-device .results .brawl-peak-flight strong{font-size:14px}
-html.touch-device .results .brawl-peak-flight strong small{font-size:11px}
+html.touch-device .brawl-results .brawl-peak-flight strong{font-size:14px}
+html.touch-device .brawl-results .brawl-peak-flight strong small{font-size:11px}
+
+/* Prevent the Brawl name from being squeezed between portrait and RPM gauge on tablet widths. */
+@media(max-width:900px){
+ #hud[data-mode="brawl"] .player-panel,
+ html.touch-playing #hud[data-mode="brawl"] .player-panel,
+ html.touch-playing #hud[data-mode="brawl"] .player-panel.pre-fight{
+  width:min(33vw,390px)!important;max-width:min(33vw,390px)!important;min-width:0!important;
+  grid-template-columns:clamp(32px,5.6vw,44px) minmax(0,1fr) clamp(36px,6.2vw,50px)!important;
+  gap:4px clamp(5px,1vw,8px)!important;padding:8px!important;
+ }
+ #hud[data-mode="brawl"] .player-title,
+ html.touch-playing #hud[data-mode="brawl"] .player-title{
+  min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+  font-size:clamp(12px,1.8vw,15px)!important;letter-spacing:0!important;
+ }
+ #hud[data-mode="brawl"] .player-portrait,
+ html.touch-playing #hud[data-mode="brawl"] .player-portrait{
+  width:clamp(32px,5.6vw,44px)!important;height:clamp(24px,4.2vw,32px)!important;
+ }
+ #hud[data-mode="brawl"] .hud-start-rpm .rpm-silhouette{max-width:clamp(36px,6.2vw,50px)}
+}

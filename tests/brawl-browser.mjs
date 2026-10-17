@@ -51,9 +51,11 @@ try{
    await wait('__brawlFixture.warming','renderer preparation');assert(await evaluate('__brawlFixture.preparing'),'The fight stays in preparation while renderer assets warm up');assert(await evaluate("document.querySelector('#modals').textContent.includes('Warming the fight scene')"),'The preparation state is visible before the countdown');await evaluate('__brawlFixture.finishWarmup()');
    await wait(`__brawlFixture.count===${n+1}&&document.querySelectorAll('[data-brawl-card]').length===${n}`,'Brawl field');
    assert(await evaluate('__brawlFixture.ffa'));assert(await evaluate('__brawlFixture.prepared'),'Brawl match preparation completes before entering the fight');
+   const playerHud=await evaluate(`(()=>{const p=document.querySelector('.player-panel'),n=p.querySelector('.player-title').getBoundingClientRect(),r=p.querySelector('.hud-start-rpm').getBoundingClientRect();return{nameWidth:n.width,nameRight:n.right,rpmLeft:r.left,overlap:n.right>r.left+1}})()`);
+   assert(playerHud.nameWidth>=80,`${device.name}: Brawl player name has a usable HUD track: ${JSON.stringify(playerHud)}`);assert.equal(playerHud.overlap,false,`${device.name}: player name must not overlap the weapon RPM instrument: ${JSON.stringify(playerHud)}`);
    assert.equal(await evaluate('new Set(__brawlFixture.names).size'),n+1);
-   const draws=await evaluate('__brawlFixture.randomDraws()');assert.equal(new Set(draws.first).size,n);assert.equal(new Set(draws.second).size,n);assert(!draws.first.includes(draws.player)&&!draws.second.includes(draws.player));assert.notDeepEqual(draws.first,draws.second,'Fresh Brawl starts randomize the opponent roster');
-   const zero=await evaluate('__brawlFixture.zeroHp(1)');assert.equal(zero.zero,'true');assert.match(zero.status,/0 HP · KNOCKED OUT/);assert.match(zero.health,/^0 HP/);
+	  const draws=await evaluate('__brawlFixture.randomDraws()');assert.equal(new Set(draws.first).size,n);assert.equal(new Set(draws.second).size,n);assert(!draws.first.includes(draws.player)&&!draws.second.includes(draws.player));assert.notDeepEqual(draws.first,draws.second,'Fresh Brawl starts randomize the opponent roster');
+	  const zero=await evaluate('__brawlFixture.zeroHp(1)');assert.equal(zero.zero,'true');assert.match(zero.status,/0 HP · KNOCKED OUT/);assert.match(zero.health,/^0 HP/);
    const callouts=await evaluate('__brawlFixture.damageCallouts()'),visible=await evaluate('(()=>{const v=visualViewport;return{left:v?.offsetLeft??0,top:v?.offsetTop??0,right:(v?.offsetLeft??0)+(v?.width??innerWidth),bottom:(v?.offsetTop??0)+(v?.height??innerHeight)}})()');assert(callouts.length>=2);for(const item of callouts){assert(item.side,'Brawl warning is placed around its robot');assert(item.robot);assert(item.box.left>=visible.left-1&&item.box.top>=visible.top-1&&item.box.right<=visible.right+1&&item.box.bottom<=visible.bottom+1,`${device.name} ${n} AI callout outside visible CSS viewport ${JSON.stringify(visible)}: ${JSON.stringify(item)}`);assert(item.box.right<=item.robot.left||item.box.left>=item.robot.right||item.box.bottom<=item.robot.top||item.box.top>=item.robot.bottom,'Callout does not cover its robot');}
    const recovery=await evaluate('__brawlFixture.recoverHeld()');
    assert(recovery.recovered,'Player Unstick must find safe space');assert(recovery.left>0&&recovery.right>0,'Unstick must preserve held drive input');assert.equal(recovery.aiMoved,false,'Player Unstick must not teleport AI opponents');
@@ -87,7 +89,7 @@ try{
    await wait("document.querySelector('#start')",'menu return');
    console.log('PASS',device.name,n,'opponents: selection, unique robots, HUD, results and rematch');
   }
-  await evaluate("document.querySelector('[data-mode=\"ai\"]').click();document.querySelector('#start').click()");await wait('__brawlFixture.warming','duel renderer preparation');await evaluate('__brawlFixture.finishWarmup()');
+   await evaluate("document.querySelector('[data-mode=\"ai\"]').click();document.querySelector('#start').click()");await wait('__brawlFixture.warming','duel renderer preparation');await evaluate('__brawlFixture.finishWarmup()');
   await wait('__brawlFixture.count===2&&!__brawlFixture.ffa','duel path');
   assert.equal(await evaluate("document.querySelectorAll('.player-panel').length"),2);
   console.log('PASS',device.name,'normal duel remains separate');
