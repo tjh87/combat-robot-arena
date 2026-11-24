@@ -24,9 +24,9 @@ export class AdaptiveResolution{
   // A pause, context recovery, or one loading hitch is not a sustained GPU load.
   if(seconds<=0||seconds>.25)return false;
   this.elapsed+=seconds;this.frames++;
-  if(this.elapsed<2)return false;
+  if(this.elapsed<1)return false;
   this.fps=this.frames/this.elapsed;const old=this.scale;
-  if(this.fps<45){this.scale=Math.max(.65,Math.round((this.scale-.1)*100)/100);this.fast=0;}
+  if(this.fps<55){this.scale=Math.max(.65,Math.round((this.scale-.1)*100)/100);this.fast=0;}
   else if(this.fps>57){this.fast+=this.elapsed;if(this.fast>=8){this.scale=Math.min(1,Math.round((this.scale+.05)*100)/100);this.fast=0;}}
   else this.fast=0;
   this.elapsed=this.frames=0;return old!==this.scale;

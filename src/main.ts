@@ -147,9 +147,10 @@ function updateHitReadouts(){
 
 function updateDamageWarnings(){
  if(!sim)return;
- const active=['fighting','practice'].includes(state),isBrawl=!!sim.options.freeForAll,hudRect=hud.getBoundingClientRect(),viewport=Math.max(0,Math.min(hud.clientWidth||window.innerWidth,window.innerWidth-hudRect.left)),height=Math.max(0,Math.min(hud.clientHeight||window.innerHeight,window.innerHeight-hudRect.top));
+ const active=['fighting','practice'].includes(state),isBrawl=!!sim.options.freeForAll;
  const badgeFor=(id:number)=>$('#damage-badge-'+id),damaged=sim.bots.map(bot=>({bot,badge:badgeFor(bot.id)})).filter((item):item is {bot:Simulation['bots'][number];badge:HTMLElement}=>!!item.badge&&item.badge.dataset.damaged==='true');
  if(!active||!damaged.length){for(const bot of sim.bots){const badge=badgeFor(bot.id);badge?.classList.add('hidden');}return;}
+ const hudRect=hud.getBoundingClientRect(),viewport=Math.max(0,Math.min(hud.clientWidth||window.innerWidth,window.innerWidth-hudRect.left)),height=Math.max(0,Math.min(hud.clientHeight||window.innerHeight,window.innerHeight-hudRect.top));
  const warnings:{id:number;badge:HTMLElement;x:number;y:number;anchor:number;anchorX:number;anchorY:number;width:number;height:number}[]=[],robotBounds:BrawlRect[]=[];
  if(isBrawl){for(const bot of sim.bots){const point=renderer.robotWarningPosition?.(sim,bot.id);if(point?.visible&&point.bounds)robotBounds.push({left:point.bounds.left-hudRect.left-6,top:point.bounds.top-hudRect.top-6,right:point.bounds.right-hudRect.left+6,bottom:point.bounds.bottom-hudRect.top+6});}}
  for(const {bot,badge} of damaged){const point=renderer.robotWarningPosition?.(sim,bot.id),visible=!!point?.visible;badge.classList.toggle('hidden',!visible);if(visible){const pageAnchor=point!.anchor??{x:point!.x/100*window.innerWidth,y:point!.y/100*window.innerHeight};if(isBrawl)badge.dataset.calloutSide='left';const badgeRect=badge.getBoundingClientRect();warnings.push({id:bot.id,badge,x:point!.x,y:point!.y,anchor:point!.x,anchorX:pageAnchor.x-hudRect.left,anchorY:pageAnchor.y-hudRect.top,width:badgeRect.width||badge.offsetWidth||206,height:badgeRect.height||badge.offsetHeight||86});}}
