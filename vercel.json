@@ -1,1 +1,23 @@
-{"$schema":"https://openapi.vercel.sh/vercel.json","buildCommand":"npm run build && npm run online:build","outputDirectory":"dist","fluid":true,"functions":{"api/online.ts":{"maxDuration":300,"includeFiles":".online/**"}},"headers":[{"source":"/api/online","headers":[{"key":"Cache-Control","value":"no-store"}]}]}
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "node tests/gameplay-pacing.mjs && node --import tsx tests/performance.ts && node scripts/build.mjs && node scripts/verify.mjs",
+  "outputDirectory": "dist",
+  "fluid": true,
+  "functions": {
+    "api/online.ts": {
+      "maxDuration": 300,
+      "includeFiles": ".online/**"
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/online",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    }
+  ]
+}
