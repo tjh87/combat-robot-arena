@@ -6,7 +6,7 @@ import {FrameGate,AdaptiveResolution} from '../src/performance.ts';
 // Exercise the real controller loop with rendering/network boundaries stubbed.
 // This measures scheduling, not GPU speed or network latency.
 const source=readFileSync(new URL('../src/online/ui.ts',import.meta.url),'utf8');
-const code=stripTypeScriptTypes(source.replace(/^import .*$/gm,'').replace('export class OnlineController','class OnlineController').replaceAll('import.meta.url',"'file:///fixture.ts'"),{mode:'transform'});
+const code=stripTypeScriptTypes(source.replace(/^import .*$/gm,'').replace('export class OnlineController','class OnlineController').replace('constructor(readonly hooks:Hooks','constructor(hooks:Hooks').replaceAll('import.meta.url',"'file:///fixture.ts'"));
 const Controller=new Function('FrameGate','PREDICTION_LIMITS','blendPoses','applyReplica','updateOpponentHud',code+'\nreturn OnlineController;')(FrameGate,{renderHz:60},()=>[],()=>{},()=>{});
 const results=[];
 for(const refresh of [60,90,120,144,165,240]){
