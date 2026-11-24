@@ -30,3 +30,16 @@ assert(resolution.scale>reduced,'quality recovers after eight seconds of headroo
 const gate=new FrameGate();assert(gate.due(0,'match',60));assert(!gate.due(1,'match',60));gate.reset();assert(gate.due(2,'match',60));
 console.log('PASS actual online controller: 60 FPS pacing across refresh rates; no bracket layout in combat loop',results);
 console.log('PASS adaptive resolution: responds to 50 FPS, ignores pause, recovers slowly');
+
+const main=readFileSync(new URL('../src/main.ts',import.meta.url),'utf8');
+const warningCode=stripTypeScriptTypes(main.slice(main.indexOf('function updateDamageWarnings(){'),main.indexOf('function updateOpponentPointer(){')));
+for(const state of ['menu','paused','fighting','practice']){
+ let hidden=0;
+ const sim={options:{freeForAll:false},bots:[{id:0},{id:1}]};
+ const badge={dataset:{damaged:'false'},classList:{add(){hidden++;}}};
+ const hud={getBoundingClientRect(){throw Error('No damage warnings: layout must not be measured');}};
+ const run=new Function('sim','state','hud','$',warningCode+'\nupdateDamageWarnings();');
+ run(sim,state,hud,()=>badge);
+ assert.equal(hidden,2,'both undamaged badges stay hidden');
+}
+console.log('PASS idle/undamaged HUD skips layout measurement in menu, pause, fight and practice');
